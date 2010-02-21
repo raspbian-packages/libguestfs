@@ -59,6 +59,11 @@ if [ ! -x "$guestfish" -o ! -x "$guestmount" ]; then
     exit 1
 fi
 
+if [ ! -c /dev/fuse ]; then
+    echo "/dev/fuse does not exist skipping tests."
+    exit 0
+fi
+
 # Ensure everything is cleaned up on exit.
 rm -f "$image"
 mkdir -p "$mp"
