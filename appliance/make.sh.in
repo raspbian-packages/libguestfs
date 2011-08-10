@@ -63,4 +63,7 @@ if grep -q /usr/share/augeas/lenses supermin.d/hostfiles-t; then
     echo "/usr/share/augeas/lenses/*.aug" >> supermin.d/hostfiles-t
 fi
 
+# Make sure that /init can be run on systemd-enabled Debian systems
+echo '/lib/lsb/*' >> supermin.d/hostfiles-t
+
 mv supermin.d/hostfiles-t supermin.d/hostfiles
