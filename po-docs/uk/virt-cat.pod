@@ -1,0 +1,269 @@
+=encoding utf8
+
+=head1 НАЗВА
+
+virt-cat — показ файлів у віртуальній машині
+
+=head1 КОРОТКИЙ ОПИС
+
+ virt-cat [--параметри] -d назва_домену файл [файл...]
+
+ virt-cat [--параметри] -a диск.img [-a диск.img ...] файл [файл...]
+
+Застарілий стиль:
+
+ virt-cat назва_домену файл
+
+ virt-cat диск.img файл
+
+=head1 ОПИС
+
+C<virt-cat> — інструмент командного рядка для показу вмісту C<файла>, який
+зберігається у вказаній віртуальній машині (або образі диска).
+
+Ви можете вказати декілька назв файлів. Вміст таких файлів буде
+об’єднано. Назви файлів слід вказувати повністю (разом зі шляхом), починаючи
+з кореневого каталогу (тобто назва має починатися з «/»).
+
+C<virt-cat> можна скористатися для пришвидшення перегляду файла. Для
+редагування даних слід користуватися C<virt-edit>. Для виконання складніших
+дій можна скористатися програмою L<guestfish(1)> (див. L</USING GUESTFISH>
+нижче).
+
+=head1 ПРИКЛАДИ
+
+Показ файла C</etc/fstab> з віртуальної машини libvirt з назвою C<mydomain>:
+
+ virt-cat -d mydomain /etc/fstab
+
+Показ списку повідомлень syslog з файла образу диска віртуальної машини:
+
+ virt-cat -a disk.img /var/log/messages | tail
+
+Визначення IP-адреси DHCP, використаної віртуальною машиною:
+
+ virt-cat -d mydomain /var/log/messages | \
+   grep 'dhclient: bound to' | tail
+
+Пошук нещодавно встановлених пакунків:
+
+ virt-cat -d mydomain /var/log/yum.log | tail
+
+Визначення користувачів, які працюють у віртуальній машині:
+
+ virt-cat -d mydomain /var/run/utmp > /tmp/utmp
+ who /tmp/utmp
+
+або тих, які у ній працювали:
+
+ virt-cat -d mydomain /var/log/wtmp > /tmp/wtmp
+ last -f /tmp/wtmp
+
+=head1 ПАРАМЕТРИ
+
+=over 4
+
+=item B<--help>
+
+Показати коротку довідку.
+
+=item B<-a> файл
+
+=item B<--add> файл
+
+Add I<file> which should be a disk image from a virtual machine.  If the
+virtual machine has multiple block devices, you must supply all of them with
+separate I<-a> options.
+
+The format of the disk image is auto-detected.  To override this and force a
+particular format use the I<--format=..> option.
+
+=item B<-c> адреса
+
+=item B<--connect> адреса
+
+If using libvirt, connect to the given I<URI>.  If omitted, then we connect
+to the default libvirt hypervisor.
+
+If you specify guest block devices directly (I<-a>), then libvirt is not
+used at all.
+
+=item B<-d> гість
+
+=item B<--domain> гість
+
+Add all the disks from the named libvirt guest.  Domain UUIDs can be used
+instead of names.
+
+=item B<--echo-keys>
+
+When prompting for keys and passphrases, virt-cat normally turns echoing off
+so you cannot see what you are typing.  If you are not worried about Tempest
+attacks and there is no one else in the room you can specify this flag to
+see what you are typing.
+
+=item B<--format=raw|qcow2|..>
+
+=item B<--format>
+
+The default for the I<-a> option is to auto-detect the format of the disk
+image.  Using this forces the disk format for I<-a> options which follow on
+the command line.  Using I<--format> with no argument switches back to
+auto-detection for subsequent I<-a> options.
+
+Приклад:
+
+ virt-cat --format=raw -a disk.img file
+
+forces raw format (no auto-detection) for C<disk.img>.
+
+ virt-cat --format=raw -a disk.img --format -a another.img file
+
+forces raw format (no auto-detection) for C<disk.img> and reverts to
+auto-detection for C<another.img>.
+
+If you have untrusted raw-format guest disk images, you should use this
+option to specify the disk format.  This avoids a possible security problem
+with malicious guests (CVE-2010-3851).
+
+=item B<--keys-from-stdin>
+
+Read key or passphrase parameters from stdin.  The default is to try to read
+passphrases from the user by opening C</dev/tty>.
+
+=item B<-v>
+
+=item B<--verbose>
+
+Увімкнути докладний показ повідомлень з метою діагностики.
+
+=item B<-V>
+
+=item B<--version>
+
+Показати дані щодо версії і завершити роботу.
+
+=item B<-x>
+
+Увімкнути трасування викликів програмного інтерфейсу libguestfs.
+
+=back
+
+=head1 ПАРАМЕТРИ КОМАНДНОГО РЯДКА У ФОРМАТІ ПОПЕРЕДНІХ ВЕРСІЙ
+
+У попередніх версіях virt-cat можна було використовувати або
+
+ virt-cat диск.img [диск.img ...] файл
+
+або
+
+ virt-cat назва_гостьової_системи файл
+
+whereas in this version you should use I<-a> or I<-d> respectively to avoid
+the confusing case where a disk image might have the same name as a guest.
+
+З міркувань зворотної сумісності передбачено підтримку запису параметрів у
+застарілому форматі.
+
+=head1 ШЛЯХИ У WINDOWS
+
+C<virt-cat> has a limited ability to understand Windows drive letters and
+paths (eg. C<E:\foo\bar.txt>).
+
+Тоді і лише тоді, коли у гостьовій системі працює Windows:
+
+=over 4
+
+=item *
+
+Drive letter prefixes like C<C:> are resolved against the Windows Registry
+to the correct filesystem.
+
+=item *
+
+Any backslash (C<\>) characters in the path are replaced with forward
+slashes so that libguestfs can process it.
+
+=item *
+
+The path is resolved case insensitively to locate the file that should be
+displayed.
+
+=back
+
+Відомі певні недоліки програми:
+
+=over 4
+
+=item *
+
+Перехід за деякими символічними посиланнями NTFS може здійснюватися з
+помилками.
+
+=item *
+
+NTFS junction points that cross filesystems are not followed.
+
+=back
+
+=head1 ВИКОРИСТАННЯ GUESTFISH
+
+L<guestfish(1)> is a more powerful, lower level tool which you can use when
+C<virt-cat> doesn't work.
+
+Using C<virt-cat> is approximately equivalent to doing:
+
+ guestfish --ro -i -d назва_домену download файл -
+
+where C<domname> is the name of the libvirt guest, and C<file> is the full
+path to the file.  Note the final C<-> (meaning "output to stdout").
+
+The command above uses libguestfs's guest inspection feature and so does not
+work on guests that libguestfs cannot inspect, or on things like arbitrary
+disk images that don't contain guests.  To display a file from a disk image
+directly, use:
+
+ guestfish --ro -a диск.img -m /dev/sda1 download файл -
+
+where C<disk.img> is the disk image, C</dev/sda1> is the filesystem within
+the disk image, and C<file> is the full path to the file.
+
+=head1 ЕКРАНУВАННЯ СИМВОЛІВ У ОБОЛОНЦІ
+
+Libvirt guest names can contain arbitrary characters, some of which have
+meaning to the shell such as C<#> and space.  You may need to quote or
+escape these characters on the command line.  See the shell manual page
+L<sh(1)> for details.
+
+=head1 СТАН ВИХОДУ
+
+Ця програма повертає значення 0 у разі успішного завершення і ненульове
+значення, якщо сталася помилка.
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfs(3)>, L<guestfish(1)>, L<virt-copy-out(1)>, L<virt-edit(1)>,
+L<virt-tar-out(1)>, L<http://libguestfs.org/>.
+
+=head1 АВТОР
+
+Richard W.M. Jones L<http://people.redhat.com/~rjones/>
+
+=head1 АВТОРСЬКІ ПРАВА
+
+© Red Hat Inc., 2010–2012
+
+Ця програма є вільним програмним забезпеченням; ви можете поширювати та/або
+змінювати її за умов дотримання GNU General Public License  утому вигляді,
+що оприлюднений Free Software Foundation; версії 2 цієї Ліцензії, або (якщо
+забажаєте) будь-якої випущеної пізніше.
+
+Ця програма поширюється у сподіванні, що вона буде корисною, але БЕЗ
+БУДЬ-ЯКИХ ГАРАНТІЙНИХ ЗОБОВ’ЯЗАНЬ; навіть без очевидної гарантії
+ПРАЦЕЗДАТНОСТІ або ПРИДАТНОСТІ ДЛЯ ВИКОРИСТАННЯ З ПЕВНОЮ МЕТОЮ. Докладніше
+про це можна дізнатися з GNU General Public License.
+
+Ви маєте отримати копію GNU General Public License разом з цією програмою;
+якщо це не так, повідомте про факт за адресою Free Software Foundation,
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+

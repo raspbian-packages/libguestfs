@@ -1,0 +1,170 @@
+abc
+def
+[]
+false
+0
+0
+123
+456
+<61><62><63><00><61><62><63>
+obool: true
+oint: 1
+oint64: unset
+ostring: unset
+abc
+null
+[]
+false
+0
+0
+123
+456
+<61><62><63><00><61><62><63>
+obool: unset
+oint: unset
+oint64: 1
+ostring: string
+
+def
+[]
+false
+0
+0
+123
+456
+<61><62><63><00><61><62><63>
+obool: false
+oint: unset
+oint64: unset
+ostring: unset
+
+
+[]
+false
+0
+0
+123
+456
+<61><62><63><00><61><62><63>
+obool: unset
+oint: unset
+oint64: unset
+ostring: unset
+abc
+def
+["1"]
+false
+0
+0
+123
+456
+<61><62><63><00><61><62><63>
+obool: unset
+oint: unset
+oint64: unset
+ostring: unset
+abc
+def
+["1", "2"]
+false
+0
+0
+123
+456
+<61><62><63><00><61><62><63>
+obool: unset
+oint: unset
+oint64: unset
+ostring: unset
+abc
+def
+["1"]
+true
+0
+0
+123
+456
+<61><62><63><00><61><62><63>
+obool: unset
+oint: unset
+oint64: unset
+ostring: unset
+abc
+def
+["1"]
+false
+-1
+-1
+123
+456
+<61><62><63><00><61><62><63>
+obool: unset
+oint: unset
+oint64: unset
+ostring: unset
+abc
+def
+["1"]
+false
+-2
+-2
+123
+456
+<61><62><63><00><61><62><63>
+obool: unset
+oint: unset
+oint64: unset
+ostring: unset
+abc
+def
+["1"]
+false
+1
+1
+123
+456
+<61><62><63><00><61><62><63>
+obool: unset
+oint: unset
+oint64: unset
+ostring: unset
+abc
+def
+["1"]
+false
+2
+2
+123
+456
+<61><62><63><00><61><62><63>
+obool: unset
+oint: unset
+oint64: unset
+ostring: unset
+abc
+def
+["1"]
+false
+4095
+4095
+123
+456
+<61><62><63><00><61><62><63>
+obool: unset
+oint: unset
+oint64: unset
+ostring: unset
+abc
+def
+["1"]
+false
+0
+0
+
+
+<61><62><63><00><61><62><63>
+obool: unset
+oint: unset
+oint64: unset
+ostring: unset
+EOF

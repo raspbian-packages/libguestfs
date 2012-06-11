@@ -1,0 +1,66 @@
+=encoding utf8
+
+=head1 НАЗВА
+
+virt-copy-out - Copy files and directories out of a virtual machine disk
+image.
+
+=head1 КОРОТКИЙ ОПИС
+
+ virt-copy-out -a disk.img /file|dir [/file|dir ...] localdir
+
+ virt-copy-out -d domain /file|dir [/file|dir ...] localdir
+
+=head1 ОПИС
+
+C<virt-copy-out> copies files and directories out of a virtual machine disk
+image or named libvirt domain.
+
+You can give one of more filenames and directories on the command line.
+Directories are copied out recursively.
+
+=head1 ПРИКЛАДИ
+
+Download the home directories from a virtual machine:
+
+ mkdir homes
+ virt-copy-out -d MyGuest /home homes
+
+=head1 JUST A SHELL SCRIPT WRAPPER AROUND GUESTFISH
+
+This command is just a simple shell script wrapper around the
+L<guestfish(1)> C<copy-out> command.  For anything more complex than a
+trivial copy, you are probably better off using guestfish directly.
+
+=head1 ПАРАМЕТРИ
+
+Since the shell script just passes options straight to guestfish, read
+L<guestfish(1)> to see the full list of options.
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfish(1)>, L<virt-cat(1)>, L<virt-copy-in(1)>, L<virt-edit(1)>,
+L<virt-tar-in(1)>, L<virt-tar-out(1)>, L<http://libguestfs.org/>.
+
+=head1 АВТОРИ
+
+Richard W.M. Jones (C<rjones at redhat dot com>)
+
+=head1 АВТОРСЬКІ ПРАВА
+
+Copyright (C) 2011 Red Hat Inc.  L<http://libguestfs.org/>
+
+Ця програма є вільним програмним забезпеченням; ви можете поширювати та/або
+змінювати її за умов дотримання GNU General Public License  утому вигляді,
+що оприлюднений Free Software Foundation; версії 2 цієї Ліцензії, або (якщо
+забажаєте) будь-якої випущеної пізніше.
+
+Ця програма поширюється у сподіванні, що вона буде корисною, але БЕЗ
+БУДЬ-ЯКИХ ГАРАНТІЙНИХ ЗОБОВ’ЯЗАНЬ; навіть без очевидної гарантії
+ПРАЦЕЗДАТНОСТІ або ПРИДАТНОСТІ ДЛЯ ВИКОРИСТАННЯ З ПЕВНОЮ МЕТОЮ. Докладніше
+про це можна дізнатися з GNU General Public License.
+
+Ви маєте отримати копію GNU General Public License разом з цією програмою;
+якщо це не так, повідомте про факт за адресою Free Software Foundation,
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+

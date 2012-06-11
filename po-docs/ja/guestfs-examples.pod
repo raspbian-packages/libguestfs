@@ -1,0 +1,60 @@
+=encoding utf8
+
+=head1 名前
+
+guestfs-examples - C から libguestfs を使用する例
+
+=head1 書式
+
+#include <guestfs.h>
+ guestfs_h *g = guestfs_create ();
+ guestfs_add_drive_ro (g, "disk.img");
+ guestfs_launch (g);
+
+ cc prog.c -o prog -lguestfs
+or:
+ cc prog.c -o prog `pkg-config libguestfs --cflags --libs`
+
+=head1 説明
+
+このマニュアルページは C プログラミング言語から libguestfs を呼び出す例があります。 libguestfs
+を使用することに慣れていなければ、L<guestfs(3)> を読む必要もあります。
+
+=head1 例 1: ディスクイメージの作成
+
+@EXAMPLE1@
+
+=head1 例 2: 仮想マシンのディスクイメージの検査
+
+@EXAMPLE2@
+
+=head1 関連項目
+
+L<guestfs(3)>, L<guestfs-erlang(3)>, L<guestfs-java(3)>,
+L<guestfs-ocaml(3)>, L<guestfs-perl(3)>, L<guestfs-python(3)>,
+L<guestfs-recipes(1)>, L<guestfs-ruby(3)>, L<http://libguestfs.org/>.
+
+=head1 著者
+
+Richard W.M. Jones (C<rjones at redhat dot com>)
+
+=head1 COPYRIGHT
+
+Copyright (C) 2010 Red Hat Inc. L<http://libguestfs.org/>
+
+このマニュアルページにある例は、なんら制限なく自由にコピー、修正、配布できます。
+
+This library is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as published by the
+Free Software Foundation; either version 2 of the License, or (at your
+option) any later version.
+
+This library is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License
+for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with this library; if not, write to the Free Software Foundation,
+Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+

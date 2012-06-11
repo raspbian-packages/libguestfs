@@ -1,0 +1,66 @@
+#!/bin/bash -
+# @configure_input@
+# Copyright (C) 2009-2012 Red Hat Inc.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+unset CDPATH
+
+set -e
+
+# Turn excludelist file into command line arguments.
+exec 5<excludelist
+while read regexp <&5; do
+    excludes="$excludes --exclude $regexp"
+done
+exec 5<&-
+
+# Run febootstrap on the package list.
+if [ "x@FEBOOTSTRAP_YUM_CONFIG@" != "xno" ]; then
+    extra="--yum-config @FEBOOTSTRAP_YUM_CONFIG@"
+fi
+
+echo @FEBOOTSTRAP@ -v -o supermin.d --names $(< packagelist ) $excludes $extra
+@FEBOOTSTRAP@ -v -o supermin.d --names $(< packagelist ) $excludes $extra
+
+# Remove some things that we don't want in the appliance.  This is
+# copied from the old febootstrap-minimize.  However minimization is
+# not so important now that we are caching the appliance.
+< supermin.d/hostfiles \
+grep -v '^/usr/lib/locale' |
+grep -v '^/usr/share/locale' |
+grep -v '^/usr/lib/gconv' |
+grep -v '^/usr/lib64/gconv' |
+grep -v '^/usr/bin/localedef' |
+grep -v '^/usr/sbin/build-locale-archive' |
+grep -v '^/usr/share/man/' |
+grep -v '^/usr/share/doc/' |
+grep -v '^/usr/share/info/' |
+grep -v '^/usr/share/gnome/help/' |
+grep -v '^/usr/share/cracklib/' |
+grep -v '^/usr/share/i18n/' > supermin.d/hostfiles-t
+
+# XXX resolv.conf?  The old script had:
+# echo nameserver 169.254.2.3 > resolv.conf
+if ! grep -q /etc/resolv.conf supermin.d/hostfiles-t; then
+    echo /etc/resolv.conf >> supermin.d/hostfiles-t
+fi
+
+# Include any Augeas lenses from the host.
+if grep -q /usr/share/augeas/lenses supermin.d/hostfiles-t; then
+    echo "/usr/share/augeas/lenses/*.aug" >> supermin.d/hostfiles-t
+fi
+
+mv supermin.d/hostfiles-t supermin.d/hostfiles
