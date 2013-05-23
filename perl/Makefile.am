@@ -78,8 +78,7 @@ clean-local:
 	rm -f Makefile-pl
 
 install-data-hook:
-	$(MAKE) -C $(srcdir) -f $(abs_builddir)/Makefile-pl \
-		DESTDIR=$(DESTDIR) install
+	$(MAKE) -f Makefile-pl DESTDIR=$(DESTDIR) install
 
 endif
 
