@@ -59,9 +59,11 @@ all-local: Build
 
 clean-local: Build
 	./Build clean
+	test $(srcdir) != $(builddir) && find -type l | xargs rm -f
 
 Build: Build.PL
-	$(PERL) $(srcdir)/Build.PL --prefix "@prefix@"
+	test $(srcdir) != $(builddir) && cp -rsft $(builddir) $(abs_srcdir)/.
+	$(PERL) ./Build.PL --prefix "@prefix@"
 
 TESTS_ENVIRONMENT = $(top_builddir)/run --test
 
