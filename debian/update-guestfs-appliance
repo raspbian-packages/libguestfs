@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -e
+
+cd /usr/lib/guestfs
+umask 022
+./make.sh
