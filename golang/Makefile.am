@@ -44,6 +44,7 @@ golangpkg_DATA = \
 	pkg/$(GOOS)_$(GOARCH)/$(pkg).a
 
 pkg/$(GOOS)_$(GOARCH)/$(pkg).a: src/$(pkg)/guestfs.go
+	-[ $(srcdir) != $(builddir) ] && ln -s $(abs_srcdir)/src $(builddir)/src
 	$(top_builddir)/run $(GOLANG) install $(pkg)
 
 golangsrc_DATA = $(source_files)
@@ -57,4 +58,5 @@ endif
 CLEANFILES += src/$(pkg)/*~
 
 clean-local:
+	-[ $(srcdir) != $(builddir) ] && rm -f $(builddir)/src
 	rm -rf pkg
