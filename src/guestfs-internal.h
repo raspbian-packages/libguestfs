@@ -145,7 +145,9 @@
  * internally when using mach-virt).
  */
 #define MACHINE_TYPE "vexpress-a15"
+#ifdef __ARM_PCS_VFP /* do not use DTB for armel */
 #define DTB_WILDCARD "vexpress*a15-tc1.dtb"
+#endif
 #endif
 #ifdef __aarch64__
 #define MACHINE_TYPE "virt"
