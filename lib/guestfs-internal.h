@@ -118,6 +118,9 @@ cleanup_mutex_unlock (pthread_mutex_t **ptr)
 #endif
 #ifdef __arm__
 #define MACHINE_TYPE "virt"
+#ifdef __ARM_PCS_VFP /* do not use DTB for armel */
+#define DTB_WILDCARD "vexpress*a15-tc1.dtb"
+#endif
 #endif
 #ifdef __aarch64__
 #define MACHINE_TYPE "virt"
