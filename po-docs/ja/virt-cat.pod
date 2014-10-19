@@ -1,0 +1,260 @@
+
+=head1 名前
+
+virt-cat - 仮想マシンにあるファイルの表示
+
+=head1 書式
+
+ virt-cat [--options] -d domname file [file ...]
+
+ virt-cat [--options] -a disk.img [-a disk.img ...] file [file ...]
+
+古い形式:
+
+ virt-cat domname file
+
+ virt-cat disk.img file
+
+=head1 説明
+
+C<virt-cat> は C<file> の内容を表示するためにコマンドラインツールです。ここで C<file> は仮想マシン
+(またはディスクイメージ) の中に存在します。
+
+Multiple filenames can be given, in which case they are concatenated
+together.  Each filename must be a full path, starting at the root directory
+(starting with '/').
+
+C<virt-cat> can be used to quickly view a file.  To edit a file, use
+C<virt-edit>.  For more complex cases you should look at the L<guestfish(1)>
+tool (see L</USING GUESTFISH> below).
+
+=head1 例
+
+C<mydomain> という名前の libvirt 仮想マシンの中にある C</etc/fstab> を表示します:
+
+ virt-cat -d mydomain /etc/fstab
+
+どのパッケージが最新インストールされたかを見つけるには:
+
+ virt-cat -d mydomain /var/log/yum.log | tail
+
+どのユーザーが仮想マシンにログインしているかを見つけるには:
+
+ virt-cat -d mydomain /var/run/utmp > /tmp/utmp
+ who /tmp/utmp
+
+または、だれがログオンしたかを見つけるには:
+
+ virt-cat -d mydomain /var/log/wtmp > /tmp/wtmp
+ last -f /tmp/wtmp
+
+=head1 オプション
+
+=over 4
+
+=item B<--help>
+
+簡単なヘルプを表示します。
+
+=item B<-a> file
+
+=item B<--add> file
+
+Add I<file> which should be a disk image from a virtual machine.  If the
+virtual machine has multiple block devices, you must supply all of them with
+separate I<-a> options.
+
+ディスクイメージの形式は自動検知されます。 これを上書きして強制的に特定の形式を使用する場合、 I<--format=..> オプションを使用します。
+
+=item B<-a URI>
+
+=item B<--add URI>
+
+リモートディスクを追加します。 L<guestfish(1)/リモートストレージの追加> 参照。
+
+=item B<-c> URI
+
+=item B<--connect> URI
+
+libvirt を使用していると、指定された I<URI> に接続します。  省略すると、デフォルトの libvirt ハイパーバイザーに接続します。
+
+ゲストのブロックデバイスを直接指定していると（(I<-a>)）、libvirt は何も使用されません。
+
+=item B<-d> guest
+
+=item B<--domain> guest
+
+名前付きの libvirt 仮想マシンからすべてのディスクを追加します。  名前の代わりに仮想マシンの UUID を使用できます。
+
+=item B<--echo-keys>
+
+キーやパスフレーズを入力するとき、通常 virt-cat はエコーを無効化します。 そのため、入力内容を確認できません。 テンペスト攻撃の心配がなく、
+部屋に誰も居なければ、 入力内容を確認するためにこのフラグを指定できます。
+
+=item B<--format=raw|qcow2|..>
+
+=item B<--format>
+
+I<-a> オプションは標準状態でディスクイメージの形式を自動検知します。 これを使用することにより、コマンドラインで後続の I<-a>
+オプションのディスク形式を強制的に指定できます。 引数なしで I<--format> を使用することにより、 後続の I<-a>
+オプションに対して自動検知に戻せます。
+
+例:
+
+ virt-cat --format=raw -a disk.img file
+
+強制的に C<disk.img> を raw 形式にします (自動検出しません)。
+
+ virt-cat --format=raw -a disk.img --format -a another.img file
+
+強制的に C<disk.img> を raw 形式にし (自動検知なし)、 C<another.img> に対して自動検知に戻します。
+
+仮想マシンのディスクイメージが信頼できない raw 形式である場合、 ディスク形式を指定するためにこのオプションを使用すべきです。
+これにより、悪意のある仮想マシンにより起こり得る セキュリティ問題を回避できます (CVE-2010-3851)。
+
+=item B<--keys-from-stdin>
+
+標準入力からキーまたはパスフレーズのパラメーターを読み込みます。 標準で C</dev/tty> を開いているユーザーから読み込もうとします。
+
+=item B<-m dev[:mountpoint[:options[:fstype]]]>
+
+=item B<--mount dev[:mountpoint[:options[:fstype]]]>
+
+指定されたマウントポイントにある、 名前付きパーティションまたは論理ボリュームをマウントします。
+
+マウントポイントが省略された場合、標準で C</> になります。
+
+Specifying any mountpoint disables the inspection of the guest and the mount
+of its root and all of its mountpoints, so make sure to mount all the
+mountpoints needed to work with the filenames given as arguments.
+
+仮想マシンのディスクイメージに含まれるファイルシステムが不明な場合、 guestfish をこのオプションなしで実行することもできます。
+そうすると、利用可能なパーティション、ファイルシステム、 論理ボリューム (LVM) の一覧が表示されます (L</list-partitions>,
+L</list-filesystems>, L</lvs> コマンド参照)。 または、 L<virt-filesystems(1)>
+コマンドを使用することもできます。
+
+マウントパラメーターの三番目の (ほとんど使用されない) 項目は、 バックエンドのファイルシステムをマウントするために使用される
+マウントオプションの一覧です。 これが指定されていない場合、 マウントオプションは空文字列または C<ro> (I<--ro>
+フラグが使用されている場合) になります。
+
+ -m /dev/sda1:/:acl,user_xattr
+
+このフラグを使用することは、 C<mount-options> コマンドを使用することと同等です。
+
+パラメーターの四番目の項目は使用するファイルシステムドライバー (C<ext3> や C<ntfs> など) です。 これはほとんど必要ありません。
+しかし、複数のドライバーがファイルシステムに対して有効である場合 (例: C<ext2> と C<ext3>)、 または libguestfs
+がファイルシステムを誤検知している場合、 これは有用です。
+
+=item B<-v>
+
+=item B<--verbose>
+
+デバッグ用の冗長なメッセージを有効にします。
+
+=item B<-V>
+
+=item B<--version>
+
+バージョン番号を表示して、終了します。
+
+=item B<-x>
+
+libguestfs API 呼び出しのトレースを有効にします。
+
+=back
+
+=head1 旧形式のコマンドライン引数
+
+以前のバージョンの virt-cat はどちらの書き込みもできます:
+
+ virt-cat disk.img [disk.img ...] file
+
+または
+
+ virt-cat guestname file
+
+whereas in this version you should use I<-a> or I<-d> respectively to avoid
+the confusing case where a disk image might have the same name as a guest.
+
+互換性のため古い形式がまだサポートされています。
+
+=head1 LOG FILES
+
+To list out the log files from guests, see the related tool L<virt-log(1)>.
+It understands binary log formats such as the systemd journal.
+
+=head1 Windows のパス
+
+C<virt-cat> は Windows のドライブレターとパスの解釈能力に制限があります（例: C<E:\foo\bar.txt>）。
+
+仮想マシンが Windows を実行している場合に限り:
+
+=over 4
+
+=item *
+
+Drive letter prefixes like C<C:> are resolved against the Windows Registry
+to the correct filesystem.
+
+=item *
+
+Any backslash (C<\>) characters in the path are replaced with forward
+slashes so that libguestfs can process it.
+
+=item *
+
+The path is resolved case insensitively to locate the file that should be
+displayed.
+
+=back
+
+There are some known shortcomings:
+
+=over 4
+
+=item *
+
+Some NTFS symbolic links may not be followed correctly.
+
+=item *
+
+NTFS junction points that cross filesystems are not followed.
+
+=back
+
+=head1 guestfish の使用法
+
+L<guestfish(1)> は C<virt-cat> がうまく機能しないときに使用できる、より強力な、より低レベルなツールです。
+
+C<virt-cat> を使用することは、次のこととほぼ同等です:
+
+ guestfish --ro -i -d domname download file -
+
+ここで C<domname> は libvirt 仮想マシンの名前です。また、C<file> はファイルの完全パスです。最後の C<->
+("標準出力に出力" を意味します) に注意してください。
+
+上のコマンドは libguestfs の仮想マシン検査機能を使用します。そのため、libguestfs
+が検査できない仮想マシンにおいて、または仮想マシンを含んでいない任意のディスクイメージのようなものにおいて、うまく動作しません。ディスクイメージから直接ファイルを表示するには、次を使用します:
+
+ guestfish --ro -a disk.img -m /dev/sda1 download file -
+
+ここで、C<disk.img> はディスクイメージ、C</dev/sda1> はディスクイメージにあるファイルシステム、そして C<file>
+はファイルの完全パスです。
+
+=head1 終了ステータス
+
+このプログラムは、成功すると 0 を、エラーがあると 0 以外を返します。
+
+=head1 関連項目
+
+L<guestfs(3)>, L<guestfish(1)>, L<virt-copy-out(1)>, L<virt-edit(1)>,
+L<virt-log(1)>, L<virt-tar-out(1)>, L<http://libguestfs.org/>.
+
+=head1 著者
+
+Richard W.M. Jones L<http://people.redhat.com/~rjones/>
+
+=head1 COPYRIGHT
+
+Copyright (C) 2010-2012 Red Hat Inc.
+

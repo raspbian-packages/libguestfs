@@ -1,0 +1,256 @@
+
+=head1 名前
+
+virt-df - 仮想ファイルシステムの使用状況の表示
+
+=head1 書式
+
+すべての仮想マシン:
+
+ virt-df [--options]
+
+単一の仮想マシン:
+
+ virt-df [--options] -d domname
+
+ virt-df [--options] -a disk.img [-a disk.img ...]
+
+古い形式:
+
+ virt-df [--options] domname
+
+ virt-df [--options] disk.img [disk.img ...]
+
+=head1 説明
+
+C<virt-df> is a command line tool to display free space on virtual machine
+filesystems.  Unlike other tools, it doesn't just display the size of disk
+allocated to a virtual machine, but can look inside disk images to see how
+much space is really being used.
+
+If used without any I<-a> or I<-d> arguments, C<virt-df> checks with libvirt
+to get a list of all active and inactive guests, and performs a C<df>-type
+operation on each one in turn, printing out the results.
+
+If any I<-a> or I<-d> arguments are specified, C<virt-df> performs a
+C<df>-type operation on either the single named libvirt domain, or on the
+disk image(s) listed on the command line (which must all belong to a single
+VM).  B<In this mode (with arguments), C<virt-df> will only work for a
+single guest>.  If you want to run on multiple guests, then you have to
+invoke C<virt-df> multiple times.
+
+Use the I<--csv> option to get a format which can be easily parsed by other
+programs.  Other options are similar to the standard L<df(1)> command.
+
+=head1 例
+
+Show disk usage for a single libvirt guest called C<F14x64>.  Make the
+output human-readable:
+
+ # virt-df -d F14x64 -h
+ Filesystem                       Size     Used  Available  Use%
+ F14x64:/dev/sda1                 484M      66M       393M   14%
+ F14x64:/dev/vg_f13x64/lv_root    7.4G     3.4G       4.0G   46%
+
+C<test.img> というディスクイメージファイルのディスク使用量を表示します:
+
+ $ virt-df -a test1.img
+ Filesystem                  1K-blocks     Used  Available  Use%
+ test1.img:/dev/sda1             99099     1551      92432    2%
+
+If a single guest has multiple disks, use the I<-a> option repeatedly.  A
+plus sign (C<+>) is displayed for each additional disk.  B<Note: Do not do
+this with unrelated guest disks.>
+
+ $ virt-df -a Win7x32TwoDisks-a -a Win7x32TwoDisks-b 
+ Filesystem                   1K-blocks    Used  Available  Use%
+ Win7x32TwoDisks-a+:/dev/sda1    102396   24712      77684   25%
+ Win7x32TwoDisks-a+:/dev/sda2  12478460 7403416    5075044   60%
+ Win7x32TwoDisks-a+:/dev/sdb1    521212   55728     465484   11%
+
+=head1 オプション
+
+=over 4
+
+=item B<--help>
+
+簡単なヘルプを表示します。
+
+=item B<-a> file
+
+=item B<--add> file
+
+Add I<file> which should be a disk image from a virtual machine.  If the
+virtual machine has multiple block devices, you must supply all of them with
+separate I<-a> options.
+
+ディスクイメージの形式は自動検知されます。 これを上書きして強制的に特定の形式を使用する場合、 I<--format=..> オプションを使用します。
+
+=item B<-a URI>
+
+=item B<--add URI>
+
+リモートディスクを追加します。 L<guestfish(1)/リモートストレージの追加> 参照。
+
+=item B<-c> URI
+
+=item B<--connect> URI
+
+libvirt を使用していると、指定された I<URI> に接続します。  省略すると、デフォルトの libvirt ハイパーバイザーに接続します。
+
+ゲストのブロックデバイスを直接指定していると（(I<-a>)）、libvirt は何も使用されません。
+
+=item B<--csv>
+
+Write out the results in CSV format (comma-separated values).  This format
+can be imported easily into databases and spreadsheets, but read L</NOTE
+ABOUT CSV FORMAT> below.
+
+=item B<-d> guest
+
+=item B<--domain> guest
+
+名前付きの libvirt 仮想マシンからすべてのディスクを追加します。  名前の代わりに仮想マシンの UUID を使用できます。
+
+=item B<--format=raw|qcow2|..>
+
+=item B<--format>
+
+I<-a> オプションは標準状態でディスクイメージの形式を自動検知します。 これを使用することにより、コマンドラインで後続の I<-a>
+オプションのディスク形式を強制的に指定できます。 引数なしで I<--format> を使用することにより、 後続の I<-a>
+オプションに対して自動検知に戻せます。
+
+例:
+
+ virt-df --format=raw -a disk.img
+
+強制的に C<disk.img> を raw 形式にします (自動検出しません)。
+
+ virt-df --format=raw -a disk.img --format -a another.img
+
+強制的に C<disk.img> を raw 形式にし (自動検知なし)、 C<another.img> に対して自動検知に戻します。
+
+仮想マシンのディスクイメージが信頼できない raw 形式である場合、 ディスク形式を指定するためにこのオプションを使用すべきです。
+これにより、悪意のある仮想マシンにより起こり得る セキュリティ問題を回避できます (CVE-2010-3851)。
+
+=item B<-h>
+
+=item B<--human-readable>
+
+読みやすい形式で容量を表示します。
+
+I<-h> と I<--csv> を同時に使用することはできません。
+
+=item B<-i>
+
+=item B<--inodes>
+
+ブロックの代わりに inode を表示します。
+
+=item B<--one-per-guest>
+
+Since libguestfs 1.22, this is the default.  This option does nothing and is
+left here for backwards compatibility with older scripts.
+
+=item B<-P> nr_threads
+
+Since libguestfs 1.22, virt-df is multithreaded and examines guests in
+parallel.  By default the number of threads to use is chosen based on the
+amount of free memory available at the time that virt-df is started.  You
+can force virt-df to use at most C<nr_threads> by using the I<-P> option.
+
+Note that I<-P 0> means to autodetect, and I<-P 1> means to use a single
+thread.
+
+=item B<--uuid>
+
+名前の代わりに UUID を表示します。仮想マシンがマイグレーションまたは名前変更されたとき、または偶然 2
+つの仮想マシンが同じ名前を持つとき、仮想マシンに使用させるために有用です。
+
+Note that only domains that we fetch from libvirt come with UUIDs.  For disk
+images, we still print the disk image name even when this option is
+specified.
+
+=item B<-v>
+
+=item B<--verbose>
+
+デバッグ用の冗長なメッセージを有効にします。
+
+=item B<-V>
+
+=item B<--version>
+
+バージョン番号を表示して、終了します。
+
+=item B<-x>
+
+libguestfs API 呼び出しのトレースを有効にします。
+
+=back
+
+=head1 STATVFS NUMBERS
+
+C<virt-df> (and L<df(1)>) get information by issuing a L<statvfs(3)> system
+call.  You can get the same information directly, either from the host
+(using libguestfs) or inside the guest:
+
+=over 4
+
+=item ホストから
+
+このコマンドを実行してください:
+
+ guestfish --ro -d GuestName -i statvfs /
+
+(他のファイルシステムの統計情報を参照するには C</> に変更します)。
+
+=item 仮想マシンの中から
+
+このコマンドを実行してください:
+
+ python -c 'import os; s = os.statvfs ("/"); print s'
+
+(他のファイルシステムの統計情報を参照するには C</> に変更します)。
+
+=back
+
+=head1 CSV 形式に関する注意
+
+Comma-separated values (CSV) is a deceptive format.  It I<seems> like it
+should be easy to parse, but it is definitely not easy to parse.
+
+神話: ただコンマで項目を区切る。 真実: これは正しく動き I<ません>。この例は 2 つの列があります:
+
+ "foo,bar",baz
+
+神話: 同時にファイルの 1 行を読み込みます。 真実: これは正しく動き I<ません>。この例は 1 つの行があります:
+
+ "foo
+ bar",baz
+
+For shell scripts, use C<csvtool> (L<http://merjis.com/developers/csv> also
+packaged in major Linux distributions).
+
+For other languages, use a CSV processing library (eg. C<Text::CSV> for Perl
+or Python's built-in csv library).
+
+Most spreadsheets and databases can import CSV directly.
+
+=head1 終了ステータス
+
+このプログラムは、成功すると 0 を、エラーがあると 0 以外を返します。
+
+=head1 関連項目
+
+L<df(1)>, L<guestfs(3)>, L<guestfish(1)>, L<virt-filesystems(1)>,
+L<http://libguestfs.org/>.
+
+=head1 著者
+
+Richard W.M. Jones L<http://people.redhat.com/~rjones/>
+
+=head1 COPYRIGHT
+
+Copyright (C) 2009-2014 Red Hat Inc.
+

@@ -1,0 +1,341 @@
+
+=head2 B<abrt-data> *
+
+ABRT により生成されたクラッシュデータを削除します。
+
+C</var/spool/abrt/> に自動的に生成された ABRT クラッシュデータを削除します。
+
+=head2 B<bash-history> *
+
+仮想マシンにおいて bash 履歴を削除します。
+
+ユーザー "root" および他のあらゆるユーザーのホームディレクトリーに C<.bash_history> ファイルを持つユーザーの bash
+履歴を削除します。
+
+=head3 Notes on bash-history
+
+Currently this only looks in C</root> and C</home/*> for home directories,
+so users with home directories in other locations won't have the bash
+history removed.
+
+=head2 B<blkid-tab> *
+
+ゲストにある blkid テーブルを削除します。
+
+=head2 B<ca-certificates>
+
+仮想マシンにおいて CA 証明書を削除します。
+
+=head2 B<crash-data> *
+
+kexec-tools により生成されたクラッシュデータを削除します。
+
+自動的に生成された kdump カーネルクラッシュデータを削除します。
+
+=head2 B<cron-spool> *
+
+ユーザーの at ジョブおよび cron ジョブを削除します。
+
+=head2 B<customize> *
+
+Customize the guest.
+
+Customize the guest by providing L<virt-customize(1)> options for installing
+packages, editing files and so on.
+
+=head2 B<dhcp-client-state> *
+
+DHCP クライアントのリースを削除します。
+
+=head2 B<dhcp-server-state> *
+
+DHCP サーバーのリースを削除します。
+
+=head2 B<dovecot-data> *
+
+Dovecot (メールサーバー) のデータを削除します。
+
+=head2 B<firewall-rules>
+
+ファイアウォールルールを削除します。
+
+This removes custom firewall rules by removing C</etc/sysconfig/iptables> or
+custom firewalld configuration in C</etc/firewalld/*/*>.
+
+Note this is I<not> enabled by default since it may expose guests to
+exploits.  Use with care.
+
+=head2 B<flag-reconfiguration>
+
+Flag the system for reconfiguration.
+
+For Linux guests, this touches C</.unconfigured>, which causes the first
+boot to interactively query the user for settings such as the root password
+and timezone.
+
+=head2 B<fs-uuids>
+
+Change filesystem UUIDs.
+
+On guests and filesystem types where this is supported, new random UUIDs are
+generated and assigned to filesystems.
+
+=head3 Notes on fs-uuids
+
+The fs-uuids operation is disabled by default because it does not yet find
+and update all the places in the guest that use the UUIDs.  For example
+C</etc/fstab> or the bootloader.  Enabling this operation is more likely
+than not to make your guest unbootable.
+
+参照: L<https://bugzilla.redhat.com/show_bug.cgi?id=991641>
+
+=head2 B<kerberos-data>
+
+仮想マシンにおいて Kerberos のデータを削除します。
+
+=head2 B<logfiles> *
+
+仮想マシンから多くのログファイルを削除します。
+
+Linux においては以下のファイルが削除されます:
+
+ /etc/Pegasus/*.cnf
+ /etc/Pegasus/*.crt
+ /etc/Pegasus/*.csr
+ /etc/Pegasus/*.pem
+ /etc/Pegasus/*.srl
+ /root/anaconda-ks.cfg
+ /root/anaconda-post.log
+ /root/initial-setup-ks.cfg
+ /root/install.log
+ /root/install.log.syslog
+ /var/cache/fontconfig/*
+ /var/cache/gdm/*
+ /var/cache/man/*
+ /var/lib/AccountService/users/*
+ /var/lib/fprint/*
+ /var/lib/logrotate.status
+ /var/log/*.log*
+ /var/log/BackupPC/LOG
+ /var/log/ConsoleKit/*
+ /var/log/anaconda.syslog
+ /var/log/anaconda/*
+ /var/log/apache2/*_log
+ /var/log/apache2/*_log-*
+ /var/log/apt/*
+ /var/log/aptitude*
+ /var/log/audit/*
+ /var/log/btmp*
+ /var/log/ceph/*.log
+ /var/log/chrony/*.log
+ /var/log/cron*
+ /var/log/cups/*_log*
+ /var/log/debug*
+ /var/log/dmesg*
+ /var/log/exim4/*
+ /var/log/faillog*
+ /var/log/firewalld*
+ /var/log/gdm/*
+ /var/log/glusterfs/*glusterd.vol.log
+ /var/log/glusterfs/glusterfs.log
+ /var/log/grubby*
+ /var/log/httpd/*log
+ /var/log/installer/*
+ /var/log/jetty/jetty-console.log
+ /var/log/journal/*
+ /var/log/lastlog*
+ /var/log/libvirt/libvirtd.log
+ /var/log/libvirt/libxl/*.log
+ /var/log/libvirt/lxc/*.log
+ /var/log/libvirt/qemu/*.log
+ /var/log/libvirt/uml/*.log
+ /var/log/lightdm/*
+ /var/log/mail/*
+ /var/log/maillog*
+ /var/log/messages*
+ /var/log/ntp
+ /var/log/ntpstats/*
+ /var/log/ppp/connect-errors
+ /var/log/rhsm/*
+ /var/log/sa/*
+ /var/log/secure*
+ /var/log/setroubleshoot/*.log
+ /var/log/spooler*
+ /var/log/squid/*.log
+ /var/log/syslog*
+ /var/log/tallylog*
+ /var/log/tuned/tuned.log
+ /var/log/wtmp*
+ /var/log/xferlog*
+ /var/named/data/named.run
+
+=head2 B<lvm-uuids> *
+
+LVM2 の PV および VG の UUID を変更します。
+
+LVM2 物理ボリューム (PV) またはボリュームグループ (VG) を持つ Linux 仮想マシンにおいて、新しいランダムな UUID
+が生成され、これらの PV や VG に割り当てられます。
+
+=head2 B<machine-id> *
+
+ローカルマシン ID を削除します。
+
+The machine ID is usually generated from a random source during system
+installation and stays constant for all subsequent boots.  Optionally, for
+stateless systems it is generated during runtime at boot if it is found to
+be empty.
+
+=head2 B<mail-spool> *
+
+ローカルのメールスプールのディレクトリから電子メールを削除します。
+
+=head2 B<net-hostname> *
+
+ネットワークインターフェース設定にある HOSTNAME を削除します。
+
+Fedora および Red Hat Enterprise Linux に対して、これは C<ifcfg-*> ファイルから削除されます。
+
+=head2 B<net-hwaddr> *
+
+HWADDR (ハードコードされた MAC アドレス) 設定を削除します。
+
+Fedora および Red Hat Enterprise Linux に対して、これは C<ifcfg-*> ファイルから削除されます。
+
+=head2 B<pacct-log> *
+
+プロセス・アカウンティングのログファイルを削除します。
+
+プロセス・アカウンティングが有効になっていると、システム全体のプロセス・アカウンティングが pacct ログファイルに保存されます。
+
+=head2 B<package-manager-cache> *
+
+パッケージマネージャーのキャッシュを削除します。
+
+=head2 B<pam-data> *
+
+ゲストにある PAM データを削除します。
+
+=head2 B<puppet-data-log> *
+
+Puppet のデータおよびログファイルを削除します。
+
+=head2 B<rh-subscription-manager> *
+
+Remove the RH subscription manager files.
+
+=head2 B<rhn-systemid> *
+
+RHN システム ID を削除します。
+
+=head2 B<rpm-db> *
+
+Remove host-specific RPM database files.
+
+Remove host-specific RPM database files and locks.  RPM will recreate these
+files automatically if needed.
+
+=head2 B<samba-db-log> *
+
+Samba のデータベースおよびログファイルを削除します。
+
+=head2 B<script> *
+
+仮想マシンに対して任意のスクリプトを実行します。
+
+The C<script> module lets you run arbitrary shell scripts or programs
+against the guest.
+
+Note this feature requires FUSE support.  You may have to enable this in
+your host, for example by adding the current user to the C<fuse> group, or
+by loading a kernel module.
+
+Use one or more I<--script> parameters to specify scripts or programs that
+will be run against the guest.
+
+The script or program is run with its current directory being the guest's
+root directory, so relative paths should be used.  For example: C<rm
+etc/resolv.conf> in the script would remove a Linux guest's DNS
+configuration file, but C<rm /etc/resolv.conf> would (try to) remove the
+host's file.
+
+Normally a temporary mount point for the guest is used, but you can choose a
+specific one by using the I<--scriptdir> parameter.
+
+B<Note:> This is different from I<--firstboot> scripts (which run in the
+context of the guest when it is booting first time).  I<--script> scripts
+run on the host, not in the guest.
+
+=head2 B<smolt-uuid> *
+
+Smolt ハードウェア UUID を削除します。
+
+=head2 B<ssh-hostkeys> *
+
+仮想マシンの SSH ホストキーを削除します。
+
+仮想マシンの次回起動時に（異なる） SSH ホストキーが再生成されます。
+
+クローン後、仮想マシンが同じ IP アドレスを取得すると、ホストキーが変更されたという警告が ssh により表示されます:
+
+ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ @    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+
+=head2 B<ssh-userdir> *
+
+仮想マシンにある ".ssh" ディレクトリーを削除します。
+
+ユーザー "root" 、およびホームディレクトリーに C<.ssh> ディレクトリーがある他のすべてのユーザーの、C<.ssh>
+ディレクトリーを削除します。
+
+=head3 Notes on ssh-userdir
+
+Currently this only looks in C</root> and C</home/*> for home directories,
+so users with home directories in other locations won't have the ssh files
+removed.
+
+=head2 B<sssd-db-log> *
+
+SSSD のデータベースとログファイルを削除します。
+
+=head2 B<tmp-files> *
+
+一時ファイルを削除します。
+
+これは C</tmp> と C</var/tmp> の中にある一時ファイルを削除します。
+
+=head2 B<udev-persistent-net> *
+
+udev persistent net ルールを削除します。
+
+Remove udev persistent net rules which map the guest's existing MAC address
+to a fixed ethernet device (eg. eth0).
+
+仮想マシンをクローンした後、通常 MAC アドレスは変わります。古い MAC アドレスは古い名前（たとえば eth0）を占有するため、このことは新しい
+MAC アドレスが新しい名前（たとえば eth1）に割り当てられることを意味します。それは、一般的に好ましくありません。 udev の永続的な net
+ルールを削除することにより、これを避けます。
+
+=head2 B<user-account>
+
+仮想マシンにあるユーザーアカウントを削除します。
+
+By default remove all the user accounts and their home directories.  The
+"root" account is not removed.
+
+See the I<--remove-user-accounts> parameter for a way to specify how to
+remove only some users, or to not remove some others.
+
+=head2 B<utmp> *
+
+utmp ファイルを削除します。
+
+このファイルは現在マシンにログインしているユーザーを記録します。最近の Linux
+ディストリビューションは、メモリーに保存するため、仮想マシンのディスクにありません。しかし、古いディストリビューションは、ディスクに保存していました。
+
+=head2 B<yum-uuid> *
+
+yum UUID を削除します。
+
+yum は元々の UUID が削除されたことを通知するとき、次の実行時に新しい UUID を作成します。
+

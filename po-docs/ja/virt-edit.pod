@@ -1,0 +1,369 @@
+
+=head1 名前
+
+virt-edit - 仮想マシンのファイルの編集
+
+=head1 書式
+
+ virt-edit [--options] -d domname file [file ...]
+
+ virt-edit [--options] -a disk.img [-a disk.img ...] file [file ...]
+
+ virt-edit [-d domname|-a disk.img] file -e 'expr'
+
+古い形式:
+
+ virt-edit domname file
+
+ virt-edit disk.img [disk.img ...] file
+
+=head1 警告
+
+動作中の仮想マシンにおいて  C<virt-edit> を使用 I<しない>
+でください。これをすると、仮想マシンにおいてディスク破損を引き起こすリスクがあります。 C<virt-edit>
+はこれを止めようとしますが、すべての場合を止められるわけではありません。
+
+=head1 説明
+
+C<virt-edit> は名前付きの仮想マシン（またはディスクイメージ）にある、それぞれの C<ファイル> を編集するためのコマンドラインツールです。
+
+複数のファイル名を指定できます。その場合、それぞれ順番に編集されます。各ファイル名はルートディレクトリーから始まる（つまり '/'
+から始まる）完全パスである必要があります。
+
+単にファイルを表示したいだけならば、 L<virt-cat(1)> を使用してください。
+
+より複雑な場合に対しては L<guestfish(1)> ツールを参照してください（以下の L</guestfish の使用法> 参照）。
+
+C<virt-edit> は新しいファイルを作成するために使用できません。 L<guestfish(1)> はこのことやさらにいろいろなことができます。
+
+=head1 例
+
+名前付きのファイルを対話的に編集します:
+
+ virt-edit -d mydomain /boot/grub/grub.conf
+
+ virt-edit -d mydomain /etc/passwd
+
+Windows 仮想マシンに対しては、Windows のパスが解釈されます:
+
+ virt-edit -d mywindomain 'c:\autoexec.bat'
+
+Perl がインストールされていると、非対話的にファイルを編集することもできます（以下の L</非対話的な編集方法> 参照）。 init
+の初期ランベルを 5 に変更するには:
+
+ virt-edit -d mydomain /etc/inittab -e 's/^id:.*/id:5:initdefault:/'
+
+=head1 オプション
+
+=over 4
+
+=item B<--help>
+
+簡単なヘルプを表示します。
+
+=item B<-a> file
+
+=item B<--add> file
+
+Add I<file> which should be a disk image from a virtual machine.  If the
+virtual machine has multiple block devices, you must supply all of them with
+separate I<-a> options.
+
+ディスクイメージの形式は自動検知されます。 これを上書きして強制的に特定の形式を使用する場合、 I<--format=..> オプションを使用します。
+
+=item B<-a URI>
+
+=item B<--add URI>
+
+リモートディスクを追加します。 L<guestfish(1)/リモートストレージの追加> 参照。
+
+=item B<-b> extension
+
+=item B<--backup> extension
+
+I<仮想マシンのディスクイメージにある> 元のファイルのバックアップを作成します。バックアップは元のファイル名に C<extension>
+を加えたものになります。
+
+一般的に C<extension> の最初の文字はドット C<.> です。そのため次のように書きます:
+
+ virt-edit -b .orig [etc]
+
+初期設定では、バックアップファイルは作成されません。
+
+=item B<-c URI>
+
+=item B<--connect URI>
+
+libvirt を使用していると、指定された I<URI> に接続します。  省略すると、デフォルトの libvirt ハイパーバイザーに接続します。
+
+仮想マシンのブロックデバイスを直接指定すると、libvirt はまったく使用されません。
+
+=item B<-d> guest
+
+=item B<--domain> guest
+
+名前付きの libvirt 仮想マシンからすべてのディスクを追加します。  名前の代わりに仮想マシンの UUID を使用できます。
+
+=item B<--echo-keys>
+
+キーやパスフレーズを入力するとき、通常 virt-edit はエコーを無効化します。 そのため、入力内容を確認できません。 テンペスト攻撃の心配がなく、
+部屋に誰も居なければ、 入力内容を確認するためにこのフラグを指定できます。
+
+=item B<-e> EXPR
+
+=item B<--edit> EXPR
+
+=item B<--expr> EXPR
+
+外部エディターを起動する代わりに、ファイルにある各行に対して非対話的に Perl 表現 C<EXPR> を適用します。以下の L</非対話的な編集方法>
+を参照してください。
+
+表現がシェルにより変更されるのを防ぐために、適切に引用符でくくるよう注意してください。
+
+このオプションは Perl 5 がインストールされているときのみ利用可能であることに注意してください。
+
+=item B<--format=raw|qcow2|..>
+
+=item B<--format>
+
+I<-a> オプションは標準状態でディスクイメージの形式を自動検知します。 これを使用することにより、コマンドラインで後続の I<-a>
+オプションのディスク形式を強制的に指定できます。 引数なしで I<--format> を使用することにより、 後続の I<-a>
+オプションに対して自動検知に戻せます。
+
+例:
+
+ virt-edit --format=raw -a disk.img file
+
+強制的に C<disk.img> を raw 形式にします (自動検出しません)。
+
+ virt-edit --format=raw -a disk.img --format -a another.img file
+
+強制的に C<disk.img> を raw 形式にし (自動検知なし)、 C<another.img> に対して自動検知に戻します。
+
+仮想マシンのディスクイメージが信頼できない raw 形式である場合、 ディスク形式を指定するためにこのオプションを使用すべきです。
+これにより、悪意のある仮想マシンにより起こり得る セキュリティ問題を回避できます (CVE-2010-3851)。
+
+=item B<--keys-from-stdin>
+
+標準入力からキーまたはパスフレーズのパラメーターを読み込みます。 標準で C</dev/tty> を開いているユーザーから読み込もうとします。
+
+=item B<-m dev[:mountpoint[:options[:fstype]]]>
+
+=item B<--mount dev[:mountpoint[:options[:fstype]]]>
+
+指定されたマウントポイントにある、 名前付きパーティションまたは論理ボリュームをマウントします。
+
+マウントポイントが省略された場合、標準で C</> になります。
+
+Specifying any mountpoint disables the inspection of the guest and the mount
+of its root and all of its mountpoints, so make sure to mount all the
+mountpoints needed to work with the filenames given as arguments.
+
+仮想マシンのディスクイメージに含まれるファイルシステムが不明な場合、 guestfish をこのオプションなしで実行することもできます。
+そうすると、利用可能なパーティション、ファイルシステム、 論理ボリューム (LVM) の一覧が表示されます (L</list-partitions>,
+L</list-filesystems>, L</lvs> コマンド参照)。 または、 L<virt-filesystems(1)>
+コマンドを使用することもできます。
+
+マウントパラメーターの三番目の (ほとんど使用されない) 項目は、 バックエンドのファイルシステムをマウントするために使用される
+マウントオプションの一覧です。 これが指定されていない場合、 マウントオプションは空文字列または C<ro> (I<--ro>
+フラグが使用されている場合) になります。
+
+ -m /dev/sda1:/:acl,user_xattr
+
+このフラグを使用することは、 C<mount-options> コマンドを使用することと同等です。
+
+パラメーターの四番目の項目は使用するファイルシステムドライバー (C<ext3> や C<ntfs> など) です。 これはほとんど必要ありません。
+しかし、複数のドライバーがファイルシステムに対して有効である場合 (例: C<ext2> と C<ext3>)、 または libguestfs
+がファイルシステムを誤検知している場合、 これは有用です。
+
+=item B<-v>
+
+=item B<--verbose>
+
+デバッグ用の冗長なメッセージを有効にします。
+
+=item B<-V>
+
+=item B<--version>
+
+バージョン番号を表示して、終了します。
+
+=item B<-x>
+
+libguestfs API 呼び出しのトレースを有効にします。
+
+=back
+
+=head1 旧形式のコマンドライン引数
+
+前のバージョンの virt-edit はどちらを書くこともできます:
+
+ virt-edit disk.img [disk.img ...] file
+
+または
+
+ virt-edit guestname file
+
+whereas in this version you should use I<-a> or I<-d> respectively to avoid
+the confusing case where a disk image might have the same name as a guest.
+
+互換性のため古い形式がまだサポートされています。
+
+=head1 非対話的な編集方法
+
+C<virt-edit> normally calls out to C<$EDITOR> (or vi) so the system
+administrator can interactively edit the file.
+
+There are two ways also to use C<virt-edit> from scripts in order to make
+automated edits to files.  (Note that although you I<can> use C<virt-edit>
+like this, it's less error-prone to write scripts directly using the
+libguestfs API and Augeas for configuration file editing.)
+
+The first method is to temporarily set C<$EDITOR> to any script or program
+you want to run.  The script is invoked as C<$EDITOR tmpfile> and it should
+update C<tmpfile> in place however it likes.
+
+The second method is to use the I<-e> parameter of C<virt-edit> to run a
+short Perl snippet in the style of L<sed(1)>.  For example to replace all
+instances of C<foo> with C<bar> in a file:
+
+ virt-edit -d domname filename -e 's/foo/bar/'
+
+The full power of Perl regular expressions can be used (see L<perlre(1)>).
+For example to delete root's password you could do:
+
+ virt-edit -d domname /etc/passwd -e 's/^root:.*?:/root::/'
+
+What really happens is that the snippet is evaluated as a Perl expression
+for each line of the file.  The line, including the final C<\n>, is passed
+in C<$_> and the expression should update C<$_> or leave it unchanged.
+
+To delete a line, set C<$_> to the empty string.  For example, to delete the
+C<apache> user account from the password file you can do:
+
+ virt-edit -d mydomain /etc/passwd -e '$_ = "" if /^apache:/'
+
+To insert a line, prepend or append it to C<$_>.  However appending lines to
+the end of the file is rather difficult this way since there is no concept
+of "last line of the file" - your expression just doesn't get called again.
+You might want to use the first method (setting C<$EDITOR>) if you want to
+do this.
+
+The variable C<$lineno> contains the current line number.  As is
+traditional, the first line in the file is number C<1>.
+
+The return value from the expression is ignored, but the expression may call
+C<die> in order to abort the whole program, leaving the original file
+untouched.
+
+Remember when matching the end of a line that C<$_> may contain the final
+C<\n>, or (for DOS files) C<\r\n>, or if the file does not end with a
+newline then neither of these.  Thus to match or substitute some text at the
+end of a line, use this regular expression:
+
+ /some text(\r?\n)?$/
+
+Alternately, use the perl C<chomp> function, being careful not to chomp
+C<$_> itself (since that would remove all newlines from the file):
+
+ my $m = $_; chomp $m; $m =~ /some text$/
+
+=head1 Windows のパス
+
+C<virt-edit> has a limited ability to understand Windows drive letters and
+paths (eg. C<E:\foo\bar.txt>).
+
+仮想マシンが Windows を実行している場合に限り:
+
+=over 4
+
+=item *
+
+Drive letter prefixes like C<C:> are resolved against the Windows Registry
+to the correct filesystem.
+
+=item *
+
+Any backslash (C<\>) characters in the path are replaced with forward
+slashes so that libguestfs can process it.
+
+=item *
+
+The path is resolved case insensitively to locate the file that should be
+edited.
+
+=back
+
+There are some known shortcomings:
+
+=over 4
+
+=item *
+
+Some NTFS symbolic links may not be followed correctly.
+
+=item *
+
+NTFS junction points that cross filesystems are not followed.
+
+=back
+
+=head1 guestfish の使用法
+
+L<guestfish(1)> is a more powerful, lower level tool which you can use when
+C<virt-edit> doesn't work.
+
+Using C<virt-edit> is approximately equivalent to doing:
+
+ guestfish --rw -i -d domname edit /file
+
+ここで C<domname> は libvirt 仮想マシンの名前で、C</file> はファイルの完全パスです。
+
+The command above uses libguestfs's guest inspection feature and so does not
+work on guests that libguestfs cannot inspect, or on things like arbitrary
+disk images that don't contain guests.  To edit a file on a disk image
+directly, use:
+
+ guestfish --rw -a disk.img -m /dev/sda1 edit /file
+
+ここで、C<disk.img> はディスクイメージ、C</dev/sda1> は編集するディスクイメージにあるファイルシステム、C</file>
+はファイルの完全パスです。
+
+C<virt-edit> は新しいファイルを作成できません。代わりに guestfish コマンド C<touch>, C<write> または
+C<upload> を使用してください:
+
+ guestfish --rw -i -d domname touch /newfile
+
+ guestfish --rw -i -d domname write /newfile "new content"
+
+ guestfish --rw -i -d domname upload localfile /newfile
+
+=head1 環境変数
+
+=over 4
+
+=item C<EDITOR>
+
+設定されていると、この文字列がエディターとして使用されます。  C<"emacs -nw"> のように、引数を含めることもできます。
+
+設定されていないと、C<vi> が使用されます。
+
+=back
+
+=head1 終了ステータス
+
+このプログラムは、成功すると 0 を、エラーがあると 0 以外を返します。
+
+=head1 関連項目
+
+L<guestfs(3)>, L<guestfish(1)>, L<virt-cat(1)>, L<virt-copy-in(1)>,
+L<virt-tar-in(1)>, L<http://libguestfs.org/>, L<perl(1)>, L<perlre(1)>.
+
+=head1 著者
+
+Richard W.M. Jones L<http://people.redhat.com/~rjones/>
+
+=head1 COPYRIGHT
+
+Copyright (C) 2009-2014 Red Hat Inc.
+

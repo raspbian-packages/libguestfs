@@ -1,0 +1,274 @@
+
+=head1 НАЗВА
+
+virt-df — програма для показу даних щодо вільного місця на віртуальних
+файлових системах
+
+=head1 КОРОТКИЙ ОПИС
+
+Всі гостьові системи:
+
+ virt-df [--параметри]
+
+Окрема гостьова система:
+
+ virt-df [--параметри] -d назва_домену
+
+ virt-df [--параметри] -a диск.img [-a диск.img ...]
+
+Старий стиль:
+
+ virt-df [--параметри] назва_домену
+
+ virt-df [--параметри] диск.img [диск.img ...]
+
+=head1 ОПИС
+
+C<virt-df> is a command line tool to display free space on virtual machine
+filesystems.  Unlike other tools, it doesn't just display the size of disk
+allocated to a virtual machine, but can look inside disk images to see how
+much space is really being used.
+
+If used without any I<-a> or I<-d> arguments, C<virt-df> checks with libvirt
+to get a list of all active and inactive guests, and performs a C<df>-type
+operation on each one in turn, printing out the results.
+
+If any I<-a> or I<-d> arguments are specified, C<virt-df> performs a
+C<df>-type operation on either the single named libvirt domain, or on the
+disk image(s) listed on the command line (which must all belong to a single
+VM).  B<In this mode (with arguments), C<virt-df> will only work for a
+single guest>.  If you want to run on multiple guests, then you have to
+invoke C<virt-df> multiple times.
+
+Use the I<--csv> option to get a format which can be easily parsed by other
+programs.  Other options are similar to the standard L<df(1)> command.
+
+=head1 ПРИКЛАДИ
+
+Show disk usage for a single libvirt guest called C<F14x64>.  Make the
+output human-readable:
+
+ # virt-df -d F14x64 -h
+ Filesystem                       Size     Used  Available  Use%
+ F14x64:/dev/sda1                 484M      66M       393M   14%
+ F14x64:/dev/vg_f13x64/lv_root    7.4G     3.4G       4.0G   46%
+
+Показати дані щодо використання диска у файлі образу диска з назвою
+C<test.img>:
+
+ $ virt-df -a test1.img
+ Filesystem                  1K-blocks     Used  Available  Use%
+ test1.img:/dev/sda1             99099     1551      92432    2%
+
+If a single guest has multiple disks, use the I<-a> option repeatedly.  A
+plus sign (C<+>) is displayed for each additional disk.  B<Note: Do not do
+this with unrelated guest disks.>
+
+ $ virt-df -a Win7x32TwoDisks-a -a Win7x32TwoDisks-b 
+ Filesystem                   1K-blocks    Used  Available  Use%
+ Win7x32TwoDisks-a+:/dev/sda1    102396   24712      77684   25%
+ Win7x32TwoDisks-a+:/dev/sda2  12478460 7403416    5075044   60%
+ Win7x32TwoDisks-a+:/dev/sdb1    521212   55728     465484   11%
+
+=head1 ПАРАМЕТРИ
+
+=over 4
+
+=item B<--help>
+
+Показати коротку довідку.
+
+=item B<-a> файл
+
+=item B<--add> файл
+
+Add I<file> which should be a disk image from a virtual machine.  If the
+virtual machine has multiple block devices, you must supply all of them with
+separate I<-a> options.
+
+Формат образу диска визначається автоматично. Щоб перевизначити його і
+примусово використати певний формат, скористайтеся параметром
+I<--format=..>.
+
+=item B<-a адреса>
+
+=item B<--add адреса>
+
+Додати віддалений диск. Див. L<guestfish(1)/ДОДАВАННЯ ВІДДАЛЕНОГО СХОВИЩА>.
+
+=item B<-c> адреса
+
+=item B<--connect> адреса
+
+Якщо використовується libvirt, встановити з’єднання з вказаним I<URI>. Якщо
+пропущено, з’єднання буде встановлено з типовим гіпервізором libvirt.
+
+Якщо вказати блокові пристрої гостьових систем безпосередньо (I<-a>),
+libvirt не буде використовуватися взагалі.
+
+=item B<--csv>
+
+Write out the results in CSV format (comma-separated values).  This format
+can be imported easily into databases and spreadsheets, but read L</NOTE
+ABOUT CSV FORMAT> below.
+
+=item B<-d> гість
+
+=item B<--domain> гість
+
+Додати всі диски з вказаної гостьової системи libvirt. UUID доменів можна
+використовувати замість назв.
+
+=item B<--format=raw|qcow2|..>
+
+=item B<--format>
+
+Типовим значенням для параметра I<-a> є автоматичне визначення формату
+образу диска. Використання цього параметра примусово визначає значення
+параметрів I<-a> формату диска у наступному рядку команди. Використання
+параметра I<--format> без аргументу перемикає програму у режим автоматичного
+визначення у наступних параметрах I<-a>.
+
+Приклад:
+
+ virt-df --format=raw -a disk.img
+
+примусове встановлення формату без обробки (без автоматичного визначення)
+для C<disk.img>.
+
+ virt-df --format=raw -a disk.img --format -a another.img
+
+примусове встановлення формату без обробки (без автоматичного визначення)
+для C<disk.img> і повернення до автоматичного визначення для C<another.img>.
+
+Якщо ви користуєтеся ненадійними образами гостьових систем у необробленому
+форматі, вам слід скористатися цим параметром для визначення формату
+диска. Таким чином можна уникнути можливих проблем з захистом для
+сформованих зловмисниками гостьових систем (CVE-2010-3851).
+
+=item B<-h>
+
+=item B<--human-readable>
+
+Вивести дані щодо розмірів у зручному для читання форматі.
+
+Параметри I<-h> і I<--csv> не можна використовувати одночасно.
+
+=item B<-i>
+
+=item B<--inodes>
+
+Вивести дані щодо inode замість даних щодо блоків.
+
+=item B<--one-per-guest>
+
+Since libguestfs 1.22, this is the default.  This option does nothing and is
+left here for backwards compatibility with older scripts.
+
+=item B<-P> кількість_потоків
+
+З версії libguestfs 1.22 у virt-df передбачено обробку у декілька потоків і
+паралельне вивчення гостьових систем. Типово кількість потоків виконання, що
+використовуються, вибирається на основі доступного обсягу вільної пам’яті на
+час запуску virt-df. Ви можете примусово наказати virt-df використовувати не
+більше за C<кількість_потоків> за допомогою параметра I<-P>.
+
+Зауважте, що I<-P 0> означає автоматичне визначення, а I<-P 1> означає
+використання одного потоку виконання.
+
+=item B<--uuid>
+
+Виводити UUID замість назв. Корисно для слідкування за гостьовою системою,
+навіть після перенесення або перейменування, або якщо дві гостьові системи
+мають однакові назви.
+
+Note that only domains that we fetch from libvirt come with UUIDs.  For disk
+images, we still print the disk image name even when this option is
+specified.
+
+=item B<-v>
+
+=item B<--verbose>
+
+Увімкнути докладний показ повідомлень з метою діагностики.
+
+=item B<-V>
+
+=item B<--version>
+
+Показати дані щодо версії і завершити роботу.
+
+=item B<-x>
+
+Увімкнути трасування викликів програмного інтерфейсу libguestfs.
+
+=back
+
+=head1 ЧИСЛОВІ ДАНІ ЩОДО STATVFS
+
+C<virt-df> (and L<df(1)>) get information by issuing a L<statvfs(3)> system
+call.  You can get the same information directly, either from the host
+(using libguestfs) or inside the guest:
+
+=over 4
+
+=item З основної системи
+
+Віддайте таку команду:
+
+ guestfish --ro -d НАЗВА_ГОСТЬОВОЇ_СИСТЕМИ -i statvfs /
+
+(change C</> to see stats for other filesystems).
+
+=item З гостьової системи
+
+Віддайте таку команду:
+
+ python -c 'import os; s = os.statvfs ("/"); print s'
+
+(change C</> to see stats for other filesystems).
+
+=back
+
+=head1 ЗАУВАЖЕННЯ ЩОДО ФОРМАТУ CSV
+
+Comma-separated values (CSV) is a deceptive format.  It I<seems> like it
+should be easy to parse, but it is definitely not easy to parse.
+
+Myth: Just split fields at commas.  Reality: This does I<not> work
+reliably.  This example has two columns:
+
+ "foo,bar",baz
+
+Myth: Read the file one line at a time.  Reality: This does I<not> work
+reliably.  This example has one row:
+
+ "foo
+ bar",baz
+
+For shell scripts, use C<csvtool> (L<http://merjis.com/developers/csv> also
+packaged in major Linux distributions).
+
+For other languages, use a CSV processing library (eg. C<Text::CSV> for Perl
+or Python's built-in csv library).
+
+Most spreadsheets and databases can import CSV directly.
+
+=head1 СТАН ВИХОДУ
+
+Ця програма повертає значення 0 у разі успішного завершення і ненульове
+значення, якщо сталася помилка.
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<df(1)>, L<guestfs(3)>, L<guestfish(1)>, L<virt-filesystems(1)>,
+L<http://libguestfs.org/>.
+
+=head1 АВТОР
+
+Richard W.M. Jones L<http://people.redhat.com/~rjones/>
+
+=head1 АВТОРСЬКІ ПРАВА
+
+© Red Hat Inc., 2009–2014
+

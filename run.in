@@ -1,0 +1,282 @@
+#!/bin/bash -
+# libguestfs 'run' programs locally script
+# Copyright (C) 2011-2014 Red Hat Inc.
+#
+# @configure_input@
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+
+#----------------------------------------------------------------------
+
+# With this script you can run all the virt tools without needing to
+# install them first.  You just have to do for example:
+#
+#   ./run virt-inspector [args ...]
+#
+# This works for any C program, virt tools, and most non-C bindings
+# and programs in the libguestfs distribution.
+#
+# For lots more ways to use this script, see the libguestfs README
+# file.
+#
+# The script can also be used to make the output of tests shorter:
+#   TESTS_ENVIRONMENT = ... $(top_builddir)/run --test [$(VG)]
+# (Use the optional $(VG) when the tests must also be run under
+# valgrind).
+
+#----------------------------------------------------------------------
+
+if [ "$1" = "--test" ]; then
+    test_mode=1
+    shift
+fi
+
+# Source and build directories (absolute paths so this works from any
+# directory).
+s="$(cd @abs_srcdir@ && pwd)"
+b="$(cd @abs_builddir@ && pwd)"
+
+# Set T to current date & time (mainly for valgrind logfile name).
+T=`date +%Y%m%d.%H.%M.%S`
+export T
+
+# Set tmpdir and cachedir so the appliance doesn't conflict with
+# globally installed libguestfs.
+#
+# We set it to a subdirectory ('tmp') so that we can label this
+# subdirectory to make libvirt + sVirt + SELinux enforcing work.
+export LIBGUESTFS_TMPDIR="$b/tmp"
+export LIBGUESTFS_CACHEDIR="$b/tmp"
+mkdir -p "$b/tmp"
+chcon --reference=/tmp "$b/tmp" 2>/dev/null ||:
+
+# Only set path if the appliance was enabled.
+if [ "x@ENABLE_APPLIANCE@" = "xyes" ]; then
+    export LIBGUESTFS_PATH="$b/appliance"
+elif [ -z "$LIBGUESTFS_PATH" ]; then
+    cat <<'EOF' >&2
+run: warning: You used './configure --disable-appliance' so LIBGUESTFS_PATH
+run: warning: has not been set automatically.
+EOF
+fi
+
+# Set the PATH to contain all the libguestfs binaries.  There are a
+# lot of binaries, so a lot of path entries.
+PATH="$b/align:$b/builder:$b/cat:$b/customize:$b/df:$b/diff:$b/edit:$b/erlang:$b/fish:$b/format:$b/fuse:$b/inspector:$b/make-fs:$b/p2v:$b/rescue:$b/resize:$b/sparsify:$b/sysprep:$b/test-tool:$b/tools:$b/v2v:$PATH"
+export PATH
+
+# Set LD_LIBRARY_PATH to contain library.
+if [ -z "$LD_LIBRARY_PATH" ]; then
+    LD_LIBRARY_PATH="$b/src/.libs:$b/java/.libs:$b/gobject/.libs"
+else
+    LD_LIBRARY_PATH="$b/src/.libs:$b/java/.libs:$b/gobject/.libs:$LD_LIBRARY_PATH"
+fi
+export LD_LIBRARY_PATH
+
+# Make virt-builder use the local website copy to avoid hitting
+# the network all the time.
+if [ -z "$XDG_CONFIG_DIRS" ]; then
+    XDG_CONFIG_DIRS="$b/builder/test-website"
+    export XDG_CONFIG_DIRS
+fi
+
+# virt-p2v-make-* data directory.
+if [ -z "$VIRT_P2V_DATA_DIR" ]; then
+    VIRT_P2V_DATA_DIR="$b/p2v"
+    export VIRT_P2V_DATA_DIR
+fi
+
+# For Perl.
+if [ -z "$PERL5LIB" ]; then
+    PERL5LIB="$b/perl/blib/lib:$b/perl/blib/arch"
+else
+    PERL5LIB="$b/perl/blib/lib:$b/perl/blib/arch:$PERL5LIB"
+fi
+export PERL5LIB
+
+# Enable Perl valgrinding.
+# XXX Unclear if this actually makes any difference.  It seems you
+# have to recompile the Perl interpreter with debugging enabled.
+export PERL_DEBUG=1
+export PERL_VALGRIND=1
+export PERL_DESTRUCT_LEVEL=2
+
+# For Python.
+export PYTHON=@PYTHON@
+if [ -z "$PYTHONPATH" ]; then
+    PYTHONPATH="$s/python:$b/python:$b/python/.libs"
+else
+    PYTHONPATH="$s/python:$b/python:$b/python/.libs:$PYTHONPATH"
+fi
+export PYTHONPATH
+
+# For Ruby.
+export RUBY=@RUBY@
+export RAKE=@RAKE@
+if [ -z "$RUBYLIB" ]; then
+    RUBYLIB="$b/ruby/lib:$b/ruby/ext/guestfs"
+else
+    RUBYLIB="$b/ruby/lib:$b/ruby/ext/guestfs:$RUBYLIB"
+fi
+export RUBYLIB
+export LD_LIBRARY_PATH="$b/ruby/ext/guestfs:$LD_LIBRARY_PATH"
+
+# For OCaml.
+if [ -z "$CAML_LD_LIBRARY_PATH" ]; then
+    CAML_LD_LIBRARY_PATH="$b/ocaml"
+else
+    CAML_LD_LIBRARY_PATH="$b/ocaml:$CAML_LD_LIBRARY_PATH"
+fi
+export CAML_LD_LIBRARY_PATH
+
+# For Java.
+export JAVA_EXE=@JAVA_EXE@
+if [ -z "$CLASSPATH" ]; then
+    CLASSPATH="$b/java:$b/java/t:$b/java/libguestfs-@VERSION@.jar"
+else
+    CLASSPATH="$b/java:$b/java/t:$b/java/libguestfs-@VERSION@.jar:$CLASSPATH"
+fi
+export CLASSPATH
+
+# For Erlang (note $PATH is adjusted above to include erl-guestfs).
+if [ -z "$ERL_LIBS" ]; then
+    ERL_LIBS="$b/erlang"
+else
+    ERL_LIBS="$b/erlang:$ERL_LIBS"
+fi
+export ERL_LIBS
+
+# For Lua.
+export LUA=@LUA@
+if [ -z "$LUA_CPATH" ]; then
+    LUA_CPATH="$b/lua/?.so"
+else
+    LUA_CPATH="$b/lua/?.so;$LUA_CPATH"
+fi
+export LUA_CPATH
+
+# For golang.
+export GOLANG=@GOLANG@
+if [ -z "$GOPATH" ]; then
+    GOPATH="$b/golang"
+else
+    GOPATH="$b/golang:$GOPATH"
+fi
+export GOPATH
+if [ -z "$CGO_CFLAGS" ]; then
+    CGO_CFLAGS="-I$s/src"
+else
+    CGO_CFLAGS="$CGO_CFLAGS -I$s/src"
+fi
+export CGO_CFLAGS
+if [ -z "$CGO_LDFLAGS" ]; then
+    CGO_LDFLAGS="-L$b/src/.libs"
+else
+    CGO_LDFLAGS="$CGO_LDFLAGS -L$b/src/.libs"
+fi
+export CGO_LDFLAGS
+
+# For GObject, Javascript and friends.
+export GJS=@GJS@
+if [ -z "$GI_TYPELIB_PATH" ]; then
+    GI_TYPELIB_PATH="$b/gobject"
+else
+    GI_TYPELIB_PATH="$b/gobject:$GI_TYPELIB_PATH"
+fi
+export GI_TYPELIB_PATH
+# Be friendly to valgrind (https://live.gnome.org/Valgrind)
+export G_SLICE=always-malloc
+export G_DEBUG=gc-friendly
+
+# This is a cheap way to find some use-after-free and uninitialized
+# read problems when using glibc.
+random_val="$(@AWK@ 'BEGIN{srand(); print 1+int(255*rand())}' < /dev/null)"
+export MALLOC_PERTURB_=$random_val
+
+# Do we have libtool?  If we have it then we can use it to make
+# running valgrind simpler.  However don't depend on it.
+if libtool --help >/dev/null 2>&1; then
+    libtool="libtool --mode=execute"
+fi
+
+# Avoid GNOME keyring stupidity
+export GNOME_KEYRING_CONTROL=
+export GNOME_KEYRING_PID=
+
+# Run the program.
+if [ -z "$test_mode" ]; then
+    exec $libtool "$@"
+fi
+
+# For tests (./run --test):
+#  - redirect all output to a file, and only print the file if the
+#    test fails
+#  - print how long it takes to run the test
+#  - timeout if the test takes too long to run
+
+# Originally 1h, but that is not long enough to run the C API
+# tests on Koji.
+timeout_period=4h
+timeout_kill=30s
+
+# Do we have Padraig's timeout utility (from coreutils)?
+if timeout --help >/dev/null 2>&1; then
+    # Must use the --foreground option (RHBZ#1025269).
+    if timeout --foreground 2 sleep 0 >/dev/null 2>&1; then
+        # Does this version of timeout have the -k option?  (Not on RHEL 6)
+        if timeout -k 10s 10s true >/dev/null 2>&1; then
+            timeout="timeout --foreground -k $timeout_kill $timeout_period"
+        fi
+    fi
+fi
+
+pid=$$
+tmpout=$b/tmp/run-$pid
+rm -f $tmpout
+start_t="$(date +'%s')"
+$timeout $libtool "$@" > $tmpout 2>&1
+fail=$?
+end_t="$(date +'%s')"
+if [ "$fail" -eq 0 ]; then
+    # Test successful.
+    echo $(($end_t - $start_t)) seconds: "$@"
+elif [ "$fail" -eq 77 ]; then
+    # Tests return 77 to mean skipped.
+    cat $tmpout
+elif [ "$fail" -eq 124 ]; then
+    # Timed out.
+    echo "$b/run --test" "$@"
+    cat $tmpout
+    echo "$b/run: command timed out after $timeout_period"
+else
+    # Test failed.
+    echo "$b/run --test" "$@"
+    cat $tmpout
+    echo "$b/run: command failed with exit code $fail"
+fi
+if [ -n "$RUN_OUTPUT_FILE" ]; then
+    testname=`echo "$1" | sed -e 's,^./,,g'`
+    echo "<test rescode=\"$fail\" name=\"$testname\" time=\"$(($end_t - $start_t))\">" >> $RUN_OUTPUT_FILE
+    echo "<![CDATA[" >> $RUN_OUTPUT_FILE
+    # skip the results of test-virt-rescue.pl, as they contain
+    # non-ASCII chars which give troubles to xsltproc
+    if ! echo "$testname" | grep test-virt-rescue.pl &>/dev/null ; then
+      cat $tmpout >> $RUN_OUTPUT_FILE
+    fi
+    echo "]]>" >> $RUN_OUTPUT_FILE
+    echo "</test>" >> $RUN_OUTPUT_FILE
+fi
+rm -f $tmpout
+exit $fail

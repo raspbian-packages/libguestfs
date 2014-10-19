@@ -1,0 +1,439 @@
+
+=head1 名前
+
+virt-sparsify - 仮想マシンのディスクをスパースにします
+
+=head1 書式
+
+ virt-sparsify [--options] indisk outdisk
+
+ virt-sparsify [--options] --in-place disk
+
+=head1 説明
+
+Virt-sparsify is a tool which can make a virtual machine disk (or any disk
+image) sparse a.k.a. thin-provisioned.  This means that free space within
+the disk image can be converted back to free space on the host.
+
+Virt-sparsify can locate and sparsify free space in most filesystems
+(eg. ext2/3/4, btrfs, NTFS, etc.), and also in LVM physical volumes.
+
+Virt-sparsify はさまざまなディスクフォーマットを変換することができます。例えば、raw ディスクイメージをシンプロビジョニングされた
+qcow2 イメージに変換することができます。
+
+Virt-sparsify can operate on any disk image, not just ones from virtual
+machines.  However if a virtual machine has multiple disks and uses volume
+management, then virt-sparsify will work but not be very effective
+(L<http://bugzilla.redhat.com/887826>).
+
+=head2 IMPORTANT NOTE ABOUT SPARSE OUTPUT IMAGES
+
+If the input is raw, then the default output is raw sparse.  B<You must
+check the output size using a tool that understands sparseness> such as C<du
+-sh>.  It can make a huge difference:
+
+ $ ls -lh test1.img
+ -rw-rw-r--. 1 rjones rjones 100M Aug  8 08:08 test1.img
+ $ du -sh test1.img
+ 3.6M	test1.img
+
+(見た目の容量 B<100M> と実際の容量 B<3.6M> を比較します)
+
+=head2 IMPORTANT LIMITATIONS
+
+=over 4
+
+=item *
+
+The virtual machine I<must be shut down> before using this tool.
+
+=item *
+
+Virt-sparsify may require up to 2x the virtual size of the source disk image
+(1 temporary copy + 1 destination image).  This is in the worst case and
+usually much less space is required.
+
+If you are using the I<--in-place> option, then large amounts of temporary
+space are B<not> required.
+
+=item *
+
+Virt-sparsify cannot resize disk images.  To do that, use L<virt-resize(1)>.
+
+=item *
+
+virt-sparsify は暗号化されたディスクを処理できません。 libguestfs
+は暗号化されたディスクをサポートしますが、暗号化されたディスク自体はスパース化できません。
+
+=item *
+
+Virt-sparsify cannot yet sparsify the space between partitions.  Note that
+this space is often used for critical items like bootloaders so it's not
+really unused.
+
+=item *
+
+In copy mode, qcow2 internal snapshots are not copied over to the
+destination image.
+
+=back
+
+You may also want to read the manual pages for the associated tools
+L<virt-filesystems(1)> and L<virt-df(1)> before starting.
+
+=head1 例
+
+一般的な使用法は次のとおりです:
+
+ virt-sparsify indisk outdisk
+
+which copies C<indisk> to C<outdisk>, making the output sparse.  C<outdisk>
+is created, or overwritten if it already exists.  The format of the input
+disk is detected (eg. qcow2) and the same format is used for the output
+disk.
+
+形式を変換するには I<--convert> オプションを使用します:
+
+ virt-sparsify disk.raw --convert qcow2 disk.qcow2
+
+Virt-sparsify tries to zero and sparsify free space on every filesystem it
+can find within the source disk image.  You can get it to ignore (don't zero
+free space on) certain filesystems by doing:
+
+ virt-sparsify --ignore /dev/sda1 indisk outdisk
+
+ディスクイメージにあるファイルシステムの一覧を取得するには L<virt-filesystems(1)> を参照してください。
+
+Since virt-sparsify E<ge> 1.26, you can now sparsify a disk image in place
+by doing:
+
+ virt-sparsify --in-place disk.img
+
+=head1 オプション
+
+=over 4
+
+=item B<--help>
+
+ヘルプを表示します。
+
+=item B<--check-tmpdir ignore>
+
+=item B<--check-tmpdir continue>
+
+=item B<--check-tmpdir warn>
+
+=item B<--check-tmpdir fail>
+
+Check if L</TMPDIR> or I<--tmp> directory has enough space to complete the
+operation.  This is just an estimate.
+
+If the check indicates a problem, then you can either:
+
+=over 4
+
+=item *
+
+B<ignore> it,
+
+=item *
+
+print a warning and B<continue>,
+
+=item *
+
+B<warn> and wait for the user to press the Return key (this is the default),
+or:
+
+=item *
+
+B<fail> and exit.
+
+=back
+
+You cannot use this option and I<--in-place> together.
+
+=item B<--compress>
+
+出力ファイルを圧縮します。これは 出力形式が C<qcow2> の場合 I<のみ> 機能します。
+
+You cannot use this option and I<--in-place> together.
+
+=item B<--convert> raw
+
+=item B<--convert> qcow2
+
+=item B<--convert> [other formats]
+
+Use C<output-format> as the format for the destination image.  If this is
+not specified, then the input format is used.
+
+サポートされる既知の動作済み出力形式は次のとおりです: C<raw>, C<qcow2>, C<vdi>。
+
+L<qemu-img(1)> プログラムによりサポートされるすべての形式を使用できます。たとえば、C<vmdk> ですが、他の形式のサポートは QEMU
+に依存します。
+
+Specifying the I<--convert> option is usually a good idea, because then
+virt-sparsify doesn't need to try to guess the input format.
+
+出力形式を詳細に調整します。関連項目: I<--compress>, I<-o>.
+
+You cannot use this option and I<--in-place> together.
+
+=item B<--debug-gc>
+
+ガベージコレクションおよびメモリー割り当てをデバッグします。これは virt-sparsify におけるメモリー問題または OCaml
+libguestfs バインドをデバッグするときのみ有用です。
+
+=item B<--format> raw
+
+=item B<--format> qcow2
+
+Specify the format of the input disk image.  If this flag is not given then
+it is auto-detected from the image itself.
+
+If working with untrusted raw-format guest disk images, you should ensure
+the format is always specified.
+
+=item B<--ignore> filesystem
+
+=item B<--ignore> volgroup
+
+Ignore the named filesystem.
+
+When not using I<--in-place>: Free space on the filesystem will not be
+zeroed, but existing blocks of zeroes will still be sparsified.
+
+When using I<--in-place>, the filesystem is ignored completely.
+
+In the second form, this ignores the named volume group.  Use the volume
+group name without the C</dev/> prefix, eg. I<--ignore vg_foo>
+
+このオプションは複数回指定できます。
+
+=item B<--in-place>
+
+Do in-place sparsification instead of copying sparsification.  See
+L</IN-PLACE SPARSIFICATION> below.
+
+=item B<--machine-readable>
+
+このオプションは、他のプログラムにより解析されるときに、よりマシンに易しい出力を作成するために使用されます。以下の L</マシン可読な出力> 参照。
+
+=item B<-o> option[,option,...]
+
+Pass I<-o> option(s) to the L<qemu-img(1)> command to fine-tune the output
+format.  Options available depend on the output format (see I<--convert>)
+and the installed version of the qemu-img program.
+
+You should use I<-o> at most once.  To pass multiple options, separate them
+with commas, eg:
+
+ virt-sparsify --convert qcow2 \
+   -o cluster_size=512,preallocation=metadata ...
+
+You cannot use this option and I<--in-place> together.
+
+=item B<-q>
+
+=item B<--quiet>
+
+This disables progress bars and other unnecessary output.
+
+=item B<--tmp> block_device
+
+=item B<--tmp> dir
+
+In copying mode only, use the named device or directory as the location of
+the temporary overlay (see also L</TMPDIR> below).
+
+If the parameter given is a block device, then the block device is written
+to directly.  B<Note this erases the existing contents of the block device>.
+
+If the parameter is a directory, then this is the same as setting the
+L</TMPDIR> environment variable.
+
+You cannot use this option and I<--in-place> together.
+
+=item B<--tmp> prebuilt:file
+
+In copying mode only, the specialized option I<--tmp prebuilt:file> (where
+C<prebuilt:> is a literal string) causes virt-sparsify to use the qcow2
+C<file> as temporary space.
+
+=over 4
+
+=item *
+
+The file B<must> be freshly formatted as qcow2, with indisk as the backing
+file.
+
+=item *
+
+If you rerun virt-sparsify, you B<must> recreate the file before each run.
+
+=item *
+
+Virt-sparsify does not delete the file.
+
+=back
+
+This option is used by oVirt which requires a specially formatted temporary
+file.
+
+=item B<-v>
+
+=item B<--verbose>
+
+デバッグ用の冗長なメッセージを有効にします。
+
+=item B<-V>
+
+=item B<--version>
+
+バージョン番号を表示して、終了します。
+
+=item B<-x>
+
+libguestfs API 呼び出しのトレースを有効にします。
+
+=item B<--zero> パーティション
+
+=item B<--zero> 論理ボリューム
+
+仮想マシンにある名前付きパーティションまたは論理ボリュームの内容をゼロ上書きします。デバイスにあるすべてのデータは失われます。しかし、スパース化は素晴らしいことです！このオプションを複数回指定できます。
+
+=back
+
+=head1 IN-PLACE SPARSIFICATION
+
+Since virt-sparsify E<ge> 1.26, the tool is able to do in-place
+sparsification (instead of copying from an input disk to an output disk).
+This is more efficient.  However it requires special support in libguestfs,
+the kernel and qemu, and it is not able to recover quite as much space as
+copying sparsification.  So in-place sparsification is considered to be
+experimental at this time.
+
+To use this mode, specify a disk image which will be modified in place:
+
+ virt-sparsify --in-place disk.img
+
+Some options are not compatible with this mode: I<--convert>, I<--compress>
+and I<-o> because they require wholesale disk format changes;
+I<--check-tmpdir> because large amounts of temporary space are not required.
+
+In-place sparsification works using discard (a.k.a trim or unmap)  support.
+
+=head1 マシン可読な出力
+
+The I<--machine-readable> option can be used to make the output more machine
+friendly, which is useful when calling virt-sparsify from other programs,
+GUIs etc.
+
+このオプションを使用するには 2 通りの方法があります。
+
+Firstly use the option on its own to query the capabilities of the
+virt-sparsify binary.  Typical output looks like this:
+
+ $ virt-sparsify --machine-readable
+ virt-sparsify
+ ntfs
+ btrfs
+
+A list of features is printed, one per line, and the program exits with
+status 0.
+
+Secondly use the option in conjunction with other options to make the
+regular program output more machine friendly.
+
+At the moment this means:
+
+=over 4
+
+=item 1.
+
+Progress bar messages can be parsed from stdout by looking for this regular
+expression:
+
+ ^[0-9]+/[0-9]+$
+
+=item 2.
+
+The calling program should treat messages sent to stdout (except for
+progress bar messages) as status messages.  They can be logged and/or
+displayed to the user.
+
+=item 3.
+
+The calling program should treat messages sent to stderr as error messages.
+In addition, virt-sparsify exits with a non-zero status code if there was a
+fatal error.
+
+=back
+
+All versions of virt-sparsify have supported the I<--machine-readable>
+option.
+
+=head1 WINDOWS 8
+
+Windows 8 "fast startup" can prevent virt-sparsify from working.  See
+L<guestfs(3)/WINDOWS HIBERNATION AND WINDOWS 8 FAST STARTUP>.
+
+=head1 環境変数
+
+=over 4
+
+=item TMPDIR
+
+Location of the temporary directory used for the potentially large temporary
+overlay file.
+
+In virt-sparsify E<ge> 1.28, you can override this environment variable
+using the I<--tmp> option.
+
+You should ensure there is enough free space in the worst case for a full
+copy of the source disk (I<virtual> size), or else set C<$TMPDIR> to point
+to another directory that has enough space.
+
+この初期値は C</tmp> です。
+
+Note that if C<$TMPDIR> is a tmpfs (eg. if C</tmp> is on tmpfs, or if you
+use C<TMPDIR=/dev/shm>), tmpfs defaults to a maximum size of I<half> of
+physical RAM.  If virt-sparsify exceeds this, it will hang.  The solution is
+either to use a real disk, or to increase the maximum size of the tmpfs
+mountpoint, eg:
+
+ mount -o remount,size=10G /tmp
+
+If you are using the I<--in-place> option, then large amounts of temporary
+space are B<not> required.
+
+=back
+
+他の環境変数は L<guestfs(3)/環境変数> を参照してください。
+
+=head1 終了ステータス
+
+This program returns 0 if the operation completed without errors.  (This
+doesn't necessarily mean that space could be freed up.)
+
+A non-zero exit code indicates an error.
+
+If the exit code is C<3> and the I<--in-place> option was used, that
+indicates that discard support is not available in libguestfs, so copying
+mode must be used instead.
+
+=head1 関連項目
+
+L<virt-df(1)>, L<virt-filesystems(1)>, L<virt-resize(1)>, L<virt-rescue(1)>,
+L<guestfs(3)>, L<guestfish(1)>, L<truncate(1)>, L<fallocate(1)>,
+L<qemu-img(1)>, L<http://libguestfs.org/>.
+
+=head1 著者
+
+Richard W.M. Jones L<http://people.redhat.com/~rjones/>
+
+=head1 COPYRIGHT
+
+Copyright (C) 2011-2014 Red Hat Inc.
+

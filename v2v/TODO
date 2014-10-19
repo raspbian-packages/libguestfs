@@ -1,0 +1,22 @@
+Missing features compared to Perl version:
+
+ - user-custom in virt-v2v.conf to install custom packages (virt-customize?)
+ - Fix configure_kernel on SUSE (see Mike Latimer's email)
+ - testing
+
+virt-v2v bash (tab) completion
+
+Proper progress bars when copying.
+
+p2v:
+
+ - network dialog and network configuration
+ - why is the Back button insensitive?
+
+p2v/main.c:/* XXX Copied from fish/options.c. */
+v2v/convert_linux.ml:           (* Get/construct the version.  XXX Read this fro
+v2v/convert_linux.ml:          [ "sym53c8xx" (* XXX why not "ide"? *) ] in
+v2v/convert_linux.ml:         * XXX RHEL 3 unfortunately will give this error an
+v2v/convert_linux.ml:    XXX to do from original v2v:
+v2v/convert_windows.ml:      g#upload rhev_apt_exe "/rhev-apt.exe"; (* XXX *)
+v2v/input_libvirtxml.ml:             * XXX Quoting, although it's not needed for

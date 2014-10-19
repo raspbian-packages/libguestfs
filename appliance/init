@@ -1,0 +1,175 @@
+#!/bin/sh
+
+echo Starting /init script ...
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+export PATH
+
+# Debian bug 606622.
+RUNLEVEL=S
+PREVLEVEL=N
+export RUNLEVEL PREVLEVEL
+
+# Make sure to find all the libraries, also those in non-standard place
+# but with a proper ld.so configuration pointing at them
+ldconfig
+
+# Try to print a stack trace for segfaults inside the appliance.
+for d in /lib64 /lib; do
+  f=$d/libSegFault.so
+  if [ -f "$f" ]; then
+    LD_PRELOAD=$f
+    export LD_PRELOAD
+    break
+  fi
+done
+
+mkdir -p /sysroot
+
+if [ ! -d /proc ]; then rm -f /proc; fi
+mkdir -p /proc
+mount -t proc /proc /proc
+if [ ! -d /sys ]; then rm -f /sys; fi
+mkdir -p /sys
+mount -t sysfs /sys /sys
+# taken from initramfs-tools/init --Hilko Bengen
+mkdir -p /run
+mount -t tmpfs -o "nosuid,size=20%,mode=0755" tmpfs /run
+mkdir -p /run/lock
+ln -s ../run/lock /var/lock
+
+# devtmpfs is required since udev 176
+mount -t devtmpfs /dev /dev
+
+# Find udevd and run it directly.
+for f in /sbin/udevd /lib/udev/udevd \
+    /lib/systemd/systemd-udevd /usr/lib/systemd/systemd-udevd \
+    /usr/lib/udev/udevd; do
+  if [ -x "$f" ]; then UDEVD="$f"; fi
+done
+if [ -z "$UDEVD" ]; then
+  echo "udev not found!  Things will probably not work ..."
+fi
+
+$UDEVD --daemon #--debug
+udevadm trigger
+udevadm settle --timeout=600
+
+if grep -sq selinux=1 /proc/cmdline; then
+  mount -t selinuxfs none /sys/fs/selinux
+fi
+
+# Set up kmod static-nodes (RHBZ#1011907).
+mkdir -p /run/tmpfiles.d
+kmod static-nodes --format=tmpfiles --output=/run/tmpfiles.d/kmod.conf
+
+# Set up tmpfiles (must run after kmod.conf is created above).
+systemd-tmpfiles --prefix=/dev --create
+
+# Disk optimizations.
+# Increase the SCSI timeout so we can read remote images.
+for f in /sys/block/sd*/device/timeout; do echo 300 > $f; done
+# https://access.redhat.com/site/solutions/5427
+for f in /sys/block/{h,s,ub,v}d*/queue/scheduler; do echo noop > $f; done
+
+# Update the system clock.
+hwclock -u -s
+
+# Set up the network.
+ip addr add 127.0.0.1/8 brd + dev lo scope host
+ip link set dev lo up
+
+if grep -sq guestfs_network=1 /proc/cmdline; then
+    if dhclient --version >/dev/null 2>&1; then
+        dhclient
+    else
+        dhcpcd
+    fi
+fi
+
+# Scan for MDs.
+mdadm -As --auto=yes --run
+
+# Scan for LVM.
+modprobe dm_mod ||:
+lvmetad ||:
+
+lvm vgchange -aay --sysinit
+
+# Scan for Windows dynamic disks.
+ldmtool create all
+
+# These are useful when debugging.
+if grep -sq guestfs_verbose=1 /proc/cmdline; then
+    uname -a
+    ls -lR /dev
+    cat /proc/mounts
+    lvm pvs
+    lvm vgs
+    lvm lvs
+    ip a
+    ip r
+    lsmod
+    #hwclock -r
+    date
+    echo -n "clocksource: "
+    cat /sys/devices/system/clocksource/clocksource0/current_clocksource
+    #ping -n -v -c 5 8.8.8.8
+
+    echo -n "uptime: "; cat /proc/uptime
+fi
+
+if ! grep -sq guestfs_rescue=1 /proc/cmdline; then
+  # Run the daemon.
+
+  # Run the daemon under valgrind if ./configure --enable-valgrind-daemon
+  if grep -sq guestfs_valgrind_daemon=1 /proc/cmdline; then
+    if [ -r /etc/guestfsd.suppressions ]; then
+      suppressions="--suppressions=/etc/guestfsd.suppressions"
+    fi
+    vg="valgrind --leak-check=full --error-exitcode=119 --max-stackframe=8388608 --child-silent-after-fork=yes $suppressions"
+    echo "enabling valgrind: $vg"
+  fi
+
+  # Run guestfsd, under valgrind if asked.
+  $vg guestfsd
+  if [ $? -eq 119 ]; then
+      echo "DAEMON VALGRIND FAILED"
+      # Sleep so valgrind messages are seen by the host.  Note this
+      # only happens in non-production builds
+      # (--enable-valgrind-daemon) + on an error path.
+      sleep 10
+  fi
+else
+  # Run virt-rescue shell.
+
+  # Remove LD_PRELOAD=libSegFault set above.
+  unset LD_PRELOAD
+
+  :> $HOME/.bashrc
+  grep -Eo 'TERM=[^[:space:]]+' /proc/cmdline >> $HOME/.bashrc
+  echo "PS1='><rescue> '" >> $HOME/.bashrc
+  echo "export TERM PS1" >> $HOME/.bashrc
+
+  echo
+  echo "------------------------------------------------------------"
+  echo
+  echo "Welcome to virt-rescue, the libguestfs rescue shell."
+  echo
+  echo "Note: The contents of / are the rescue appliance."
+  echo "You have to mount the guest's partitions under /sysroot"
+  echo "before you can examine them."
+  echo
+  bash -i
+  echo
+  echo "virt-rescue: Syncing the disk now before exiting ..."
+  echo
+fi
+
+sync
+
+if ! grep -sq guestfs_noreboot=1 /proc/cmdline; then
+  # qemu has the -no-reboot flag, so issuing a reboot here actually
+  # causes qemu to exit gracefully.
+  reboot -f
+fi

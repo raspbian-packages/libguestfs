@@ -1,0 +1,126 @@
+<grammar
+  xmlns="http://relaxng.org/ns/structure/1.0"
+  datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <!-- -*- xml -*-
+  This is a RELAX NG schema for the output of 'virt-inspector'.
+
+  To validate an existing document against this schema, you can
+  use xmllint, like this:
+
+    virt-inspector -d Foo > output.xml
+    xmllint - -noout - -relaxng virt-inspector.rng output.xml
+
+  (Note that because of limitations of XML, I have had to put spaces
+  between double dashes in the above code.  Those spaces should not
+  be there in what you type on the command line).
+
+  Written by Richard W.M. Jones, with a little help from Daniel
+  Veillard.
+
+  This file can be freely copied and modified without restrictions.
+  -->
+  <start>
+    <element name="operatingsystems">
+      <oneOrMore>
+        <element name="operatingsystem">
+          <interleave>
+
+            <optional><element name="root"><text/></element></optional>
+            <element name="name">
+              <choice>
+                <value>linux</value>
+                <value>windows</value>
+              </choice>
+            </element>
+            <optional><element name="arch"><text/></element></optional>
+            <optional><element name="distro"><text/></element></optional>
+            <optional><element name="product_name"><text/></element></optional>
+            <optional><element name="product_variant"><text/></element></optional>
+            <element name="major_version"><text/></element>
+            <element name="minor_version"><text/></element>
+            <optional><element name="windows_systemroot"><text/></element></optional>
+            <optional><element name="windows_current_control_set"><text/></element></optional>
+            <optional><element name="package_format"><text/></element></optional>
+            <optional><element name="package_management"><text/></element></optional>
+            <optional><element name="hostname"><text/></element></optional>
+            <optional><element name="format"><text/></element></optional>
+            <optional><element name="live"><empty/></element></optional>
+            <optional><element name="netinst"><empty/></element></optional>
+            <optional><element name="multipart"><empty/></element></optional>
+
+            <ref name="mountpoints"/>
+            <ref name="filesystems"/>
+            <optional><ref name="drive_mappings"/></optional>
+            <optional><ref name="applications"/></optional>
+
+            <optional><element name="icon"><data type="base64Binary"/></element></optional>
+
+          </interleave>
+        </element>
+      </oneOrMore>
+    </element>
+  </start>
+
+  <!-- how filesystems are mounted on mount points -->
+  <define name="mountpoints">
+    <element name="mountpoints">
+      <oneOrMore>
+        <element name="mountpoint">
+          <attribute name="dev"><text/></attribute>
+          <text/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+
+  <!-- filesystems detected -->
+  <define name="filesystems">
+    <element name="filesystems">
+      <oneOrMore>
+        <element name="filesystem">
+          <attribute name="dev"><text/></attribute>
+          <interleave>
+            <optional><element name="type"><text/></element></optional>
+            <optional><element name="label"><text/></element></optional>
+            <optional><element name="uuid"><text/></element></optional>
+          </interleave>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+
+  <!-- drive mappings (for Windows) -->
+  <define name="drive_mappings">
+    <element name="drive_mappings">
+      <oneOrMore>
+        <element name="drive_mapping">
+          <attribute name="name"><text/></attribute>
+          <text/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+
+  <!-- applications installed -->
+  <define name="applications">
+    <element name="applications">
+      <zeroOrMore>
+        <element name="application">
+          <element name="name"><text/></element>
+          <optional><element name="display_name"><text/></element></optional>
+          <optional><element name="epoch"><text/></element></optional>
+          <optional><element name="version"><text/></element></optional>
+          <optional><element name="release"><text/></element></optional>
+          <optional><element name="arch"><text/></element></optional>
+          <optional><element name="install_path"><text/></element></optional>
+          <optional><element name="publisher"><text/></element></optional>
+          <optional><element name="url"><text/></element></optional>
+          <optional><element name="source_package"><text/></element></optional>
+          <optional><element name="summary"><text/></element></optional>
+          <optional><element name="description"><text/></element></optional>
+        </element>
+      </zeroOrMore>
+    </element>
+  </define>
+
+</grammar>

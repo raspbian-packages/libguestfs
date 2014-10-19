@@ -1,0 +1,190 @@
+
+=head1 名前
+
+virt-format - ディスクの消去および空のディスクの作成
+
+=head1 書式
+
+ virt-format [--options] -a disk.img [-a disk.img ...]
+
+=head1 説明
+
+Virt-format takes an existing disk file (or it can be a host partition, LV
+etc), B<erases all data on it>, and formats it as a blank disk.  It can
+optionally create partition tables, empty filesystems, logical volumes and
+more.
+
+To create a disk containing data, you may be better to use
+L<virt-make-fs(1)>.  If you are creating a blank disk to use in
+L<guestfish(1)>, you should instead use the guestfish I<-N> option.
+
+通常の使用方法はこのようになります:
+
+ virt-format -a disk.qcow
+
+または、このようになります:
+
+ virt-format -a /dev/VG/LV
+
+C<disk.qcow> or C</dev/VG/LV> must exist already.  B<Any data on these disks
+will be erased by these commands>.  These commands will create a single
+empty partition covering the whole disk, with no filesystem inside it.
+
+Additional parameters can be used to control the creation of partitions,
+filesystems, etc.  The most commonly used options are:
+
+=over 4
+
+=item I<--filesystem=[ext3|ntfs|vfat|...]>
+
+Create an empty filesystem (C<ext3>, C<ntfs> etc) inside the partition.
+
+=item I<--lvm[=/dev/VG/LV]>
+
+Create a Linux LVM2 logical volume on the disk.  When used with
+I<--filesystem>, the filesystem is created inside the LV.
+
+=back
+
+For more information about these and other options, see L</OPTIONS> below.
+
+The format of the disk is normally auto-detected, but you can also force it
+by using the I<--format> option (q.v.).  In situations where you do not
+trust the existing content of the disk, then it is advisable to use this
+option to avoid possible exploits.
+
+=head1 オプション
+
+=over 4
+
+=item B<--help>
+
+簡単なヘルプを表示します。
+
+=item B<-a> file
+
+=item B<--add> file
+
+I<ファイル>、ディスクイメージ、ホストのパーティション、論理ボリューム、外部 USB ディスクなどを追加します。
+
+ディスクイメージの形式は自動検知されます。 これを上書きして強制的に特定の形式を使用する場合、 I<--format=..> オプションを使用します。
+
+B<ディスクにある既存のデータはすべて削除されます。>
+
+=item B<-a URI>
+
+=item B<--add URI>
+
+リモートディスクを追加します。 L<guestfish(1)/リモートストレージの追加> 参照。
+
+=item B<--filesystem=ext3|ntfs|vfat|...>
+
+Create an empty filesystem of the specified type.  Many filesystem types are
+supported by libguestfs.
+
+=item B<--filesystem=none>
+
+ファイルシステムを作成しません。  これがデフォルトです。
+
+=item B<--format=raw|qcow2|..>
+
+=item B<--format>
+
+I<-a> オプションは標準状態でディスクイメージの形式を自動検知します。 これを使用することにより、コマンドラインで後続の I<-a>
+オプションのディスク形式を強制的に指定できます。 引数なしで I<--format> を使用することにより、 後続の I<-a>
+オプションに対して自動検知に戻せます。
+
+例:
+
+ virt-format --format=raw -a disk.img
+
+強制的に C<disk.img> を raw 形式にします (自動検出しません)。
+
+ virt-format --format=raw -a disk.img --format -a another.img
+
+強制的に C<disk.img> を raw 形式にし (自動検知なし)、 C<another.img> に対して自動検知に戻します。
+
+仮想マシンのディスクイメージが信頼できない raw 形式である場合、 ディスク形式を指定するためにこのオプションを使用すべきです。
+これにより、悪意のある仮想マシンにより起こり得る セキュリティ問題を回避できます (CVE-2010-3851)。
+
+=item B<--label=LABEL>
+
+Set the filesystem label.
+
+=item B<--lvm=/dev/I<VG>/I<LV>>
+
+C</dev/I<VG>/I<LV>> という Linux LVM2
+論理ボリュームを作成します。ボリュームグループおよび論理ボリュームの名前を変更できます。
+
+=item B<--lvm>
+
+初期名 (C</dev/VG/LV>) を用いて Linux LVM2 論理ボリュームを作成します。
+
+=item B<--lvm=none>
+
+論理ボリュームを作成しません。  これがデフォルトです。
+
+=item B<--partition>
+
+ディスク全体をカバーする MBR または GPT パーティションを作成します。ディスク容量が E<lt> 2 TB ならば MBR
+が選択されます。容量が E<ge> 2 TB ならば GPT が選択されます。
+
+これがデフォルトです。
+
+=item B<--partition=gpt>
+
+GPT パーティションを作成します。
+
+=item B<--partition=mbr>
+
+MBR パーティションを作成します。
+
+=item B<--partition=none>
+
+パーティションテーブルを作成しません。Windows はこれらのディスクを認識できないかもしれないことに注意してください。
+
+=item B<-v>
+
+=item B<--verbose>
+
+デバッグ用の冗長なメッセージを有効にします。
+
+=item B<-V>
+
+=item B<--version>
+
+バージョン番号を表示して、終了します。
+
+=item B<--wipe>
+
+Normally virt-format does not wipe data from the disk (because that takes a
+long time).  Thus if there is data on the disk, it is only hidden and
+partially overwritten by virt-format, and it might be recovered by disk
+editing tools.
+
+If you use this option, virt-format writes zeroes over the whole disk so
+that previous data is not recoverable.
+
+=item B<-x>
+
+libguestfs API 呼び出しのトレースを有効にします。
+
+=back
+
+=head1 終了ステータス
+
+このプログラムは、成功すると C<0>、失敗すると C<1> を返します。
+
+=head1 関連項目
+
+L<guestfs(3)>, L<guestfish(1)>, L<virt-filesystems(1)>, L<virt-make-fs(1)>,
+L<virt-rescue(1)>, L<virt-resize(1)>, L<http://libguestfs.org/>.
+
+=head1 著者
+
+Richard W.M. Jones L<http://people.redhat.com/~rjones/>
+
+=head1 COPYRIGHT
+
+Copyright (C) 2012 Red Hat Inc.
+
