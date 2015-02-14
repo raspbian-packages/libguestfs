@@ -113,7 +113,7 @@ supermin.d/daemon.tar.gz: ../daemon/guestfsd
 	rm -rf tmp-d
 	mkdir -p tmp-d$(DAEMON_SUPERMIN_DIR) tmp-d/etc
 	ln ../daemon/guestfsd tmp-d$(DAEMON_SUPERMIN_DIR)/guestfsd
-	( cd tmp-d && tar zcf - * ) > $@-t
+	( cd tmp-d && tar --mtime=$(abs_top_srcdir)/ChangeLog -zcf - * ) > $@-t
 	rm -r tmp-d
 	mv $@-t $@
 
@@ -134,7 +134,7 @@ supermin.d/hostfiles: hostfiles.in Makefile
 
 supermin.d/init.tar.gz: init
 	rm -f $@ $@-t
-	( cd $(srcdir) && tar zcf - init ) > $@-t
+	( cd $(srcdir) && tar --mtime=$(abs_top_srcdir)/ChangeLog -zcf - init ) > $@-t
 	mv $@-t $@
 
 # We should put this file in /lib/udev/rules.d, but put it in /etc so
@@ -144,7 +144,7 @@ supermin.d/udev-rules.tar.gz: 99-guestfs-serial.rules
 	rm -rf tmp-u
 	mkdir -p tmp-u/etc/udev/rules.d
 	for f in $^; do ln $$f tmp-u/etc/udev/rules.d/$$(basename $$f); done
-	( cd tmp-u && tar zcf - etc ) > $@-t
+	( cd tmp-u && tar --mtime=$(abs_top_srcdir)/ChangeLog -zcf - etc ) > $@-t
 	rm -r tmp-u
 	mv $@-t $@
 
