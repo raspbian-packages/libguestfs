@@ -56,13 +56,14 @@ superminfs_DATA = \
 supermin.d/base.tar.gz supermin.d/packages: stamp-supermin
 stamp-supermin: make.sh packagelist supermin.d/excludefiles
 	rm -f $@ supermin.d/base.tar.gz supermin.d/packages
-	./make.sh
+	GZIP=-n ./make.sh
 	$(MAKE) \
 	  supermin.d/daemon.tar.gz \
 	  supermin.d/excludefiles \
 	  supermin.d/hostfiles \
 	  supermin.d/init.tar.gz \
-	  supermin.d/udev-rules.tar.gz
+	  supermin.d/udev-rules.tar.gz \
+	  GZIP=-n
 	touch $@
 
 clean-supermin-appliance:
