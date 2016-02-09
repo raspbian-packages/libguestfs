@@ -55,7 +55,7 @@ superminfs_DATA = \
 supermin.d/base.tar.gz supermin.d/packages: stamp-supermin
 stamp-supermin: make.sh packagelist supermin.d/excludefiles
 	rm -f $@ supermin.d/base.tar.gz supermin.d/packages
-	./make.sh
+	GZIP=-n TAR_OPTIONS="$(TAR_OPTIONS)" ./make.sh
 	$(MAKE) \
 	  supermin.d/daemon.tar.gz \
 	  supermin.d/excludefiles \
@@ -124,7 +124,7 @@ supermin.d/daemon.tar.gz: ../daemon/guestfsd
 	rm -rf tmp-d
 	mkdir -p tmp-d$(DAEMON_SUPERMIN_DIR) tmp-d/etc
 	ln ../daemon/guestfsd tmp-d$(DAEMON_SUPERMIN_DIR)/guestfsd
-	( cd tmp-d && tar $(TAR_OPTIONS) -cf - * ) > $@-t
+	( cd tmp-d && GZIP=-n tar $(TAR_OPTIONS) -cf - * ) > $@-t
 	rm -r tmp-d
 	mv $@-t $@
 
@@ -145,7 +145,7 @@ supermin.d/hostfiles: hostfiles.in Makefile
 
 supermin.d/init.tar.gz: init
 	rm -f $@ $@-t
-	( cd $(srcdir) && tar $(TAR_OPTIONS) -cf - init ) > $@-t
+	( cd $(srcdir) && GZIP=-n tar --mode=0755 $(TAR_OPTIONS) -cf - init ) > $@-t
 	mv $@-t $@
 
 # We should put this file in /lib/udev/rules.d, but put it in /etc so
@@ -155,7 +155,7 @@ supermin.d/udev-rules.tar.gz: 99-guestfs-serial.rules
 	rm -rf tmp-u
 	mkdir -p tmp-u/etc/udev/rules.d
 	for f in $^; do ln $$f tmp-u/etc/udev/rules.d/$$(basename $$f); done
-	( cd tmp-u && tar $(TAR_OPTIONS) -cf - etc ) > $@-t
+	( cd tmp-u && GZIP=-n tar --mode=0644 $(TAR_OPTIONS) -cf - etc ) > $@-t
 	rm -r tmp-u
 	mv $@-t $@
 
