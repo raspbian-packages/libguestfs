@@ -1,0 +1,52 @@
+
+=head1 НАЗВА
+
+guestfs-perl — як використовувати libguestfs з Perl
+
+=head1 КОРОТКИЙ ОПИС
+
+ use Sys::Guestfs;
+ 
+ my $g = Sys::Guestfs->new ();
+ $g->add_drive_opts ('guest.img', format => 'raw');
+ $g->launch ();
+ $g->mount ('/dev/sda1', '/');
+ $g->touch ('/hello');
+ $g->shutdown ();
+ $g->close ();
+
+=head1 ОПИС
+
+This manual page documents how to call libguestfs from the Perl programming
+language.  This page just documents the differences from the C API and gives
+some examples.  If you are not familiar with using libguestfs, you also need
+to read L<guestfs(3)>.  To read the full Perl API, see L<Sys::Guestfs(3)>.
+
+=head2 ПОМИЛКИ
+
+Errors from libguestfs functions turn into calls to C<croak> (see
+L<Carp(3)>).
+
+=head1 ПРИКЛАД 1. СТВОРЕННЯ ОБРАЗУ ДИСКА
+
+@EXAMPLE1@
+
+=head1 ПРИКЛАД 2. ПЕРЕВІРКА ОБРАЗУ ДИСКА ВІРТУАЛЬНОЇ МАШИНИ
+
+@EXAMPLE2@
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<Sys::Guestfs(3)>, L<guestfs(3)>, L<guestfs-examples(3)>,
+L<guestfs-erlang(3)>, L<guestfs-golang(3)>, L<guestfs-java(3)>,
+L<guestfs-lua(3)>, L<guestfs-ocaml(3)>, L<guestfs-python(3)>,
+L<guestfs-recipes(1)>, L<guestfs-ruby(3)>, L<http://libguestfs.org/>.
+
+=head1 АВТОРИ
+
+Richard W.M. Jones (C<rjones at redhat dot com>)
+
+=head1 АВТОРСЬКІ ПРАВА
+
+© Red Hat Inc., 2011–2012
+
