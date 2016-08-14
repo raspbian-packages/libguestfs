@@ -93,7 +93,7 @@ source_files := $(shell cat $(srcdir)/C_SOURCE_FILES)
 
 internal-documentation.pod: $(source_files:%=$(top_srcdir)/%)
 	rm -f $@ $@-t
-	./make-internal-documentation.pl \
+	$(srcdir)/make-internal-documentation.pl \
 	    --srcdir $(top_srcdir) \
 	    -o $@-t \
 	    $(source_files)
