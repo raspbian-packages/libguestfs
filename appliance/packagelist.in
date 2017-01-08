@@ -74,6 +74,7 @@ dnl iproute has been renamed to iproute2
   iputils-arping
   iputils-tracepath
   isc-dhcp-client
+  ldmtool
   libaugeas0
   libc-bin
   libcap2
