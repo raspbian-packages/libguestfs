@@ -28,6 +28,7 @@ Build-Depends: debhelper (>= 9),
   dh-lua,
   dh-ocaml, ocaml-nox, ocaml-findlib, libpcre-ocaml-dev, libgettext-ocaml-dev,
   python (>= 2.6.6-3~), python-all-dev (>= 2.6.6-3~), python3-all-dev,
+  dh-python,
   default-jdk,
   gem2deb, rake, libjs-jquery,
   libmodule-build-perl,
@@ -45,7 +46,7 @@ Build-Depends: debhelper (>= 9),
   golang-go [i386 amd64 armel armhf arm64 ppc64el],
   dh-php, php-all-dev | php5-dev,
 # for appliance
-  linux-image-versatile [armel],
+  linux-image-marvell [armel] | linux-image-versatile [armel],
   linux-image-rpi [armhf],
   linux-image-arm64 [arm64],
   linux-image-4kc-malta [mips mipsel] | linux-image-5kc-malta [mips mipsel mips64 mips64el],
@@ -109,7 +110,7 @@ Build-Depends: debhelper (>= 9),
   zerofree,
   zfs-fuse [i386 amd64 armel powerpc sparc],
 Homepage: http://libguestfs.org
-Standards-Version: 3.9.6
+Standards-Version: 3.9.8
 Vcs-Git: git://anonscm.debian.org/pkg-libvirt/libguestfs.git
 Vcs-Browser: http://anonscm.debian.org/?p=pkg-libvirt/libguestfs.git
 XS-Ruby-Versions: all
