@@ -1,0 +1,209 @@
+#!/bin/bash
+
+echo Starting /init script ...
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+export PATH
+
+# Debian bug 606622.
+RUNLEVEL=S
+PREVLEVEL=N
+export RUNLEVEL PREVLEVEL
+
+# Make sure /tmp /var/tmp are real directories, not symlinks.
+if [ ! -d /tmp ] || [ ! -d /var/tmp ]; then
+    rm -f /tmp /var/tmp
+    mkdir /tmp /var/tmp
+    chmod 1777 /tmp /var/tmp
+fi
+
+# Try to print a stack trace for segfaults inside the appliance.
+for d in /lib64 /lib; do
+  f=$d/libSegFault.so
+  if [ -f "$f" ]; then
+    LD_PRELOAD=$f
+    export LD_PRELOAD
+    break
+  fi
+done
+
+mkdir -p /sysroot
+
+# Mount /proc.
+if [ ! -d /proc ]; then rm -f /proc; fi
+mkdir -p /proc
+mount -t proc /proc /proc
+
+# Parse the kernel command line early (must be after /proc is mounted).
+cmdline=$(</proc/cmdline)
+
+if [[ $cmdline == *guestfs_verbose=1* ]]; then
+    guestfs_verbose=1
+    set -x
+fi
+if [[ $cmdline == *guestfs_network=1* ]]; then
+    guestfs_network=1
+fi
+if [[ $cmdline == *guestfs_rescue=1* ]]; then
+    guestfs_rescue=1
+fi
+if [[ $cmdline == *guestfs_noreboot=1* ]]; then
+    guestfs_noreboot=1
+fi
+if [[ $cmdline == *guestfs_boot_analysis=1* ]]; then
+    guestfs_boot_analysis=1
+fi
+
+# Mount the other special filesystems.
+if [ ! -d /sys ]; then rm -f /sys; fi
+mkdir -p /sys
+mount -t sysfs /sys /sys
+# taken from initramfs-tools/init --Hilko Bengen
+mkdir -p /run
+mount -t tmpfs -o "nosuid,size=20%,mode=0755" tmpfs /run
+mkdir -p /run/lock
+ln -s ../run/lock /var/lock
+
+# On Fedora 23, util-linux creates /etc/mtab in %post .. stupid
+# and e2fsprogs fails if the link doesn't exist .. stupid stupid
+if ! test -e /etc/mtab; then
+  ln -s /proc/mounts /etc/mtab
+fi
+
+# devtmpfs is required since udev 176
+mount -t devtmpfs /dev /dev
+mkdir -p /dev/pts
+mount -t devpts /dev/pts /dev/pts
+
+if [[ $cmdline == *selinux=1* ]]; then
+  mount -t selinuxfs none /sys/fs/selinux
+fi
+
+# Static nodes must happen before udev is started.
+
+# Set up kmod static-nodes (RHBZ#1011907).
+mkdir -p /run/tmpfiles.d
+kmod static-nodes --format=tmpfiles --output=/run/tmpfiles.d/kmod.conf
+
+# Create a machine-id with a random UUID
+machine_id=$(dd if=/dev/urandom bs=16 count=1 status=none | od -x -A n)
+echo "${machine_id// /}" > /etc/machine-id
+
+# Set up tmpfiles (must run after kmod.conf is created above).
+systemd-tmpfiles --prefix=/dev --prefix=/run --create --boot
+
+# Find udevd and run it directly.
+for f in /lib/systemd/systemd-udevd /usr/lib/systemd/systemd-udevd \
+    /sbin/udevd /lib/udev/udevd \
+    /usr/lib/udev/udevd; do
+  if [ -x "$f" ]; then UDEVD="$f"; break; fi
+done
+if [ -z "$UDEVD" ]; then
+  echo "error: udev not found!  Things will probably not work ..."
+fi
+
+$UDEVD --daemon #--debug
+udevadm trigger
+udevadm settle --timeout=600
+
+# Disk optimizations.
+# Increase the SCSI timeout so we can read remote images.
+shopt -s nullglob
+for f in /sys/block/sd*/device/timeout; do echo 300 > $f; done
+# https://access.redhat.com/site/solutions/5427
+for f in /sys/block/{h,s,ub,v}d*/queue/scheduler; do echo noop > $f; done
+shopt -u nullglob
+
+# Set up the network.
+ip addr add 127.0.0.1/8 brd + dev lo scope host
+ip link set dev lo up
+
+if test "$guestfs_network" = 1; then
+    iface=$(ls -I all -I default -I lo /proc/sys/net/ipv4/conf)
+    touch /etc/fstab   # Workaround for Ubuntu.
+    if dhclient --version >/dev/null 2>&1; then
+        dhclient $iface
+    else
+        dhcpcd $iface
+    fi
+fi
+
+# Scan for MDs.
+mdadm -As --auto=yes --run
+
+# Scan for LVM.
+modprobe dm_mod ||:
+
+lvm vgchange -aay --sysinit
+
+# Scan for Windows dynamic disks.
+ldmtool create all
+
+# These are useful when debugging.
+if test "$guestfs_verbose" = 1 && test "$guestfs_boot_analysis" != 1; then
+    uname -a
+    ls -lR /dev
+    cat /proc/mounts
+    lvm pvs
+    lvm vgs
+    lvm lvs
+    ip a
+    ip r
+    lsmod
+    #hwclock -r
+    date
+    echo -n "clocksource: "
+    cat /sys/devices/system/clocksource/clocksource0/current_clocksource
+    #ping -n -v -c 5 8.8.8.8
+
+    echo -n "uptime: "; cat /proc/uptime
+fi
+
+if ! test "$guestfs_rescue" = 1; then
+  # Run the daemon.
+  cmd="guestfsd"
+  eval `grep -Eo 'guestfs_channel=[^[:space:]]+' /proc/cmdline`
+  if test "x$guestfs_channel" != "x"; then
+    cmd="$cmd --channel $guestfs_channel"
+  fi
+  if test "$guestfs_verbose" = 1; then
+    cmd="$cmd --verbose"
+  fi
+  if test "$guestfs_network" = 1; then
+    cmd="$cmd --network"
+  fi
+  echo $cmd
+  $cmd
+else
+  # Run virt-rescue shell.
+
+  # Remove LD_PRELOAD=libSegFault set above.
+  unset LD_PRELOAD
+
+  :> $HOME/.bashrc
+  grep -Eo 'TERM=[^[:space:]]+' /proc/cmdline >> $HOME/.bashrc
+  echo "PS1='><rescue> '" >> $HOME/.bashrc
+  echo "export TERM PS1" >> $HOME/.bashrc
+
+  echo
+  echo "------------------------------------------------------------"
+  echo
+  echo "Welcome to virt-rescue, the libguestfs rescue shell."
+  echo
+  echo "Note: The contents of / are the rescue appliance."
+  echo "You have to mount the guest's partitions under /sysroot"
+  echo "before you can examine them."
+  echo
+  bash -i
+  echo
+  echo "virt-rescue: Syncing the disk now before exiting ..."
+  echo
+fi
+
+sync
+
+if ! test "$guestfs_noreboot" = 1; then
+  # qemu has the -no-reboot flag, so issuing a reboot here actually
+  # causes qemu to exit gracefully.
+  reboot -f
+fi
