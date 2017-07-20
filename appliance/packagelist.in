@@ -89,8 +89,8 @@ dnl isc-dhcp-client has been replaced with dhcpcd-base
   ntfs-3g
   openssh-client
   reiserfsprogs
-  sysvinit                  dnl for /sbin/reboot
-  systemd                   dnl alternative for /sbin/reboot
+  sysvinit-core             dnl for /sbin/reboot
+  systemd-sysv              dnl alternative for /sbin/reboot
   ufsutils
   vim-tiny
   xz-utils
