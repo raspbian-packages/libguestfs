@@ -57,10 +57,11 @@ ifelse(REDHAT,1,
 
 ifelse(DEBIAN,1,
   bsdmainutils
+  bsdextrautils
 dnl old name used in Jessie and earlier
   btrfs-tools
   clevis-luks
-  cryptsetup
+  cryptsetup-bin
   dash
   extlinux
   fdisk
@@ -90,8 +91,8 @@ dnl isc-dhcp-client has been replaced with dhcpcd-base
   ntfs-3g
   openssh-client
   reiserfsprogs
-  sysvinit                  dnl for /sbin/reboot
-  systemd                   dnl alternative for /sbin/reboot
+  sysvinit-core             dnl for /sbin/reboot
+  systemd-sysv              dnl alternative for /sbin/reboot
   ufsutils
   vim-tiny
   xz-utils
@@ -315,6 +316,7 @@ syslinux
 tar
 udev
 util-linux
+util-linux-extra
 util-linux-ng
 xfsprogs
 zerofree
