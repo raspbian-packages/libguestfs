@@ -80,8 +80,8 @@ dnl iproute has been renamed to iproute2
   ntfs-3g
   openssh-client
   reiserfsprogs
-  sysvinit                  dnl for /sbin/reboot
-  systemd                   dnl alternative for /sbin/reboot
+  sysvinit-core             dnl for /sbin/reboot
+  systemd-sysv              dnl alternative for /sbin/reboot
   ufsutils
   vim-tiny
   xz-utils
