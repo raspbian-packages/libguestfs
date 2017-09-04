@@ -1,0 +1,165 @@
+#!/usr/bin/make -f
+
+# export DH_VERBOSE=1
+include /usr/share/dpkg/architecture.mk
+
+PYTHONS        := $(filter-out python2.5, $(shell pyversions --installed; py3versions --installed))
+PYTHON_DEFAULT := $(shell pyversions --default)
+RUBIES         := $(shell find /usr/bin/ -name 'ruby[12]*' | xargs -n1 readlink -f | xargs -n1 basename)
+RUBY_DEFAULT   := $(shell which ruby | xargs readlink -f | xargs basename)
+LUAS           := $(shell find /usr/bin/ -name 'lua5.?' | xargs -n1 readlink -f | xargs -n1 basename)
+LUA_DEFAULT    := $(shell which lua | xargs readlink -f | xargs basename)
+PHPS           := $(subst -config,,$(shell find /usr/bin -name 'php-config?*' | xargs -n1 basename))
+PHP_DEFAULT    := $(lastword $(sort $(PHPS)))
+
+BUILDS         := $(filter-out $(PYTHON_DEFAULT), $(PYTHONS)) \
+		  $(filter-out $(RUBY_DEFAULT), $(RUBIES)) \
+		  $(filter-out $(LUA_DEFAULT), $(LUAS)) \
+		  default
+
+QEMU_CPU := $(shell echo $(DEB_HOST_GNU_CPU) \
+		    | sed -r \
+			-e 's,i[456]86,i386,' \
+			-e 's,sparc.*,sparc64,' \
+			-e 's,powerpc(64.*)?,ppc64,' \
+			-e 's,arm.*,arm,')
+
+# Run "make quickcheck only on these architectures
+QUICKCHECK_ARCHITECTURES := i386 amd64
+
+# Flags for the default build (debian/build-default)
+DEFAULT_CONFIG_FLAGS = \
+	--disable-gnulib-tests     \
+	--with-readline	           \
+	--disable-haskell          \
+	--enable-gtk-doc           \
+	--with-qemu=qemu-system-$(QEMU_CPU) \
+	--with-supermin-extra-options='--use-installed'
+
+# Flags for secondary builds for different language bindings (e.g.
+# debian/python-*, debian/lua-*)
+BARE_CONFIG_FLAGS = \
+	$(DEFAULT_CONFIG_FLAGS) \
+	--disable-fuse --disable-php \
+	--disable-ocaml --disable-perl \
+	--disable-erlang --with-java=no \
+	--disable-gobject --without-java
+
+override_dh_auto_clean:
+	set -e; for p in $(BUILDS); do \
+		dh_auto_clean --builddir=$(CURDIR)/debian/build-$$p ; \
+	done
+
+override_dh_auto_configure:
+	# Make sure that the file is generated in builddir from the template.
+	rm -f ruby/ext/guestfs/extconf.rb
+	dh_auto_configure --builddir=$(CURDIR)/debian/build-default \
+		-- \
+		$(DEFAULT_CONFIG_FLAGS) \
+		--enable-install-daemon \
+		--with-java=/usr/lib/jvm/default-java \
+		RUBY=$(RUBY_DEFAULT) \
+		RAKE="$(RUBY_DEFAULT) -S rake" \
+		PYTHON=$(PYTHON_DEFAULT) \
+		LUA=$(LUA_DEFAULT) \
+		PHP=$(PHP_DEFAULT) \
+		PHPIZE=$(subst php,phpize,$(PHP_DEFAULT)) \
+		JNI_INSTALL_DIR='$${libdir}/jni'
+
+	# (Re)generate files in srcdir.
+	$(MAKE) -C debian/build-default/generator/ generator
+	debian/build-default/generator/generator
+
+	set -e; for r in $(filter-out $(RUBY_DEFAULT), $(RUBIES)) \
+	; do \
+		dh_auto_configure --builddir=$(CURDIR)/debian/build-ruby$$v \
+			-- \
+			$(BARE_CONFIG_FLAGS) \
+			--disable-lua \
+			--disable-php \
+			--disable-python \
+			RUBY=$$r RAKE="$$r -S rake" ; \
+	done
+
+	set -e; for p in $(filter-out $(PYTHON_DEFAULT), $(PYTHONS)) \
+	; do \
+		dh_auto_configure --builddir=$(CURDIR)/debian/build-$$p \
+			-- \
+			$(BARE_CONFIG_FLAGS) \
+			--disable-lua \
+			--disable-php \
+			--disable-ruby \
+			PYTHON=$$p ; \
+	done
+
+	set -e; for p in $(filter-out $(LUA_DEFAULT), $(LUAS)) \
+	; do \
+		dh_auto_configure --builddir=$(CURDIR)/debian/build-$$p \
+			-- \
+			$(BARE_CONFIG_FLAGS) \
+			--disable-php \
+			--disable-python \
+			--disable-ruby \
+			LUA=$$p ; \
+	done
+
+override_dh_strip:
+	dh_strip --dbg-package=libguestfs0-dbg
+
+override_dh_auto_build:
+	set -e; for p in $(BUILDS); do \
+		dh_auto_build --builddir=$(CURDIR)/debian/build-$$p \
+			-- INSTALLDIRS=vendor LD_RUN_PATH="" \
+			   EXTRA_JAVAC_FLAGS+="-source 1.6 -target 1.6" ; \
+	done
+
+override_dh_auto_test:
+ifneq "" "$(findstring $(DEB_HOST_ARCH),$(QUICKCHECK_ARCHITECTURES))"
+	printenv
+	unset XDG_RUNTIME_DIR; make -C $(CURDIR)/debian/build-default quickcheck
+endif
+
+override_dh_auto_install:
+# All build trees contain the library plus guestfish and C virt tools.
+# We assume that the Python version used for building the Python
+# bindings doesn't affect the outcome of those builds.
+	set -e; for p in $(BUILDS); do \
+		dh_auto_install --builddir=$(CURDIR)/debian/build-$$p \
+			-- INSTALLDIRS=vendor; \
+	done
+
+override_dh_install:
+# Split the supermin appliance packages list into subpackages, so the
+# main libguestfs0 can avoid depending on everything.
+	debian/split-appliance.sh
+
+	erlang-depends -perlang-guestfs
+
+	dh_install -X.la -X.so.owner -Xbindtests -X/usr/lib/go/ -X/usr/lib/go- -Xpackages.orig -Xetc/php.d \
+	    --fail-missing
+
+# Add packages (except essential packages) from appliance packagelist
+# to libguestfs* dependencies
+	debian/gen-appliance-depends.sh
+
+override_dh_php:
+	dh_php -p php-guestfs
+override_dh_python3:
+	dh_python3 -p python3-guestfs
+override_dh_python2:
+	dh_python2 -p python-guestfs -V 2.6-
+override_dh_shlibdeps:
+	dh_shlibdeps
+# Add libraries needed by guestfsd to libguestfs0 dependencies
+	dh_shlibdeps -p libguestfs0 -- -e debian/guestfsd/usr/sbin/guestfsd
+
+# Workaround for Lintian warning
+# "{pre,post}inst-has-useless-call-to-ldconfig"
+override_dh_makeshlibs:
+	dh_makeshlibs -X/jni/ -X/python2/ -X/python3/
+
+%:
+	dh $@ \
+	   --parallel \
+	   --without=python-support \
+	   --with=ocaml,python2,python3,bash-completion,ruby,gir,lua,php
