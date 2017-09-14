@@ -3,8 +3,7 @@ Section: libs
 Priority: extra
 Maintainer: Debian Libvirt Maintainers <pkg-libvirt-maintainers@lists.alioth.debian.org>
 Uploaders: Richard Jones <rjones@redhat.com>, Guido Günther <agx@sigxcpu.org>, Hilko Bengen <bengen@debian.org>
-Build-Depends: debhelper (>= 9),
-  dh-autoreconf,
+Build-Depends: debhelper (>= 10),
   po-debconf, bash-completion,
   supermin (>= 5),
   libreadline-dev, libaugeas-dev (>= 1.0.0), libselinux1-dev, libhivex-dev, libvirt-dev,
@@ -15,12 +14,13 @@ Build-Depends: debhelper (>= 9),
   libsystemd-dev | libsystemd-journal-dev,
   sleuthkit, libtsk-dev,
   automake, autoconf, libtool,
+  fdisk | util-linux (<< 2.29.2-3~),
   gperf, libxml2-utils,
   qemu-system-arm [armel armhf arm64],
   qemu-system-mips [mips mipsel mips64 mips64el],
   qemu-system-misc [s390x],
-  qemu-system-ppc [powerpc ppc64 ppc64el],
-  qemu-system-sparc [sparc],
+  qemu-system-ppc [powerpc powerpcspe ppc64 ppc64el],
+  qemu-system-sparc [sparc sparc64],
   qemu-system-x86 [i386 amd64], sgabios [i386 amd64],
   qemu-utils,
   genisoimage, pkg-config,
@@ -110,9 +110,9 @@ Build-Depends: debhelper (>= 9),
   zerofree,
   zfs-fuse [i386 amd64 armel powerpc sparc],
 Homepage: http://libguestfs.org
-Standards-Version: 3.9.8
-Vcs-Git: git://anonscm.debian.org/pkg-libvirt/libguestfs.git
-Vcs-Browser: http://anonscm.debian.org/?p=pkg-libvirt/libguestfs.git
+Standards-Version: 4.0.0
+Vcs-Git: https://anonscm.debian.org/git/pkg-libvirt/libguestfs.git
+Vcs-Browser: https://anonscm.debian.org/cgit/pkg-libvirt/libguestfs.git
 XS-Ruby-Versions: all
 
 Package: guestfsd
