@@ -1,5 +1,5 @@
 (* virt-v2v
- * Copyright (C) 2009-2016 Red Hat Inc.
+ * Copyright (C) 2009-2017 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,14 +26,7 @@ open Utils
 
 module G = Guestfs
 
-(* Wrappers around aug_init & aug_load which can dump out full Augeas
- * parsing problems when debugging is enabled.
- *)
-let rec augeas_init g =
-  g#aug_init "/" 1;
-  debug_augeas_errors g
-
-and augeas_reload g =
+let augeas_reload g =
   g#aug_load ();
   debug_augeas_errors g
 
@@ -44,10 +37,14 @@ let rec remove g inspect packages =
     augeas_reload g
   )
 
-and do_remove g inspect packages =
+and do_remove g { i_package_format = package_format } packages =
   assert (List.length packages > 0);
-  let package_format = inspect.i_package_format in
   match package_format with
+  | "deb" ->
+    let cmd = [ "dpkg"; "--purge" ] @ packages in
+    let cmd = Array.of_list cmd in
+    ignore (g#command cmd);
+
   | "rpm" ->
     let cmd = [ "rpm"; "-e" ] @ packages in
     let cmd = Array.of_list cmd in
@@ -58,9 +55,14 @@ and do_remove g inspect packages =
       format (String.concat " " packages)
 
 let file_list_of_package (g : Guestfs.guestfs) inspect app =
-  let package_format = inspect.i_package_format in
+  match inspect.i_package_format with
+  | "deb" ->
+    let cmd = [| "dpkg"; "-L"; app.G.app2_name |] in
+    debug "%s" (String.concat " " (Array.to_list cmd));
+    let files = g#command_lines cmd in
+    let files = Array.to_list files in
+    List.sort compare files
 
-  match package_format with
   | "rpm" ->
     (* Since RPM allows multiple packages installed with the same
      * name, always check the full ENVR here (RHBZ#1161250).
@@ -91,34 +93,57 @@ let file_list_of_package (g : Guestfs.guestfs) inspect app =
     let files = g#command_lines cmd in
     let files = Array.to_list files in
     List.sort compare files
+
   | format ->
     error (f_"don't know how to get list of files from package using %s")
       format
 
-let rec file_owner (g : G.guestfs) inspect path =
-  let package_format = inspect.i_package_format in
+let is_file_owned (g : G.guestfs) { i_package_format = package_format } path =
   match package_format with
-  | "rpm" ->
-      (* Although it is possible in RPM for multiple packages to own
-       * a file, this deliberately only returns one package.
+  | "deb" ->
+      (* With dpkg usually the directories are owned by all the packages
+       * that install anything in them.  Also with multiarch the same
+       * package is allowed (although with different architectures).
+       * This function returns only one package in all the cases.
        *)
-      let cmd = [| "rpm"; "-qf"; "--qf"; "%{NAME}\\n"; path |] in
+      let cmd = [| "dpkg"; "-S"; path |] in
       debug "%s" (String.concat " " (Array.to_list cmd));
       (try
-         let pkgs = g#command_lines cmd in
-         pkgs.(0)
+         let lines = g#command_lines cmd in
+         if Array.length lines = 0 then
+           error (f_"internal error: is_file_owned: dpkg command returned no output");
+         (* Just check the output looks something like "pkg: filename". *)
+         if String.find lines.(0) ": " >= 0 then
+           true
+         else
+           error (f_"internal error: is_file_owned: unexpected output from dpkg command: %s")
+                 lines.(0)
        with Guestfs.Error msg as exn ->
-         if String.find msg "is not owned" >= 0 then
-           raise Not_found
+         if String.find msg "no path found matching pattern" >= 0 then
+           false
          else
            raise exn
-       | Invalid_argument _ (* pkgs.(0) raises index out of bounds *) ->
-         error (f_"internal error: file_owner: rpm command returned no output")
       )
+
+  | "rpm" ->
+     (* Run rpm -qf and print a magic string if the file is owned.
+      * If not owned, rpm will print "... is not owned by any package"
+      * and exit with an error.  Unfortunately the string is sent to
+      * stdout, so here we ignore the exit status of rpm and just
+      * look for one of the two strings.
+      *)
+     let magic = "FILE_OWNED_TEST" in
+     let cmd = sprintf "rpm -qf --qf %s %s 2>&1 ||:"
+                       (quote (magic ^ "\n")) (quote path) in
+     let r = g#sh cmd in
+     if String.find r magic >= 0 then true
+     else if String.find r "is not owned" >= 0 then false
+     else failwithf "RPM file owned test failed: %s" r
 
   | format ->
     error (f_"don't know how to find file owner using %s") format
 
-and is_file_owned g inspect path =
-  try ignore (file_owner g inspect path); true
-  with Not_found -> false
+let is_package_manager_save_file filename =
+  (* Recognized suffixes of package managers. *)
+  let suffixes = [ ".dpkg-old"; ".dpkg-new"; ".rpmsave"; ".rpmnew"; ] in
+  List.exists (Filename.check_suffix filename) suffixes

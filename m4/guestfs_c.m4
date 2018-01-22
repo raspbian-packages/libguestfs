@@ -1,5 +1,5 @@
 # libguestfs
-# Copyright (C) 2009-2016 Red Hat Inc.
+# Copyright (C) 2009-2017 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -48,6 +48,7 @@ nw="$nw -Wtraditional"               # Warns on #elif which we use often
 nw="$nw -Wsystem-headers"            # Don't let system headers trigger warnings
 nw="$nw -Wpadded"                    # Our structs are not padded
 nw="$nw -Wvla"                       # Allow variable length arrays.
+nw="$nw -Wvla-larger-than=4031"
 nw="$nw -Winline"                    # inline functions in Python binding
 nw="$nw -Wshadow"                    # Not useful, as it applies to global vars
 nw="$nw -Wunsafe-loop-optimizations" # just a warning that an optimization
@@ -95,6 +96,13 @@ dnl Warn about large stack frames, including estimates for alloca
 dnl and variable length arrays.
 gl_WARN_ADD([-Wstack-usage=10000])
 
+dnl Warn about implicit fallthrough in case statements, but suppress
+dnl the warning if /*FALLTHROUGH*/ comment is used.
+gl_WARN_ADD([-Wimplicit-fallthrough=4])
+
+dnl GCC level 2 gives incorrect warnings, so use level 1.
+gl_WARN_ADD([-Wformat-truncation=1])
+
 AC_SUBST([WARN_CFLAGS])
 
 AC_DEFINE([lint], [1], [Define to 1 if the compiler is checking for lint.])
@@ -138,10 +146,12 @@ dnl Check sizeof long.
 AC_CHECK_SIZEOF([long])
 
 dnl Check if __attribute__((cleanup(...))) works.
-dnl XXX It would be nice to use AC_COMPILE_IFELSE here, but gcc just
-dnl emits a warning for attributes that it doesn't understand.
+dnl Set -Werror, otherwise gcc will only emit a warning for attributes
+dnl that it doesn't understand.
+acx_nbdkit_save_CFLAGS="${CFLAGS}"
+CFLAGS="${CFLAGS} -Werror"
 AC_MSG_CHECKING([if __attribute__((cleanup(...))) works with this compiler])
-AC_RUN_IFELSE([
+AC_COMPILE_IFELSE([
 AC_LANG_SOURCE([[
 #include <stdio.h>
 #include <stdlib.h>
@@ -178,6 +188,8 @@ or the configure test may be wrong.
 
 The code will still compile, but is likely to leak memory and other
 resources when it runs.])])
+dnl restore CFLAGS
+CFLAGS="${acx_nbdkit_save_CFLAGS}"
 
 dnl Should we run the gnulib tests?
 AC_MSG_CHECKING([if we should run the GNUlib tests])

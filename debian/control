@@ -1,6 +1,6 @@
 Source: libguestfs
 Section: libs
-Priority: extra
+Priority: optional
 Maintainer: Debian Libvirt Maintainers <pkg-libvirt-maintainers@lists.alioth.debian.org>
 Uploaders: Richard Jones <rjones@redhat.com>, Guido Günther <agx@sigxcpu.org>, Hilko Bengen <bengen@debian.org>
 Build-Depends: debhelper (>= 10),
@@ -36,7 +36,7 @@ Build-Depends: debhelper (>= 10),
   libstring-shellquote-perl,
   libsys-virt-perl, libwin-hivex-perl,
   libfuse-dev, fuse,
-  libglib2.0-dev, gjs, gobject-introspection, libgirepository1.0-dev, gtk-doc-tools,
+  libglib2.0-dev, gjs, gobject-introspection, libgirepository1.0-dev,
   libgtk2.0-dev,
   db-util,
   netpbm, icoutils,
@@ -60,11 +60,12 @@ Build-Depends: debhelper (>= 10),
   attr,
   binutils,
   bsdmainutils,
-  btrfs-tools,
+  btrfs-progs,
   bzip2,
   cpio,
   cryptsetup, busybox,
   dosfstools,
+  exfat-utils,
   extlinux [i386 amd64],
   file,
   gawk,
@@ -101,16 +102,18 @@ Build-Depends: debhelper (>= 10),
   rsync,
   scrub,
   strace,
+  squashfs-tools,
   syslinux [i386 amd64],
   udev,
 # ufsutils,
   vim-tiny,
+  e2fsprogs,
   xfsprogs,
   xz-utils,
   zerofree,
   zfs-fuse [i386 amd64 armel powerpc sparc],
 Homepage: http://libguestfs.org
-Standards-Version: 4.0.0
+Standards-Version: 4.1.2
 Vcs-Git: https://anonscm.debian.org/git/pkg-libvirt/libguestfs.git
 Vcs-Browser: https://anonscm.debian.org/cgit/pkg-libvirt/libguestfs.git
 XS-Ruby-Versions: all
@@ -347,17 +350,6 @@ Description: guest disk image management system - tools
  virt-filesystems, virt-inspector, virt-ls, virt-make-fs, virt-rescue,
  virt-resize, virt-tar, and virt-win-reg.
 
-Package: libguestfs0-dbg
-Section: debug
-Architecture: linux-any
-Multi-Arch: same
-Depends: ${shlibs:Depends}, ${misc:Depends}, libguestfs0 (= ${binary:Version})
-Description: guest disk image management system - debug symbols
- The libguestfs library allows accessing and modifying guest disk
- images.
- .
- This package contains the debugging symbols.
-
 Package: python-guestfs
 Section: python
 Architecture: linux-any
@@ -474,7 +466,7 @@ Package: libguestfs-gobject-dev
 Section: libdevel
 Architecture: linux-any
 Multi-Arch: same
-Depends: libguestfs-gobject-1.0-0 (= ${binary:Version}), ${misc:Depends}
+Depends: libguestfs-gobject-1.0-0 (= ${binary:Version}), gir1.2-guestfs-1.0 (= ${binary:Version}), ${misc:Depends}
 Conflicts: libguestfs0 (<< 1:1.14.9-1~)
 Description: guest disk image management system - GObject development headers
  The libguestfs library allows accessing and modifying guest disk

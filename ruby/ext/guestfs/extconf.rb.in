@@ -1,6 +1,6 @@
 # libguestfs Ruby bindings -*- ruby -*-
 # @configure_input@
-# Copyright (C) 2009-2016 Red Hat Inc.
+# Copyright (C) 2009-2017 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,8 +33,9 @@ have_func("rb_define_alloc_func")
 have_type("rb_alloc_func_t")
 
 $CFLAGS =
-  "#{$CFLAGS} @CFLAGS@ -DGUESTFS_PRIVATE=1 " <<
-  "@WARN_CFLAGS@ @WERROR_CFLAGS@"
+  "#{$CFLAGS} " <<
+  "@WARN_CFLAGS@ @WERROR_CFLAGS@ " <<
+  "@CFLAGS@ -DGUESTFS_PRIVATE=1"
 
 create_header
 create_makefile(extension_name, "@abs_srcdir@")

@@ -1,5 +1,5 @@
 (* Common utilities for OCaml tools in libguestfs.
- * Copyright (C) 2010-2016 Red Hat Inc.
+ * Copyright (C) 2010-2017 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *)
 
+(* The parts between <stdlib>..</stdlib> are copied into the
+ * generator/common_utils.ml file.  These parts must ONLY use
+ * functions from the OCaml stdlib.
+ *)
+(*<stdlib>*)
 open Printf
+(*</stdlib>*)
 
 open Common_gettext.Gettext
 open Getopt.OptionName
@@ -24,6 +30,8 @@ open Getopt.OptionName
 external c_inspect_decrypt : Guestfs.t -> int64 -> unit = "guestfs_int_mllib_inspect_decrypt"
 external c_set_echo_keys : unit -> unit = "guestfs_int_mllib_set_echo_keys" "noalloc"
 external c_set_keys_from_stdin : unit -> unit = "guestfs_int_mllib_set_keys_from_stdin" "noalloc"
+
+(*<stdlib>*)
 
 module Char = struct
     include Char
@@ -37,6 +45,50 @@ module Char = struct
       if (c >= 'a' && c <= 'z')
       then unsafe_chr (code c - 32)
       else c
+
+    let isspace c =
+      c = ' '
+      (* || c = '\f' *) || c = '\n' || c = '\r' || c = '\t' (* || c = '\v' *)
+
+    let isdigit = function
+      | '0'..'9' -> true
+      | _ -> false
+
+    let isxdigit = function
+      | '0'..'9' -> true
+      | 'a'..'f' -> true
+      | 'A'..'F' -> true
+      | _ -> false
+
+    let isalpha = function
+      | 'a'..'z' -> true
+      | 'A'..'Z' -> true
+      | _ -> false
+
+    let isalnum = function
+      | '0'..'9' -> true
+      | 'a'..'z' -> true
+      | 'A'..'Z' -> true
+      | _ -> false
+
+    let hexdigit = function
+      | '0' -> 0
+      | '1' -> 1
+      | '2' -> 2
+      | '3' -> 3
+      | '4' -> 4
+      | '5' -> 5
+      | '6' -> 6
+      | '7' -> 7
+      | '8' -> 8
+      | '9' -> 9
+      | 'a' | 'A' -> 10
+      | 'b' | 'B' -> 11
+      | 'c' | 'C' -> 12
+      | 'd' | 'D' -> 13
+      | 'e' | 'E' -> 14
+      | 'f' | 'F' -> 15
+      | _ -> -1
 end
 
 module String = struct
@@ -52,6 +104,11 @@ module String = struct
 
     let lowercase_ascii s = map Char.lowercase_ascii s
     let uppercase_ascii s = map Char.uppercase_ascii s
+
+    let capitalize_ascii s =
+      let b = Bytes.of_string s in
+      Bytes.unsafe_set b 0 (Char.uppercase_ascii (Bytes.unsafe_get b 0));
+      Bytes.to_string b
 
     let is_prefix str prefix =
       let n = length prefix in
@@ -92,24 +149,39 @@ module String = struct
         s' ^ s2 ^ replace s'' s1 s2
       )
 
-    let rec nsplit sep str =
-      let len = length str in
-      let seplen = length sep in
-      let i = find str sep in
-      if i = -1 then [str]
-      else (
-        let s' = sub str 0 i in
-        let s'' = sub str (i+seplen) (len-i-seplen) in
-        s' :: nsplit sep s''
-      )
+    let replace_char s c1 c2 =
+      let b2 = Bytes.of_string s in
+      let r = ref false in
+      for i = 0 to Bytes.length b2 - 1 do
+        if Bytes.unsafe_get b2 i = c1 then (
+          Bytes.unsafe_set b2 i c2;
+          r := true
+        )
+      done;
+      if not !r then s else Bytes.to_string b2
 
-    let split sep str =
+    let rec split sep str =
       let len = length sep in
       let seplen = length str in
       let i = find str sep in
       if i = -1 then str, ""
       else (
         sub str 0 i, sub str (i + len) (seplen - i - len)
+      )
+
+    and nsplit ?(max = 0) sep str =
+      if max < 0 then
+        invalid_arg "String.nsplit: max parameter should not be negative";
+
+      (* If we reached the limit, OR if the pattern does not match the string
+       * at all, return the rest of the string as a single element list.
+       *)
+      if max = 1 || find str sep = -1 then
+        [str]
+      else (
+        let s1, s2 = split sep str in
+        let max = if max = 0 then 0 else max - 1 in
+        s1 :: nsplit ~max sep s2
       )
 
     let rec lines_split str =
@@ -152,12 +224,60 @@ module String = struct
             make 1 c
         ) [1;2;3;4;5;6;7;8]
       )
-end
 
-exception Executable_not_found of string (* executable *)
+    let triml ?(test = Char.isspace) str =
+      let i = ref 0 in
+      let n = ref (String.length str) in
+      while !n > 0 && test str.[!i]; do
+        decr n;
+        incr i
+      done;
+      if !i = 0 then str
+      else String.sub str !i !n
+
+    let trimr ?(test = Char.isspace) str =
+      let n = ref (String.length str) in
+      while !n > 0 && test str.[!n-1]; do
+        decr n
+      done;
+      if !n = String.length str then str
+      else String.sub str 0 !n
+
+    let trim ?(test = Char.isspace) str =
+      trimr ~test (triml ~test str)
+
+    let count_chars c str =
+      let count = ref 0 in
+      for i = 0 to String.length str - 1 do
+        if c = String.unsafe_get str i then incr count
+      done;
+      !count
+
+    let explode str =
+      let r = ref [] in
+      for i = 0 to String.length str - 1 do
+        let c = String.unsafe_get str i in
+        r := c :: !r;
+      done;
+      List.rev !r
+
+    let map_chars f str =
+      List.map f (explode str)
+
+    let spaces n = String.make n ' '
+end
 
 let (//) = Filename.concat
 let quote = Filename.quote
+
+let subdirectory parent path =
+  if path = parent then
+    ""
+  else if String.is_prefix path (parent // "") then (
+    let len = String.length parent in
+    String.sub path (len+1) (String.length path - len-1)
+  ) else
+    invalid_arg (sprintf "%S is not a path prefix of %S" parent path)
 
 let ( +^ ) = Int64.add
 let ( -^ ) = Int64.sub
@@ -165,6 +285,8 @@ let ( *^ ) = Int64.mul
 let ( /^ ) = Int64.div
 let ( &^ ) = Int64.logand
 let ( ~^ ) = Int64.lognot
+
+external identity : 'a -> 'a = "%identity"
 
 let roundup64 i a = let a = a -^ 1L in (i +^ a) &^ (~^ a)
 let div_roundup64 i a = (i +^ a -^ 1L) /^ a
@@ -191,16 +313,6 @@ let le32_of_int i =
   Bytes.unsafe_set b 2 (Char.unsafe_chr (Int64.to_int c2));
   Bytes.unsafe_set b 3 (Char.unsafe_chr (Int64.to_int c3));
   Bytes.to_string b
-
-let isdigit = function
-  | '0'..'9' -> true
-  | _ -> false
-
-let isxdigit = function
-  | '0'..'9' -> true
-  | 'a'..'f' -> true
-  | 'A'..'F' -> true
-  | _ -> false
 
 type wrap_break_t = WrapEOS | WrapSpace | WrapNL
 
@@ -238,6 +350,8 @@ and _wrap_find_next_break i len str =
 
 and output_spaces chan n = for i = 0 to n-1 do output_char chan ' ' done
 
+let (|>) x f = f x
+
 (* Drop elements from a list while a predicate is true. *)
 let rec dropwhile f = function
   | [] -> []
@@ -255,6 +369,13 @@ let rec filter_map f = function
       match f x with
       | Some y -> y :: filter_map f xs
       | None -> filter_map f xs
+
+let rec find_map f = function
+  | [] -> raise Not_found
+  | x :: xs ->
+      match f x with
+      | Some y -> y
+      | None -> find_map f xs
 
 let iteri f xs =
   let rec loop i = function
@@ -327,6 +448,8 @@ let pop_front xsp =
 let append xsp xs = xsp := !xsp @ xs
 let prepend xs xsp = xsp := xs @ !xsp
 
+let unique = let i = ref 0 in fun () -> incr i; !i
+
 let may f = function
   | None -> ()
   | Some x -> f x
@@ -339,6 +462,10 @@ let protect ~f ~finally =
     with exn -> Or exn in
   finally ();
   match r with Either ret -> ret | Or exn -> raise exn
+
+let failwithf fs = ksprintf failwith fs
+
+exception Executable_not_found of string (* executable *)
 
 let which executable =
   let paths =
@@ -390,6 +517,8 @@ let ansi_magenta ?(chan = stdout) () =
   if colours () || istty chan then output_string chan "\x1b[1;35m"
 let ansi_restore ?(chan = stdout) () =
   if colours () || istty chan then output_string chan "\x1b[0m"
+
+(*</stdlib>*)
 
 (* Timestamped progress messages, used for ordinary messages when not
  * --quiet.
@@ -498,21 +627,44 @@ let print_version_and_exit () =
 let generated_by =
   sprintf (f_"generated by %s %s") prog Guestfs_config.package_version_full
 
+let virt_tools_data_dir =
+  let dir = lazy (
+    try Sys.getenv "VIRT_TOOLS_DATA_DIR"
+    with Not_found -> Guestfs_config.datadir // "virt-tools"
+  ) in
+  fun () -> Lazy.force dir
+
+(*<stdlib>*)
+let with_open_in filename f =
+  let chan = open_in filename in
+  protect ~f:(fun () -> f chan) ~finally:(fun () -> close_in chan)
+
+let with_open_out filename f =
+  let chan = open_out filename in
+  protect ~f:(fun () -> f chan) ~finally:(fun () -> close_out chan)
+
+let with_openfile filename flags perms f =
+  let fd = Unix.openfile filename flags perms in
+  protect ~f:(fun () -> f fd) ~finally:(fun () -> Unix.close fd)
+
 let read_whole_file path =
   let buf = Buffer.create 16384 in
-  let chan = open_in path in
-  let maxlen = 16384 in
-  let b = Bytes.create maxlen in
-  let rec loop () =
-    let r = input chan b 0 maxlen in
-    if r > 0 then (
-      Buffer.add_substring buf (Bytes.to_string b) 0 r;
+  with_open_in path (
+    fun chan ->
+      let maxlen = 16384 in
+      let b = Bytes.create maxlen in
+      let rec loop () =
+        let r = input chan b 0 maxlen in
+        if r > 0 then (
+          Buffer.add_substring buf (Bytes.to_string b) 0 r;
+          loop ()
+        )
+      in
       loop ()
-    )
-  in
-  loop ();
-  close_in chan;
+  );
   Buffer.contents buf
+
+(*</stdlib>*)
 
 (* Parse a size field, eg. "10G". *)
 let parse_size =
@@ -628,6 +780,8 @@ let create_standard_options argspec ?anon_fun ?(key_opts = false) usage_msg =
       else []) in
   Getopt.create argspec ?anon_fun usage_msg
 
+(*<stdlib>*)
+
 (* Compare two version strings intelligently. *)
 let rex_numbers = Str.regexp "^\\([0-9]+\\)\\(.*\\)$"
 let rex_letters = Str.regexp_case_fold "^\\([a-z]+\\)\\(.*\\)$"
@@ -684,6 +838,8 @@ let stringify_args args =
   match args with
   | [] -> ""
   | app :: xs -> app ^ quote_args xs
+
+(*</stdlib>*)
 
 (* Run an external command, slurp up the output as a list of lines. *)
 let external_command ?(echo_cmd = true) cmd =
@@ -749,6 +905,8 @@ let uuidgen () =
   if len < 10 then assert false; (* sanity check on uuidgen *)
   uuid
 
+(*<stdlib>*)
+
 (* Unlink a temporary file on exit. *)
 let unlink_on_exit =
   let files = ref [] in
@@ -769,6 +927,8 @@ let unlink_on_exit =
       register_handlers ();
       registered_handlers := true
     )
+
+(*</stdlib>*)
 
 (* Remove a temporary directory on exit. *)
 let rmdir_on_exit =
@@ -906,6 +1066,8 @@ let detect_file_type filename =
   close_in chan;
   ret
 
+(*<stdlib>*)
+
 let is_block_device file =
   try (Unix.stat file).Unix.st_kind = Unix.S_BLK
   with Unix.Unix_error _ -> false
@@ -914,18 +1076,22 @@ let is_char_device file =
   try (Unix.stat file).Unix.st_kind = Unix.S_CHR
   with Unix.Unix_error _ -> false
 
+(*</stdlib>*)
+
 let is_partition dev =
   try
     if not (is_block_device dev) then false
     else (
       let rdev = (Unix.stat dev).Unix.st_rdev in
-      let major = Dev_t.major rdev in
-      let minor = Dev_t.minor rdev in
+      let major = Unix_utils.Dev_t.major rdev in
+      let minor = Unix_utils.Dev_t.minor rdev in
       let path = sprintf "/sys/dev/block/%d:%d/partition" major minor in
       Unix.access path [Unix.F_OK];
       true
     )
   with Unix.Unix_error _ -> false
+
+(*<stdlib>*)
 
 (* Annoyingly Sys.is_directory throws an exception on failure
  * (RHBZ#1022431).
@@ -979,6 +1145,14 @@ let guest_arch_compatible guest_arch =
   | "x86_64", "i386" -> true
   | _ -> false
 
+(* Is the guest OS "Unix-like"? *)
+let unix_like = function
+  | "hurd"
+  | "linux"
+  | "minix" -> true
+  | typ when String.is_suffix typ "bsd" -> true
+  | _ -> false
+
 (** Return the last part of a string, after the specified separator. *)
 let last_part_of str sep =
   try
@@ -987,14 +1161,16 @@ let last_part_of str sep =
   with Not_found -> None
 
 let read_first_line_from_file filename =
-  let chan = open_in filename in
-  let line = input_line chan in
-  close_in chan;
-  line
+  with_open_in filename (
+    fun chan ->
+      try input_line chan with End_of_file -> ""
+  )
 
 let is_regular_file path = (* NB: follows symlinks. *)
   try (Unix.stat path).Unix.st_kind = Unix.S_REG
   with Unix.Unix_error _ -> false
+
+(*</stdlib>*)
 
 let inspect_mount_root g ?mount_opts_fn root =
   let mps = g#inspect_get_mountpoints root in

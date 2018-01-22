@@ -1,5 +1,5 @@
 # libguestfs
-# Copyright (C) 2011-2016 Red Hat Inc.
+# Copyright (C) 2011-2017 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,7 +23,9 @@ include $(top_srcdir)/subdir-rules.mk
 
 TESTS = \
 	qemu-liveness.sh \
-	qemu-snapshot-isolation.sh \
+	qemu-snapshot-isolation-add-drive-opts-readonly.sh \
+	qemu-snapshot-isolation-add-drive-ro.sh \
+	qemu-snapshot-isolation-qcow2.sh \
 	qemu-force-tcg.sh
 
 TESTS_ENVIRONMENT = $(top_builddir)/run --test

@@ -1,5 +1,5 @@
 (* virt-v2v
- * Copyright (C) 2009-2016 Red Hat Inc.
+ * Copyright (C) 2009-2017 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -130,7 +130,7 @@ read the man page virt-v2v-copy-to-local(1).
 
   (* Get the remote libvirt XML. *)
   message (f_"Fetching the remote libvirt XML metadata ...");
-  let xml = Domainxml.dumpxml ?password ~conn:input_conn guest_name in
+  let xml = Libvirt_utils.dumpxml ?password ~conn:input_conn guest_name in
 
   debug "libvirt XML from remote server:\n%s" xml;
 
@@ -224,16 +224,14 @@ read the man page virt-v2v-copy-to-local(1).
 
   let guest_xml = guest_name ^ ".xml" in
   message (f_"Writing libvirt XML metadata to %s ...") guest_xml;
-  let chan = open_out guest_xml in
-  output_string chan xml;
-  close_out chan;
+  with_open_out guest_xml (fun chan -> output_string chan xml);
 
   (* Finished, so don't delete the disks on exit. *)
   message (f_"Finishing off");
   delete_on_exit := false
 
 (* This is a greatly simplified version of the parsing function
- * in virt-v2v input_libvirtxml.ml:parse_libvirt_xml
+ * in virt-v2v parse_libvirt_xml.ml:parse_libvirt_xml
  * It also modifies the XML <disk> elements to point to local disks.
  *)
 and parse_libvirt_xml guest_name xml =

@@ -1,5 +1,5 @@
 (* virt-v2v
- * Copyright (C) 2009-2016 Red Hat Inc.
+ * Copyright (C) 2009-2017 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ open Common_utils
 
 open Types
 open Utils
+open Create_libvirt_xml
 
 class output_local dir = object
   inherit output
@@ -42,10 +43,11 @@ class output_local dir = object
     match target_firmware with
     | TargetBIOS -> ()
     | TargetUEFI ->
-       (* This will fail with an error if the target firmware is
-        * not installed on the host.
+       (* XXX Can remove this method when libvirt supports
+        * <loader type="efi"/> since then it will be up to
+        * libvirt to check this.
         *)
-       ignore (find_uefi_firmware guestcaps.gcaps_arch)
+       error_unless_uefi_firmware guestcaps.gcaps_arch
 
   method create_metadata source _ target_buses guestcaps _ target_firmware =
     (* We don't know what target features the hypervisor supports, but
@@ -58,15 +60,13 @@ class output_local dir = object
       | _ -> [] in
 
     let doc =
-      Output_libvirt.create_libvirt_xml source target_buses
-        guestcaps target_features target_firmware in
+      create_libvirt_xml source target_buses
+                         guestcaps target_features target_firmware in
 
     let name = source.s_name in
     let file = dir // name ^ ".xml" in
 
-    let chan = open_out file in
-    DOM.doc_to_chan chan doc;
-    close_out chan
+    with_open_out file (fun chan -> DOM.doc_to_chan chan doc)
 end
 
 let output_local = new output_local

@@ -1,5 +1,5 @@
 (* virt-v2v
- * Copyright (C) 2009-2016 Red Hat Inc.
+ * Copyright (C) 2009-2017 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,10 +16,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *)
 
-(** Convert an Enterprise Linux guest to run on KVM.
+(** Convert a Linux guest to run on KVM.
 
     This module converts certain Enterprise Linux guests to run on
-    KVM.  Only RHEL, SuSE, Fedora and CentOS are supported.
+    KVM.  RHEL, SuSE, Fedora, CentOS, OracleLinux, Debian, Ubuntu
+    and Mint are supported by this module.
 
     No functions are exported.  When the module is linked to virt-v2v
     it registers itself with

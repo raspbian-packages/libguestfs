@@ -1,5 +1,5 @@
 /* libguestfs
- * Copyright (C) 2009-2016 Red Hat Inc.
+ * Copyright (C) 2009-2017 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -34,13 +34,7 @@
 #include <caml/mlvalues.h>
 #include <caml/printexc.h>
 #include <caml/signals.h>
-
-#ifdef HAVE_CAML_UNIXSUPPORT_H
 #include <caml/unixsupport.h>
-#else
-#define Nothing ((value) 0)
-extern void unix_error (int errcode, char * cmdname, value arg) Noreturn;
-#endif
 
 #include "guestfs-c.h"
 

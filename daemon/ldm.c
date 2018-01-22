@@ -316,7 +316,7 @@ do_ldmtool_scan_devices (char * const * devices)
 {
   char **ret;
   size_t i, nr_devices;
-  CLEANUP_FREE_STRING_LIST const char **argv = NULL;
+  CLEANUP_FREE const char **argv = NULL;
   int r;
   CLEANUP_FREE char *out = NULL, *err = NULL;
 
@@ -370,7 +370,6 @@ do_ldmtool_diskgroup_volumes (const char *diskgroup)
     reply_with_error ("%s", err);
     return NULL;
   }
-  free (err);
 
   return parse_json_get_object_string_list (out, "volumes",
                                             __func__, "ldmtool show diskgroup");

@@ -25,9 +25,10 @@ this works is better explained in the L<guestfish(1)> manual page, or by
 looking at the examples below.
 
 FUSE lets you mount filesystems as non-root.  The mountpoint must be owned
-by you, and the filesystem will not be visible to any other users unless you
-make certain global configuration changes to F</etc/fuse.conf>.  To unmount
-the filesystem, use the L<guestunmount(1)> command.
+by you.  The filesystem will not be visible to any other users unless you
+make configuration changes, see L</NOTES> below.
+
+To unmount the filesystem, use the L<guestunmount(1)> command.
 
 =head1 ПРИКЛАДИ
 
@@ -76,6 +77,8 @@ be able to see it by default.  The fix is to add the FUSE C<allow_other>
 option when mounting:
 
  sudo guestmount [...] -o allow_other /mnt
+
+B<and> to enable this option in F</etc/fuse.conf>.
 
 =head2 Enabling FUSE
 
@@ -152,9 +155,9 @@ program.
 
 =over 4
 
-=item B<-a> IMAGE
+=item B<-a> ОБРАЗ
 
-=item B<--add> IMAGE
+=item B<--add> ОБРАЗ
 
 Add a block device or virtual machine image.
 
@@ -175,15 +178,15 @@ I<--format=..>.
 When used in conjunction with the I<-d> option, this specifies the libvirt
 URI to use.  The default is to use the default libvirt connection.
 
-=item B<-d> LIBVIRT-DOMAIN
+=item B<-d> ДОМЕН_LIBVIRT
 
-=item B<--domain> LIBVIRT-DOMAIN
+=item B<--domain> ДОМЕН_LIBVIRT
 
 Add disks from the named libvirt domain.  If the I<--ro> option is also
 used, then any libvirt domain can be used.  However in write mode, only
 libvirt domains which are shut down can be named here.
 
-Domain UUIDs can be used instead of names.
+Замість назв можна використовувати UUID доменів.
 
 =item B<--dir-cache-timeout> N
 
@@ -307,7 +310,8 @@ of them are a good idea.
 
 =item B<-o> B<allow_other>
 
-Дозволити іншим користувачам переглядати файлову систему.
+Allow other users to see the filesystem.  This option has no effect unless
+you enable it globally in F</etc/fuse.conf>.
 
 =item B<-o> B<attr_timeout=N>
 
@@ -338,7 +342,7 @@ appearing through FUSE.  Use of this option can confuse some software.
 
 =back
 
-=item B<--pid-file> FILENAME
+=item B<--pid-file> НАЗВА_ФАЙЛА
 
 Write the PID of the guestmount worker process to C<filename>.
 
@@ -429,5 +433,5 @@ Richard W.M. Jones (C<rjones at redhat dot com>)
 
 =head1 АВТОРСЬКІ ПРАВА
 
-© Red Hat Inc., 2009–2016
+Copyright (C) 2009-2017 Red Hat Inc.
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 # podwrapper.pl
-# Copyright (C) 2010-2016 Red Hat Inc.
+# Copyright (C) 2010-2017 Red Hat Inc.
 # @configure_input@
 #
 # This program is free software; you can redistribute it and/or modify
@@ -552,6 +552,7 @@ SUBHTML: {
         return 1 if /^guestunmount/;
         return 1 if /^hivex/;
         return 1 if /^supermin/;
+        return 1 if /^nbdkit/;
         return 0;
     }
 
@@ -674,4 +675,4 @@ Richard W.M. Jones.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2012-2016 Red Hat Inc.
+Copyright (C) 2012-2017 Red Hat Inc.

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (C) 2013-2016 Red Hat Inc.
+# Copyright (C) 2013-2017 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,29 +17,11 @@
 
 # Test that disks map to the correct qemu -drive parameter.
 
-export LANG=C
-
 set -e
 
-if [ -z "$abs_srcdir" ]; then
-    echo "$0: abs_srcdir environment variable must be set"
-    exit 1
-fi
-
-if [ -z "$abs_builddir" ]; then
-    echo "$0: abs_builddir environment variable must be set"
-    exit 1
-fi
-
-if [ ! -x ../../src/libvirt-is-version ]; then
-    echo "$0: test skipped because libvirt-is-version is not built yet"
-    exit 77
-fi
-
-if ! ../../src/libvirt-is-version 1 1 3; then
-    echo "$0: test skipped because libvirt is too old (< 1.1.3)"
-    exit 77
-fi
+$TEST_FUNCTIONS
+skip_if_skipped
+skip_unless_libvirt_minimum_version 1 1 3
 
 guestfish="guestfish -c test://$abs_builddir/test-qemu-drive-libvirt.xml"
 
@@ -63,7 +45,7 @@ function check_output ()
 
 function fail ()
 {
-    echo "$0: Test failed.  Command line output was:"
+    echo "$0: Test $1 failed.  Command line output was:"
     cat "$DEBUG_QEMU_FILE"
     exit 1
 }
@@ -74,47 +56,47 @@ rm -f "$DEBUG_QEMU_FILE"
 
 $guestfish -d ceph1 run ||:
 check_output
-grep -sq -- '-drive file=rbd:abc-def/ghi-jkl:mon_host=1.2.3.4\\:1234\\;1.2.3.5\\:1235\\;1.2.3.6\\:1236:auth_supported=none,' "$DEBUG_QEMU_FILE" || fail
+grep -sq -- '-drive file=rbd:abc-def/ghi-jkl:mon_host=1.2.3.4\\:1234\\;1.2.3.5\\:1235\\;1.2.3.6\\:1236:auth_supported=none,' "$DEBUG_QEMU_FILE" || fail ceph1
 rm "$DEBUG_QEMU_FILE"
 
 $guestfish -d ceph2 run ||:
 check_output
-grep -sq -- '-drive file=rbd:abc-def/ghi-jkl:auth_supported=none,' "$DEBUG_QEMU_FILE" || fail
+grep -sq -- '-drive file=rbd:abc-def/ghi-jkl:auth_supported=none,' "$DEBUG_QEMU_FILE" || fail ceph2
 rm "$DEBUG_QEMU_FILE"
 
 # Gluster.
 
 $guestfish -d gluster run ||:
 check_output
-grep -sq -- '-drive file=gluster://1.2.3.4:1234/volname/image,' "$DEBUG_QEMU_FILE" || fail
+grep -sq -- '-drive file=gluster://1.2.3.4:1234/volname/image,' "$DEBUG_QEMU_FILE" || fail gluster
 rm "$DEBUG_QEMU_FILE"
 
 # iSCSI.
 
 $guestfish -d iscsi run ||:
 check_output
-grep -sq -- '-drive file=iscsi://1.2.3.4:1234/iqn.2003-01.org.linux-iscsi.fedora,' "$DEBUG_QEMU_FILE" || fail
+grep -sq -- '-drive file=iscsi://1.2.3.4:1234/iqn.2003-01.org.linux-iscsi.fedora' "$DEBUG_QEMU_FILE" || fail iscsi
 rm "$DEBUG_QEMU_FILE"
 
 # NBD.
 
 $guestfish -d nbd run ||:
 check_output
-grep -sq -- '-drive file=nbd:1.2.3.4:1234,' "$DEBUG_QEMU_FILE" || fail
+grep -sq -- '-drive file=nbd:1.2.3.4:1234,' "$DEBUG_QEMU_FILE" || fail nbd
 rm "$DEBUG_QEMU_FILE"
 
 # Sheepdog.
 
 $guestfish -d sheepdog run ||:
 check_output
-grep -sq -- '-drive file=sheepdog:volume,' "$DEBUG_QEMU_FILE" || fail
+grep -sq -- '-drive file=sheepdog:volume,' "$DEBUG_QEMU_FILE" || fail sheepdog
 rm "$DEBUG_QEMU_FILE"
 
 # Local, stored in a pool.
 
 $guestfish -d pool1 run ||:
 check_output
-grep -sq -- "-drive file=$abs_builddir/tmp/in-pool" "$DEBUG_QEMU_FILE" || fail
+grep -sq -- "-drive file=$abs_builddir/tmp/in-pool" "$DEBUG_QEMU_FILE" || fail pool1
 rm "$DEBUG_QEMU_FILE"
 
 # To do:

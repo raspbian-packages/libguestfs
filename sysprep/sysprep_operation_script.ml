@@ -21,6 +21,7 @@ open Unix
 
 open Common_gettext.Gettext
 open Common_utils
+open Unix_utils
 open Getopt.OptionName
 
 open Sysprep_operation
@@ -44,7 +45,7 @@ let rec script_perform (g : Guestfs.guestfs) root side_effects =
       match !scriptdir with
       | Some dir -> dir, false
       | None ->
-        let tmpdir = Mkdtemp.temp_dir "virt-sysprep." "" in
+        let tmpdir = Mkdtemp.temp_dir "virt-sysprep." in
         tmpdir, true in
 
     (* Mount the directory locally. *)

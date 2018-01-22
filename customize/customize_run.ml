@@ -24,8 +24,11 @@ open Common_utils
 
 open Customize_cmdline
 open Password
+open Append_line
 
-let run (g : Guestfs.guestfs) root (ops : ops) =
+module G = Guestfs
+
+let run (g : G.guestfs) root (ops : ops) =
   (* Is the host_cpu compatible with the guest arch?  ie. Can we
    * run commands in this guest?
    *)
@@ -87,7 +90,7 @@ exec >>%s 2>&1
     debug "running command:\n%s" cmd;
     try ignore (g#sh cmd)
     with
-      Guestfs.Error msg ->
+      G.Error msg ->
         debug_logfile ();
         if warn_failed_no_network && not (g#get_network ()) then (
           prerr_newline ();
@@ -192,6 +195,26 @@ exec >>%s 2>&1
   if not (Random_seed.set_random_seed g root) then
     warning (f_"random seed could not be set for this type of guest");
 
+  (* Set the systemd machine ID.  This must be set before performing
+   * --install/--update since (at least in Fedora) the kernel %post
+   * script requires a machine ID and will fail if it is not set.
+   *)
+  let () =
+    let etc_machine_id = "/etc/machine-id" in
+    let statbuf =
+      try Some (g#lstatns etc_machine_id) with G.Error _ -> None in
+    (match statbuf with
+     | Some { G.st_size = 0L; G.st_mode = mode }
+          when (Int64.logand mode 0o170000_L) = 0o100000_L ->
+        message (f_"Setting the machine ID in %s") etc_machine_id;
+        let id = Urandom.urandom_bytes 16 in
+        let id = String.map_chars (fun c -> sprintf "%02x" (Char.code c)) id in
+        let id = String.concat "" id in
+        let id = id ^ "\n" in
+        g#write etc_machine_id id
+     | _ -> ()
+    ) in
+
   (* Store the passwords and set them all at the end. *)
   let passwords = Hashtbl.create 13 in
   let set_password user pw =
@@ -203,6 +226,16 @@ exec >>%s 2>&1
   (* Perform the remaining customizations in command-line order. *)
   List.iter (
     function
+    | `AppendLine (path, line) ->
+       (* It's an error if it's not a single line.  This is
+        * to prevent incorrect line endings being added to a file.
+        *)
+       if String.contains line '\n' then
+         error (f_"--append-line: line must not contain newline characters.  Use the --append-line option multiple times to add several lines.");
+
+       message (f_"Appending line to %s") path;
+       append_line g root path line
+
     | `Chmod (mode, path) ->
       message (f_"Changing permissions of %s to %s") path mode;
       (* If the mode string is octal, add the OCaml prefix for octal values
@@ -335,12 +368,11 @@ exec >>%s 2>&1
       do_run ~display:cmd ~warn_failed_no_network:true cmd
 
     | `SSHInject (user, selector) ->
-      (match g#inspect_get_type root with
-      | "linux" | "freebsd" | "netbsd" | "openbsd" | "hurd" ->
+      if unix_like (g#inspect_get_type root) then (
         message (f_"SSH key inject: %s") user;
         Ssh_key.do_ssh_inject_unix g user selector
-      | _ ->
-        warning (f_"SSH key could be injected for this type of guest"))
+      ) else
+        warning (f_"SSH key could be injected for this type of guest")
 
     | `Truncate path ->
       message (f_"Truncating: %s") path;
@@ -388,8 +420,8 @@ exec >>%s 2>&1
       let uid, gid = statbuf.st_uid, statbuf.st_gid in
       let chown () =
         try g#chown uid gid dest
-        with Guestfs.Error m as e ->
-          if g#last_errno () = Guestfs.Errno.errno_EPERM
+        with G.Error m as e ->
+          if g#last_errno () = G.Errno.errno_EPERM
           then warning "%s" m
           else raise e in
       chown ()

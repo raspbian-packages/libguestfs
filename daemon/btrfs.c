@@ -1130,7 +1130,7 @@ do_btrfs_subvolume_show (const char *subvolume)
           return NULL;
       }
     } else {
-      if (add_string (&ret, key ? key : "") == -1)
+      if (add_string (&ret, key) == -1)
         return NULL;
       if (value && !STREQ (value, "-")) {
         if (add_string (&ret, value) == -1)
@@ -1826,7 +1826,7 @@ do_btrfs_balance_status (const char *path)
   ret = calloc (1, sizeof *ret);
   if (ret == NULL) {
     reply_with_perror ("calloc");
-    goto error;
+    return NULL;
   }
 
   /* Output of `btrfs balance status' is like:
@@ -1855,7 +1855,7 @@ do_btrfs_balance_status (const char *path)
     ret->btrfsbalance_status = strdup ("none");
     if (ret->btrfsbalance_status == NULL) {
       reply_with_perror ("strdup");
-      return NULL;
+      goto error;
     }
     return ret;
   }
@@ -2185,11 +2185,11 @@ do_btrfs_replace (const char *srcdev, const char *targetdev,
   ADD_ARG (argv, i, str_btrfs);
   ADD_ARG (argv, i, "replace");
   ADD_ARG (argv, i, "start");
+  ADD_ARG (argv, i, "-B");
+  ADD_ARG (argv, i, "-f");
   ADD_ARG (argv, i, srcdev);
   ADD_ARG (argv, i, targetdev);
   ADD_ARG (argv, i, path_buf);
-  ADD_ARG (argv, i, "-B");
-  ADD_ARG (argv, i, "-f");
   ADD_ARG (argv, i, NULL);
 
   r = commandv (NULL, &err, argv);
@@ -2268,7 +2268,8 @@ do_btrfs_filesystem_show (const char *device)
     } else if (STRPREFIX (lines[i], "\t*** Some devices missing")) {
       reply_with_error_errno (ENODEV, "%s: missing devices", device);
       return NULL;
-    } else if (STRPREFIX (lines[i], "btrfs-progs v")) {
+    } else if (STRPREFIX (lines[i], "btrfs-progs v") ||
+               STRPREFIX (lines[i], "Btrfs v")) {
       /* Older versions of btrfs-progs output also the version string
        * (the same as `btrfs --version`.  This has been fixed upstream
        * since v4.3.1, commit e29ec82e4e66042ca55bf8cd9ef609e3b21a7eb7.

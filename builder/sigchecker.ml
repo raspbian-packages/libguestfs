@@ -18,6 +18,7 @@
 
 open Common_gettext.Gettext
 open Common_utils
+open Unix_utils
 
 open Utils
 
@@ -90,7 +91,7 @@ let import_keyfile ~gpg ~gpghome ~tmpdir ?(trust = true) keyfile =
 
 let rec create ~gpg ~gpgkey ~check_signature ~tmpdir =
   (* Create a temporary directory for gnupg. *)
-  let gpgtmpdir = Mkdtemp.temp_dir ~base_dir:tmpdir "vb.gpghome." "" in
+  let gpgtmpdir = Mkdtemp.temp_dir ~base_dir:tmpdir "vb.gpghome." in
   (* Make sure we have no check_signature=true with no actual key. *)
   let check_signature, gpgkey =
     match check_signature, gpgkey with

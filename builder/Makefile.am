@@ -1,5 +1,5 @@
 # libguestfs virt-builder tool
-# Copyright (C) 2013-2016 Red Hat Inc.
+# Copyright (C) 2013-2017 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ EXTRA_DIST = \
 	$(SOURCES_MLI) $(SOURCES_ML) $(SOURCES_C) \
 	libguestfs.gpg \
 	opensuse.gpg \
+	test-console.sh \
 	test-index \
 	test-simplestreams/streams/v1/index.json \
 	test-simplestreams/streams/v1/net.cirros-cloud_released_download.json \
@@ -36,6 +37,7 @@ EXTRA_DIST = \
 	test-virt-index-validate-good-1 \
 	test-virt-index-validate-good-2 \
 	test-virt-index-validate-good-3 \
+	test-virt-index-validate-good-4 \
 	virt-builder.pod \
 	virt-index-validate.pod \
 	yajl_tests.ml
@@ -99,8 +101,8 @@ virt_builder_CPPFLAGS = \
 	-I$(top_srcdir)/gnulib/lib -I$(top_builddir)/gnulib/lib \
 	-I$(shell $(OCAMLC) -where) \
 	-I$(top_srcdir)/gnulib/lib \
-	-I$(top_srcdir)/src \
-	-I$(top_srcdir)/fish
+	-I$(top_srcdir)/common/utils \
+	-I$(top_srcdir)/lib
 virt_builder_CFLAGS = \
 	-pthread \
 	$(WARN_CFLAGS) $(WERROR_CFLAGS) \
@@ -113,12 +115,13 @@ virt_builder_CFLAGS = \
 BOBJECTS = $(SOURCES_ML:.ml=.cmo)
 XOBJECTS = $(BOBJECTS:.cmo=.cmx)
 
-# -I $(top_builddir)/src/.libs is a hack which forces corresponding -L
+# -I $(top_builddir)/lib/.libs is a hack which forces corresponding -L
 # option to be passed to gcc, so we don't try linking against an
 # installed copy of libguestfs.
 OCAMLPACKAGES = \
 	-package str,unix \
-	-I $(top_builddir)/src/.libs \
+	-I $(top_builddir)/common/utils/.libs \
+	-I $(top_builddir)/lib/.libs \
 	-I $(top_builddir)/gnulib/lib/.libs \
 	-I $(top_builddir)/ocaml \
 	-I $(top_builddir)/mllib \
@@ -253,10 +256,43 @@ endif
 check-valgrind:
 	$(MAKE) VG="@VG@" check
 
-SLOW_TESTS = test-virt-builder-planner.sh
+# Slow tests.
+
+SLOW_TESTS = \
+	$(console_test_scripts) \
+	test-virt-builder-planner.sh
 
 check-slow:
 	$(MAKE) check TESTS="$(SLOW_TESTS)" SLOW=1
+
+# Test that the supplied guests boot with a serial console.
+#
+# Note that in future we might decide to make the serial console a
+# feature, eg. `virt-builder --add-serial-console' or `virt-builder
+# --remove-serial-console', so don't assume that having these tests
+# means that a serial console is a requirement.
+console_test_scripts := \
+	test-console-centos-7.2.sh \
+	test-console-rhel-6.8.sh \
+	test-console-rhel-7.2.sh \
+	test-console-debian-7.sh \
+	test-console-debian-8.sh \
+	test-console-fedora-24.sh \
+	test-console-ubuntu-12.04.sh \
+	test-console-ubuntu-14.04.sh \
+	test-console-ubuntu-16.04.sh
+
+test-console-%.sh:
+	rm -f $@ $@-t
+	f=`echo "$@" | $(SED) 's/test-console-\(.*\).sh/\1/'`; \
+	echo 'script=$@ exec $$srcdir/test-console.sh' "$$f" > $@-t
+	chmod 0755 $@-t
+	mv $@-t $@
+
+CLEANFILES += \
+	$(console_test_scripts) \
+	console-*.img \
+	console-*.out
 
 # Dependencies.
 depend: .depend
@@ -300,7 +336,8 @@ virt_index_validate_CPPFLAGS = \
 	-I. \
 	-I$(top_builddir) \
 	-I$(top_srcdir)/gnulib/lib -I$(top_builddir)/gnulib/lib \
-	-I$(top_srcdir)/src
+	-I$(top_srcdir)/common/utils \
+	-I$(top_srcdir)/lib
 virt_index_validate_CFLAGS = \
 	$(WARN_CFLAGS) $(WERROR_CFLAGS) \
 	-Wno-unused-macros
@@ -327,15 +364,7 @@ CLEANFILES += \
 	index-parse.h \
 	index-scan.c
 
-if HAVE_OCAML
-# Automake-generated makefile has a rule ".y.c" but lacks a rule ".y.h".
-index-parse.h: index-parse.y
-	touch $(srcdir)/index-parse.y
-	$(MAKE) index-parse.c
-# Also it doesn't generate dependencies for the C files that include
-# index-parse.h.
-index-parser-c.c index-scan.c index-validate.c: index-parse.h
-endif
+BUILT_SOURCES = index-parse.h
 
 # Apparently there's no clean way with Automake to not have them
 # in the distribution, so just remove them from the distdir.

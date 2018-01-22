@@ -1,5 +1,5 @@
 (* virt-builder
- * Copyright (C) 2013-2016 Red Hat Inc.
+ * Copyright (C) 2013-2017 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ open Common_gettext.Gettext
 module G = Guestfs
 
 open Common_utils
+open Unix_utils
 open Password
 open Planner
 open Utils
@@ -147,12 +148,10 @@ let main () =
   (* Check that gpg is installed.  Optional as long as the user
    * disables all signature checks.
    *)
-  let cmd = sprintf "%s --help >/dev/null 2>&1" cmdline.gpg in
-  if shell_command cmd <> 0 then (
-    if cmdline.check_signature then
-      error (f_"gpg is not installed (or does not work)\nYou should install gpg, or use --gpg option, or use --no-check-signature.")
-    else if verbose () then
-      warning (f_"gpg program is not available")
+  if cmdline.check_signature then (
+    let cmd = sprintf "%s --help >/dev/null 2>&1" cmdline.gpg in
+    if cmdline.gpg = "" || shell_command cmd <> 0 then
+      error (f_"no GNU Privacy Guard (GnuPG, gpg) binary was found.\n\nEither gpg v1 or v2 can be installed to check signatures.  Virt-builder looks for a binary called either ‘gpg2’ or ‘gpg‘ on the $PATH.  You can also specify a binary using the ‘--gpg’ option.  If you don't want to check signatures, use ’--no-check-signature’ but note that this may make you vulnerable to Man-In-The-Middle attacks.")
   );
 
   (* Check that curl works. *)
@@ -181,7 +180,7 @@ let main () =
    * temporary files that Downloader, Sigchecker, etc, are going
    * create.
    *)
-  let tmpdir = Mkdtemp.temp_dir "virt-builder." "" in
+  let tmpdir = Mkdtemp.temp_dir "virt-builder." in
   rmdir_on_exit tmpdir;
 
   (* Download the sources. *)
@@ -396,18 +395,15 @@ let main () =
         (human_size size) output_filename (human_size blockdev_size);
     size in
 
-  let goal =
-    (* MUST *)
-    let goal_must = [
-      `Filename, output_filename;
-      `Size, Int64.to_string output_size;
-      `Format, output_format
-    ] in
+  (* Goal: must *)
+  let must = [
+    `Filename, output_filename;
+    `Size, Int64.to_string output_size;
+    `Format, output_format
+  ] in
 
-    (* MUST NOT *)
-    let goal_must_not = [ `Template, ""; `XZ, "" ] in
-
-    goal_must, goal_must_not in
+  (* Goal: must not *)
+  let must_not = [ `Template, ""; `XZ, "" ] in
 
   let cache_dir = (open_guestfs ())#get_cachedir () in
 
@@ -508,7 +504,7 @@ let main () =
   (* Plan how to create the disk image. *)
   message (f_"Planning how to build this image");
   let plan =
-    try plan ~max_depth:5 transitions itags goal
+    try plan ~max_depth:5 transitions itags ~must ~must_not
     with
       Failure "plan" ->
         error (f_"no plan could be found for making a disk image with\nthe required size, format etc. This is a bug in libguestfs!\nPlease file a bug, giving the command line arguments you used.");
