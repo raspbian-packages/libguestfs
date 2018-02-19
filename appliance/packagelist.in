@@ -60,6 +60,7 @@ ifelse(DEBIAN,1,
 dnl old name used in Jessie and earlier
   btrfs-tools
   cryptsetup
+  dash
   extlinux
   fdisk
   genisoimage
