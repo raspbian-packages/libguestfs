@@ -235,7 +235,8 @@ guestfsd_LDADD = \
 	$(TSK_LIBS) \
 	$(RPC_LIBS) \
 	$(YARA_LIBS) \
-	$(OCAML_LIBS)
+	$(OCAML_LIBS) \
+	$(LIBTINFO_LIBS)
 
 guestfsd_CPPFLAGS = \
 	-I$(shell $(OCAMLC) -where) \
