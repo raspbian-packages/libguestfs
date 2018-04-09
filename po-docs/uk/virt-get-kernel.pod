@@ -1,0 +1,200 @@
+
+=head1 НАЗВА
+
+virt-get-kernel — видобування ядра і диска в пам'яті з гостьових систем
+
+=head1 КОРОТКИЙ ОПИС
+
+ virt-get-kernel [--параметри] -d назва_домену
+
+ virt-get-kernel [--параметри] -a диск.img
+
+=head1 ОПИС
+
+This option extracts the kernel and initramfs from a guest.
+
+Формат образу диска буде визначено автоматично, якщо ви не вкажете його за
+допомогою параметра I<--format>.
+
+In the case where the guest contains multiple kernels, the one with the
+highest version number is chosen.  To extract arbitrary kernels from the
+disk image, see L<guestfish(1)>.  To extract the entire C</boot> directory
+of a guest, see L<virt-copy-out(1)>.
+
+=head1 ПАРАМЕТРИ
+
+=over 4
+
+=item B<--help>
+
+Показати довідкове повідомлення.
+
+=item B<-a> файл
+
+=item B<--add> файл
+
+Додати I<файл>, який має бути образом диска з віртуальної машини.
+
+Формат образу диска визначається автоматично. Щоб перевизначити його і
+примусово використати певний формат, скористайтеся параметром I<--format>.
+
+=item B<-a> адреса
+
+=item B<--add> адреса
+
+Додати віддалений диск. Формат адреси є сумісним із
+guestfish. Див. L<guestfish(1)/ДОДАВАННЯ ВІДДАЛЕНОГО СХОВИЩА>.
+
+=item B<--colors>
+
+=item B<--colours>
+
+Використовувати послідовності символів ANSI для розфарбовування
+повідомлень. Ці послідовності типово використовуються, якщо дані виводяться
+на термінал tty.  Якщо дані, виведені програмою, спрямовуються до файла,
+послідовності визначення кольорів ANSI буде вимкнено, якщо ви не додасте до
+команди цей параметр.
+
+=item B<-c> адреса
+
+=item B<--connect> адреса
+
+Якщо використовується libvirt, встановити з’єднання з вказаним I<URI>. Якщо
+пропущено, з’єднання буде встановлено з типовим гіпервізором libvirt.
+
+Якщо вказати блокові пристрої гостьових систем безпосередньо (I<-a>),
+libvirt не буде використовуватися взагалі.
+
+=item B<-d> гість
+
+=item B<--domain> гість
+
+Додати всі диски з вказаної гостьової системи libvirt. UUID доменів можна
+використовувати замість назв.
+
+=item B<--echo-keys>
+
+Типово, якщо virt-get-kernel попросить вас ввести ключ або пароль, програма
+не відтворюватиме введені символи на екрані. Якщо ви не боїтеся
+TEMPEST-нападів, або у вашій кімнаті нікого, окрім вас, немає, ви можете
+скористатися цим прапорцем, щоб бачити, які саме символи ви вводите.
+
+=item B<--format> raw|qcow2|..
+
+=item B<--format> auto
+
+The default for the I<-a> option is to auto-detect the format of the disk
+image.  Using this forces the disk format for the I<-a> option on the
+command line.
+
+Якщо ви користуєтеся ненадійними образами гостьових систем у необробленому
+форматі, вам слід скористатися цим параметром для визначення формату
+диска. Таким чином можна уникнути можливих проблем з захистом для
+сформованих зловмисниками гостьових систем (CVE-2010-3851).
+
+=item B<--keys-from-stdin>
+
+Прочитати параметри ключа або пароля із джерела стандартного
+введення. Типово програма намагається читати паролі від користувача
+відкриттям F</dev/tty>.
+
+=item B<--machine-readable>
+
+За допомогою цього параметра можна зробити виведені дані придатнішими для
+обробки комп'ютером, якщо для цієї обробки використовуються інші
+програми. Див. L</ПРИДАТНЕ ДО ЧИТАННЯ КОМП'ЮТЕРОМ ВИВЕДЕННЯ> нижче.
+
+=item B<-o> каталог
+
+=item B<--output> каталог
+
+This option specifies the output directory where kernel and initramfs from
+the guest are written.
+
+If not specified, the default output is the current directory.
+
+=item B<--prefix> префікс
+
+За допомогою цього параметра можна вказати префікс для видобутих файлів.
+
+If a prefix is specified, then there will be a dash (C<->) after the prefix
+and before the rest of the file name; for example, a kernel in the guest
+like C<vmlinuz-3.19.0-20-generic> is saved as
+C<mydistro-vmlinuz-3.19.0-20-generic> when the prefix is C<mydistro>.
+
+Див. також I<--unversioned-names>.
+
+=item B<-q>
+
+=item B<--quiet>
+
+Не виводити звичайних повідомлень щодо поступу.
+
+=item B<--unversioned-names>
+
+Цей параметр впливає на назву файла призначення для видобутих файлів.
+
+If enabled, files will be saved locally just with the base name; for
+example, kernel and ramdisk in the guest like C<vmlinuz-3.19.0-20-generic>
+and C<initrd.img-3.19.0-20-generic> are saved respectively as C<vmlinuz> and
+C<initrd.img>.
+
+Див. також I<--prefix>.
+
+=item B<-v>
+
+=item B<--verbose>
+
+Увімкнути докладний показ повідомлень з метою діагностики.
+
+=item B<-V>
+
+=item B<--version>
+
+Показати дані щодо версії і завершити роботу.
+
+=item B<-x>
+
+Увімкнути трасування викликів програмного інтерфейсу libguestfs.
+
+=back
+
+=head1 ПРИДАТНЕ ДО ЧИТАННЯ КОМП'ЮТЕРОМ ВИВЕДЕННЯ
+
+Для виведення даних у зручному для машинної обробки форматі можна
+скористатися параметром I<--machine-readable>. Додавання цього параметра
+робить зручним використання virt-get-kernel з інших програм, графічних
+інтерфейсів тощо.
+
+Use the option on its own to query the capabilities of the virt-get-kernel
+binary.  Typical output looks like this:
+
+ $ virt-get-kernel --machine-readable
+ virt-get-kernel
+
+Виводиться список можливостей, по одній на рядок, і програма завершує роботу
+зі станом 0.
+
+=head1 ЗМІННІ СЕРЕДОВИЩА
+
+Опис інших змінних середовища, які стосуються усіх програм libguestfs,
+наведено у розділі L<guestfs(3)/ЗМІННІ СЕРЕДОВИЩА>.
+
+=head1 СТАН ВИХОДУ
+
+Ця програма повертає значення 0 у разі успішного завершення і ненульове
+значення, якщо сталася помилка.
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfs(3)>, L<guestfish(1)>, L<guestmount(1)>, L<virt-copy-out(1)>,
+L<http://libguestfs.org/>.
+
+=head1 АВТОР
+
+Richard W.M. Jones L<http://people.redhat.com/~rjones/>
+
+=head1 АВТОРСЬКІ ПРАВА
+
+Copyright (C) 2013-2018 Red Hat Inc.
+
