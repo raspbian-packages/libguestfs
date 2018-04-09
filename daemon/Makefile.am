@@ -236,6 +236,7 @@ guestfsd_LDADD = \
 	$(RPC_LIBS) \
 	$(YARA_LIBS) \
 	$(OCAML_LIBS) \
+	$(LIBTINFO_LIBS) \
 	../common/errnostring/liberrnostring.la \
 	../common/protocol/libprotocol.la \
 	../common/utils/libutils.la
