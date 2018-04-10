@@ -30,6 +30,7 @@ SOURCES_MLI = \
 SOURCES_ML = \
 	v2v_test_harness.ml
 
+if FALSE
 if HAVE_OCAML
 if HAVE_OCAML_PKG_LIBVIRT
 
@@ -130,6 +131,7 @@ stamp-virt-v2v-test-harness.pod: virt-v2v-test-harness.pod
 	$(top_builddir)/ocaml-dep.sh -I .. $^
 -include .depend
 
+endif
 endif
 endif
 
