@@ -1,0 +1,405 @@
+
+=head1 НАЗВА
+
+virt-edit — програма для редагування файлів у віртуальній машині
+
+=head1 КОРОТКИЙ ОПИС
+
+ virt-edit [--параметри] -d назва_домену файл [файл ...]
+
+ virt-edit [--options] -a диск.img [-a диск.img ...] файл [файл ...]
+
+ virt-edit [-d назва_домену|-a диск.img] файл -e 'вираз'
+
+Застарілий стиль:
+
+ virt-edit назва_домену файл
+
+ virt-edit диск.img [диск.img ...] файл
+
+=head1 ОПИС
+
+C<virt-edit> is a command line tool to edit C<file> where each C<file>
+exists in the named virtual machine (or disk image).
+
+Ви можете вказати декілька назв файлів. Вміст таких файлів буде редаговано
+послідовно. Назви файлів слід вказувати повністю (разом зі шляхом),
+починаючи з кореневого каталогу (тобто назва має починатися з «/»).
+
+Якщо ви просто хочете переглянути файл, скористайтеся L<virt-cat(1)>.
+
+Для виконання складніших дій можна скористатися програмою L<guestfish(1)>
+(див. L</USING GUESTFISH> нижче).
+
+C<virt-edit> cannot be used to create a new file.  L<guestfish(1)> can do
+that and much more.
+
+=head1 ПРИКЛАДИ
+
+Інтерактивне редагування іменованих файлів:
+
+ virt-edit -d mydomain /boot/grub/grub.conf
+
+ virt-edit -d mydomain /etc/passwd
+
+For Windows guests, some Windows paths are understood:
+
+ virt-edit -d mywindomain 'c:\autoexec.bat'
+
+If Perl is installed, you can also edit files non-interactively (see
+L</NON-INTERACTIVE EDITING> below).  To change the init default level to 5:
+
+ virt-edit -d mydomain /etc/inittab -e 's/^id:.*/id:5:initdefault:/'
+
+=head1 ПАРАМЕТРИ
+
+=over 4
+
+=item B<--help>
+
+Показати коротку довідку.
+
+=item B<-a> файл
+
+=item B<--add> файл
+
+Додати I<файл>, який має бути образом диска з віртуальної машини. Якщо у
+віртуальній машині декілька блокових пристроїв, вам слід вказати їх усі за
+допомогою окремих записів параметра I<-a>.
+
+Формат образу диска визначається автоматично. Щоб перевизначити його і
+примусово використати певний формат, скористайтеся параметром
+I<--format=..>.
+
+=item B<-a> адреса
+
+=item B<--add> адреса
+
+Додати віддалений диск. Див. L<guestfish(1)/ДОДАВАННЯ ВІДДАЛЕНОГО СХОВИЩА>.
+
+=item B<-b> СУФІКС
+
+=item B<--backup> СУФІКС
+
+Create a backup of the original file I<in the guest disk image>.  The backup
+has the original filename with C<extension> added.
+
+Usually the first character of C<extension> would be a dot C<.> so you would
+write:
+
+ virt-edit -b .orig [тощо]
+
+Типово створюється файл резервної копії.
+
+=item B<-c> адреса
+
+=item B<--connect> адреса
+
+Якщо використовується libvirt, встановити з’єднання з вказаним I<URI>. Якщо
+пропущено, з’єднання буде встановлено з типовим гіпервізором libvirt.
+
+Якщо вказати блокові пристрої гостьових систем безпосередньо, libvirt не
+буде використовуватися взагалі.
+
+=item B<-d> ГІСТЬ
+
+=item B<--domain> ГІСТЬ
+
+Додати всі диски з вказаної гостьової системи libvirt. UUID доменів можна
+використовувати замість назв.
+
+=item B<--echo-keys>
+
+Типово, якщо virt-edit попросить вас ввести ключ або пароль, програма не
+відтворюватиме введені символи на екрані. Якщо ви не боїтеся
+TEMPEST-нападів, або у вашій кімнаті нікого, окрім вас, немає, ви можете
+скористатися цим прапорцем, щоб бачити, які саме символи ви вводите.
+
+=item B<-e> вираз
+
+=item B<--edit> ВИРАЗ
+
+=item B<--expr> вираз
+
+Instead of launching the external editor, non-interactively apply the Perl
+expression C<EXPR> to each line in the file.  See L</NON-INTERACTIVE
+EDITING> below.
+
+Слід подбати про належне розставлення лапок у виразі, щоб запобігти його
+зміні у командній оболонці.
+
+Зауважте, що цим параметром можна буде скористатися, лише якщо встановлено
+Perl 5.
+
+=item B<--format=raw|qcow2|..>
+
+=item B<--format>
+
+Типовим значенням для параметра I<-a> є автоматичне визначення формату
+образу диска. Використання цього параметра примусово визначає значення
+параметрів I<-a> формату диска у наступному рядку команди. Використання
+параметра I<--format> без аргументу перемикає програму у режим автоматичного
+визначення у наступних параметрах I<-a>.
+
+Приклад:
+
+ virt-edit --format=raw -a диск.img файл
+
+примусове встановлення формату без обробки (без автоматичного визначення)
+для F<disk.img>.
+
+ virt-cat --format=raw -a диск.img --format -a інший.img файл
+
+примусове встановлення формату без обробки (без автоматичного визначення)
+для F<diskimg> і повернення до автоматичного визначення для F<another.img>.
+
+Якщо ви користуєтеся ненадійними образами гостьових систем у необробленому
+форматі, вам слід скористатися цим параметром для визначення формату
+диска. Таким чином можна уникнути можливих проблем з захистом для
+сформованих зловмисниками гостьових систем (CVE-2010-3851).
+
+=item B<--keys-from-stdin>
+
+Прочитати параметри ключа або пароля із джерела стандартного
+введення. Типово програма намагається читати паролі від користувача
+відкриттям F</dev/tty>.
+
+=item B<-m> пристрій[:точка_монтування[:параметри[:тип_файлової_системи]]]
+
+=item B<--mount> пристрій[:точка_монтування[:параметри[:тип_файлової_системи]]]
+
+Змонтувати названий розділ або логічний том до вказаної точки монтування.
+
+Якщо точку монтування не вказано, типовим значенням є F</>.
+
+Визначення точки монтування вимикає інспектування гостьової системи і
+призводить до монтування її кореневої системи та усіх її точок
+монтування. Тому вам слід забезпечити монтування усіх точок монтування,
+потрібних для роботи із файлами, назви яких вказано як аргументи.
+
+Якщо ви не знаєте, які саме файлові системи містяться у образі диска, ви
+можете або запустити guestfish без цього параметра і ознайомитися зі списком
+доступних розділів, файлових систем та логічних томів (див. команди
+L</list-partitions>, L</list-filesystems> і L</lvs>), або скористатися
+програмою L<virt-filesystems(1)>.
+
+Третьою (і нечасто використовуваною) частиною параметра монтування є список
+параметрів монтування, які використовуються для того, щоб змонтувати
+підлеглу файлову систему. Якщо такий список не буде задано, параметрами
+монтування вважатиметься або порожній рядок, або C<ro> (другий варіант
+використовується, якщо використано прапорець I<--ro>). Заданням параметрів
+монтування ви перевизначаєте типовий варіант. Ймовірно, єдиним випадком,
+коли вам може знадобитися це, є випадок вмикання списків керування доступом
+(ACL) і/або розширених атрибутів, якщо у файловій системі передбачено їхню
+підтримку:
+
+ -m /dev/sda1:/:acl,user_xattr
+
+Використання цього прапорця є еквівалентним до використання команди
+C<mount-options>.
+
+Четвертою частиною параметра є назва драйвера файлової системи, якою слід
+скористатися, зокрема C<ext3> або C<ntfs>. У визначенні цієї частини
+параметра рідко виникає потреба, але вона може бути корисною, якщо для
+файлової системи можна скористатися декількома драйверами (приклад: C<ext2>
+і C<ext3>), або libguestfs визначає файлову систему помилково.
+
+=item B<-v>
+
+=item B<--verbose>
+
+Увімкнути докладний показ повідомлень з метою діагностики.
+
+=item B<-V>
+
+=item B<--version>
+
+Показати дані щодо версії і завершити роботу.
+
+=item B<-x>
+
+Увімкнути трасування викликів програмного інтерфейсу libguestfs.
+
+=back
+
+=head1 ПАРАМЕТРИ КОМАНДНОГО РЯДКА У ФОРМАТІ ПОПЕРЕДНІХ ВЕРСІЙ
+
+У попередніх версіях virt-edit можна було використовувати або
+
+ virt-edit диск.img [диск.img ...] файл
+
+або
+
+ virt-edit назва_гостьової_системи файл
+
+тоді як у цій версії вам слід скористатися I<-a> або I<-d>, відповідно, щоб
+уникнути помилок у випадках, коли назва образу диска може збігатися із
+назвою гостьової системи.
+
+З міркувань зворотної сумісності передбачено підтримку запису параметрів у
+застарілому форматі.
+
+=head1 НЕІНТЕРАКТИВНЕ РЕДАГУВАННЯ
+
+C<virt-edit> normally calls out to C<$EDITOR> (or vi) so the system
+administrator can interactively edit the file.
+
+There are two ways also to use C<virt-edit> from scripts in order to make
+automated edits to files.  (Note that although you I<can> use C<virt-edit>
+like this, it’s less error-prone to write scripts directly using the
+libguestfs API and Augeas for configuration file editing.)
+
+The first method is to temporarily set C<$EDITOR> to any script or program
+you want to run.  The script is invoked as C<$EDITOR tmpfile> and it should
+update C<tmpfile> in place however it likes.
+
+The second method is to use the I<-e> parameter of C<virt-edit> to run a
+short Perl snippet in the style of L<sed(1)>.  For example to replace all
+instances of C<foo> with C<bar> in a file:
+
+ virt-edit -d назва_домену назва_файла -e 's/foo/bar/'
+
+The full power of Perl regular expressions can be used (see L<perlre(1)>).
+For example to delete root’s password you could do:
+
+ virt-edit -d назва_домену /etc/passwd -e 's/^root:.*?:/root::/'
+
+What really happens is that the snippet is evaluated as a Perl expression
+for each line of the file.  The line, including the final C<\n>, is passed
+in C<$_> and the expression should update C<$_> or leave it unchanged.
+
+To delete a line, set C<$_> to the empty string.  For example, to delete the
+C<apache> user account from the password file you can do:
+
+ virt-edit -d mydomain /etc/passwd -e '$_ = "" if /^apache:/'
+
+To insert a line, prepend or append it to C<$_>.  However appending lines to
+the end of the file is rather difficult this way since there is no concept
+of "last line of the file" - your expression just doesn't get called again.
+You might want to use the first method (setting C<$EDITOR>) if you want to
+do this.
+
+The variable C<$lineno> contains the current line number.  As is
+traditional, the first line in the file is number C<1>.
+
+The return value from the expression is ignored, but the expression may call
+C<die> in order to abort the whole program, leaving the original file
+untouched.
+
+Remember when matching the end of a line that C<$_> may contain the final
+C<\n>, or (for DOS files) C<\r\n>, or if the file does not end with a
+newline then neither of these.  Thus to match or substitute some text at the
+end of a line, use this regular expression:
+
+ /якийсь текст(\r?\n)?$/
+
+Alternately, use the perl C<chomp> function, being careful not to chomp
+C<$_> itself (since that would remove all newlines from the file):
+
+ my $m = $_; chomp $m; $m =~ /якийсь текст$/
+
+=head1 ШЛЯХИ У WINDOWS
+
+У C<virt-edit> передбачено обмежені можливості щодо обробки літерних дисків
+та шляхів у Windows (наприклад F<E:\foo\bar.txt>).
+
+Тоді і лише тоді, коли у гостьовій системі працює Windows:
+
+=over 4
+
+=item *
+
+Літери дисків, наприклад C<C:>, замінюються на адреси відповідних файлових
+систем на основі даних з регістру Windows.
+
+=item *
+
+Усі символи зворотної похилої риски (C<\>) у шляху замінюються символами
+звичайної похилої риски так, щоб libguestfs змогла обробити адресу.
+
+=item *
+
+Шлях до файла, вміст якого має бути редаговано, визначається без врахування
+регістру символів у його записі.
+
+=back
+
+Відомі певні недоліки програми:
+
+=over 4
+
+=item *
+
+Перехід за деякими символічними посиланнями NTFS може здійснюватися з
+помилками.
+
+=item *
+
+Точки з'єднання NTFS, які виходять за межі однією файлової системи
+використовувати не можна.
+
+=back
+
+=head1 ВИКОРИСТАННЯ GUESTFISH
+
+L<guestfish(1)> є потужнішим інструментом нижчого рівня, яким можна
+скористатися, якщо C<virt-edit> не працює.
+
+Використання C<virt-edit> є приблизним еквівалентом такого:
+
+ guestfish --rw -i -d назва_домену edit /файл
+
+де C<назва_домену> — назва гостьової системи libvirt, а F<файл> — шлях до
+файла повністю.
+
+У вказаній вище команді використано можливість інспектування гостьових
+систем засобами libguestfs, отже, вона не працюватиме у гостьових системах,
+які libguestfs не може інспектувати, або у довільних образах дисків, які не
+містять гостьових систем. Щоб редагувати дані файла безпосередньо на образі
+диска, скористайтеся такою командою:
+
+ guestfish --rw -a диск.img -m /dev/sda1 edit /файл
+
+де F<диск.img> — образ диска, F</dev/sda1> — файлова система у образі диска
+для редагування, а F<файл> — шлях до файла повністю.
+
+C<virt-edit> cannot create new files.  Use the guestfish commands C<touch>,
+C<write> or C<upload> instead:
+
+ guestfish --rw -i -d назва_домену touch /новий_файл
+
+ guestfish --rw -i -d назва_домену write /новий_файл "новий вміст"
+
+ guestfish --rw -i -d назва_домену upload локальний_файл /новий_файл
+
+=head1 ЗМІННІ СЕРЕДОВИЩА
+
+=over 4
+
+=item C<EDITOR>
+
+If set, this string is used as the editor.  It may contain arguments,
+eg. C<"emacs -nw">
+
+Якщо не встановлено, використовуватиметься C<vi>.
+
+=back
+
+=head1 СТАН ВИХОДУ
+
+Ця програма повертає значення 0 у разі успішного завершення і ненульове
+значення, якщо сталася помилка.
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfs(3)>, L<guestfish(1)>, L<virt-cat(1)>, L<virt-copy-in(1)>,
+L<virt-tar-in(1)>, L<http://libguestfs.org/>, L<perl(1)>, L<perlre(1)>.
+
+=head1 АВТОР
+
+Richard W.M. Jones L<http://people.redhat.com/~rjones/>
+
+=head1 АВТОРСЬКІ ПРАВА
+
+Copyright (C) 2009-2018 Red Hat Inc.
+
