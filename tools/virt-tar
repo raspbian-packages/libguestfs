@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl
 # virt-tar
 # Copyright (C) 2009-2018 Red Hat Inc.
 #
