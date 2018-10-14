@@ -1,0 +1,26 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Thu, 12 Dec 2013 21:06:22 +0100
+Subject: golang: Fix for out-of-tree builds
+
+---
+ golang/Makefile.am | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/golang/Makefile.am b/golang/Makefile.am
+index 6afa97c..c4dbd48 100644
+--- a/golang/Makefile.am
++++ b/golang/Makefile.am
+@@ -49,6 +49,7 @@ golangpkg_DATA = \
+ 	pkg/$(GOOS)_$(GOARCH)/$(pkg).a
+ 
+ pkg/$(GOOS)_$(GOARCH)/$(pkg).a: src/$(pkg)/guestfs.go
++	-[ $(srcdir) != $(builddir) ] && ln -s $(abs_srcdir)/src $(builddir)/src
+ 	$(top_builddir)/run $(GOLANG) install $(pkg)
+ 
+ golangsrc_DATA = $(source_files)
+@@ -62,4 +63,5 @@ endif
+ CLEANFILES += src/$(pkg)/*~
+ 
+ clean-local:
++	-[ $(srcdir) != $(builddir) ] && rm -f $(builddir)/src
+ 	rm -rf pkg
