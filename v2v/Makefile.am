@@ -700,8 +700,8 @@ v2v_unit_tests_LINK = \
 .depend: \
 	$(srcdir)/*.mli \
 	$(srcdir)/*.ml \
-	config.ml \
-	output_rhv_upload_*_source.ml
+	$(srcdir)/config.ml \
+	$(srcdir)/output_rhv_upload_*_source.ml
 	$(top_builddir)/ocaml-dep.sh $^
 -include .depend
 
