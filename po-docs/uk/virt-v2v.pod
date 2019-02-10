@@ -1,0 +1,1680 @@
+
+=head1 НАЗВА
+
+virt-v2v - перетворення гостьової системи для використання KVM
+
+=head1 КОРОТКИЙ ОПИС
+
+ virt-v2v [-i mode] [other -i* options]
+          [-o mode] [other -o* options]
+          [guest|filename]
+
+ virt-v2v --in-place
+          [-i mode] [other -i* options]
+          [guest|filename]
+
+=head1 ОПИС
+
+Virt-v2v converts a single guest from a foreign hypervisor to run on KVM.
+It can read Linux and Windows guests running on VMware, Xen, Hyper-V and
+some other hypervisors, and convert them to KVM managed by libvirt,
+OpenStack, oVirt, Red Hat Virtualisation (RHV) or several other targets.  It
+can modify the guest to make it bootable on KVM and install virtio drivers
+so it will run quickly.
+
+Існує також супутня оболонка із назвою L<virt-p2v(1)>, яка постачається у
+форматі ISO, образу компакт-диска або PXE, який можна завантажити на
+фізичних машинах із метою віртуалізації цих машин (фізична машина у
+віртуальну, або physical to virtual чи p2v).
+
+=head2 Input and Output
+
+You normally run virt-v2v with several I<-i*> options controlling the input
+mode and also several I<-o*> options controlling the output mode.  In this
+sense, "input" refers to the source foreign hypervisor such as VMware, and
+"output" refers to the target KVM-based management system such as oVirt or
+OpenStack.
+
+The input and output sides of virt-v2v are separate and unrelated.  Virt-v2v
+can read from any input and write to any output.  Therefore these sides of
+virt-v2v are documented separately in this manual.
+
+Virt-v2v normally copies from the input to the output, called "copying
+mode".  In this case the source guest is always left unchanged.  In-place
+conversion (I<--in-place>) only uses the I<-i*> options and modifies the
+source guest in-place.  (See L</In-place conversion> below.)
+
+=head2 Other virt-v2v topics
+
+L<virt-v2v-support(1)> — Supported hypervisors, virtualization management
+systems, guests.
+
+L<virt-v2v-input-vmware(1)> — Input from VMware.
+
+L<virt-v2v-input-xen(1)> — Input from Xen.
+
+L<virt-v2v-output-local(1)> — Output to local files or local libvirt.
+
+L<virt-v2v-output-rhv(1)> — Output to oVirt or RHV.
+
+L<virt-v2v-output-openstack(1)> — Output to OpenStack.
+
+L<virt-v2v-copy-to-local(1)> — Deprecated tool to handle Xen guests using
+host block device storage.
+
+=head1 ПРИКЛАДИ
+
+=head2 Перетворення з сервера vCenter VMware до локальної libvirt
+
+Нехай маємо сервер vCenter VMware із назвою C<vcenter.example.com>,
+датацентр із назвою C<Datacenter> і гіпервізор ESXi із назвою C<esxi>. Нам
+потрібно перетворити гостьову систему із назвою C<vmware_guest> так, щоб її
+можна було запустити локально під керуванням libvirt.
+
+ virt-v2v -ic vpx://vcenter.example.com/Datacenter/esxi vmware_guest
+
+У цьому випадку, найімовірніше, вам доведеться запускати virt-v2v від імені
+користувача C<root>, оскільки програмі буде потрібен обмін даними із фоновою
+службою libvirt системи і копіювання дисків гостьової системи до
+F</var/lib/libvirt/images>.
+
+For more information see L<virt-v2v-input-vmware(1)>.
+
+=head2 Перетворення з VMware до RHV/oVirt
+
+This is the same as the previous example, except you want to send the guest
+to a RHV Data Domain using the RHV REST API.  Guest network interface(s) are
+connected to the target network called C<ovirtmgmt>.
+
+ virt-v2v -ic vpx://vcenter.example.com/Datacenter/esxi vmware_guest \
+   -o rhv-upload -oc https://ovirt-engine.example.com/ovirt-engine/api \
+   -os ovirt-data -op /tmp/ovirt-admin-password -of raw \
+   -oo rhv-cafile=/tmp/ca.pem -oo rhv-direct \
+   --bridge ovirtmgmt
+
+У цьому випадку основна система, де запущено virt-v2v, працює як B<сервер
+перетворення>.
+
+For more information see L<virt-v2v-output-rhv(1)>.
+
+=head2 Перетворення з гіпервізору ESXi за допомогою SSH до локальної libvirt
+
+Нехай маємо гіпервізор ESXi із назвою C<esxi.example.com> і уможливленим
+доступом за допомогою SSH. Потрібно перетворити його зі сховища VMFS на
+сервері до локального файла.
+
+ virt-v2v \
+   -i vmx -it ssh \
+   "ssh://root@esxi.example.com/vmfs/volumes/datastore1/guest/guest.vmx" \
+   -o local -os /var/tmp
+
+Гостьову систему перед перетворенням має бути вимкнено. Потреби у запуску
+virt-v2v від імені користувача root у цьому випадку I<немає>.
+
+For more information about converting from VMX files see
+L<virt-v2v-input-vmware(1)>.
+
+=head2 Convert disk image to OpenStack
+
+Given a disk image from another hypervisor that you want to convert to run
+on OpenStack (only KVM-based OpenStack is supported), you can run virt-v2v
+inside an OpenStack VM (called C<v2v-vm> below), and do:
+
+ virt-v2v -i disk disk.img -o openstack -oo server-id=v2v-vm
+
+See L<virt-v2v-output-openstack(1)>.
+
+=head2 Перетворення образу диска на образ диска
+
+Нехай маємо образ диска з іншого гіпервізору, який слід перетворити для
+запуску на KVM. Тоді можна піти одним зі двох шляхів. Найпростішим шляхом
+буде такий:
+
+ virt-v2v -i disk диск.img -o local -os /var/tmp
+
+де virt-v2v має визначити усі параметри вхідного образу F<disk.img> і (у
+цьому випадку) записати перетворений результат до F</var/tmp>.
+
+Складнішим способом є створення L<XML
+libvirt|http://libvirt.org/formatdomain.html> із описом вхідної гостьової
+системи (якщо можна якось отримати XML libvirt з початкового гіпервізора,
+все стає набагато простішим). Далі, можна зробити так:
+
+ virt-v2v -i libvirtxml guest-domain.xml -o local -os /var/tmp
+
+Оскільки F<guest-domain.xml> містить шляхи до образів гостьової системи, вам
+не потрібно вказувати назву образу диска у рядку команди.
+
+Щоб перетворити локальний образ диска і негайно завантажити його у
+локальному qemu, віддайте таку команду:
+
+ virt-v2v -i disk disk.img -o qemu -os /var/tmp --qemu-boot
+
+=head1 ПАРАМЕТРИ
+
+=over 4
+
+=item B<--help>
+
+Показати довідкове повідомлення.
+
+=item B<-b> ...
+
+=item B<--bridge> ...
+
+Див. I<--network> нижче.
+
+=item B<--colors>
+
+=item B<--colours>
+
+Використовувати послідовності символів ANSI для розфарбовування
+повідомлень. Ці послідовності типово використовуються, якщо дані виводяться
+на термінал tty.  Якщо дані, виведені програмою, спрямовуються до файла,
+послідовності визначення кольорів ANSI буде вимкнено, якщо ви не додасте до
+команди цей параметр.
+
+=item B<--compressed>
+
+Записати результати до стиснутого файла. Це можна зробити, лише якщо
+форматом виведення даних є qcow2 (див. I<-of> нижче). Є еквівалентом
+параметра I<-c> у L<qemu-img(1)>.
+
+=item B<--debug-overlays>
+
+Зберегти файли накладок, створені під час перетворення. Цей параметр
+використовується лише для діагностики virt-v2v, його може бути вилучено у
+майбутніх версіях.
+
+=item B<--echo-keys>
+
+Типово, якщо virt-v2v попросить вас ввести ключ або пароль, програма не
+відтворюватиме введені символи на екрані. Якщо ви не боїтеся
+TEMPEST-нападів, або у вашій кімнаті нікого, окрім вас, немає, ви можете
+скористатися цим прапорцем, щоб бачити, які саме символи ви вводите.
+
+Зауважте, що цей параметр стосується лише ключів і паролів до зашифрованих
+пристроїв і розділів, а не паролів, які використовуються для встановлення
+з'єднання із віддаленими серверами.
+
+=item B<-i> B<disk>
+
+Встановити метод введення I<disk>.
+
+У цьому режимі ви можете читати образ диска віртуальної машини без
+метаданих. virt-v2v намагається визначити найкращі типові значення для
+метаданих. Ці значення, зазвичай, є адекватними, але ви можете додатково
+змінити їх (наприклад, змінити об'єм пам'яті або кількість віртуальних
+процесорів) за допомогою параметра I<-i libvirtxml>. У цей спосіб може бути
+імпортовано лише гостьові системи, які використовують лише один диск.
+
+=item B<-i> B<libvirt>
+
+Встановити метод введення I<libvirt>. Цей метод є типовим.
+
+У цьому режимі вам слід вказати назву гостьової системи libvirt або UUID у
+рядку команди. Ви також можете вказати адресу з'єднання libvirt
+(див. I<-ic>).
+
+=item B<-i> B<libvirtxml>
+
+Встановити метод введення I<libvirtxml>.
+
+In this mode you have to pass a libvirt XML file on the command line.  This
+file is read in order to get metadata about the source guest (such as its
+name, amount of memory), and also to locate the input disks.  See L</Minimal
+XML for -i libvirtxml option> below.
+
+=item B<-i> B<local>
+
+Те саме, що і I<-i disk>.
+
+=item B<-i> B<ova>
+
+Встановити метод введення I<ova>.
+
+In this mode you can read a VMware ova file.  Virt-v2v will read the ova
+manifest file and check the vmdk volumes for validity (checksums)  as well
+as analyzing the ovf file, and then convert the guest.  See
+L<virt-v2v-input-vmware(1)>.
+
+=item B<-i> B<vmx>
+
+Встановити метод введення I<vmx>.
+
+In this mode you can read a VMware vmx file directly or over SSH.  This is
+useful when VMware VMs are stored on an NFS server which you can mount
+directly, or where you have access by SSH to an ESXi hypervisor.  See
+L<virt-v2v-input-vmware(1)>.
+
+=item B<-ic> адреса_libvirt
+
+Вказати адресу з'єднання libvirt, яким слід скористатися під час читання
+гостьової системи. Використовується, лише якщо S<I<-i libvirt>>.
+
+Можна використовувати лише локальні з'єднання libvirt, з'єднання vCenter
+VMware або віддалені з'єднання Xen RHEL 5. Інші віддалені з'єднання libvirt,
+загалом, не працюватимуть.
+
+See also L<virt-v2v-input-vmware(1)>, L<virt-v2v-input-xen(1)>.
+
+=item B<-if> формат
+
+Лише для I<-i disk>. Цей параметр вказує формат образу диска вхідних
+даних. Для інших варіантів вхідних даних вам слід вказати формат вхідних
+даних у метаданих.
+
+=item B<--in-place>
+
+Не створювати виведену віртуальну машину у гіпервізорі призначення. Замість
+цього, скоригувати гостьову операційну систему у початковій віртуальній
+машині для запуску у початковому гіпервізорі.
+
+Цей режим призначено для інтеграції із іншими наборами інструментів, які
+відповідають за перетворення налаштувань віртуальної машини, забезпечення
+повернення до початкового стану, якщо стануться помилки, перетворення
+сховища даних тощо.
+
+See L</In-place conversion> below.
+
+Конфліктує з усіма параметрами I<-o *>.
+
+=item B<-io> OPTION=VALUE
+
+Set input option(s) related to the current input mode or transport.  To
+display short help on what options are available you can use:
+
+ virt-v2v -it vddk -io "?"
+
+=item B<-io vddk-libdir=>LIBDIR
+
+Встановити каталог бібліотеки VDDK. У цьому каталозі мають I<міститися>
+підкаталоги із назвами F<include>, F<lib64> тощо, але у аргументі параметра
+не повинно бути самої частини назви каталогу F<lib64>.
+
+In most cases this parameter is required when using the I<-it vddk> (VDDK)
+transport.  See L<virt-v2v-input-vmware(1)> for details.
+
+=item B<-io vddk-thumbprint=>xx:xx:xx:...
+
+Встановити відбиток віддаленого сервера VMware.
+
+This parameter is required when using the I<-it vddk> (VDDK) transport.  See
+L<virt-v2v-input-vmware(1)> for details.
+
+=item B<-io vddk-config=>FILENAME
+
+=item B<-io vddk-cookie=>COOKIE
+
+=item B<-io vddk-nfchostport=>PORT
+
+=item B<-io vddk-port=>PORT
+
+=item B<-io vddk-snapshot=>SNAPSHOT-MOREF
+
+=item B<-io vddk-transports=>MODE:MODE:...
+
+When using VDDK mode, these options are passed unmodified to the
+L<nbdkit(1)> VDDK plugin.  Please refer to L<nbdkit-vddk-plugin(1)>.  Do not
+use these options unless you know what you are doing.  These are all
+optional.
+
+=item B<-ip> filename
+
+Supply a file containing a password to be used when connecting to the target
+hypervisor.  If this is omitted then the input hypervisor may ask for the
+password interactively.  Note the file should contain the whole password,
+B<without any trailing newline>, and for security the file should have mode
+C<0600> so that others cannot read it.
+
+=item B<-it> B<ssh>
+
+When using I<-i vmx>, this enables the ssh transport.  See
+L<virt-v2v-input-vmware(1)>.
+
+=item B<-it> B<vddk>
+
+Use VMware VDDK as a transport to copy the input disks.  See
+L<virt-v2v-input-vmware(1)>.  If you use this parameter then you may need to
+use other I<-io vddk*> options to specify how to connect through VDDK.
+
+=item B<--key> SELECTOR
+
+Specify a key for LUKS, to automatically open a LUKS device when using the
+inspection.  C<SELECTOR> can be in one of the following formats:
+
+=over 4
+
+=item B<--key> C<DEVICE>:key:KEY_STRING
+
+Use the specified C<KEY_STRING> as passphrase.
+
+=item B<--key> C<DEVICE>:file:FILENAME
+
+Read the passphrase from F<FILENAME>.
+
+=back
+
+=item B<--keys-from-stdin>
+
+Прочитати параметри ключа або пароля із джерела стандартного
+введення. Типово програма намагається читати паролі від користувача
+відкриттям F</dev/tty>.
+
+Зауважте, що цей параметр стосується лише ключів і паролів до зашифрованих
+пристроїв і розділів, а не паролів, які використовуються для встановлення
+з'єднання із віддаленими серверами.
+
+=item B<--mac> aa:bb:cc:dd:ee:ffB<:network:>out
+
+=item B<--mac> aa:bb:cc:dd:ee:ffB<:bridge:>out
+
+Map source NIC MAC address to a network or bridge.
+
+See L</Networks and bridges> below.
+
+=item B<--machine-readable>
+
+=item B<--machine-readable>=format
+
+This option is used to make the output more machine friendly when being
+parsed by other programs.  See L</Machine readable output> below.
+
+=item B<-n> вхід:вихід
+
+=item B<-n> вихід
+
+=item B<--network> вхід:вихід
+
+=item B<--network> вихід
+
+=item B<-b> вхід:вихід
+
+=item B<-b> вихід
+
+=item B<--bridge> вхід:вихід
+
+=item B<--bridge> вихід
+
+Пов'язати мережу (або місток) із назвою C<вхід> із мережею (або містком) із
+назвою C<вихід>. Якщо не вказано префікс C<вхід:>, із C<вихід> буде
+пов'язано усі інші мережі (або містки).
+
+See L</Networks and bridges> below.
+
+=item B<--no-copy>
+
+Не копіювати диски. Замість цього, буде виконано перетворення (а його
+результати буде відкинуто) і записано метадані, але диски не буде
+створено. Див. також обговорення щодо S<I<-o null>> нижче.
+
+Цей параметр корисний у двох випадках: вам потрібно перевірити, чи
+завершиться перетворення успіхом без довгого процесу копіювання або ви
+хочете просто подивитися на метадані.
+
+Цей параметр несумісний із I<-o libvirt>, оскільки їх поєднання створити
+помилкову гостьову систему (систему без дисків).
+
+Цей параметр несумісний із I<-o glance> з технічних причин.
+
+=item B<-o> B<disk>
+
+Те саме, що і I<-o local>.
+
+=item B<-o> B<glance>
+
+This is a legacy option.  You should probably use I<-o openstack> instead.
+
+Set the output method to OpenStack Glance.  In this mode the converted guest
+is uploaded to Glance.  See L<virt-v2v-output-openstack(1)>.
+
+=item B<-o> B<libvirt>
+
+Встановити метод виведення I<libvirt>. Цей метод є типовим.
+
+У цьому режимі перетворену гостьову систему буде створено як гостьову
+систему libvirt. Ви також можете вказати адресу з'єднання libvirt
+(див. I<-oc>).
+
+See L<virt-v2v-output-local(1)>.
+
+=item B<-o> B<local>
+
+Встановити метод виведення до I<local>.
+
+У цьому режимі перетворену гостьову систему буде записано до локального
+каталогу, вказаного за допомогою параметра I<-os /каталог> (каталог має
+існувати). Перетворені диски гостьової системи буде записано так:
+
+ /каталог/назва-sda
+ /каталог/назва-sdb
+ [тощо]
+
+Також буде створено файл XML libvirt із метаданими гостьової системи:
+
+ /каталог/назва.xml
+
+де C<назва> — назва гостьової системи.
+
+=item B<-o> B<null>
+
+Встановити метод виведення до I<null>.
+
+Гостьову систему буде перетворено і скопійовано (якщо ви не вкажете ще і
+I<--no-copy>), але результати буде викинуто, метадані не записуватимуться.
+
+=item B<-o> B<openstack>
+
+Set the output method to OpenStack.  See L<virt-v2v-output-openstack(1)>.
+
+=item B<-o> B<ovirt>
+
+Те саме, що і I<-o rhv>.
+
+=item B<-o> B<ovirt-upload>
+
+This is the same as I<-o rhv-upload>.
+
+=item B<-o> B<qemu>
+
+Встановити метод виведення до I<qemu>.
+
+Дія параметра подібна до I<-o local>, але при виконанні команди програма
+записує скрипт командної оболонки, яким можна скористатися для завантаження
+гостьової системи у qemu. Перетворені диски і скрипт оболонки буде записано
+до каталогу, вказаного за допомогою параметра I<-os>.
+
+Якщо ви використовуєте цей режим виведення, ви також можете вказати параметр
+I<--qemu-boot>, який завантажує гостьову систему у qemu негайно.
+
+=item B<-o> B<rhev>
+
+Те саме, що і I<-o rhv>.
+
+=item B<-o> B<rhv>
+
+Встановити метод виведення до I<rhv>.
+
+Перетворену гостьову систему буде записано до домену сховища експортування
+RHV. Слід також вказати параметр I<-os> для визначення розташування домену
+сховища експортування. Зауважте, що використання цього параметр не імпортує
+гостьову систему до RHV. Вам доведеться зробити це пізніше за допомогою
+інтерфейсу сховища.
+
+See L<virt-v2v-output-rhv(1)>.
+
+=item B<-o> B<rhv-upload>
+
+Set the output method to I<rhv-upload>.
+
+The converted guest is written directly to a RHV Data Domain.  This is a
+faster method than I<-o rhv>, but requires oVirt or RHV E<ge> 4.2.
+
+See L<virt-v2v-output-rhv(1)>.
+
+=item B<-o> B<vdsm>
+
+Встановити метод виведення до I<vdsm>.
+
+Цей режим подібний до I<-o rhv>, але тут треба вказувати повний шлях до
+домену даних:
+F</rhv/data-center/E<lt>uuid-датацентруE<gt>/E<lt>uuid-домену-данихE<gt>>.
+Цей режим використовується, лише якщо virt-v2v запущено під керуванням VDSM.
+
+=item B<-oa> B<sparse>
+
+=item B<-oa> B<preallocated>
+
+Встановити режим розміщення виведеного файла. Типовим режимом є C<sparse>
+(розріджений файл).
+
+=item B<-oc> URI
+
+Specify a connection URI to use when writing the converted guest.
+
+For S<I<-o libvirt>> this is the libvirt URI.  Only local libvirt
+connections can be used.  Remote libvirt connections will not work.  See
+L<virt-v2v-output-local(1)> for further information.
+
+=item B<-of> формат
+
+Під час перетворення гостьової системи перетворити диски до вказаного
+формату.
+
+Якщо не вказано, буде використано формат вхідних даних.
+
+=item B<-on> назва
+
+Перейменувати гостьову систему під час перетворення. Якщо цей параметр не
+використано, назва виведеного результату буде тією самою, що і назва вхідної
+системи.
+
+=item B<-oo> OPTION=VALUE
+
+Set output option(s) related to the current output mode.  To display short
+help on what options are available you can use:
+
+ virt-v2v -o rhv-upload -oo "?"
+
+=item B<-oo guest-id=>C<ID>
+
+For I<-o openstack> (L<virt-v2v-output-openstack(1)>) only, set a guest ID
+which is saved on each Cinder volume in the C<virt_v2v_guest_id> volume
+property.
+
+=item B<-oo verify-server-certificate>
+
+=item B<-oo verify-server-certificate=>C<true|false>
+
+For I<-o openstack> (L<virt-v2v-output-openstack(1)>) only, this can be used
+to disable SSL certification validation when connecting to OpenStack by
+specifying I<-oo verify-server-certificate=false>.
+
+=item B<-oo os->*B<=>*
+
+For I<-o openstack> (L<virt-v2v-output-openstack(1)>) only, set optional
+OpenStack authentication.  For example I<-oo os-username=>NAME is equivalent
+to C<openstack --os-username=NAME>.
+
+=item B<-oo rhv-cafile=>F<ca.pem>
+
+For I<-o rhv-upload> (L<virt-v2v-output-rhv(1)>) only, the F<ca.pem> file
+(Certificate Authority), copied from F</etc/pki/ovirt-engine/ca.pem> on the
+oVirt engine.
+
+=item B<-oo rhv-cluster=>C<CLUSTERNAME>
+
+For I<-o rhv-upload> (L<virt-v2v-output-rhv(1)>) only, set the RHV Cluster
+Name.  If not given it uses C<Default>.
+
+=item B<-oo rhv-direct>
+
+For I<-o rhv-upload> (L<virt-v2v-output-rhv(1)>) only, if this option is
+given then virt-v2v will attempt to directly upload the disk to the oVirt
+node, otherwise it will proxy the upload through the oVirt engine.  Direct
+upload requires that you have network access to the oVirt nodes.  Non-direct
+upload is slightly slower but should work in all situations.
+
+=item B<-oo rhv-verifypeer>
+
+For I<-o rhv-upload> (L<virt-v2v-output-rhv(1)>) only, verify the oVirt/RHV
+server’s identity by checking the server‘s certificate against the
+Certificate Authority.
+
+=item B<-oo server-id=>C<NAME|UUID>
+
+For I<-o openstack> (L<virt-v2v-output-openstack(1)>) only, set the name of
+the conversion appliance where virt-v2v is running.
+
+=item B<-oo vdsm-compat=0.10>
+
+=item B<-oo vdsm-compat=1.1>
+
+Якщо вказано I<-o vdsm> і форматом виведення даних є qcow2, ми додаємо
+параметр qcow2 I<compat=0.10> до файла виведених даних для сумісності із
+RHEL 6 (див. L<https://bugzilla.redhat.com/1145582>).
+
+If I<-oo vdsm-compat=1.1> is used then modern qcow2 (I<compat=1.1>)  files
+are generated instead.
+
+Currently I<-oo vdsm-compat=0.10> is the default, but this will change to
+I<-oo vdsm-compat=1.1> in a future version of virt-v2v (when we can assume
+that everyone is using a modern version of qemu).
+
+B<Зауважте, що цей параметр стосується лише даних, виведених при
+використанні I<-o vdsm>>. В усіх інших режимах виведення (зокрема, при
+використанні I<-o rhv>) завжди створюватимуться файли сучасної версії qcow2,
+I<compat=1.1>.
+
+Якщо доступний цей параметр, C<vdsm-compat-option> буде представлено у
+форматі виведення I<--machine-readable>.
+
+=item B<-oo vdsm-image-uuid=>UUID
+
+=item B<-oo vdsm-vol-uuid=>UUID
+
+=item B<-oo vdsm-vm-uuid=>UUID
+
+=item B<-oo vdsm-ovf-output=>DIR
+
+Зазвичай, при використанні режиму виведення RHV програма вибирає
+псевдовипадкові значення UUID для гостьової системи призначення. Втім, VDSM
+потребує керування UUID і передає значення цих параметрів, якщо virt-v2v
+працює під керуванням VDSM. Параметри керують такими значеннями:
+
+=over 4
+
+=item *
+
+the image directory of each guest disk (I<-oo vdsm-image-uuid>) (this option
+is passed once for each guest disk)
+
+=item *
+
+UUIDs for each guest disk (I<-oo vdsm-vol-uuid>) (this option is passed once
+for each guest disk)
+
+=item *
+
+the OVF file name (I<-oo vdsm-vm-uuid>).
+
+=item *
+
+the OVF output directory (default current directory) (I<-oo
+vdsm-ovf-output>).
+
+=back
+
+Формат запису UUID: C<12345678-1234-1234-1234-123456789abc> (кожна
+шістнадцяткова цифра може приймати значення C<0-9> або C<a-f>), відповідно
+до S<OSF DCE 1.1>.
+
+Ці параметри можна використовувати лише з I<-o vdsm>.
+
+=item B<-oo vdsm-ovf-flavour=>flavour
+
+This option controls the format of the OVF generated at the end of
+conversion.  Currently there are two possible flavours:
+
+=over 4
+
+=item rhvexp
+
+The OVF format used in RHV export storage domain.
+
+=item ovirt
+
+The OVF format understood by oVirt REST API.
+
+=back
+
+For backward compatibility the default is I<rhvexp>, but this may change in
+the future.
+
+=item B<-op> file
+
+Supply a file containing a password to be used when connecting to the target
+hypervisor.  Note the file should contain the whole password, B<without any
+trailing newline>, and for security the file should have mode C<0600> so
+that others cannot read it.
+
+=item B<-os> сховище
+
+Розташування сховища даних для перетвореної гостьової системи.
+
+Для I<-o libvirt> цей параметр визначає каталог буфера libvirt
+(див. S<C<virsh pool-list>>) або UUID буфера.
+
+Для I<-o local> і I<-o qemu> це назва каталогу. Каталог має вже існувати.
+
+For I<-o rhv-upload>, this is the name of the destination Storage Domain.
+
+For I<-o openstack>, this is the optional Cinder volume type.
+
+Для I<-o rhv> це може бути шлях NFS домену сховища експортування (Export
+Storage Domain) у форматі C<E<lt>вузолE<gt>:E<lt>шляхE<gt>>. Приклад:
+
+ rhv-storage.example.com:/rhv/export
+
+Місце експортування NFS має бути придатним до монтування та доступним для
+запису користувачем та вузлом, де запущено virt-v2v, оскільки програмі
+virt-v2v потрібно буде його змонтувати під час роботи. Отже, ймовірно, вам
+доведеться запустити virt-v2v від імені користувача C<root>.
+
+B<Альтернативний варіант:> ви можете змонтувати домен сховища експортування
+власноруч і вказати його точку монтування за допомогою I<-os>. Зауважте, що
+virt-v2v все ще потрібно буде вести запис до цього віддаленого каталогу,
+тому virt-v2v все одно доведеться запускати від імені C<root>.
+
+Вам буде повідомлено про помилку, якщо virt-v2v не вдасться змонтувати домен
+сховища експортування або здійснити до нього запис.
+
+=item B<--print-estimate>
+
+Print the estimated size of the data which will be copied from the source
+disk(s) and stop.  One number (the size in bytes) is printed per disk, and a
+total:
+
+ $ virt-v2v --print-estimate
+ ...
+ disk 1: 100000
+ disk 2: 200000
+ total: 300000
+
+With the I<--machine-readable> option you get JSON output which can be
+directed into a file or elsewhere:
+
+ $ virt-v2v --print-estimate --machine-readable=file:estimates
+ ...
+ $ cat estimates
+ {
+  "disks": [ 100000, 200000 ],
+  "total": 300000
+ }
+
+When using this option you must specify an output mode.  This is because
+virt-v2v has to perform the conversion in order to print the estimate, and
+the conversion depends on the output mode.  Using I<-o null> should be safe
+for most purposes.
+
+When this option is used along with I<--machine-readable> you can direct the
+output to an alternate file.
+
+=item B<--print-source>
+
+Print information about the source guest and stop.  This option is useful
+when you are setting up network and bridge maps.  See L</Networks and
+bridges>.
+
+=item B<--qemu-boot>
+
+Лише якщо використовується I<-o qemu>, негайно завантажує гостьову систему
+після завершення роботи virt-v2v.
+
+=item B<-q>
+
+=item B<--quiet>
+
+Цей параметр вимикає смужки поступу та інші необов'язкові до виведення дані.
+
+=item B<--root ask>
+
+=item B<--root single>
+
+=item B<--root first>
+
+=item B<--root> /dev/sdX
+
+=item B<--root> /dev/VG/LV
+
+Вибрати кореневу файлову систему для перетворення.
+
+Якщо у віртуальній машині передбачено декілька варіантів завантаження або у
+віртуальній машині є сторонні файлові системи, які виглядають як розділи
+операційних систем, за допомогою цього параметра можна вибрати кореневу
+файлову систему (тобто диск C<C:> або F</>) операційної системи, яку слід
+перетворити. Використання консолі відновлення Windows, деякі долучені диски
+DVD та вади у евристиці засобу інспектування libguestfs можуть призвести до
+помилкового визначення гостьової операційної системи як такої, у якій
+передбачено варіанти завантаження.
+
+Типовим варіантом у virt-v2v E<le> 0.7.1 був параметр S<I<--root single>>,
+який спричиняв аварійне завершення virt-v2v, якщо виявлялася операційна
+система із варіантами завантаження.
+
+Починаючи з версії virt-v2v E<ge> 0.7.2 типовим режимом є S<I<--root ask>>:
+якщо буде виявлено варіанти завантаження у віртуальній машині, virt-v2v
+припинить роботу, виведе список усіх можливих кореневих файлових системи і
+попросить користувача вказати ту, яку слід перетворити. Це потребує роботи
+virt-v2v у інтерактивному режимі.
+
+S<I<--root first>> означає, що слід вибрати перший кореневий пристрій, якщо
+буде виявлено операційну систему із варіантами завантаження. Оскільки
+виявлення кореневих пристроїв пов'язано із евристикою, іноді програма може
+вибрати помилковий пристрій.
+
+Ви також можете вказати певний кореневий пристрій за назвою, наприклад,
+S<I<--root /dev/sda2>> означає, що слід використати другий розділ на першому
+диску. Якщо іменованого кореневого пристрою не існує або його не вдасться
+визначити як кореневий пристрій, virt-v2v повідомить про помилку і завершить
+роботу.
+
+Зауважте, що у grub є вада, яка заважає успішно завантажувати систему із
+варіантами завантаження, якщо увімкнено virtio. Grub може завантажувати лише
+операційні системи з першого диска virtio. Зокрема, F</boot> має бути першим
+диском virtio, і grub не може ланцюгово завантажувати операційну систему,
+яка не зберігається на першому диску virtio.
+
+=item B<-v>
+
+=item B<--verbose>
+
+Увімкнути докладний показ повідомлень з метою діагностики.
+
+=item B<-V>
+
+=item B<--version>
+
+Показати дані щодо версії і завершити роботу.
+
+=item B<-x>
+
+Увімкнути трасування викликів програмного інтерфейсу libguestfs.
+
+=back
+
+=head1 ПРИМІТКИ
+
+=head2 Xen paravirtualized guests
+
+У застарілих версіях virt-v2v можна було перетворити паравіртуалізовану
+гостьову систему Xen на гостьову систему KVM встановленням нового ядра. Ця
+версія virt-v2v I<не> намагатиметься встановити будь-яке нове ядро. Замість
+цього, вона повідомить вам про помилку, якщо доступними виявляться I<лише>
+паравіртуалізовані ядра Xen.
+
+Тому, перш ніж виконувати перетворення, вам слід перевірити, чи встановлено
+у системі звичайне ядро. Для деяких застарілих дистрибутивів Linux це
+означає, що має бути встановлено ядро із наведеної нижче таблиці:
+
+ RHEL 3         (Неможливо визначити, не було ядра PV Xen)
+ 
+ RHEL 4         i686 з > 10 ГБ пам'яті: встановіть «kernel-hugemem»
+                i686 SMP: встановіть «kernel-smp»
+                інші i686: встановіть «kernel»
+                x86-64 SMP з > 8 процесорів: встановіть «kernel-largesmp»
+                x86-64 SMP: встановіть «kernel-smp»
+                інші x86-64: встановіть «kernel»
+ 
+ RHEL 5         i686: встановіть «kernel-PAE»
+                x86-64: встановіть «kernel»
+ 
+ SLES 10        i586 з > 10 ГБ оперативної пам'яті: встановіть «kernel-bigsmp»
+                i586 SMP: встановіть «kernel-smp»
+                інша i586: встановіть «kernel-default»
+                x86-64 SMP: встановіть «kernel-smp»
+                other x86-64: встановіть «kernel-default»
+ 
+ SLES 11+       i586: встановіть «kernel-pae»
+                x86-64: встановіть «kernel-default»
+
+ Windows        (Неможливо визначити, не існує ядер Windows для PV Xen)
+
+=head2 Enabling virtio
+
+«Virtio» — назва набору драйверів, які значно пришвидшують роботу диска
+(блокового пристрою), мережі та інших дій у гостьовій системі у KVM.
+
+У застарілих версіях virt-v2v можна було встановити ці драйвери для певних
+гостьових систем Linux. Ця версія virt-v2v I<не> намагатиметься встановити
+нові ядра Linux або драйвери, але попередить вас, якщо їх ще не встановлено.
+
+Щоб увімкнути virtio і поліпшити швидкодію гостьової системи після
+перетворення, вам слід переконатися, що у системі встановлено B<принаймні>
+вказані у наведеній нижче таблиці версії пакунків ще I<до> перетворення.
+
+ RHEL 3         Немає доступних драйверів virtio
+ 
+ RHEL 4         ядро >= 2.5.9-89.EL
+                lvm2 >= 2.02.42-5.el4
+                device-mapper >= 1.02.28-2.el4
+                selinux-policy-targeted >= 1.17.30-2.152.el4
+                policycoreutils >= 1.18.1-4.13
+ 
+ RHEL 5         ядро >= 2.6.18-128.el5
+                lvm2 >= 2.02.40-6.el5
+                selinux-policy-targeted >= 2.4.6-203.el5
+ 
+ RHEL 6+        усі версії підтримують virtio
+ 
+ Fedora         усі версії підтримують virtio
+ 
+ SLES 11+       усі версії підтримують virtio
+ 
+ SLES 10        ядро >= 2.6.16.60-0.85.1
+ 
+ OpenSUSE 11+   усі версії підтримують virtio
+ 
+ OpenSUSE 10    ядро >= 2.6.25.5-1.1
+
+ Debian 6+      Підтримку virtio передбачено в усіх версіях
+
+ Ubuntu 10.04+  — підтримку virtio передбачено в усіх версіях
+
+ Windows        драйвери встановлюються з ISO або каталогу, на який
+                вказує змінна середовища VIRTIO_WIN, якщо її встановлено
+
+=head2 RHEL 4: SELinux relabel appears to hang forever
+
+У RHEL E<le> 4.7 була вада, яка спричиняла до того, що повторне встановлення
+міток SELinux «зависало» на такому повідомленні:
+
+ *** Warning -- SELinux relabel is required. ***
+ *** Disabling security enforcement.         ***
+ *** Relabeling could take a very long time, ***
+ *** depending on file system size.          ***
+
+Насправді, система очікувала від вас натискання клавіші (але ніяк візуально
+про це не повідомляла). Ви можете або натиснути клавішу C<[Return]>, у
+результаті чого гостьова система завершить повторне встановлення міток і
+перезавантажиться, або можете встановити policycoreutils E<ge> 1.18.1-4.13
+до запуску перетворення v2v. Див. також
+L<https://bugzilla.redhat.com/show_bug.cgi?id=244636>
+
+=head2 Debian і Ubuntu
+
+=head3 "попередження: не вдалося визначити спосіб оновлення налаштувань Grub2"
+
+У поточній версії virt-v2v не передбачено способу визначити типове ядро у
+гостьових системах Debian та Ubuntu, які використовують завантажувач GRUB
+2. Це означає, що virt-v2v не змінюватиме типового ядра для завантаження,
+навіть якщо це не краще ядро, яке доступне у гостьовій
+системі. Рекомендуємо, перш ніж користуватися virt-v2v, зробити так, щоб
+типове ядро для завантаження було найкращим з доступних у гостьовій системі
+ядер (наприклад, просто оновивши гостьову систему до найсвіжішої версії).
+
+=head3 "vsyscall attempted with vsyscall=none"
+
+When run on a recent Debian host virt-v2v may fail to convert guests which
+were created before 2013.  In the debugging output you will see a crash
+message similar to:
+
+ vsyscall attempted with vsyscall=none ip:...
+ segfault at ...
+
+This is caused because Debian removed support for running old binaries which
+used the legacy vsyscall page to call into the kernel.
+
+You can work around this problem by running this command before running
+virt-v2v:
+
+ export LIBGUESTFS_APPEND="vsyscall=emulate"
+
+For more information, see L<https://bugzilla.redhat.com/1592061>
+
+=head2 Windows
+
+=head3 Швидкий запуск у Windows E<ge> 8 є несумісним із virt-v2v
+
+Гостьові системи, у яких використовується можливість Windows E<ge> 8 «Fast
+Startup» (або гостьові системи, які було приспано), не можна перетворити за
+допомогою virt-v2v. Програма повідомлятиме про таку помилку:
+
+ virtv2v: помилка: не вдалося змонтувати образ диска для запису. Ймовірно, це
+ сталося через те, що у гостьовій системі використано Windows Hibernation або
+ Fast Restart. Вам слід вимкнути ці можливості (у гостьовій системі), щоб
+ скористатися virt-v2v.
+Як і повідомляється, вам слід завантажити гостьову систему і вимкнути
+можливість швидкого запуску (Панель керування → Живлення → Виберіть дію для
+кнопки живлення → Змінити параметри, які зараз недоступні → Увімкнути
+швидкий запуск), потім вимкнути гостьову систему. Після цього ви зможете
+перетворити її.
+
+Щоб дізнатися більше, див. L<guestfs(3)/ПРИСИПЛЯННЯ WINDOWS  ТА ШВИДКИЙ
+ЗАПУСК WINDOWS 8>.
+
+=head3 Boot failure: 0x0000007B
+
+Неможливість завантаження спричинено тим, що Windows не може знайти або
+завантажити належний драйвер диска (наприклад F<viostor.sys>). Якщо у вас
+виникає ця помилка, ось декілька речей, які можуть допомогти:
+
+=over 4
+
+=item *
+
+Спочатку, до перетворення, переконайтеся, що гостьова система завантажується
+на початковому гіпервізорі.
+
+=item *
+
+Перевірте, чи є у вас драйвери virtio Windows у F</usr/share/virtio-win>, і
+що virt-v2v не виводила жодних попереджень щодо неможливості встановити
+драйвери virtio.
+
+У S<Red Hat Enterprise Linux 7> вам слід буде встановити підписані драйвери
+з пакунка C<virtio-win>. Якщо у вас немає доступу до підписаних драйверів,
+вам, ймовірно, слід вимкнути підписування драйверів у меню завантаження.
+
+=item *
+
+Перевірте, чи ви надаєте інтерфейс virtio-blk (B<не> virtio-scsi і B<не>
+ide) гостьовій системі. У командному рядку qemu/KVM ви маєте бачити щось
+подібне до такого:
+
+ ... -drive file=windows-sda,if=virtio ...
+
+У XML libvirt має бути таке:
+
+ <target dev='vda' bus='virtio'/>
+
+=item *
+
+Перевірте, чи не запобігає Windows Group Policy встановленню або
+використанню драйвера. Спробуйте вилучити Windows Group Policy до
+перетворення.
+
+=item *
+
+Перевірте, чи не встановлено якогось антивірусного або іншого програмного
+забезпечення, яке реалізує заборони, подібні до Group Policy, щодо
+встановлення або використання нових драйверів.
+
+=item *
+
+Увімкніть діагностику завантаження і перевірте, чи завантажується драйвер
+F<viostor.sys>.
+
+=back
+
+=head3 OpenStack і повторна активація Windows
+
+OpenStack не надає гостьовим системам стабільних адрес пристроїв та каналів
+PCI. Кожного разу, коли створюється або запускається гостьова система,
+OpenStack повторно створює від початку XML libvirt для цієї гостьової
+системи. Створений таким чином XML libvirt не міститиме полів
+E<lt>addressE<gt>. Потім libvirt призначить адреси для пристроїв у
+передбачуваний спосіб. Адреси можуть змінитися, якщо буде виконано будь-яку
+з таких умов:
+
+=over 4
+
+=item *
+
+До гостьової системи було додано новий диск або мережевий пристрій або з
+гостьової системи було вилучено диск або мережевий пристрій.
+
+=item *
+
+Було змінено версію OpenStack або (можливо) libvirt.
+
+=back
+
+Оскільки Windows не подобаються такі «апаратні» зміни, це може спровокувати
+початок процедури повторної активації Windows.
+
+Це також може заважати завантаженню із повідомленням про помилку 7B
+[див. попередній розділ], якщо у гостьовій системі є group policy із назвою
+C<Device Installation Restrictions>.
+
+=head3 Support for SHA-2 certificates in Windows 7 and Windows Server 2008 R2
+
+Later versions of the Windows virtio drivers are signed using SHA-2
+certificates (instead of SHA-1).  The original shipping Windows 7 and
+Windows Server 2008 R2 did not understand SHA-2 certificates and so the
+Windows virtio drivers will not install properly.
+
+To fix this you must apply SHA-2 Code Signing Support from:
+L<https://docs.microsoft.com/en-us/security-updates/SecurityAdvisories/2015/3033929>
+before converting the guest.
+
+For further information see:
+L<https://bugzilla.redhat.com/show_bug.cgi?id=1624878>
+
+=head2 Networks and bridges
+
+Guests are usually connected to one or more networks, and when converted to
+the target hypervisor you usually want to reconnect those networks at the
+destination.  The options I<--network>, I<--bridge> and I<--mac> allow you
+to do that.
+
+Якщо ви не певні щодо того, які мережі і містки використовуються у
+початковому гіпервізорі, ви можете вивчити початкові метадані (XML libvirt,
+дані vCenter тощо). Ви також можете запустити virt-v2v з параметром
+I<--print-source>, який призведе до того, що virt-v2v виведе доступну
+програмі інформацію щодо початкового варіанта гостьової системи, а потім
+завершить роботу.
+
+У виведених даних з параметром I<--print-source> ви побачите розділ, де буде
+показано картки мережевих інтерфейсів (NIC) гостьової системи:
+
+ $ virt-v2v [-i ...] --print-source name
+ [...]
+ NIC:
+     Network "default" mac: 52:54:00:d0:cf:0e
+
+Bridges are special classes of network devices which are attached to a named
+external network on the source hypervisor, for example:
+
+ $ virt-v2v [-i ...] --print-source name
+ [...]
+ NICs:
+     Bridge "br0"
+
+To map a specific source bridge to a target network, for example C<br0> on
+the source to C<ovirtmgmt> on the target, use:
+
+ virt-v2v [...] --bridge br0:ovirtmgmt
+
+To map every bridge to a target network, use:
+
+ virt-v2v [...] --bridge ovirtmgmt
+
+=head3 Fine-grained mapping of guest NICs
+
+The I<--mac> option gives you more control over the mapping, letting you map
+single NICs to either networks or bridges on the target.  For example a
+source guest with two NICs could map them individually to two networks
+called C<mgmt> and C<clientdata> like this:
+
+ $ virt-v2v [...] \
+    --mac 52:54:00:d0:cf:0e:network:mgmt \
+    --mac 52:54:00:d0:cf:0f:network:clientdata
+
+Note that virt-v2v does not have the ability to change a guest’s MAC
+address.  The MAC address is part of the guest metadata and must remain the
+same on source and target hypervisors.  Most guests will use the MAC address
+to set up persistent associations between NICs and internal names (like
+C<eth0>), with firewall settings, or even for other purposes like software
+licensing.
+
+=head2 Resource requirements
+
+=head3 Мережа
+
+Здається, найважливішим ресурсом для virt-v2v є канал мережі. Virt-v2v
+повинна мати можливість копіювати дані гостьових систем із гігабітними або
+навіть вищими швидкостями мережею.
+
+Вам слід забезпечити швидке і якомога менш латентне з'єднання між серверами
+(сервером перетворення, сервером NFS, vCenter, Xen).
+
+=head3 Місце на диску
+
+Virt-v2v розташовує потенційно великі тимчасові файли у C<$TMPDIR> (тобто у
+F</var/tmp>, якщо значення цієї змінної середовища не
+встановлено). Використання tmpfs у цьому випадку недоцільне.
+
+Для кожного диска гостьової системи тимчасово зберігається накладка. У ній
+містяться дані щодо змін, які було внесено з часу перетворення, а також дані
+кешу. Накладки не є дуже великими — типово десятки або декілька сотень
+мегабайтів. Окрім накладок, місце на диску може використовуватися засобами
+обробки вхідних і вихідних даних. Дані щодо цих витрат місця на диску
+наведено у викладеній нижче таблиці.
+
+=over 4
+
+=item I<-i ova>
+
+Ця команда тимчасово зберігає повну копію нестиснених початкових дисків у
+C<$TMPDIR>.
+
+=item I<-o glance>
+
+Ця команда тимчасово зберігає повну копію виведених у результаті обробки
+дисків у C<$TMPDIR>.
+
+=item I<-o local>
+
+=item I<-o qemu>
+
+Вам слід переконатися щодо у каталозі для виведення даних є достатньо
+вільного місця для перетвореної гостьової системи.
+
+=back
+
+Див. також L</Мінімальне вільне місце у основній системі> нижче.
+
+=head3 Ресурси vCenter VMware
+
+У поточній версії копіювання з vCenter VMware є дуже повільним, ми вважаємо,
+що це проблема з VMware. Щоб частково усунути цю проблему, слід забезпечити
+роботу гіпервізору ESXi VMware та vCenter на швидкому обладнанні із великим
+обсягом пам'яті.
+
+=head3 Обчислювальні потужності і обсяг оперативної пам’яті
+
+Virt-v2v не є особливо вимогливою до обчислювальних можливостей або обсягу
+пам'яті. Якщо ви виконуєте багато паралельних перетворень, вам варто
+виділити одне ядро процесора і 2 ГБ оперативної пам'яті на кожен запущений
+екземпляр.
+
+Virt-v2v можна запускати у віртуальній машині.
+
+=head3 Обрізання
+
+Virt-v2v намагається оптимізувати перетворення, ігноруючи дані файлової
+системи гостьової операційної системи, які не використовуються. Це
+стосується невикористаних блоків файлових систем, блоків, які містять лише
+нулі, та вилучених файлів.
+
+Для виконання цього завдання virt-v2v використовує неруйнівну дію
+L<fstrim(8)>. Оскільки відповідна програма виконує дії із накладкою над
+даними гостьової системи, початкова система B<ніяким чином> не змінюється.
+
+Якщо робота цієї програми fstrim завершується помилкою, ви побачите
+попередження, а virt-v2v продовжить роботу. Програма може працювати
+повільніше (у деяких випадках набагато повільніше) через те, що копіюватиме
+і невикористані частини диска.
+
+На жаль, підтримка fstrim не є універсальною. Результат також залежить від
+певних параметрів файлової системи, вирівнювання розділів та резервного
+сховища даних. Наприклад, fstrim не можна застосовувати до файлових систем
+NTFS, якщо вони займають розділи, які не вирівняно із базових сховищем
+даних. Такого вирівнювання типово не було у Windows до Vista. Іншим
+прикладом є файлові системи VFAT (використовуються гостьовими системами
+UEFI) — їх взагалі не можна обрізати.
+
+Підтримка fstrim у ядрі Linux поступово поліпшується, отже, з часом, ці
+обмеження буде знято і virt-v2v працюватиме швидше.
+
+=head2 Post-conversion tasks
+
+=head3 Налаштовування гостьової мережі
+
+У поточній версії virt-v2v не може переналаштувати мережу у гостьовій
+системі. Якщо перетворену гостьову систему не з'єднано із тією самою
+підмережею, що і початкову, її налаштування мережі має бути
+оновлено. Див. також L<virt-customize(1)>.
+
+=head3 Перетворення гостьової системи Windows
+
+Процес перетворення гостьових систем Windows поділено на два етапи:
+
+=over 
+
+=item 1
+
+Автономне перетворення.
+
+=item 2
+
+Перше завантаження.
+
+=back
+
+Гостьова система буде придатною до завантаження після етапу автономного
+перетворення, але у ній усе ще не буде встановлено потрібних для належної
+роботи драйверів. Драйвери буде встановлено автоматично під час першого
+завантаження гостьової системи.
+
+B<Зауваження>: не переривайте процесу автоматичного встановлення драйверів
+під час першого входу до гостьової системи, оскільки це може завадити усім
+наступним спробам завантажити гостьову систему належним чином.
+
+=head2 Free space for conversion
+
+=head3 Вільне місце у гостьовій системі
+
+Virt-v2v перевіряє, чи достатньо місця у гостьовій файловій системі для
+виконання перетворення. У поточній версії програма перевіряє таке:
+
+=over 4
+
+=item Кореневу систему Linux або диск C<C:> Windows
+
+Мінімальний вільний простір: 20 МБ
+
+=item Linux F</boot>
+
+Мінімальний вільний простір: 50 МБ
+
+Причиною є те, що нам потрібно збирати нові initramfs для деяких перетворень
+Enterprise Linux.
+
+=item Будь-яка інша придатна до монтування файлова система
+
+Мінімальний вільний простір: 10 МБ
+
+=back
+
+=head3 Мінімальний обсяг місця у основній системі
+
+У каталозі основної системи має бути достатньо вільного місця для зберігання
+тимчасових накладок (окрім режиму I<--in-place>). Щоб визначити каталог, у
+якому зберігатимуться накладки, скористайтеся такою командою:
+
+ $ df -h "`guestfish get-cachedir`"
+ Ф. система        Розм   Вик  Дост Вик% змонтований на
+ /dev/mapper/root   50G   40G  6.8G  86% /
+
+і зверніть увагу га стовпчик C<Avail>. Virt-v2v взагалі відмовиться
+виконувати перетворення, якщо на диску не буде принаймні 1 ГБ вільного
+місця.
+
+See also L</Resource requirements> above.
+
+=head2 Running virt-v2v as root or non-root
+
+Нічого у virt-v2v не потребує обов'язкових прав доступу root — програма
+чудово працює і від імені звичайного користувача. Втім, використання деяких
+зовнішніх можливостей може потребувати прав доступу root або інших
+спеціалізованих користувачів:
+
+=over 4
+
+=item Монтування Export Storage Domain
+
+При використанні параметрів I<-o rhv -os server:/esd> virt-v2v повинна мати
+достатні права доступу до змонтованої системи NFS домену сховища
+експортування з сервера C<server>.
+
+Ви можете уникнути тут потреби у використання прав доступу root, якщо
+змонтуєте диск власноруч до запуску virt-v2v і передасте його як параметр
+команди I<-os /точка_монтування>, але перед цим прочитайте наступний
+S<розділ...>
+
+=item Запис до Export Storage Domain від імені 36:36
+
+RHV-M не зможе прочитати файли і каталоги з Export Storage Domain, якщо
+їхнім власником не буде UID:GID 36:36. Якщо значення UID:GID виставлено
+неправильно, ви побачите повідомлення про проблеми з імпортуванням даних з
+віртуальної машини.
+
+Коли ви запускаєте virt-v2v I<-o rhv> від імені користувача root, virt-v2v
+намагатиметься створити файли і каталоги із правильними записами
+власників. Якщо ж virt-v2v запускатиметься від імені непривілейованого
+користувача, програма, ймовірно, працюватиме, але вам доведеться вручну
+змінити права власності на файли і каталоги після завершення роботи
+virt-v2v.
+
+=item Запис до libvirt
+
+Якщо використовується параметр I<-o libvirt>, може виникнути потреба у
+запуску virt-v2v від імені користувача root для уможливлення запису до
+каталогу загальносистемного екземпляра libvirt (тобто до C<qemu:///system>)
+і до типового каталогу для образів дисків (зазвичай,
+F</var/lib/libvirt/images>).
+
+Ви можете уникнути цього, налаштувавши розпізнавання у з'єднанні із libvirt,
+див. L<http://libvirt.org/auth.html>. Крім того, можна скористатися
+параметром I<-oc qemu:///session>, використання якого призведе до запису
+даних до каталогів libvirt вашого користувача.
+
+=item Writing to Openstack
+
+Because of how Cinder volumes are presented as F</dev> block devices, using
+I<-o openstack> normally requires that virt-v2v is run as root.
+
+=item Запис до Glance
+
+Ця дія I<не> потребує прав доступу root (фактично, вона, ймовірно, не
+працюватиме з ними), але може потребувати прав доступу спеціалізованого
+користувача і/або створення скрипту для встановлення змінних середовища,
+пов'язаних із розпізнаванням користувача. Зверніться до документації із
+Glance.
+
+=back
+
+=head2 Minimal XML for -i libvirtxml option
+
+Якщо використовується параметр I<-i libvirtxml>, вам слід буде вказати
+певний файл XML libvirt. Написання такого файла «з нуля» є доволі марудною
+справою, отже, вам буде корисний наведений нижче шаблон.
+
+B<Зауважте, що цим слід користуватися лише для тестування і/або там, де ви
+впевнені у своїх діях!> Якщо у вас є метадані libvirt для гостьової системи,
+завжди користуйтеся ними, а не цим шаблоном.
+
+ <domain type='kvm'>
+   <name> NAME </name>
+   <memory>1048576</memory>
+   <vcpu>2</vcpu>
+   <os>
+     <type>hvm</type>
+     <boot dev='hd'/>
+   </os>
+   <features>
+     <acpi/>
+     <apic/>
+     <pae/>
+   </features>
+   <devices>
+     <disk type='file' device='disk'>
+       <driver name='qemu' type='raw'/>
+       <source file='/path/to/disk/image'/>
+       <target dev='hda' bus='ide'/>
+     </disk>
+     <interface type='network'>
+       <mac address='52:54:00:01:02:03'/>
+       <source network='default'/>
+       <model type='rtl8139'/>
+     </interface>
+   </devices>
+ </domain>
+
+=head2 In-place conversion
+
+Крім того, можна скористатися virt-v2v у сценаріях, де сторонню віртуальну
+машину вже імпортовано до заснованого на KVM гіпервізору, але вона все ще
+потребує коригування у самій гостьовій системі для того, щоб її можна було
+запустити на новому віртуальному обладнанні.
+
+У цьому випадку припускається, що віртуальну машину призначення створено
+стороннім інструментом у підтримуваному гіпервізорі на основі KVM з
+використанням налаштувань і вмісту початкової віртуальної машини, але з
+використанням віртуальних пристроїв, які краще пристосовано до KVM
+(наприклад, сховища і мережі virtio тощо).
+
+Далі, щоб уможливити завантаження і роботу гостьової операційної системи у
+зміненому середовищі, можна скористатися такою командою:
+
+ virt-v2v -ic qemu:///system converted_vm --in-place
+
+Virt-v2v проаналізує налаштування перетвореної віртуальної машини
+C<converted_vm> у екземплярі libvirt C<qemu:///system> і застосує
+різноманітні виправлення у налаштуваннях гостьової операційної системи, щоб
+зробити їх відповідними до налаштувань віртуальної машини. Це може включати
+встановлення драйверів virtio, налаштовування завантажувача, точок
+монтування, інтерфейсів мережі тощо.
+
+Якщо під час виконання дії станеться помилка, virt-v2v завершить роботу із
+кодом помилки, залишивши віртуальну машину у невизначеному стані.
+
+=head2 Machine readable output
+
+Для виведення даних у зручному для машинної обробки форматі можна
+скористатися параметром I<--machine-readable>. Додавання цього параметра
+робить зручним використання virt-v2v з інших програм, графічних інтерфейсів
+тощо.
+
+Існує два способи використання цього параметра.
+
+Спочатку, скористайтеся цим параметром окремо, щоб опитати систему щодо
+можливостей виконуваного файла virt-v2v. Типово виведені дані виглядатимуть
+якось так:
+
+ $ virt-v2v --machine-readable
+ virt-v2v
+ libguestfs-rewrite
+ colours-option
+ vdsm-compat-option
+ input:disk
+ [...]
+ output:local
+ [...]
+ convert:linux
+ convert:windows
+
+Виводиться список можливостей, по одній на рядок, і програма завершує роботу
+зі станом 0.
+
+Записи C<input:> і C<output:> стосуються аргументів параметрів I<-i> і I<-o>
+(вхідного і вихідного режимів), які підтримуються цим виконуваним
+файлом. Записи C<convert:> стосуються типів гостьових систем, підтримку
+перетворення яких передбачено у цьому виконуваному файлі.
+
+По-друге, можна скористатися цим параметром у поєднанні із іншими
+параметрами для того, щоб зробити звичайні виведені програмою дані
+придатнішими для подальшої машинної обробки.
+
+У поточній версії це означає таке:
+
+=over 4
+
+=item 1.
+
+Повідомлення смужки поступу можна обробляти зі стандартного виведення,
+шукаючи їх за таким формальним виразом:
+
+ ^[0-9]+/[0-9]+$
+
+=item 2.
+
+Програма, яка надсилає виклик, має обробляти повідомлення, надіслані до
+стандартного виведення, (окрім повідомлень смужки поступу) як повідомлення
+щодо стану. Ці повідомлення може бути записано до журналу і/або показано
+користувачеві.
+
+=item 3.
+
+Програма, яка надсилає виклик, має обробляти повідомлення, надіслані до
+stderr як повідомлення про помилки. Крім того, virt-v2v завершує роботу із
+ненульовим кодом стану, якщо станеться критична помилка.
+
+=back
+
+У virt-v2v E<le> 0.9.1 взагалі не передбачено підтримки параметра
+I<--machine-readable>. Цей параметр було додано під час переписування
+virt-v2v у 2014 році.
+
+It is possible to specify a format string for controlling the output; see
+L<guestfs(3)/ADVANCED MACHINE READABLE OUTPUT>.
+
+=head1 ФАЙЛИ
+
+=over 4
+
+=item F</usr/share/virtio-win>
+
+(Необов’язково)
+
+Якщо існує цей каталог, драйвери virtio для гостьових систем Windows буде
+знайдено у цьому каталозі і встановлено до гостьової системи під час
+перетворення.
+
+=back
+
+=head1 ЗМІННІ СЕРЕДОВИЩА
+
+=over 4
+
+=item C<TMPDIR>
+
+Розташування каталогу тимчасових даних, який використовуватиметься для
+потенційно великих тимчасових файлів-накладок.
+
+Див. розділ L</Місце на диску> вище.
+
+=item C<VIRT_TOOLS_DATA_DIR>
+
+Ця змінна визначає каталог, у якому містяться файли даних, які
+використовуються для перетворення Windows.
+
+Зазвичай, потреби у встановленні власного значення немає. Якщо значення не
+встановлено, буде використано вбудоване типове значення (щось схоже на
+F</usr/share/virt-tools>).
+
+Цей каталог може містити такі файли:
+
+=over 4
+
+=item F<rhsrvany.exe>
+
+(Потрібен для перетворень гостьових систем Windows)
+
+Це виконуваний файл для Windows RHSrvAny, який використовується для
+встановлення скрипту «firstboot» у гостьові системи під час перетворення
+гостьових систем Windows.
+
+Див. також C<https://github.com/rwmjones/rhsrvany>
+
+=item F<pvvxsvc.exe>
+
+Це виконуваний файл Windows, що постачається разом із VMDP SUSE,
+використовується для встановлення скрипту «firstboot» у гостьові системи
+Windows. Він знадобиться, якщо ви маєте намір використовувати параметри
+I<--firstboot> і I<--firstboot-command> для гостьових операційних систем
+Windows.
+
+=item F<rhev-apt.exe>
+
+(Необов’язково)
+
+RHV Application Provisioning Tool (RHEV APT). Якщо існує цей файл, під час
+перетворення до гостьової системи Windows буде встановлено RHEV APT. Це
+інструмент, який є агентом у гостьовій системі, який забезпечує актуальність
+драйверів virtio, якщо гостьова система працює у Red Hat Virtualization
+(RHV).
+
+Цей файл походить з Red Hat Virtualization (RHV) і не поширюється із
+virt-v2v.
+
+=back
+
+=item C<VIRTIO_WIN>
+
+Це місце, де виконуватиметься пошук драйверів virtio для Windows.
+
+Якщо не встановлено, відбуватиметься пошук драйверів; знайденим
+вважатиметься драйвер, який буде першим знайдено у одному з цих місць (за
+пріоритетністю):
+
+=over 4
+
+=item F</usr/share/virtio-win/virtio-win.iso>
+
+Образ ISO, де містяться драйвери virtio для Windows.
+
+=item F</usr/share/virtio-win>
+
+Розгорнута ієрархія драйверів virtio для Windows. Зазвичай, там є не усі
+драйвери, тому слід надавати перевагу образу ISO.
+
+=back
+
+(F<> якщо не встановлено). Це може бути каталог I<або> вказівник на
+F<virtio-win.iso> (образ CD ROM, на якому містяться драйвери).
+
+See L</Enabling virtio>.
+
+=back
+
+Опис інших змінних середовища наведено у розділі L<guestfs(3)/ENVIRONMENT
+VARIABLES>.
+
+=head1 ІНШІ ІНСТРУМЕНТИ
+
+=over 4
+
+=item L<virt-v2v-copy-to-local(1)>
+
+Існують певні особливі випадки, коли virt-v2v не може отримати доступ до
+віддаленого гіпервізору безпосередньо. Якщо ви зіткнулися саме з таким
+випадком, вам слід спочатку скористатися L<virt-v2v-copy-to-local(1)> для
+створення локальної копії гостьової системи, а потім віддати команду
+C<virt-v2v -i libvirtxml> для виконання самого перетворення.
+
+=item L<engine-image-uploader(8)>
+
+Цей інструмент може називатися C<engine-image-uploader>,
+C<ovirt-image-uploader> або C<rhevm-image-uploader>. За його допомогою можна
+скопіювати гостьову систему з одного домену сховища експортування oVirt або
+RHV до іншого. Його використання надає змогу імпортувати лише ті гостьові
+системи, які раніше було експортовано з іншого екземпляра oVirt/RHV.
+
+=item L<import-to-ovirt.pl|http://git.annexia.org/?p=import-to-ovirt.git>
+
+Цим скриптом можна скористатися для імпортування гостьових систем, які вже
+запущено у KVM до oVirt або RHV. Щоб дізнатися більше, ознайомтеся із цим
+дописом у блозі автора virt-v2v:
+
+L<https://rwmj.wordpress.com/2015/09/18/importing-kvm-guests-to-ovirt-or-rhev/#content>
+
+=back
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<virt-p2v(1)>, L<virt-customize(1)>, L<virt-df(1)>, L<virt-filesystems(1)>,
+L<virt-sparsify(1)>, L<virt-sysprep(1)>, L<guestfs(3)>, L<guestfish(1)>,
+L<qemu-img(1)>, L<virt-v2v-copy-to-local(1)>, L<virt-v2v-test-harness(1)>,
+L<engine-image-uploader(8)>,
+L<import-to-ovirt.pl|http://git.annexia.org/?p=import-to-ovirt.git>,
+L<nbdkit(1)>, L<nbdkit-vddk-plugin(1)>, L<http://libguestfs.org/>.
+
+=head1 АВТОРИ
+
+Matthew Booth
+
+Cédric Bosdonnat
+
+Tomáš Golembiovský
+
+Shahar Havivi
+
+Roman Kagan
+
+Mike Latimer
+
+Nir Soffer
+
+Richard W.M. Jones
+
+Pino Toscano
+
+Tingting Zheng
+
+=head1 АВТОРСЬКІ ПРАВА
+
+Copyright (C) 2009-2019 Red Hat Inc.
+
