@@ -59,7 +59,7 @@ ifelse(DEBIAN,1,
 dnl old name used in Jessie and earlier
   btrfs-tools
   clevis-luks
-  cryptsetup
+  cryptsetup-bin
   dash
   extlinux
   fdisk
