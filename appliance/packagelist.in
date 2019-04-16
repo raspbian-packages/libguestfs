@@ -53,7 +53,7 @@ ifelse(DEBIAN,1,
   bsdmainutils
 dnl old name used in Jessie and earlier
   btrfs-tools
-  cryptsetup
+  cryptsetup-bin
   dash
   extlinux
   fdisk
