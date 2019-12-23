@@ -68,7 +68,7 @@ echo >> $output-t
     | sed \
           -e "s,@abs_top_srcdir@/${subdir},.,g" \
           -e "s,\B${srcdir_re}/\\([^ ]*[.]\\)\\(cm[^ ]*\\|o\\),\\1\\2,g" \
-          -e "s,\B${srcdir_re}/\\([^ /]*_config[.]ml\\),\\1,g" \
+          -e "s,\B${srcdir_re}/\\([^ /]*config[.]ml\\),\\1,g" \
           -e "s,@abs_top_srcdir@/\\([^ ]*[.]\\)\\(cm[^ ]*\\|o\\),${top_builddir}/\\1\\2,g" \
           -e 's,\(^\| \)./,\1,g' \
     >> $output-t
