@@ -393,7 +393,7 @@ camldaemon.o: $(OBJECTS)
 	    $(OBJECTS)
 
 # OCaml dependencies.
-.depend: $(srcdir)/*.mli $(srcdir)/*.ml
+.depend: $(srcdir)/*.mli $(srcdir)/*.ml $(builddir)/daemon_config.ml
 	$(top_builddir)/ocaml-dep.sh $^
 -include .depend
 
