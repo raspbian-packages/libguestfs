@@ -52,22 +52,30 @@ supports it.
 If you want to use Python 2, you will need to use libguestfs 1.40 or 1.42.0.])
         ])
 
-        # Debian: python-3.2.pc
-        PKG_CHECK_MODULES([PYTHON], [python-"$PYTHON_VERSION"],[
+        # Debian: python-3.2.pc. But also: python-3.8-embed.pc
+        PKG_CHECK_MODULES([PYTHON], [python-"$PYTHON_VERSION"-embed],[
             have_python_module=1
             AC_SUBST([PYTHON_CFLAGS])
             AC_SUBST([PYTHON_LIBS])
             AC_SUBST([PYTHON_VERSION])
             AC_DEFINE([HAVE_PYTHON],[1],[Python library found at compile time])
         ],[
-            PKG_CHECK_MODULES([PYTHON], [python],[
+            PKG_CHECK_MODULES([PYTHON], [python-"$PYTHON_VERSION"],[
                 have_python_module=1
                 AC_SUBST([PYTHON_CFLAGS])
                 AC_SUBST([PYTHON_LIBS])
                 AC_SUBST([PYTHON_VERSION])
                 AC_DEFINE([HAVE_PYTHON],[1],[Python library found at compile time])
             ],[
-                AC_MSG_WARN([python $PYTHON_VERSION not found])
+                PKG_CHECK_MODULES([PYTHON], [python],[
+                    have_python_module=1
+                    AC_SUBST([PYTHON_CFLAGS])
+                    AC_SUBST([PYTHON_LIBS])
+                    AC_SUBST([PYTHON_VERSION])
+                    AC_DEFINE([HAVE_PYTHON],[1],[Python library found at compile time])
+                ],[
+                    AC_MSG_WARN([python $PYTHON_VERSION not found])
+                ])
             ])
         ])
 
