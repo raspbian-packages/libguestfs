@@ -38,23 +38,30 @@ AS_IF([test "x$enable_python" != "xno"],[
            AC_MSG_ERROR([found Python $PYTHON_VERSION, while Python $PYTHON_REQ_MAJOR.$PYTHON_REQ_MINOR is required])
         ])
 	AC_MSG_RESULT([$PYTHON_VERSION])
-
-        # Debian: python-2.7.pc, python-3.2.pc
-        PKG_CHECK_MODULES([PYTHON], [python-"$PYTHON_VERSION"],[
+        # Debian: python-2.7.pc, python-3.2.pc. But also: python-3.8-embed.pc
+        PKG_CHECK_MODULES([PYTHON], [python-"$PYTHON_VERSION"-embed],[
             have_python_module=1
             AC_SUBST([PYTHON_CFLAGS])
             AC_SUBST([PYTHON_LIBS])
             AC_SUBST([PYTHON_VERSION])
             AC_DEFINE([HAVE_PYTHON],[1],[Python library found at compile time])
         ],[
-            PKG_CHECK_MODULES([PYTHON], [python],[
+            PKG_CHECK_MODULES([PYTHON], [python-"$PYTHON_VERSION"],[
                 have_python_module=1
                 AC_SUBST([PYTHON_CFLAGS])
                 AC_SUBST([PYTHON_LIBS])
                 AC_SUBST([PYTHON_VERSION])
                 AC_DEFINE([HAVE_PYTHON],[1],[Python library found at compile time])
             ],[
-                AC_MSG_WARN([python $PYTHON_VERSION not found])
+                PKG_CHECK_MODULES([PYTHON], [python],[
+                    have_python_module=1
+                    AC_SUBST([PYTHON_CFLAGS])
+                    AC_SUBST([PYTHON_LIBS])
+                    AC_SUBST([PYTHON_VERSION])
+                    AC_DEFINE([HAVE_PYTHON],[1],[Python library found at compile time])
+                ],[
+                    AC_MSG_WARN([python $PYTHON_VERSION not found])
+                ])
             ])
         ])
 
