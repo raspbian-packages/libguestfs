@@ -353,6 +353,9 @@ AC_CONFIG_FILES([Makefile
                  tools/Makefile
                  website/index.html])
 
+AC_CONFIG_LINKS([common/mlstdutils/guestfs_config.mli:common/mlstdutils/guestfs_config.mli
+                 daemon/daemon_config.mli:daemon/daemon_config.mli])
+
 AC_OUTPUT
 
 dnl Produce summary.
