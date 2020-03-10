@@ -60,7 +60,7 @@ noinst_DATA = \
 virt-make-fs.1 $(top_builddir)/website/virt-make-fs.1.html: stamp-virt-make-fs.pod
 
 stamp-virt-make-fs.pod: virt-make-fs.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-make-fs.1 \
 	  --html $(top_builddir)/website/virt-make-fs.1.html \
 	  --license GPLv2+ \

@@ -119,7 +119,7 @@ noinst_DATA = $(top_builddir)/website/virt-resize.1.html
 virt-resize.1 $(top_builddir)/website/virt-resize.1.html: stamp-virt-resize.pod
 
 stamp-virt-resize.pod: virt-resize.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-resize.1 \
 	  --html $(top_builddir)/website/virt-resize.1.html \
 	  --license GPLv2+ \
