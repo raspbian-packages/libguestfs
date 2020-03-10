@@ -369,7 +369,7 @@ installcheck-local: installcheck.sh
 # It should be noinst_MANS but that doesn't work.
 noinst_DATA += podwrapper.1
 podwrapper.1: podwrapper.pl
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man $@-t \
 	  --license GPLv2+ \

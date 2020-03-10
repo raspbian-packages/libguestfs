@@ -32,7 +32,7 @@ noinst_DATA = $(top_builddir)/website/guestfs-java.3.html
 guestfs-java.3 $(top_builddir)/website/guestfs-java.3.html: stamp-guestfs-java.pod
 
 stamp-guestfs-java.pod: guestfs-java.pod CreateDisk.java InspectVM.java
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 3 \
 	  --man guestfs-java.3 \
 	  --html $(top_builddir)/website/guestfs-java.3.html \

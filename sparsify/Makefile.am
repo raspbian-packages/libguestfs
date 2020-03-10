@@ -127,7 +127,7 @@ noinst_DATA = $(top_builddir)/website/virt-sparsify.1.html
 virt-sparsify.1 $(top_builddir)/website/virt-sparsify.1.html: stamp-virt-sparsify.pod
 
 stamp-virt-sparsify.pod: virt-sparsify.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-sparsify.1 \
 	  --html $(top_builddir)/website/virt-sparsify.1.html \
 	  --path $(top_srcdir)/common/options \
