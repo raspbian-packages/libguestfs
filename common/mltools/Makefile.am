@@ -261,7 +261,7 @@ tools_utils_tests_DEPENDENCIES = \
 	../mlgettext/mlgettext.$(MLARCHIVE) \
 	../mlpcre/mlpcre.$(MLARCHIVE) \
 	$(MLTOOLS_CMA) \
-	$(top_srcdir)/ocaml-link.sh
+	$(top_builddir)/ocaml-link.sh
 tools_utils_tests_OCAMLCLIBS = \
 	-pthread -lpthread \
 	-lutils \
@@ -269,7 +269,7 @@ tools_utils_tests_OCAMLCLIBS = \
 	-lgnu \
 	$(LIBGUESTFS_LIBS)
 tools_utils_tests_LINK = \
-	$(top_srcdir)/ocaml-link.sh \
+	$(top_builddir)/ocaml-link.sh \
 	  -cclib '$(tools_utils_tests_OCAMLCLIBS)' -- \
 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
@@ -281,7 +281,7 @@ getopt_tests_DEPENDENCIES = \
 	../mlgettext/mlgettext.$(MLARCHIVE) \
 	../mlpcre/mlpcre.$(MLARCHIVE) \
 	$(MLTOOLS_CMA) \
-	$(top_srcdir)/ocaml-link.sh
+	$(top_builddir)/ocaml-link.sh
 getopt_tests_OCAMLCLIBS = \
 	-pthread -lpthread \
 	-lutils \
@@ -289,7 +289,7 @@ getopt_tests_OCAMLCLIBS = \
 	-lgnu \
 	$(LIBGUESTFS_LIBS)
 getopt_tests_LINK = \
-	$(top_srcdir)/ocaml-link.sh \
+	$(top_builddir)/ocaml-link.sh \
 	  -cclib '$(getopt_tests_OCAMLCLIBS)' -- \
 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
@@ -301,9 +301,9 @@ JSON_tests_DEPENDENCIES = \
 	../mlgettext/mlgettext.$(MLARCHIVE) \
 	../mlpcre/mlpcre.$(MLARCHIVE) \
 	$(MLTOOLS_CMA) \
-	$(top_srcdir)/ocaml-link.sh
+	$(top_builddir)/ocaml-link.sh
 JSON_tests_LINK = \
-	$(top_srcdir)/ocaml-link.sh \
+	$(top_builddir)/ocaml-link.sh \
 	  -cclib '-pthread -lpthread $(LIBGUESTFS_LIBS)' -- \
 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
@@ -315,9 +315,9 @@ JSON_parser_tests_DEPENDENCIES = \
 	../mlgettext/mlgettext.$(MLARCHIVE) \
 	../mlpcre/mlpcre.$(MLARCHIVE) \
 	$(MLTOOLS_CMA) \
-	$(top_srcdir)/ocaml-link.sh
+	$(top_builddir)/ocaml-link.sh
 JSON_parser_tests_LINK = \
-	$(top_srcdir)/ocaml-link.sh \
+	$(top_builddir)/ocaml-link.sh \
 	  -cclib '-pthread -lpthread $(OCAMLCLIBS) $(LIBGUESTFS_LIBS)' -- \
 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
@@ -329,9 +329,9 @@ machine_readable_tests_DEPENDENCIES = \
 	../mlgettext/mlgettext.$(MLARCHIVE) \
 	../mlpcre/mlpcre.$(MLARCHIVE) \
 	$(MLTOOLS_CMA) \
-	$(top_srcdir)/ocaml-link.sh
+	$(top_builddir)/ocaml-link.sh
 machine_readable_tests_LINK = \
-	$(top_srcdir)/ocaml-link.sh \
+	$(top_builddir)/ocaml-link.sh \
 	  -cclib '-pthread -lpthread -lutils -lgnu $(LIBGUESTFS_LIBS)' -- \
 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
@@ -343,9 +343,9 @@ tools_messages_tests_DEPENDENCIES = \
 	../mlgettext/mlgettext.$(MLARCHIVE) \
 	../mlpcre/mlpcre.$(MLARCHIVE) \
 	$(MLTOOLS_CMA) \
-	$(top_srcdir)/ocaml-link.sh
+	$(top_builddir)/ocaml-link.sh
 tools_messages_tests_LINK = \
-	$(top_srcdir)/ocaml-link.sh \
+	$(top_builddir)/ocaml-link.sh \
 	  -cclib '-pthread -lpthread -lutils -lgnu $(LIBGUESTFS_LIBS)' -- \
 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \

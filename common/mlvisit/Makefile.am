@@ -114,7 +114,7 @@ visit_tests_DEPENDENCIES = \
 	$(visit_tests_THEOBJECTS) \
 	../mlutils/mlcutils.$(MLARCHIVE) \
 	$(MLVISIT_CMA) \
-	$(top_srcdir)/ocaml-link.sh
+	$(top_builddir)/ocaml-link.sh
 visit_tests_OCAMLCLIBS = \
 	-pthread -lpthread \
 	-lvisit \
@@ -123,7 +123,7 @@ visit_tests_OCAMLCLIBS = \
 	$(LIBXML2_LIBS) \
 	$(LIBGUESTFS_LIBS)
 visit_tests_LINK = \
-	$(top_srcdir)/ocaml-link.sh \
+	$(top_builddir)/ocaml-link.sh \
 	  -cclib '$(visit_tests_OCAMLCLIBS)' -- \
 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
