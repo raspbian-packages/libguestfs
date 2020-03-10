@@ -100,7 +100,7 @@ noinst_DATA = \
 guestmount.1 $(top_builddir)/website/guestmount.1.html: stamp-guestmount.pod
 
 stamp-guestmount.pod: guestmount.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man guestmount.1 \
 	  --html $(top_builddir)/website/guestmount.1.html \
 	  --path $(top_srcdir)/common/options \
@@ -112,7 +112,7 @@ stamp-guestmount.pod: guestmount.pod
 guestunmount.1 $(top_builddir)/website/guestunmount.1.html: stamp-guestunmount.pod
 
 stamp-guestunmount.pod: guestunmount.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man guestunmount.1 \
 	  --html $(top_builddir)/website/guestunmount.1.html \
 	  --license GPLv2+ \

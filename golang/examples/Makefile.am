@@ -29,7 +29,7 @@ noinst_DATA = $(top_builddir)/website/guestfs-golang.3.html
 guestfs-golang.3 $(top_builddir)/website/guestfs-golang.3.html: stamp-guestfs-golang.pod
 
 stamp-guestfs-golang.pod: guestfs-golang.pod create-disk.go inspect-vm.go
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 3 \
 	  --man guestfs-golang.3 \
 	  --html $(top_builddir)/website/guestfs-golang.3.html \

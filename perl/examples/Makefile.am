@@ -29,7 +29,7 @@ noinst_DATA = $(top_builddir)/website/guestfs-perl.3.html
 guestfs-perl.3 $(top_builddir)/website/guestfs-perl.3.html: stamp-guestfs-perl.pod
 
 stamp-guestfs-perl.pod: guestfs-perl.pod create_disk.pl inspect_vm.pl
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 3 \
 	  --man guestfs-perl.3 \
 	  --html $(top_builddir)/website/guestfs-perl.3.html \
