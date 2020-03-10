@@ -237,7 +237,7 @@ stamp-guestfs.pod: guestfs.pod \
 		guestfs-actions.pod \
 		guestfs-availability.pod \
 		guestfs-structs.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 3 \
 	  --man guestfs.3 \
 	  --html $(top_builddir)/website/guestfs.3.html \

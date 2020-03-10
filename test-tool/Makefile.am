@@ -50,7 +50,7 @@ libguestfs_test_tool_LDADD = \
 libguestfs-test-tool.1 $(top_builddir)/website/libguestfs-test-tool.1.html: stamp-libguestfs-test-tool.pod
 
 stamp-libguestfs-test-tool.pod: libguestfs-test-tool.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man libguestfs-test-tool.1 \
 	  --html $(top_builddir)/website/libguestfs-test-tool.1.html \
 	  --license GPLv2+ \
