@@ -165,7 +165,7 @@ man_MANS = libguestfs-make-fixed-appliance.1
 libguestfs-make-fixed-appliance.1 $(top_builddir)/website/libguestfs-make-fixed-appliance.1.html: stamp-libguestfs-make-fixed-appliance.pod
 
 stamp-libguestfs-make-fixed-appliance.pod: libguestfs-make-fixed-appliance.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man libguestfs-make-fixed-appliance.1 \
 	  --html $(top_builddir)/website/libguestfs-make-fixed-appliance.1.html \
 	  --license GPLv2+ \
