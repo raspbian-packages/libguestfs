@@ -121,7 +121,7 @@ noinst_DATA = \
 guestfs-building.1 $(top_builddir)/website/guestfs-building.1.html: stamp-guestfs-building.pod
 
 stamp-guestfs-building.pod: guestfs-building.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-building.1 \
 	  --html $(top_builddir)/website/guestfs-building.1.html \
@@ -132,7 +132,7 @@ stamp-guestfs-building.pod: guestfs-building.pod
 guestfs-faq.1 $(top_builddir)/website/guestfs-faq.1.html: stamp-guestfs-faq.pod
 
 stamp-guestfs-faq.pod: guestfs-faq.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-faq.1 \
 	  --html $(top_builddir)/website/guestfs-faq.1.html \
@@ -143,7 +143,7 @@ stamp-guestfs-faq.pod: guestfs-faq.pod
 guestfs-hacking.1 $(top_builddir)/website/guestfs-hacking.1.html: stamp-guestfs-hacking.pod
 
 stamp-guestfs-hacking.pod: guestfs-hacking.pod internal-documentation.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-hacking.1 \
 	  --html $(top_builddir)/website/guestfs-hacking.1.html \
@@ -165,7 +165,7 @@ internal-documentation.pod: $(source_files:%=$(top_srcdir)/%) $(srcdir)/make-int
 guestfs-internals.1 $(top_builddir)/website/guestfs-internals.1.html: stamp-guestfs-internals.pod
 
 stamp-guestfs-internals.pod: guestfs-internals.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-internals.1 \
 	  --html $(top_builddir)/website/guestfs-internals.1.html \
@@ -176,7 +176,7 @@ stamp-guestfs-internals.pod: guestfs-internals.pod
 guestfs-performance.1 $(top_builddir)/website/guestfs-performance.1.html: stamp-guestfs-performance.pod
 
 stamp-guestfs-performance.pod: guestfs-performance.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-performance.1 \
 	  --html $(top_builddir)/website/guestfs-performance.1.html \
@@ -187,7 +187,7 @@ stamp-guestfs-performance.pod: guestfs-performance.pod
 guestfs-recipes.1 $(top_builddir)/website/guestfs-recipes.1.html: stamp-guestfs-recipes.pod
 
 stamp-guestfs-recipes.pod: guestfs-recipes.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-recipes.1 \
 	  --html $(top_builddir)/website/guestfs-recipes.1.html \
@@ -209,7 +209,7 @@ stamp-guestfs-release-notes-1.44.pod: guestfs-release-notes-1.44.pod
 guestfs-release-notes-1.42.1 guestfs-release-notes-1.42.txt $(top_builddir)/website/guestfs-release-notes-1.42.1.html: stamp-guestfs-release-notes-1.42.pod
 
 stamp-guestfs-release-notes-1.42.pod: guestfs-release-notes-1.42.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-release-notes-1.42.1 \
 	  --html $(top_builddir)/website/guestfs-release-notes-1.42.1.html \
@@ -220,7 +220,7 @@ stamp-guestfs-release-notes-1.42.pod: guestfs-release-notes-1.42.pod
 guestfs-release-notes-1.40.1 guestfs-release-notes-1.40.txt $(top_builddir)/website/guestfs-release-notes-1.40.1.html: stamp-guestfs-release-notes-1.40.pod
 
 stamp-guestfs-release-notes-1.40.pod: guestfs-release-notes-1.40.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-release-notes-1.40.1 \
 	  --html $(top_builddir)/website/guestfs-release-notes-1.40.1.html \
@@ -231,7 +231,7 @@ stamp-guestfs-release-notes-1.40.pod: guestfs-release-notes-1.40.pod
 guestfs-release-notes-1.38.1 guestfs-release-notes-1.38.txt $(top_builddir)/website/guestfs-release-notes-1.38.1.html: stamp-guestfs-release-notes-1.38.pod
 
 stamp-guestfs-release-notes-1.38.pod: guestfs-release-notes-1.38.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-release-notes-1.38.1 \
 	  --html $(top_builddir)/website/guestfs-release-notes-1.38.1.html \
@@ -242,7 +242,7 @@ stamp-guestfs-release-notes-1.38.pod: guestfs-release-notes-1.38.pod
 guestfs-release-notes-1.36.1 guestfs-release-notes-1.36.txt $(top_builddir)/website/guestfs-release-notes-1.36.1.html: stamp-guestfs-release-notes-1.36.pod
 
 stamp-guestfs-release-notes-1.36.pod: guestfs-release-notes-1.36.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-release-notes-1.36.1 \
 	  --html $(top_builddir)/website/guestfs-release-notes-1.36.1.html \
@@ -253,7 +253,7 @@ stamp-guestfs-release-notes-1.36.pod: guestfs-release-notes-1.36.pod
 guestfs-release-notes-1.34.1 guestfs-release-notes-1.34.txt $(top_builddir)/website/guestfs-release-notes-1.34.1.html: stamp-guestfs-release-notes-1.34.pod
 
 stamp-guestfs-release-notes-1.34.pod: guestfs-release-notes-1.34.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-release-notes-1.34.1 \
 	  --html $(top_builddir)/website/guestfs-release-notes-1.34.1.html \
@@ -264,7 +264,7 @@ stamp-guestfs-release-notes-1.34.pod: guestfs-release-notes-1.34.pod
 guestfs-release-notes-1.32.1 guestfs-release-notes-1.32.txt $(top_builddir)/website/guestfs-release-notes-1.32.1.html: stamp-guestfs-release-notes-1.32.pod
 
 stamp-guestfs-release-notes-1.32.pod: guestfs-release-notes-1.32.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-release-notes-1.32.1 \
 	  --html $(top_builddir)/website/guestfs-release-notes-1.32.1.html \
@@ -275,7 +275,7 @@ stamp-guestfs-release-notes-1.32.pod: guestfs-release-notes-1.32.pod
 guestfs-release-notes-1.30.1 guestfs-release-notes-1.30.txt $(top_builddir)/website/guestfs-release-notes-1.30.1.html: stamp-guestfs-release-notes-1.30.pod
 
 stamp-guestfs-release-notes-1.30.pod: guestfs-release-notes-1.30.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-release-notes-1.30.1 \
 	  --html $(top_builddir)/website/guestfs-release-notes-1.30.1.html \
@@ -286,7 +286,7 @@ stamp-guestfs-release-notes-1.30.pod: guestfs-release-notes-1.30.pod
 guestfs-release-notes-1.28.1 guestfs-release-notes-1.28.txt $(top_builddir)/website/guestfs-release-notes-1.28.1.html: stamp-guestfs-release-notes-1.28.pod
 
 stamp-guestfs-release-notes-1.28.pod: guestfs-release-notes-1.28.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-release-notes-1.28.1 \
 	  --html $(top_builddir)/website/guestfs-release-notes-1.28.1.html \
@@ -297,7 +297,7 @@ stamp-guestfs-release-notes-1.28.pod: guestfs-release-notes-1.28.pod
 guestfs-release-notes-1.26.1 guestfs-release-notes-1.26.txt $(top_builddir)/website/guestfs-release-notes-1.26.1.html: stamp-guestfs-release-notes-1.26.pod
 
 stamp-guestfs-release-notes-1.26.pod: guestfs-release-notes-1.26.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-release-notes-1.26.1 \
 	  --html $(top_builddir)/website/guestfs-release-notes-1.26.1.html \
@@ -308,7 +308,7 @@ stamp-guestfs-release-notes-1.26.pod: guestfs-release-notes-1.26.pod
 guestfs-release-notes-1.24.1 guestfs-release-notes-1.24.txt $(top_builddir)/website/guestfs-release-notes-1.24.1.html: stamp-guestfs-release-notes-1.24.pod
 
 stamp-guestfs-release-notes-1.24.pod: guestfs-release-notes-1.24.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-release-notes-1.24.1 \
 	  --html $(top_builddir)/website/guestfs-release-notes-1.24.1.html \
@@ -319,7 +319,7 @@ stamp-guestfs-release-notes-1.24.pod: guestfs-release-notes-1.24.pod
 guestfs-release-notes-1.22.1 guestfs-release-notes-1.22.txt $(top_builddir)/website/guestfs-release-notes-1.22.1.html: stamp-guestfs-release-notes-1.22.pod
 
 stamp-guestfs-release-notes-1.22.pod: guestfs-release-notes-1.22.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-release-notes-1.22.1 \
 	  --html $(top_builddir)/website/guestfs-release-notes-1.22.1.html \
@@ -330,7 +330,7 @@ stamp-guestfs-release-notes-1.22.pod: guestfs-release-notes-1.22.pod
 guestfs-release-notes-1.20.1 guestfs-release-notes-1.20.txt $(top_builddir)/website/guestfs-release-notes-1.20.1.html: stamp-guestfs-release-notes-1.20.pod
 
 stamp-guestfs-release-notes-1.20.pod: guestfs-release-notes-1.20.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-release-notes-1.20.1 \
 	  --html $(top_builddir)/website/guestfs-release-notes-1.20.1.html \
@@ -341,7 +341,7 @@ stamp-guestfs-release-notes-1.20.pod: guestfs-release-notes-1.20.pod
 guestfs-release-notes-1.18.1 guestfs-release-notes-1.18.txt $(top_builddir)/website/guestfs-release-notes-1.18.1.html: stamp-guestfs-release-notes-1.18.pod
 
 stamp-guestfs-release-notes-1.18.pod: guestfs-release-notes-1.18.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-release-notes-1.18.1 \
 	  --html $(top_builddir)/website/guestfs-release-notes-1.18.1.html \
@@ -352,7 +352,7 @@ stamp-guestfs-release-notes-1.18.pod: guestfs-release-notes-1.18.pod
 guestfs-release-notes-1.16.1 guestfs-release-notes-1.16.txt $(top_builddir)/website/guestfs-release-notes-1.16.1.html: stamp-guestfs-release-notes-1.16.pod
 
 stamp-guestfs-release-notes-1.16.pod: guestfs-release-notes-1.16.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-release-notes-1.16.1 \
 	  --html $(top_builddir)/website/guestfs-release-notes-1.16.1.html \
@@ -363,7 +363,7 @@ stamp-guestfs-release-notes-1.16.pod: guestfs-release-notes-1.16.pod
 guestfs-release-notes-1.14.1 guestfs-release-notes-1.14.txt $(top_builddir)/website/guestfs-release-notes-1.14.1.html: stamp-guestfs-release-notes-1.14.pod
 
 stamp-guestfs-release-notes-1.14.pod: guestfs-release-notes-1.14.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-release-notes-1.14.1 \
 	  --html $(top_builddir)/website/guestfs-release-notes-1.14.1.html \
@@ -374,7 +374,7 @@ stamp-guestfs-release-notes-1.14.pod: guestfs-release-notes-1.14.pod
 guestfs-release-notes-1.12.1 guestfs-release-notes-1.12.txt $(top_builddir)/website/guestfs-release-notes-1.12.1.html: stamp-guestfs-release-notes-1.12.pod
 
 stamp-guestfs-release-notes-1.12.pod: guestfs-release-notes-1.12.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-release-notes-1.12.1 \
 	  --html $(top_builddir)/website/guestfs-release-notes-1.12.1.html \
@@ -385,7 +385,7 @@ stamp-guestfs-release-notes-1.12.pod: guestfs-release-notes-1.12.pod
 guestfs-release-notes-1.10.1 guestfs-release-notes-1.10.txt $(top_builddir)/website/guestfs-release-notes-1.10.1.html: stamp-guestfs-release-notes-1.10.pod
 
 stamp-guestfs-release-notes-1.10.pod: guestfs-release-notes-1.10.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-release-notes-1.10.1 \
 	  --html $(top_builddir)/website/guestfs-release-notes-1.10.1.html \
@@ -396,7 +396,7 @@ stamp-guestfs-release-notes-1.10.pod: guestfs-release-notes-1.10.pod
 guestfs-release-notes-1.8.1 guestfs-release-notes-1.8.txt $(top_builddir)/website/guestfs-release-notes-1.8.1.html: stamp-guestfs-release-notes-1.8.pod
 
 stamp-guestfs-release-notes-1.8.pod: guestfs-release-notes-1.8.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-release-notes-1.8.1 \
 	  --html $(top_builddir)/website/guestfs-release-notes-1.8.1.html \
@@ -407,7 +407,7 @@ stamp-guestfs-release-notes-1.8.pod: guestfs-release-notes-1.8.pod
 guestfs-release-notes-1.6.1 guestfs-release-notes-1.6.txt $(top_builddir)/website/guestfs-release-notes-1.6.1.html: stamp-guestfs-release-notes-1.6.pod
 
 stamp-guestfs-release-notes-1.6.pod: guestfs-release-notes-1.6.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-release-notes-1.6.1 \
 	  --html $(top_builddir)/website/guestfs-release-notes-1.6.1.html \
@@ -418,7 +418,7 @@ stamp-guestfs-release-notes-1.6.pod: guestfs-release-notes-1.6.pod
 guestfs-release-notes-1.4.1 guestfs-release-notes-1.4.txt $(top_builddir)/website/guestfs-release-notes-1.4.1.html: stamp-guestfs-release-notes-1.4.pod
 
 stamp-guestfs-release-notes-1.4.pod: guestfs-release-notes-1.4.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-release-notes-1.4.1 \
 	  --html $(top_builddir)/website/guestfs-release-notes-1.4.1.html \
@@ -429,7 +429,7 @@ stamp-guestfs-release-notes-1.4.pod: guestfs-release-notes-1.4.pod
 guestfs-release-notes-historical.1 guestfs-release-notes-historical.txt $(top_builddir)/website/guestfs-release-notes-historical.1.html: stamp-guestfs-release-notes-historical.pod
 
 stamp-guestfs-release-notes-historical.pod: guestfs-release-notes-historical.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-release-notes-historical.1 \
 	  --html $(top_builddir)/website/guestfs-release-notes-historical.1.html \
@@ -440,7 +440,7 @@ stamp-guestfs-release-notes-historical.pod: guestfs-release-notes-historical.pod
 guestfs-security.1 $(top_builddir)/website/guestfs-security.1.html: stamp-guestfs-security.pod
 
 stamp-guestfs-security.pod: guestfs-security.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-security.1 \
 	  --html $(top_builddir)/website/guestfs-security.1.html \
@@ -451,7 +451,7 @@ stamp-guestfs-security.pod: guestfs-security.pod
 guestfs-testing.1 $(top_builddir)/website/guestfs-testing.1.html: stamp-guestfs-testing.pod
 
 stamp-guestfs-testing.pod: guestfs-testing.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 1 \
 	  --man guestfs-testing.1 \
 	  --html $(top_builddir)/website/guestfs-testing.1.html \

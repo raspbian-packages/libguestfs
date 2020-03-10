@@ -42,7 +42,7 @@ man_MANS = \
 virt-list-filesystems.1 $(top_builddir)/website/virt-list-filesystems.1.html: stamp-virt-list-filesystems.pod
 
 stamp-virt-list-filesystems.pod: virt-list-filesystems
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-list-filesystems.1 \
 	  --html $(top_builddir)/website/virt-list-filesystems.1.html \
 	  --license GPLv2+ \
@@ -53,7 +53,7 @@ stamp-virt-list-filesystems.pod: virt-list-filesystems
 virt-list-partitions.1 $(top_builddir)/website/virt-list-partitions.1.html: stamp-virt-list-partitions.pod
 
 stamp-virt-list-partitions.pod: virt-list-partitions
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-list-partitions.1 \
 	  --html $(top_builddir)/website/virt-list-partitions.1.html \
 	  --license GPLv2+ \
@@ -64,7 +64,7 @@ stamp-virt-list-partitions.pod: virt-list-partitions
 virt-tar.1 $(top_builddir)/website/virt-tar.1.html: stamp-virt-tar.pod
 
 stamp-virt-tar.pod: virt-tar
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-tar.1 \
 	  --html $(top_builddir)/website/virt-tar.1.html \
 	  --license GPLv2+ \
@@ -75,7 +75,7 @@ stamp-virt-tar.pod: virt-tar
 virt-win-reg.1 $(top_builddir)/website/virt-win-reg.1.html: stamp-virt-win-reg.pod
 
 stamp-virt-win-reg.pod: virt-win-reg
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-win-reg.1 \
 	  --html $(top_builddir)/website/virt-win-reg.1.html \
 	  --license GPLv2+ \

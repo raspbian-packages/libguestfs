@@ -29,7 +29,7 @@ noinst_DATA = $(top_builddir)/website/guestfs-erlang.3.html
 guestfs-erlang.3 $(top_builddir)/website/guestfs-erlang.3.html: stamp-guestfs-erlang.pod
 
 stamp-guestfs-erlang.pod: guestfs-erlang.pod create_disk.erl inspect_vm.erl
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 3 \
 	  --man guestfs-erlang.3 \
 	  --html $(top_builddir)/website/guestfs-erlang.3.html \

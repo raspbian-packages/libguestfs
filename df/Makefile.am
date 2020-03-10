@@ -68,7 +68,7 @@ noinst_DATA = $(top_builddir)/website/virt-df.1.html
 virt-df.1 $(top_builddir)/website/virt-df.1.html: stamp-virt-df.pod
 
 stamp-virt-df.pod: virt-df.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-df.1 \
 	  --html $(top_builddir)/website/virt-df.1.html \
 	  --path $(top_srcdir)/common/options \
