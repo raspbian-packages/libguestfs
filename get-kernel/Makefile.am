@@ -125,7 +125,7 @@ noinst_DATA += $(top_builddir)/website/virt-get-kernel.1.html
 virt-get-kernel.1 $(top_builddir)/website/virt-get-kernel.1.html: stamp-virt-get-kernel.pod
 
 stamp-virt-get-kernel.pod: virt-get-kernel.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-get-kernel.1 \
 	  --html $(top_builddir)/website/virt-get-kernel.1.html \
 	  --path $(top_srcdir)/common/options \

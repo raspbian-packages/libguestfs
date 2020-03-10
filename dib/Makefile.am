@@ -154,7 +154,7 @@ noinst_DATA = $(top_builddir)/website/virt-dib.1.html
 virt-dib.1 $(top_builddir)/website/virt-dib.1.html: stamp-virt-dib.pod
 
 stamp-virt-dib.pod: virt-dib.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-dib.1 \
 	  --html $(top_builddir)/website/virt-dib.1.html \
 	  --license GPLv2+ \

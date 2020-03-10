@@ -190,7 +190,7 @@ noinst_DATA = $(top_builddir)/website/virt-sysprep.1.html
 virt-sysprep.1 $(top_builddir)/website/virt-sysprep.1.html: stamp-virt-sysprep.pod
 
 stamp-virt-sysprep.pod: virt-sysprep.pod sysprep-extra-options.pod sysprep-operations.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-sysprep.1 \
           --insert sysprep-extra-options.pod:__EXTRA_OPTIONS__ \
           --insert sysprep-operations.pod:__OPERATIONS__ \
