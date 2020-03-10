@@ -79,7 +79,7 @@ noinst_DATA = $(top_builddir)/website/virt-inspector.1.html
 virt-inspector.1 $(top_builddir)/website/virt-inspector.1.html: stamp-virt-inspector.pod
 
 stamp-virt-inspector.pod: virt-inspector.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-inspector.1 \
 	  --html $(top_builddir)/website/virt-inspector.1.html \
 	  --path $(top_srcdir)/common/options \
