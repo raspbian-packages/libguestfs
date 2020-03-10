@@ -106,9 +106,9 @@ OCAMLLINKFLAGS = $(LINK_CUSTOM_OCAMLC_ONLY)
 pcre_tests_DEPENDENCIES = \
 	$(pcre_tests_THEOBJECTS) \
 	$(MLPCRE_CMA) \
-	$(top_srcdir)/ocaml-link.sh
+	$(top_builddir)/ocaml-link.sh
 pcre_tests_LINK = \
-	$(top_srcdir)/ocaml-link.sh \
+	$(top_builddir)/ocaml-link.sh \
 	  -cclib '-pthread -lpthread -lutils -lpcre2-8 -lgnu' -- \
 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
