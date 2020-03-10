@@ -264,7 +264,7 @@ noinst_DATA += $(top_builddir)/website/virt-builder.1.html
 virt-builder.1 $(top_builddir)/website/virt-builder.1.html: stamp-virt-builder.pod
 
 stamp-virt-builder.pod: virt-builder.pod $(top_srcdir)/common/mlcustomize/customize-synopsis.pod $(top_srcdir)/common/mlcustomize/customize-options.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-builder.1 \
 	  --html $(top_builddir)/website/virt-builder.1.html \
 	  --insert $(top_srcdir)/common/mlcustomize/customize-synopsis.pod:__CUSTOMIZE_SYNOPSIS__ \
@@ -280,7 +280,7 @@ noinst_DATA += $(top_builddir)/website/virt-builder-repository.1.html
 virt-builder-repository.1 $(top_builddir)/website/virt-builder-repository.1.html: stamp-virt-builder-repository.pod
 
 stamp-virt-builder-repository.pod: virt-builder-repository.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-builder-repository.1 \
 	  --html $(top_builddir)/website/virt-builder-repository.1.html \
 	  --license GPLv2+ \
@@ -463,7 +463,7 @@ noinst_DATA += $(top_builddir)/website/virt-index-validate.1.html
 virt-index-validate.1 $(top_builddir)/website/virt-index-validate.1.html: stamp-virt-index-validate.pod
 
 stamp-virt-index-validate.pod: virt-index-validate.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-index-validate.1 \
 	  --html $(top_builddir)/website/virt-index-validate.1.html \
 	  --license GPLv2+ \

@@ -199,8 +199,8 @@ noinst_DATA += $(top_builddir)/website/virt-customize.1.html
 
 virt-customize.1 $(top_builddir)/website/virt-customize.1.html: stamp-virt-customize.pod
 
-stamp-virt-customize.pod: virt-customize.pod $(top_srcdir)/common/mlcustomize/customize-synopsis.pod $(top_srcdir)/common/mlcustomize/customize-options.pod
-	$(PODWRAPPER) \
+stamp-virt-customize.pod: virt-customize.pod $(top_builddir)/common/mlcustomize/customize-synopsis.pod $(top_srcdir)/common/mlcustomize/customize-options.pod
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-customize.1 \
 	  --html $(top_builddir)/website/virt-customize.1.html \
 	  --path $(top_srcdir)/common/options \
