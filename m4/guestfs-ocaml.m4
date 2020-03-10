@@ -161,8 +161,7 @@ AM_CONDITIONAL([HAVE_OCAML_GETTEXT],
                [test "x$OCAML_PKG_gettext" != "xno" && test "x$OCAML_GETTEXT" != "xno"])
 
 dnl Check if OCaml has caml_alloc_initialized_string (added 2017).
-AS_IF([test "x$OCAMLC" != "xno" && test "x$OCAMLFIND" != "xno" && \
-       test "x$enable_ocaml" = "xyes"],[
+AS_IF([test "x$OCAMLC" != "xno" && test "x$OCAMLFIND" != "xno"],[
     AC_MSG_CHECKING([for caml_alloc_initialized_string])
     cat >conftest.c <<'EOF'
 #include <caml/alloc.h>
