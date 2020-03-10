@@ -262,9 +262,9 @@ tools_utils_tests_DEPENDENCIES = \
 	../mlgettext/mlgettext.$(MLARCHIVE) \
 	../mlpcre/mlpcre.$(MLARCHIVE) \
 	$(MLTOOLS_CMA) \
-	$(top_srcdir)/ocaml-link.sh
+	$(top_builddir)/ocaml-link.sh
 tools_utils_tests_LINK = \
-	$(top_srcdir)/ocaml-link.sh -cclib '-lutils $(LIBXML2_LIBS) -lgnu' -- \
+	$(top_builddir)/ocaml-link.sh -cclib '-lutils $(LIBXML2_LIBS) -lgnu' -- \
 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
 	  $(tools_utils_tests_THEOBJECTS) -o $@
@@ -275,9 +275,9 @@ getopt_tests_DEPENDENCIES = \
 	../mlgettext/mlgettext.$(MLARCHIVE) \
 	../mlpcre/mlpcre.$(MLARCHIVE) \
 	$(MLTOOLS_CMA) \
-	$(top_srcdir)/ocaml-link.sh
+	$(top_builddir)/ocaml-link.sh
 getopt_tests_LINK = \
-	$(top_srcdir)/ocaml-link.sh -cclib '-lutils $(LIBXML2_LIBS) -lgnu' -- \
+	$(top_builddir)/ocaml-link.sh -cclib '-lutils $(LIBXML2_LIBS) -lgnu' -- \
 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
 	  $(getopt_tests_THEOBJECTS) -o $@
@@ -288,9 +288,9 @@ JSON_tests_DEPENDENCIES = \
 	../mlgettext/mlgettext.$(MLARCHIVE) \
 	../mlpcre/mlpcre.$(MLARCHIVE) \
 	$(MLTOOLS_CMA) \
-	$(top_srcdir)/ocaml-link.sh
+	$(top_builddir)/ocaml-link.sh
 JSON_tests_LINK = \
-	$(top_srcdir)/ocaml-link.sh -- \
+	$(top_builddir)/ocaml-link.sh -- \
 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
 	  $(JSON_tests_THEOBJECTS) -o $@
@@ -301,9 +301,9 @@ JSON_parser_tests_DEPENDENCIES = \
 	../mlgettext/mlgettext.$(MLARCHIVE) \
 	../mlpcre/mlpcre.$(MLARCHIVE) \
 	$(MLTOOLS_CMA) \
-	$(top_srcdir)/ocaml-link.sh
+	$(top_builddir)/ocaml-link.sh
 JSON_parser_tests_LINK = \
-	$(top_srcdir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
+	$(top_builddir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
 	  $(JSON_parser_tests_THEOBJECTS) -o $@
@@ -314,9 +314,9 @@ machine_readable_tests_DEPENDENCIES = \
 	../mlgettext/mlgettext.$(MLARCHIVE) \
 	../mlpcre/mlpcre.$(MLARCHIVE) \
 	$(MLTOOLS_CMA) \
-	$(top_srcdir)/ocaml-link.sh
+	$(top_builddir)/ocaml-link.sh
 machine_readable_tests_LINK = \
-	$(top_srcdir)/ocaml-link.sh -cclib '-lutils -lgnu' -- \
+	$(top_builddir)/ocaml-link.sh -cclib '-lutils -lgnu' -- \
 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
 	  $(machine_readable_tests_THEOBJECTS) -o $@
@@ -327,9 +327,9 @@ tools_messages_tests_DEPENDENCIES = \
 	../mlgettext/mlgettext.$(MLARCHIVE) \
 	../mlpcre/mlpcre.$(MLARCHIVE) \
 	$(MLTOOLS_CMA) \
-	$(top_srcdir)/ocaml-link.sh
+	$(top_builddir)/ocaml-link.sh
 tools_messages_tests_LINK = \
-	$(top_srcdir)/ocaml-link.sh -cclib '-lutils -lgnu' -- \
+	$(top_builddir)/ocaml-link.sh -cclib '-lutils -lgnu' -- \
 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
 	  $(tools_messages_tests_THEOBJECTS) -o $@

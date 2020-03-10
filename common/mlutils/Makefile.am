@@ -127,9 +127,9 @@ c_utils_unit_tests_DEPENDENCIES = \
 	$(c_utils_unit_tests_THEOBJECTS) \
 	../mlstdutils/mlstdutils.$(MLARCHIVE) \
 	mlcutils.$(MLARCHIVE) \
-	$(top_srcdir)/ocaml-link.sh
+	$(top_builddir)/ocaml-link.sh
 c_utils_unit_tests_LINK = \
-	$(top_srcdir)/ocaml-link.sh -cclib '-lutils -lgnu' -- \
+	$(top_builddir)/ocaml-link.sh -cclib '-lutils -lgnu' -- \
 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) \
 	  $(OCAMLPACKAGES) -package oUnit \
 	  $(OCAMLLINKFLAGS) \
