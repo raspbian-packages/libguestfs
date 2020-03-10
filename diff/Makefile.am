@@ -62,7 +62,7 @@ noinst_DATA = \
 virt-diff.1 $(top_builddir)/website/virt-diff.1.html: stamp-virt-diff.pod
 
 stamp-virt-diff.pod: virt-diff.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-diff.1 \
 	  --html $(top_builddir)/website/virt-diff.1.html \
 	  --path $(top_srcdir)/common/options \
