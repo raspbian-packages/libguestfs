@@ -117,9 +117,9 @@ OCAMLLINKFLAGS = $(LINK_CUSTOM_OCAMLC_ONLY)
 std_utils_tests_DEPENDENCIES = \
 	$(std_utils_tests_THEOBJECTS) \
 	$(MLSTDUTILS_CMA) \
-	$(top_srcdir)/ocaml-link.sh
+	$(top_builddir)/ocaml-link.sh
 std_utils_tests_LINK = \
-	$(top_srcdir)/ocaml-link.sh -- \
+	$(top_builddir)/ocaml-link.sh -- \
 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
 	  $(std_utils_tests_THEOBJECTS) -o $@
