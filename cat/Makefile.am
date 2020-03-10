@@ -185,7 +185,7 @@ noinst_DATA = \
 virt-cat.1 $(top_builddir)/website/virt-cat.1.html: stamp-virt-cat.pod
 
 stamp-virt-cat.pod: virt-cat.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-cat.1 \
 	  --html $(top_builddir)/website/virt-cat.1.html \
 	  --path $(top_srcdir)/common/options \
@@ -197,7 +197,7 @@ stamp-virt-cat.pod: virt-cat.pod
 virt-filesystems.1 $(top_builddir)/website/virt-filesystems.1.html: stamp-virt-filesystems.pod
 
 stamp-virt-filesystems.pod: virt-filesystems.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-filesystems.1 \
 	  --html $(top_builddir)/website/virt-filesystems.1.html \
 	  --path $(top_srcdir)/common/options \
@@ -209,7 +209,7 @@ stamp-virt-filesystems.pod: virt-filesystems.pod
 virt-log.1 $(top_builddir)/website/virt-log.1.html: stamp-virt-log.pod
 
 stamp-virt-log.pod: virt-log.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-log.1 \
 	  --html $(top_builddir)/website/virt-log.1.html \
 	  --path $(top_srcdir)/common/options \
@@ -221,7 +221,7 @@ stamp-virt-log.pod: virt-log.pod
 virt-ls.1 $(top_builddir)/website/virt-ls.1.html: stamp-virt-ls.pod
 
 stamp-virt-ls.pod: virt-ls.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-ls.1 \
 	  --html $(top_builddir)/website/virt-ls.1.html \
 	  --path $(top_srcdir)/common/options \
@@ -233,7 +233,7 @@ stamp-virt-ls.pod: virt-ls.pod
 virt-tail.1 $(top_builddir)/website/virt-tail.1.html: stamp-virt-tail.pod
 
 stamp-virt-tail.pod: virt-tail.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-tail.1 \
 	  --html $(top_builddir)/website/virt-tail.1.html \
 	  --path $(top_srcdir)/common/options \

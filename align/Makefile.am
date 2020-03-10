@@ -63,7 +63,7 @@ noinst_DATA = $(top_builddir)/website/virt-alignment-scan.1.html
 virt-alignment-scan.1 $(top_builddir)/website/virt-alignment-scan.1.html: stamp-virt-alignment-scan.pod
 
 stamp-virt-alignment-scan.pod: virt-alignment-scan.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-alignment-scan.1 \
 	  --html $(top_builddir)/website/virt-alignment-scan.1.html \
 	  --path $(top_srcdir)/common/options \
