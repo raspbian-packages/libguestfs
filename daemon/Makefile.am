@@ -459,7 +459,7 @@ noinst_DATA += $(top_builddir)/website/guestfsd.8.html
 guestfsd.8 $(top_builddir)/website/guestfsd.8.html: stamp-guestfsd.pod
 
 stamp-guestfsd.pod: guestfsd.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 8 \
 	  --man guestfsd.8 \
 	  --html $(top_builddir)/website/guestfsd.8.html \
