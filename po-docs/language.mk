@@ -112,7 +112,7 @@ EXTRA_DIST = \
 all-local: $(MANPAGES)
 
 guestfs.3: guestfs.pod guestfs-actions.pod guestfs-availability.pod guestfs-structs.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --no-strict-checks \
 	  --man $@ \
 	  --section 3 \
@@ -127,14 +127,14 @@ guestfs.3: guestfs.pod guestfs-actions.pod guestfs-availability.pod guestfs-stru
 # out all the %.1 pattern rules below.
 
 guestfish.1: guestfish.pod guestfish-actions.pod guestfish-commands.pod guestfish-prepopts.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --no-strict-checks \
 	  --man $@ \
 	  --license GPLv2+ \
 	  $<
 
 virt-builder.1: virt-builder.pod customize-synopsis.pod customize-options.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --no-strict-checks \
 	  --man $@ \
 	  --license GPLv2+ \
@@ -143,7 +143,7 @@ virt-builder.1: virt-builder.pod customize-synopsis.pod customize-options.pod
 	  $<
 
 virt-customize.1: virt-customize.pod customize-synopsis.pod customize-options.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --no-strict-checks \
 	  --man $@ \
 	  --license GPLv2+ \
@@ -152,7 +152,7 @@ virt-customize.1: virt-customize.pod customize-synopsis.pod customize-options.po
 	  $<
 
 virt-sysprep.1: virt-sysprep.pod sysprep-extra-options.pod sysprep-operations.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --no-strict-checks \
 	  --man $@ \
 	  --license GPLv2+ \
@@ -161,7 +161,7 @@ virt-sysprep.1: virt-sysprep.pod sysprep-extra-options.pod sysprep-operations.po
 	  $<
 
 virt-p2v.1: virt-p2v.pod virt-p2v-kernel-config.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --no-strict-checks \
 	  --man $@ \
 	  --license GPLv2+ \
@@ -169,27 +169,27 @@ virt-p2v.1: virt-p2v.pod virt-p2v-kernel-config.pod
 	  $<
 
 %.1: %.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --no-strict-checks \
 	  --man $@ \
 	  $<
 
 %.3: %.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --no-strict-checks \
 	  --man $@ \
 	  --section 3 \
 	  $<
 
 %.5: %.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --no-strict-checks \
 	  --man $@ \
 	  --section 5 \
 	  $<
 
 %.8: %.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --no-strict-checks \
 	  --man $@ \
 	  --section 8 \

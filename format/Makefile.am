@@ -57,7 +57,7 @@ noinst_DATA = $(top_builddir)/website/virt-format.1.html
 virt-format.1 $(top_builddir)/website/virt-format.1.html: stamp-virt-format.pod
 
 stamp-virt-format.pod: virt-format.pod
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --man virt-format.1 \
 	  --html $(top_builddir)/website/virt-format.1.html \
 	  --path $(top_srcdir)/common/options \

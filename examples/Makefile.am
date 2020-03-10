@@ -133,7 +133,7 @@ noinst_DATA = $(top_builddir)/website/guestfs-examples.3.html
 guestfs-examples.3 $(top_builddir)/website/guestfs-examples.3.html: stamp-guestfs-examples.pod
 
 stamp-guestfs-examples.pod: guestfs-examples.pod copy-over.c create-disk.c debug-logging.c display-icon.c inspect-vm.c libvirt-auth.c mount-local.c virt-dhcp-address.c
-	$(PODWRAPPER) \
+	$(PODWRAPPER) --path $(srcdir) \
 	  --section 3 \
 	  --man guestfs-examples.3 \
 	  --html $(top_builddir)/website/guestfs-examples.3.html \
