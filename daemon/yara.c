@@ -58,7 +58,11 @@ static bool initialized = false;
 static int compile_rules_file (const char *);
 static void compile_error_callback (int, const char *, int, const char *, void *);
 static void cleanup_destroy_yara_compiler (void *ptr);
-static int yara_rules_callback (int , void *, void *);
+#if YARA_MAJOR_VERSION==3
+static int yara_rules_callback (int, void *, void *);
+#else if YARA_MAJOR_VERSION==4
+static int yara_rules_callback (YR_SCAN_CONTEXT*, int, void *, void *);
+#endif
 static int send_detection_info (const char *, YR_RULE *);
 
 /* Has one FileIn parameter.
@@ -221,8 +225,13 @@ compile_error_callback (int level, const char *name, int line,
 /* Yara scan callback, called by yr_rules_scan_file.
  * Return 0 on success, -1 on error.
  */
+#if YARA_MAJOR_VERSION==3
 static int
 yara_rules_callback (int code, void *message, void *data)
+#else if YARA_MAJOR_VERSION==4
+static int
+yara_rules_callback (YR_SCAN_CONTEXT *context, int code, void *message, void *data)
+#endif
 {
   int ret = 0;
 
