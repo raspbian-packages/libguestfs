@@ -1,0 +1,60 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Mon, 4 May 2020 00:32:37 +0200
+Subject: Add support for YARA 4
+
+---
+ appliance/packagelist.in |  2 ++
+ daemon/yara.c            | 11 ++++++++++-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/appliance/packagelist.in b/appliance/packagelist.in
+index 641a06d..25e3f80 100644
+--- a/appliance/packagelist.in
++++ b/appliance/packagelist.in
+@@ -90,6 +90,7 @@ dnl iproute has been renamed to iproute2
+   libsystemd-id128-0
+   libsystemd-journal0
+   libtirpc1
++  libyara4
+   libyara3
+   linux-image
+   dnl syslinux 'suggests' mtools, but in reality it's a hard dependency:
+@@ -159,6 +160,7 @@ ifelse(SUSE,1,
+   libjansson4
+   libselinux1
+   libtirpc3
++  libyara4
+   libyara3
+   mkisofs
+   ntfsprogs
+diff --git a/daemon/yara.c b/daemon/yara.c
+index 9e7bc94..d90d471 100644
+--- a/daemon/yara.c
++++ b/daemon/yara.c
+@@ -58,7 +58,11 @@ static bool initialized = false;
+ static int compile_rules_file (const char *);
+ static void compile_error_callback (int, const char *, int, const char *, void *);
+ static void cleanup_destroy_yara_compiler (void *ptr);
+-static int yara_rules_callback (int , void *, void *);
++#if YARA_MAJOR_VERSION==3
++static int yara_rules_callback (int, void *, void *);
++#else if YARA_MAJOR_VERSION==4
++static int yara_rules_callback (YR_SCAN_CONTEXT*, int, void *, void *);
++#endif
+ static int send_detection_info (const char *, YR_RULE *);
+ 
+ /* Has one FileIn parameter.
+@@ -221,8 +225,13 @@ compile_error_callback (int level, const char *name, int line,
+ /* Yara scan callback, called by yr_rules_scan_file.
+  * Return 0 on success, -1 on error.
+  */
++#if YARA_MAJOR_VERSION==3
+ static int
+ yara_rules_callback (int code, void *message, void *data)
++#else if YARA_MAJOR_VERSION==4
++static int
++yara_rules_callback (YR_SCAN_CONTEXT *context, int code, void *message, void *data)
++#endif
+ {
+   int ret = 0;
+ 
