@@ -1,0 +1,331 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Tue, 10 Mar 2020 20:06:39 +0100
+Subject: Make sure that generated ocaml-link.sh is used in out-of-tree builds
+
+---
+ Makefile.am                   |  1 -
+ builder/Makefile.am           | 12 ++++++------
+ common/mlpcre/Makefile.am     |  4 ++--
+ common/mlstdutils/Makefile.am |  4 ++--
+ common/mltools/Makefile.am    | 24 ++++++++++++------------
+ common/mlutils/Makefile.am    |  4 ++--
+ common/mlvisit/Makefile.am    |  4 ++--
+ customize/Makefile.am         |  4 ++--
+ daemon/Makefile.am            |  4 ++--
+ dib/Makefile.am               |  4 ++--
+ get-kernel/Makefile.am        |  4 ++--
+ resize/Makefile.am            |  4 ++--
+ sparsify/Makefile.am          |  4 ++--
+ sysprep/Makefile.am           |  4 ++--
+ 14 files changed, 40 insertions(+), 41 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 27f2c6e..596b926 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -237,7 +237,6 @@ EXTRA_DIST = \
+ 	logo/fish-10yrs.svg logo/fish-10yrs.png \
+ 	logo/virt-builder.svg \
+ 	m4/.gitignore \
+-	ocaml-link.sh \
+ 	podcheck.pl \
+ 	tests/automake2junit.ml \
+ 	tests/test-functions.sh \
+diff --git a/builder/Makefile.am b/builder/Makefile.am
+index d87eaf0..a41eb75 100644
+--- a/builder/Makefile.am
++++ b/builder/Makefile.am
+@@ -240,9 +240,9 @@ virt_builder_DEPENDENCIES = \
+ 	../common/mltools/mltools.$(MLARCHIVE) \
+ 	../common/mlcustomize/mlcustomize.$(MLARCHIVE) \
+ 	../customize/customize.$(MLARCHIVE) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ virt_builder_LINK = \
+-	$(top_srcdir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
++	$(top_builddir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLPACKAGES) $(OCAMLLINKFLAGS) \
+ 	  $(OBJECTS) -o $@
+ 
+@@ -250,9 +250,9 @@ virt_builder_repository_DEPENDENCIES = \
+ 	$(REPOSITORY_OBJECTS) \
+ 	../common/mltools/mltools.$(MLARCHIVE) \
+ 	../common/mlxml/mlxml.$(MLARCHIVE) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ virt_builder_repository_LINK = \
+-	$(top_srcdir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
++	$(top_builddir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLPACKAGES) $(OCAMLLINKFLAGS) \
+ 	  $(REPOSITORY_OBJECTS) -o $@
+ 
+@@ -348,9 +348,9 @@ endif
+ index_parser_tests_DEPENDENCIES = \
+ 	$(index_parser_tests_THEOBJECTS) \
+ 	../common/mltools/mltools.$(MLARCHIVE) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ index_parser_tests_LINK = \
+-	$(top_srcdir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
++	$(top_builddir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) $(OCAMLLINKFLAGS) \
+ 	  $(index_parser_tests_THEOBJECTS) -o $@
+ 
+diff --git a/common/mlpcre/Makefile.am b/common/mlpcre/Makefile.am
+index 1e0b779..9d3c482 100644
+--- a/common/mlpcre/Makefile.am
++++ b/common/mlpcre/Makefile.am
+@@ -105,9 +105,9 @@ OCAMLLINKFLAGS = $(LINK_CUSTOM_OCAMLC_ONLY)
+ pcre_tests_DEPENDENCIES = \
+ 	$(pcre_tests_THEOBJECTS) \
+ 	$(MLPCRE_CMA) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ pcre_tests_LINK = \
+-	$(top_srcdir)/ocaml-link.sh \
++	$(top_builddir)/ocaml-link.sh \
+ 	  -cclib '-lutils -lpcre -lgnu' -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
+ 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
+diff --git a/common/mlstdutils/Makefile.am b/common/mlstdutils/Makefile.am
+index 3b2d146..0aacc97 100644
+--- a/common/mlstdutils/Makefile.am
++++ b/common/mlstdutils/Makefile.am
+@@ -129,9 +129,9 @@ OCAMLLINKFLAGS = $(LINK_CUSTOM_OCAMLC_ONLY)
+ std_utils_tests_DEPENDENCIES = \
+ 	$(std_utils_tests_THEOBJECTS) \
+ 	$(MLSTDUTILS_CMA) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ std_utils_tests_LINK = \
+-	$(top_srcdir)/ocaml-link.sh -- \
++	$(top_builddir)/ocaml-link.sh -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
+ 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
+ 	  $(std_utils_tests_THEOBJECTS) -o $@
+diff --git a/common/mltools/Makefile.am b/common/mltools/Makefile.am
+index ce4d1ac..b58f1f6 100644
+--- a/common/mltools/Makefile.am
++++ b/common/mltools/Makefile.am
+@@ -262,9 +262,9 @@ tools_utils_tests_DEPENDENCIES = \
+ 	../mlgettext/mlgettext.$(MLARCHIVE) \
+ 	../mlpcre/mlpcre.$(MLARCHIVE) \
+ 	$(MLTOOLS_CMA) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ tools_utils_tests_LINK = \
+-	$(top_srcdir)/ocaml-link.sh -cclib '-lutils $(LIBXML2_LIBS) -lgnu' -- \
++	$(top_builddir)/ocaml-link.sh -cclib '-lutils $(LIBXML2_LIBS) -lgnu' -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
+ 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
+ 	  $(tools_utils_tests_THEOBJECTS) -o $@
+@@ -275,9 +275,9 @@ getopt_tests_DEPENDENCIES = \
+ 	../mlgettext/mlgettext.$(MLARCHIVE) \
+ 	../mlpcre/mlpcre.$(MLARCHIVE) \
+ 	$(MLTOOLS_CMA) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ getopt_tests_LINK = \
+-	$(top_srcdir)/ocaml-link.sh -cclib '-lutils $(LIBXML2_LIBS) -lgnu' -- \
++	$(top_builddir)/ocaml-link.sh -cclib '-lutils $(LIBXML2_LIBS) -lgnu' -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
+ 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
+ 	  $(getopt_tests_THEOBJECTS) -o $@
+@@ -288,9 +288,9 @@ JSON_tests_DEPENDENCIES = \
+ 	../mlgettext/mlgettext.$(MLARCHIVE) \
+ 	../mlpcre/mlpcre.$(MLARCHIVE) \
+ 	$(MLTOOLS_CMA) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ JSON_tests_LINK = \
+-	$(top_srcdir)/ocaml-link.sh -- \
++	$(top_builddir)/ocaml-link.sh -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
+ 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
+ 	  $(JSON_tests_THEOBJECTS) -o $@
+@@ -301,9 +301,9 @@ JSON_parser_tests_DEPENDENCIES = \
+ 	../mlgettext/mlgettext.$(MLARCHIVE) \
+ 	../mlpcre/mlpcre.$(MLARCHIVE) \
+ 	$(MLTOOLS_CMA) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ JSON_parser_tests_LINK = \
+-	$(top_srcdir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
++	$(top_builddir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
+ 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
+ 	  $(JSON_parser_tests_THEOBJECTS) -o $@
+@@ -314,9 +314,9 @@ machine_readable_tests_DEPENDENCIES = \
+ 	../mlgettext/mlgettext.$(MLARCHIVE) \
+ 	../mlpcre/mlpcre.$(MLARCHIVE) \
+ 	$(MLTOOLS_CMA) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ machine_readable_tests_LINK = \
+-	$(top_srcdir)/ocaml-link.sh -cclib '-lutils -lgnu' -- \
++	$(top_builddir)/ocaml-link.sh -cclib '-lutils -lgnu' -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
+ 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
+ 	  $(machine_readable_tests_THEOBJECTS) -o $@
+@@ -327,9 +327,9 @@ tools_messages_tests_DEPENDENCIES = \
+ 	../mlgettext/mlgettext.$(MLARCHIVE) \
+ 	../mlpcre/mlpcre.$(MLARCHIVE) \
+ 	$(MLTOOLS_CMA) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ tools_messages_tests_LINK = \
+-	$(top_srcdir)/ocaml-link.sh -cclib '-lutils -lgnu' -- \
++	$(top_builddir)/ocaml-link.sh -cclib '-lutils -lgnu' -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
+ 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
+ 	  $(tools_messages_tests_THEOBJECTS) -o $@
+diff --git a/common/mlutils/Makefile.am b/common/mlutils/Makefile.am
+index e86d7bb..1adefd6 100644
+--- a/common/mlutils/Makefile.am
++++ b/common/mlutils/Makefile.am
+@@ -127,9 +127,9 @@ c_utils_unit_tests_DEPENDENCIES = \
+ 	$(c_utils_unit_tests_THEOBJECTS) \
+ 	../mlstdutils/mlstdutils.$(MLARCHIVE) \
+ 	mlcutils.$(MLARCHIVE) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ c_utils_unit_tests_LINK = \
+-	$(top_srcdir)/ocaml-link.sh -cclib '-lutils -lgnu' -- \
++	$(top_builddir)/ocaml-link.sh -cclib '-lutils -lgnu' -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) \
+ 	  $(OCAMLPACKAGES) -package oUnit \
+ 	  $(OCAMLLINKFLAGS) \
+diff --git a/common/mlvisit/Makefile.am b/common/mlvisit/Makefile.am
+index a07c282..870fde2 100644
+--- a/common/mlvisit/Makefile.am
++++ b/common/mlvisit/Makefile.am
+@@ -118,9 +118,9 @@ visit_tests_DEPENDENCIES = \
+ 	$(visit_tests_THEOBJECTS) \
+ 	../mlutils/mlcutils.$(MLARCHIVE) \
+ 	$(MLVISIT_CMA) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ visit_tests_LINK = \
+-	$(top_srcdir)/ocaml-link.sh \
++	$(top_builddir)/ocaml-link.sh \
+ 	  -cclib '-lvisit -lstructs -lutils $(LIBXML2_LIBS) -lgnu' -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
+ 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
+diff --git a/customize/Makefile.am b/customize/Makefile.am
+index 3ce996c..6e5d540 100644
+--- a/customize/Makefile.am
++++ b/customize/Makefile.am
+@@ -179,7 +179,7 @@ OCAMLCLIBS = \
+ OCAMLFLAGS = $(OCAML_FLAGS) $(OCAML_WARN_ERROR) -ccopt '$(CFLAGS)'
+ 
+ virt_customize_DEPENDENCIES = \
+-	$(top_srcdir)/ocaml-link.sh \
++	$(top_builddir)/ocaml-link.sh \
+ 	$(CUSTOMIZE_THEOBJECTS) \
+ 	$(CUSTOMIZE_CMA) \
+ 	../common/mlcustomize/mlcustomize.$(MLARCHIVE) \
+@@ -189,7 +189,7 @@ virt_customize_DEPENDENCIES = \
+ 	../common/mltools/mltools.$(MLARCHIVE) \
+ 	../common/mlcustomize/mlcustomize.$(MLARCHIVE)
+ virt_customize_LINK = \
+-	$(top_srcdir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
++	$(top_builddir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLPACKAGES) $(OCAMLLINKFLAGS) \
+ 	  $(CUSTOMIZE_THEOBJECTS) -o $@
+ 
+diff --git a/daemon/Makefile.am b/daemon/Makefile.am
+index 0256434..98280c9 100644
+--- a/daemon/Makefile.am
++++ b/daemon/Makefile.am
+@@ -437,9 +437,9 @@ OCAMLLINKFLAGS = \
+ 
+ daemon_utils_tests_DEPENDENCIES = \
+ 	$(daemon_utils_tests_THEOBJECTS) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ daemon_utils_tests_LINK = \
+-	$(top_srcdir)/ocaml-link.sh \
++	$(top_builddir)/ocaml-link.sh \
+ 	  -cclib '-lutils -lgnu' \
+ 	  -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
+diff --git a/dib/Makefile.am b/dib/Makefile.am
+index 7c2ab09..ce742f7 100644
+--- a/dib/Makefile.am
++++ b/dib/Makefile.am
+@@ -123,9 +123,9 @@ virt_dib_DEPENDENCIES = \
+ 	../common/mlgettext/mlgettext.$(MLARCHIVE) \
+ 	../common/mlpcre/mlpcre.$(MLARCHIVE) \
+ 	../common/mltools/mltools.$(MLARCHIVE) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ virt_dib_LINK = \
+-	$(top_srcdir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
++	$(top_builddir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLPACKAGES) $(OCAMLLINKFLAGS) \
+ 	  $(OBJECTS) -o $@
+ 
+diff --git a/get-kernel/Makefile.am b/get-kernel/Makefile.am
+index 8692431..bfc1195 100644
+--- a/get-kernel/Makefile.am
++++ b/get-kernel/Makefile.am
+@@ -105,9 +105,9 @@ virt_get_kernel_DEPENDENCIES = \
+ 	../common/mlgettext/mlgettext.$(MLARCHIVE) \
+ 	../common/mlpcre/mlpcre.$(MLARCHIVE) \
+ 	../common/mltools/mltools.$(MLARCHIVE) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ virt_get_kernel_LINK = \
+-	$(top_srcdir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
++	$(top_builddir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLPACKAGES) $(OCAMLLINKFLAGS) \
+ 	  $(OBJECTS) -o $@
+ 
+diff --git a/resize/Makefile.am b/resize/Makefile.am
+index 424eddf..fa88cc6 100644
+--- a/resize/Makefile.am
++++ b/resize/Makefile.am
+@@ -104,9 +104,9 @@ virt_resize_DEPENDENCIES = \
+ 	../common/mlgettext/mlgettext.$(MLARCHIVE) \
+ 	../common/mlpcre/mlpcre.$(MLARCHIVE) \
+ 	../common/mltools/mltools.$(MLARCHIVE) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ virt_resize_LINK = \
+-	$(top_srcdir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
++	$(top_builddir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLPACKAGES) $(OCAMLLINKFLAGS) \
+ 	  $(OBJECTS) -o $@
+ 
+diff --git a/sparsify/Makefile.am b/sparsify/Makefile.am
+index b7aad05..fa964e8 100644
+--- a/sparsify/Makefile.am
++++ b/sparsify/Makefile.am
+@@ -112,9 +112,9 @@ virt_sparsify_DEPENDENCIES = \
+ 	../common/mlgettext/mlgettext.$(MLARCHIVE) \
+ 	../common/mlpcre/mlpcre.$(MLARCHIVE) \
+ 	../common/mltools/mltools.$(MLARCHIVE) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ virt_sparsify_LINK = \
+-	$(top_srcdir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
++	$(top_builddir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLPACKAGES) $(OCAMLLINKFLAGS) \
+ 	  $(OBJECTS) -o $@
+ 
+diff --git a/sysprep/Makefile.am b/sysprep/Makefile.am
+index 3dd7f46..451a347 100644
+--- a/sysprep/Makefile.am
++++ b/sysprep/Makefile.am
+@@ -165,9 +165,9 @@ virt_sysprep_DEPENDENCIES = \
+ 	../common/mltools/mltools.$(MLARCHIVE) \
+ 	../common/mlcustomize/mlcustomize.$(MLARCHIVE) \
+ 	../customize/customize.$(MLARCHIVE) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ virt_sysprep_LINK = \
+-	$(top_srcdir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
++	$(top_builddir)/ocaml-link.sh -cclib '$(OCAMLCLIBS)' -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLPACKAGES) $(OCAMLLINKFLAGS) \
+ 	  $(OBJECTS) -o $@
+ 

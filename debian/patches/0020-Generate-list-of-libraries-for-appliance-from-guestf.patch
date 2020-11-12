@@ -1,0 +1,275 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Sat, 17 Oct 2020 17:38:47 +0200
+Subject: Generate list of libraries for appliance from guestfsd binary
+
+---
+ appliance/Makefile.am    | 25 ++++++++++++++++++++-
+ appliance/packagelist.in | 57 +++---------------------------------------------
+ m4/guestfs-appliance.m4  |  9 ++++++++
+ 3 files changed, 36 insertions(+), 55 deletions(-)
+
+diff --git a/appliance/Makefile.am b/appliance/Makefile.am
+index 8403afe..6795be3 100644
+--- a/appliance/Makefile.am
++++ b/appliance/Makefile.am
+@@ -80,7 +80,29 @@ make.sh: make.sh.in $(top_builddir)/config.log $(top_builddir)/config.status
+ 
+ PACKAGELIST_CPP_FLAGS = -D$(DISTRO)=1 -DEXTRA_PACKAGES="$(EXTRA_PACKAGES)"
+ 
+-packagelist: packagelist.in Makefile
++
++if HAVE_RPM
++QUERY_FILES_CMD := xargs rpm -qf --qf '%{name}\n'
++endif
++if HAVE_DPKG
++QUERY_FILES_CMD := xargs dpkg -S | cut -d: -f1
++endif
++if HAVE_PACMAN
++QUERY_FILES_CMD := xargs pacman -Qo | sed -r 's/.* is owned by ([^ ]+) .*/\1/'
++endif
++
++guestfsd.deps: ../daemon/guestfsd
++	/sbin/ldconfig -p > ld.so.cache.txt
++	objdump -p $^ |\
++		sed -ne '/NEEDED/{s/ *NEEDED *//; p;}' |\
++		xargs -i grep -F {} ld.so.cache.txt |\
++		sed -ne '/ => /{s/.* => *//; p;}' |\
++		$(QUERY_FILES_CMD) |\
++		sort -u > $@.t
++	rm -f ld.so.cache.txt
++	mv $@.t $@
++
++packagelist: packagelist.in Makefile guestfsd.deps
+ 	m4 $(PACKAGELIST_CPP_FLAGS) $< | \
+ 	grep -v '^[[:space:]]*$$' | grep -v '^#' > $@-t
+ 	cmp -s $@ $@-t || mv $@-t $@
+@@ -154,5 +176,6 @@ stamp-libguestfs-make-fixed-appliance.pod: libguestfs-make-fixed-appliance.pod
+ 
+ DISTCLEANFILES += \
+ 	make.sh \
++	guestfsd.deps \
+ 	packagelist \
+ 	supermin.d/*
+diff --git a/appliance/packagelist.in b/appliance/packagelist.in
+index 25e3f80..3bac0a7 100644
+--- a/appliance/packagelist.in
++++ b/appliance/packagelist.in
+@@ -23,7 +23,6 @@ dnl Basically the same with a few minor tweaks.
+ ifelse(UBUNTU,1,`define(`DEBIAN',1)')
+ 
+ ifelse(REDHAT,1,
+-  augeas-libs
+   cryptsetup
+   cryptsetup-luks      dnl old name used before Fedora 17
+   dhclient
+@@ -37,23 +36,17 @@ ifelse(REDHAT,1,
+   iputils
+   jansson
+   kernel
+-  libcap
+-  libldm
+-  libtirpc
+   nilfs-utils
+   ntfsprogs
+   ntfs-3g
+   ntfs-3g-system-compression
+   openssh-clients
+-  pcre
+   policycoreutils
+   reiserfs-utils
+-  libselinux
+   syslinux-extlinux
+   systemd              dnl for /sbin/reboot and udevd
+   vim-minimal
+   xz
+-  yara
+   zfs-fuse
+ )
+ 
+@@ -80,18 +73,7 @@ dnl iproute has been renamed to iproute2
+   iputils-tracepath
+   isc-dhcp-client
+   ldmtool
+-  libaugeas0
+   libc-bin
+-  libcap2
+-  libhivex0
+-  libjansson4
+-  libpcre3
+-  libsystemd0
+-  libsystemd-id128-0
+-  libsystemd-journal0
+-  libtirpc1
+-  libyara4
+-  libyara3
+   linux-image
+   dnl syslinux 'suggests' mtools, but in reality it's a hard dependency:
+   mtools
+@@ -109,7 +91,6 @@ dnl iproute has been renamed to iproute2
+ )
+ 
+ ifelse(ARCHLINUX,1,
+-  augeas
+   cdrkit
+   cdrtools
+   cryptsetup
+@@ -120,8 +101,6 @@ ifelse(ARCHLINUX,1,
+   iproute2
+   iputils
+   jansson
+-  libcap
+-  libtirpc
+   linux
+   lrzip
+   dnl syslinux has mtools as optional dependency, but in reality it's
+@@ -131,16 +110,13 @@ ifelse(ARCHLINUX,1,
+   nilfs-utils
+   ntfs-3g
+   ntfs-3g-system-compression
+-  pcre
+   reiserfsprogs
+   systemd
+   vim
+   xz
+-  yara
+ )
+ 
+ ifelse(SUSE,1,
+-  augeas
+   dnl It seems no other augeas package depends on it.
+   augeas-lenses
+   btrfsprogs
+@@ -155,13 +131,6 @@ ifelse(SUSE,1,
+   initviocons
+   iproute2
+   iputils
+-  libcap2
+-  libhivex0
+-  libjansson4
+-  libselinux1
+-  libtirpc3
+-  libyara4
+-  libyara3
+   mkisofs
+   ntfsprogs
+   ntfs-3g
+@@ -170,11 +139,9 @@ ifelse(SUSE,1,
+   systemd
+   vim
+   xz
+-  yara
+ )
+ 
+ ifelse(FRUGALWARE,1,
+-  augeas
+   cryptsetup-luks
+   cdrkit
+   dhclient
+@@ -184,12 +151,9 @@ ifelse(FRUGALWARE,1,
+   iputils
+   jansson
+   kernel
+-  libcap
+-  libtirpc
+   ntfsprogs
+   ntfs-3g
+   openssh
+-  pcre
+   reiserfsprogs
+   systemd
+   vim
+@@ -200,7 +164,6 @@ ifelse(FRUGALWARE,1,
+ )
+ 
+ ifelse(MAGEIA,1,
+-  augeas
+   cryptsetup
+   chkconfig /* for /etc/init.d */
+   cdrkit-genisoimage
+@@ -213,27 +176,19 @@ ifelse(MAGEIA,1,
+   hivex
+   iproute2
+   iputils
+-  libcap
+-  libjansson4
+-  lib64jansson4 /* lib64jansson4 does not provide libjansson4 */
+-  libldm
+-  libtirpc
+   dnl syslinux uses mtools without depending on it
+   mtools
+   nilfs-utils
+   ntfsprogs
+   ntfs-3g
+   openssh-clients
+-  pcre
+   reiserfs-utils
+-  libselinux
+   systemd /* for /sbin/reboot and udevd */
+   vim-minimal
+   xz
+ )
+ 
+ ifelse(OPENMANDRIVA,1,
+-  augeas
+   cryptsetup
+   chkconfig /* for /etc/init.d */
+   cdrkit-genisoimage
+@@ -241,27 +196,22 @@ ifelse(OPENMANDRIVA,1,
+   dhcp-client
+   extlinux
+   grub2
+-  lib64hivex0
+   hivex
+   iproute2
+   iputils
+-  libcap
+-  libjansson4
+-  lib64jansson4 /* lib64jansson4 does not provide libjansson4 */
+-  libldm
+-  libtirpc
+   dnl syslinux uses mtools without depending on it
+   mtools
+   nilfs-utils
+   ntfs-3g
+   openssh-clients
+-  pcre
+-  libselinux
+   systemd /* for /sbin/reboot and udevd */
+   vim-minimal
+   xz
+ )
+ 
++dnl This file is autogenerated from guestfsd shared library dependencies
++include(guestfsd.deps)
++
+ acl
+ attr
+ bash
+@@ -283,7 +233,6 @@ gzip
+ jfsutils
+ kmod
+ less
+-libxml2
+ lsof
+ lsscsi
+ lvm2
+diff --git a/m4/guestfs-appliance.m4 b/m4/guestfs-appliance.m4
+index 3cb7f5b..d55f65d 100644
+--- a/m4/guestfs-appliance.m4
++++ b/m4/guestfs-appliance.m4
+@@ -114,6 +114,15 @@ AC_ARG_WITH([distro],
+             AC_MSG_ERROR([/etc/os-release not available, please specify the distro using --with-distro=DISTRO])
+         fi
+     ]
++    AM_CONDITIONAL([HAVE_RPM],
++        [AS_CASE([$DISTRO], [REDHAT | SUSE | OPENMANDRIVA | MAGEIA ], [true],
++                            [*], [false])])
++    AM_CONDITIONAL([HAVE_DPKG],
++        [AS_CASE([$DISTRO], [DEBIAN | UBUNTU | RASPBIAN ], [true],
++                            [*], [false])])
++    AM_CONDITIONAL([HAVE_PACMAN],
++        [AS_CASE([$DISTRO], [ARCHLINUX | FRUGALWARE ], [true],
++                            [*], [false])])
+ )
+ AC_SUBST([DISTRO])
+ 
