@@ -78,7 +78,7 @@ endif
 
 .po.gmo:
 	rm -f $@ $@-t
-	$(MSGFMT) -c -o $@-t $(srcdir)/$<
+	$(MSGFMT) -c -o $@-t $<
 	mv $@-t $@
 
 # Install.
