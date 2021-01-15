@@ -29,1258 +29,1260 @@
 #include <string.h>
 #include <errno.h>
 
-#include <erl_interface.h>
-/* We should switch over to using
-  #include <ei.h>
-instead of erl_interface.
-*/
+#include <ei.h>
 
 #include "guestfs.h"
 #include "guestfs-utils.h"
 
 #include "actions.h"
 
-ETERM *
-dispatch (ETERM *args_tuple)
+int
+dispatch (ei_x_buff *retbuff, const char *buff, int *index)
 {
-  ETERM *fun;
+  int arity;
+  char fun[MAXATOMLEN];
 
-  fun = ERL_TUPLE_ELEMENT (args_tuple, 0);
+  if (ei_decode_tuple_header (buff, index, &arity) != 0) return -1;
+  if (ei_decode_atom (buff, index, fun) != 0) return -1;
 
   /* XXX We should use gperf here. */
   if (atom_equals (fun, "acl_delete_def_file"))
-    return run_acl_delete_def_file (args_tuple);
+    return run_acl_delete_def_file (retbuff, buff, index);
   else if (atom_equals (fun, "acl_get_file"))
-    return run_acl_get_file (args_tuple);
+    return run_acl_get_file (retbuff, buff, index);
   else if (atom_equals (fun, "acl_set_file"))
-    return run_acl_set_file (args_tuple);
+    return run_acl_set_file (retbuff, buff, index);
   else if (atom_equals (fun, "add_cdrom"))
-    return run_add_cdrom (args_tuple);
+    return run_add_cdrom (retbuff, buff, index);
   else if (atom_equals (fun, "add_domain"))
-    return run_add_domain (args_tuple);
+    return run_add_domain (retbuff, buff, index);
   else if (atom_equals (fun, "add_drive"))
-    return run_add_drive (args_tuple);
+    return run_add_drive (retbuff, buff, index);
   else if (atom_equals (fun, "add_drive_ro"))
-    return run_add_drive_ro (args_tuple);
+    return run_add_drive_ro (retbuff, buff, index);
   else if (atom_equals (fun, "add_drive_ro_with_if"))
-    return run_add_drive_ro_with_if (args_tuple);
+    return run_add_drive_ro_with_if (retbuff, buff, index);
   else if (atom_equals (fun, "add_drive_scratch"))
-    return run_add_drive_scratch (args_tuple);
+    return run_add_drive_scratch (retbuff, buff, index);
   else if (atom_equals (fun, "add_drive_with_if"))
-    return run_add_drive_with_if (args_tuple);
+    return run_add_drive_with_if (retbuff, buff, index);
   else if (atom_equals (fun, "add_libvirt_dom"))
-    return run_add_libvirt_dom (args_tuple);
+    return run_add_libvirt_dom (retbuff, buff, index);
   else if (atom_equals (fun, "aug_clear"))
-    return run_aug_clear (args_tuple);
+    return run_aug_clear (retbuff, buff, index);
   else if (atom_equals (fun, "aug_close"))
-    return run_aug_close (args_tuple);
+    return run_aug_close (retbuff, buff, index);
   else if (atom_equals (fun, "aug_defnode"))
-    return run_aug_defnode (args_tuple);
+    return run_aug_defnode (retbuff, buff, index);
   else if (atom_equals (fun, "aug_defvar"))
-    return run_aug_defvar (args_tuple);
+    return run_aug_defvar (retbuff, buff, index);
   else if (atom_equals (fun, "aug_get"))
-    return run_aug_get (args_tuple);
+    return run_aug_get (retbuff, buff, index);
   else if (atom_equals (fun, "aug_init"))
-    return run_aug_init (args_tuple);
+    return run_aug_init (retbuff, buff, index);
   else if (atom_equals (fun, "aug_insert"))
-    return run_aug_insert (args_tuple);
+    return run_aug_insert (retbuff, buff, index);
   else if (atom_equals (fun, "aug_label"))
-    return run_aug_label (args_tuple);
+    return run_aug_label (retbuff, buff, index);
   else if (atom_equals (fun, "aug_load"))
-    return run_aug_load (args_tuple);
+    return run_aug_load (retbuff, buff, index);
   else if (atom_equals (fun, "aug_ls"))
-    return run_aug_ls (args_tuple);
+    return run_aug_ls (retbuff, buff, index);
   else if (atom_equals (fun, "aug_match"))
-    return run_aug_match (args_tuple);
+    return run_aug_match (retbuff, buff, index);
   else if (atom_equals (fun, "aug_mv"))
-    return run_aug_mv (args_tuple);
+    return run_aug_mv (retbuff, buff, index);
   else if (atom_equals (fun, "aug_rm"))
-    return run_aug_rm (args_tuple);
+    return run_aug_rm (retbuff, buff, index);
   else if (atom_equals (fun, "aug_save"))
-    return run_aug_save (args_tuple);
+    return run_aug_save (retbuff, buff, index);
   else if (atom_equals (fun, "aug_set"))
-    return run_aug_set (args_tuple);
+    return run_aug_set (retbuff, buff, index);
   else if (atom_equals (fun, "aug_setm"))
-    return run_aug_setm (args_tuple);
+    return run_aug_setm (retbuff, buff, index);
   else if (atom_equals (fun, "aug_transform"))
-    return run_aug_transform (args_tuple);
+    return run_aug_transform (retbuff, buff, index);
   else if (atom_equals (fun, "available"))
-    return run_available (args_tuple);
+    return run_available (retbuff, buff, index);
   else if (atom_equals (fun, "available_all_groups"))
-    return run_available_all_groups (args_tuple);
+    return run_available_all_groups (retbuff, buff, index);
   else if (atom_equals (fun, "base64_in"))
-    return run_base64_in (args_tuple);
+    return run_base64_in (retbuff, buff, index);
   else if (atom_equals (fun, "base64_out"))
-    return run_base64_out (args_tuple);
+    return run_base64_out (retbuff, buff, index);
   else if (atom_equals (fun, "blkdiscard"))
-    return run_blkdiscard (args_tuple);
+    return run_blkdiscard (retbuff, buff, index);
   else if (atom_equals (fun, "blkdiscardzeroes"))
-    return run_blkdiscardzeroes (args_tuple);
+    return run_blkdiscardzeroes (retbuff, buff, index);
   else if (atom_equals (fun, "blkid"))
-    return run_blkid (args_tuple);
+    return run_blkid (retbuff, buff, index);
   else if (atom_equals (fun, "blockdev_flushbufs"))
-    return run_blockdev_flushbufs (args_tuple);
+    return run_blockdev_flushbufs (retbuff, buff, index);
   else if (atom_equals (fun, "blockdev_getbsz"))
-    return run_blockdev_getbsz (args_tuple);
+    return run_blockdev_getbsz (retbuff, buff, index);
   else if (atom_equals (fun, "blockdev_getro"))
-    return run_blockdev_getro (args_tuple);
+    return run_blockdev_getro (retbuff, buff, index);
   else if (atom_equals (fun, "blockdev_getsize64"))
-    return run_blockdev_getsize64 (args_tuple);
+    return run_blockdev_getsize64 (retbuff, buff, index);
   else if (atom_equals (fun, "blockdev_getss"))
-    return run_blockdev_getss (args_tuple);
+    return run_blockdev_getss (retbuff, buff, index);
   else if (atom_equals (fun, "blockdev_getsz"))
-    return run_blockdev_getsz (args_tuple);
+    return run_blockdev_getsz (retbuff, buff, index);
   else if (atom_equals (fun, "blockdev_rereadpt"))
-    return run_blockdev_rereadpt (args_tuple);
+    return run_blockdev_rereadpt (retbuff, buff, index);
   else if (atom_equals (fun, "blockdev_setbsz"))
-    return run_blockdev_setbsz (args_tuple);
+    return run_blockdev_setbsz (retbuff, buff, index);
   else if (atom_equals (fun, "blockdev_setra"))
-    return run_blockdev_setra (args_tuple);
+    return run_blockdev_setra (retbuff, buff, index);
   else if (atom_equals (fun, "blockdev_setro"))
-    return run_blockdev_setro (args_tuple);
+    return run_blockdev_setro (retbuff, buff, index);
   else if (atom_equals (fun, "blockdev_setrw"))
-    return run_blockdev_setrw (args_tuple);
+    return run_blockdev_setrw (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_balance_cancel"))
-    return run_btrfs_balance_cancel (args_tuple);
+    return run_btrfs_balance_cancel (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_balance_pause"))
-    return run_btrfs_balance_pause (args_tuple);
+    return run_btrfs_balance_pause (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_balance_resume"))
-    return run_btrfs_balance_resume (args_tuple);
+    return run_btrfs_balance_resume (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_balance_status"))
-    return run_btrfs_balance_status (args_tuple);
+    return run_btrfs_balance_status (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_device_add"))
-    return run_btrfs_device_add (args_tuple);
+    return run_btrfs_device_add (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_device_delete"))
-    return run_btrfs_device_delete (args_tuple);
+    return run_btrfs_device_delete (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_filesystem_balance"))
-    return run_btrfs_filesystem_balance (args_tuple);
+    return run_btrfs_filesystem_balance (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_filesystem_defragment"))
-    return run_btrfs_filesystem_defragment (args_tuple);
+    return run_btrfs_filesystem_defragment (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_filesystem_resize"))
-    return run_btrfs_filesystem_resize (args_tuple);
+    return run_btrfs_filesystem_resize (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_filesystem_show"))
-    return run_btrfs_filesystem_show (args_tuple);
+    return run_btrfs_filesystem_show (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_filesystem_sync"))
-    return run_btrfs_filesystem_sync (args_tuple);
+    return run_btrfs_filesystem_sync (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_fsck"))
-    return run_btrfs_fsck (args_tuple);
+    return run_btrfs_fsck (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_image"))
-    return run_btrfs_image (args_tuple);
+    return run_btrfs_image (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_qgroup_assign"))
-    return run_btrfs_qgroup_assign (args_tuple);
+    return run_btrfs_qgroup_assign (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_qgroup_create"))
-    return run_btrfs_qgroup_create (args_tuple);
+    return run_btrfs_qgroup_create (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_qgroup_destroy"))
-    return run_btrfs_qgroup_destroy (args_tuple);
+    return run_btrfs_qgroup_destroy (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_qgroup_limit"))
-    return run_btrfs_qgroup_limit (args_tuple);
+    return run_btrfs_qgroup_limit (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_qgroup_remove"))
-    return run_btrfs_qgroup_remove (args_tuple);
+    return run_btrfs_qgroup_remove (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_qgroup_show"))
-    return run_btrfs_qgroup_show (args_tuple);
+    return run_btrfs_qgroup_show (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_quota_enable"))
-    return run_btrfs_quota_enable (args_tuple);
+    return run_btrfs_quota_enable (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_quota_rescan"))
-    return run_btrfs_quota_rescan (args_tuple);
+    return run_btrfs_quota_rescan (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_replace"))
-    return run_btrfs_replace (args_tuple);
+    return run_btrfs_replace (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_rescue_chunk_recover"))
-    return run_btrfs_rescue_chunk_recover (args_tuple);
+    return run_btrfs_rescue_chunk_recover (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_rescue_super_recover"))
-    return run_btrfs_rescue_super_recover (args_tuple);
+    return run_btrfs_rescue_super_recover (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_scrub_cancel"))
-    return run_btrfs_scrub_cancel (args_tuple);
+    return run_btrfs_scrub_cancel (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_scrub_resume"))
-    return run_btrfs_scrub_resume (args_tuple);
+    return run_btrfs_scrub_resume (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_scrub_start"))
-    return run_btrfs_scrub_start (args_tuple);
+    return run_btrfs_scrub_start (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_scrub_status"))
-    return run_btrfs_scrub_status (args_tuple);
+    return run_btrfs_scrub_status (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_set_seeding"))
-    return run_btrfs_set_seeding (args_tuple);
+    return run_btrfs_set_seeding (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_subvolume_create"))
-    return run_btrfs_subvolume_create (args_tuple);
+    return run_btrfs_subvolume_create (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_subvolume_delete"))
-    return run_btrfs_subvolume_delete (args_tuple);
+    return run_btrfs_subvolume_delete (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_subvolume_get_default"))
-    return run_btrfs_subvolume_get_default (args_tuple);
+    return run_btrfs_subvolume_get_default (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_subvolume_list"))
-    return run_btrfs_subvolume_list (args_tuple);
+    return run_btrfs_subvolume_list (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_subvolume_set_default"))
-    return run_btrfs_subvolume_set_default (args_tuple);
+    return run_btrfs_subvolume_set_default (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_subvolume_show"))
-    return run_btrfs_subvolume_show (args_tuple);
+    return run_btrfs_subvolume_show (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_subvolume_snapshot"))
-    return run_btrfs_subvolume_snapshot (args_tuple);
+    return run_btrfs_subvolume_snapshot (retbuff, buff, index);
   else if (atom_equals (fun, "btrfstune_enable_extended_inode_refs"))
-    return run_btrfstune_enable_extended_inode_refs (args_tuple);
+    return run_btrfstune_enable_extended_inode_refs (retbuff, buff, index);
   else if (atom_equals (fun, "btrfstune_enable_skinny_metadata_extent_refs"))
-    return run_btrfstune_enable_skinny_metadata_extent_refs (args_tuple);
+    return run_btrfstune_enable_skinny_metadata_extent_refs (retbuff, buff, index);
   else if (atom_equals (fun, "btrfstune_seeding"))
-    return run_btrfstune_seeding (args_tuple);
+    return run_btrfstune_seeding (retbuff, buff, index);
   else if (atom_equals (fun, "c_pointer"))
-    return run_c_pointer (args_tuple);
+    return run_c_pointer (retbuff, buff, index);
   else if (atom_equals (fun, "canonical_device_name"))
-    return run_canonical_device_name (args_tuple);
+    return run_canonical_device_name (retbuff, buff, index);
   else if (atom_equals (fun, "cap_get_file"))
-    return run_cap_get_file (args_tuple);
+    return run_cap_get_file (retbuff, buff, index);
   else if (atom_equals (fun, "cap_set_file"))
-    return run_cap_set_file (args_tuple);
+    return run_cap_set_file (retbuff, buff, index);
   else if (atom_equals (fun, "case_sensitive_path"))
-    return run_case_sensitive_path (args_tuple);
+    return run_case_sensitive_path (retbuff, buff, index);
   else if (atom_equals (fun, "cat"))
-    return run_cat (args_tuple);
+    return run_cat (retbuff, buff, index);
   else if (atom_equals (fun, "checksum"))
-    return run_checksum (args_tuple);
+    return run_checksum (retbuff, buff, index);
   else if (atom_equals (fun, "checksum_device"))
-    return run_checksum_device (args_tuple);
+    return run_checksum_device (retbuff, buff, index);
   else if (atom_equals (fun, "checksums_out"))
-    return run_checksums_out (args_tuple);
+    return run_checksums_out (retbuff, buff, index);
   else if (atom_equals (fun, "chmod"))
-    return run_chmod (args_tuple);
+    return run_chmod (retbuff, buff, index);
   else if (atom_equals (fun, "chown"))
-    return run_chown (args_tuple);
+    return run_chown (retbuff, buff, index);
   else if (atom_equals (fun, "clear_backend_setting"))
-    return run_clear_backend_setting (args_tuple);
+    return run_clear_backend_setting (retbuff, buff, index);
   else if (atom_equals (fun, "command"))
-    return run_command (args_tuple);
+    return run_command (retbuff, buff, index);
   else if (atom_equals (fun, "command_lines"))
-    return run_command_lines (args_tuple);
+    return run_command_lines (retbuff, buff, index);
   else if (atom_equals (fun, "compress_device_out"))
-    return run_compress_device_out (args_tuple);
+    return run_compress_device_out (retbuff, buff, index);
   else if (atom_equals (fun, "compress_out"))
-    return run_compress_out (args_tuple);
+    return run_compress_out (retbuff, buff, index);
   else if (atom_equals (fun, "config"))
-    return run_config (args_tuple);
+    return run_config (retbuff, buff, index);
   else if (atom_equals (fun, "copy_attributes"))
-    return run_copy_attributes (args_tuple);
+    return run_copy_attributes (retbuff, buff, index);
   else if (atom_equals (fun, "copy_device_to_device"))
-    return run_copy_device_to_device (args_tuple);
+    return run_copy_device_to_device (retbuff, buff, index);
   else if (atom_equals (fun, "copy_device_to_file"))
-    return run_copy_device_to_file (args_tuple);
+    return run_copy_device_to_file (retbuff, buff, index);
   else if (atom_equals (fun, "copy_file_to_device"))
-    return run_copy_file_to_device (args_tuple);
+    return run_copy_file_to_device (retbuff, buff, index);
   else if (atom_equals (fun, "copy_file_to_file"))
-    return run_copy_file_to_file (args_tuple);
+    return run_copy_file_to_file (retbuff, buff, index);
   else if (atom_equals (fun, "copy_in"))
-    return run_copy_in (args_tuple);
+    return run_copy_in (retbuff, buff, index);
   else if (atom_equals (fun, "copy_out"))
-    return run_copy_out (args_tuple);
+    return run_copy_out (retbuff, buff, index);
   else if (atom_equals (fun, "copy_size"))
-    return run_copy_size (args_tuple);
+    return run_copy_size (retbuff, buff, index);
   else if (atom_equals (fun, "cp"))
-    return run_cp (args_tuple);
+    return run_cp (retbuff, buff, index);
   else if (atom_equals (fun, "cp_a"))
-    return run_cp_a (args_tuple);
+    return run_cp_a (retbuff, buff, index);
   else if (atom_equals (fun, "cp_r"))
-    return run_cp_r (args_tuple);
+    return run_cp_r (retbuff, buff, index);
   else if (atom_equals (fun, "cpio_out"))
-    return run_cpio_out (args_tuple);
+    return run_cpio_out (retbuff, buff, index);
+  else if (atom_equals (fun, "cryptsetup_close"))
+    return run_cryptsetup_close (retbuff, buff, index);
+  else if (atom_equals (fun, "cryptsetup_open"))
+    return run_cryptsetup_open (retbuff, buff, index);
   else if (atom_equals (fun, "dd"))
-    return run_dd (args_tuple);
+    return run_dd (retbuff, buff, index);
   else if (atom_equals (fun, "debug"))
-    return run_debug (args_tuple);
+    return run_debug (retbuff, buff, index);
   else if (atom_equals (fun, "debug_drives"))
-    return run_debug_drives (args_tuple);
+    return run_debug_drives (retbuff, buff, index);
   else if (atom_equals (fun, "debug_upload"))
-    return run_debug_upload (args_tuple);
+    return run_debug_upload (retbuff, buff, index);
   else if (atom_equals (fun, "device_index"))
-    return run_device_index (args_tuple);
+    return run_device_index (retbuff, buff, index);
   else if (atom_equals (fun, "df"))
-    return run_df (args_tuple);
+    return run_df (retbuff, buff, index);
   else if (atom_equals (fun, "df_h"))
-    return run_df_h (args_tuple);
+    return run_df_h (retbuff, buff, index);
   else if (atom_equals (fun, "disk_create"))
-    return run_disk_create (args_tuple);
+    return run_disk_create (retbuff, buff, index);
   else if (atom_equals (fun, "disk_format"))
-    return run_disk_format (args_tuple);
+    return run_disk_format (retbuff, buff, index);
   else if (atom_equals (fun, "disk_has_backing_file"))
-    return run_disk_has_backing_file (args_tuple);
+    return run_disk_has_backing_file (retbuff, buff, index);
   else if (atom_equals (fun, "disk_virtual_size"))
-    return run_disk_virtual_size (args_tuple);
+    return run_disk_virtual_size (retbuff, buff, index);
   else if (atom_equals (fun, "dmesg"))
-    return run_dmesg (args_tuple);
+    return run_dmesg (retbuff, buff, index);
   else if (atom_equals (fun, "download"))
-    return run_download (args_tuple);
+    return run_download (retbuff, buff, index);
   else if (atom_equals (fun, "download_blocks"))
-    return run_download_blocks (args_tuple);
+    return run_download_blocks (retbuff, buff, index);
   else if (atom_equals (fun, "download_inode"))
-    return run_download_inode (args_tuple);
+    return run_download_inode (retbuff, buff, index);
   else if (atom_equals (fun, "download_offset"))
-    return run_download_offset (args_tuple);
+    return run_download_offset (retbuff, buff, index);
   else if (atom_equals (fun, "drop_caches"))
-    return run_drop_caches (args_tuple);
+    return run_drop_caches (retbuff, buff, index);
   else if (atom_equals (fun, "du"))
-    return run_du (args_tuple);
+    return run_du (retbuff, buff, index);
   else if (atom_equals (fun, "e2fsck"))
-    return run_e2fsck (args_tuple);
+    return run_e2fsck (retbuff, buff, index);
   else if (atom_equals (fun, "e2fsck_f"))
-    return run_e2fsck_f (args_tuple);
+    return run_e2fsck_f (retbuff, buff, index);
   else if (atom_equals (fun, "echo_daemon"))
-    return run_echo_daemon (args_tuple);
+    return run_echo_daemon (retbuff, buff, index);
   else if (atom_equals (fun, "egrep"))
-    return run_egrep (args_tuple);
+    return run_egrep (retbuff, buff, index);
   else if (atom_equals (fun, "egrepi"))
-    return run_egrepi (args_tuple);
+    return run_egrepi (retbuff, buff, index);
   else if (atom_equals (fun, "equal"))
-    return run_equal (args_tuple);
+    return run_equal (retbuff, buff, index);
   else if (atom_equals (fun, "exists"))
-    return run_exists (args_tuple);
+    return run_exists (retbuff, buff, index);
   else if (atom_equals (fun, "extlinux"))
-    return run_extlinux (args_tuple);
+    return run_extlinux (retbuff, buff, index);
   else if (atom_equals (fun, "f2fs_expand"))
-    return run_f2fs_expand (args_tuple);
+    return run_f2fs_expand (retbuff, buff, index);
   else if (atom_equals (fun, "fallocate"))
-    return run_fallocate (args_tuple);
+    return run_fallocate (retbuff, buff, index);
   else if (atom_equals (fun, "fallocate64"))
-    return run_fallocate64 (args_tuple);
+    return run_fallocate64 (retbuff, buff, index);
   else if (atom_equals (fun, "feature_available"))
-    return run_feature_available (args_tuple);
+    return run_feature_available (retbuff, buff, index);
   else if (atom_equals (fun, "fgrep"))
-    return run_fgrep (args_tuple);
+    return run_fgrep (retbuff, buff, index);
   else if (atom_equals (fun, "fgrepi"))
-    return run_fgrepi (args_tuple);
+    return run_fgrepi (retbuff, buff, index);
   else if (atom_equals (fun, "file"))
-    return run_file (args_tuple);
+    return run_file (retbuff, buff, index);
   else if (atom_equals (fun, "file_architecture"))
-    return run_file_architecture (args_tuple);
+    return run_file_architecture (retbuff, buff, index);
   else if (atom_equals (fun, "filesize"))
-    return run_filesize (args_tuple);
+    return run_filesize (retbuff, buff, index);
   else if (atom_equals (fun, "filesystem_available"))
-    return run_filesystem_available (args_tuple);
+    return run_filesystem_available (retbuff, buff, index);
   else if (atom_equals (fun, "filesystem_walk"))
-    return run_filesystem_walk (args_tuple);
+    return run_filesystem_walk (retbuff, buff, index);
   else if (atom_equals (fun, "fill"))
-    return run_fill (args_tuple);
+    return run_fill (retbuff, buff, index);
   else if (atom_equals (fun, "fill_dir"))
-    return run_fill_dir (args_tuple);
+    return run_fill_dir (retbuff, buff, index);
   else if (atom_equals (fun, "fill_pattern"))
-    return run_fill_pattern (args_tuple);
+    return run_fill_pattern (retbuff, buff, index);
   else if (atom_equals (fun, "find"))
-    return run_find (args_tuple);
+    return run_find (retbuff, buff, index);
   else if (atom_equals (fun, "find0"))
-    return run_find0 (args_tuple);
+    return run_find0 (retbuff, buff, index);
   else if (atom_equals (fun, "find_inode"))
-    return run_find_inode (args_tuple);
+    return run_find_inode (retbuff, buff, index);
   else if (atom_equals (fun, "findfs_label"))
-    return run_findfs_label (args_tuple);
+    return run_findfs_label (retbuff, buff, index);
   else if (atom_equals (fun, "findfs_uuid"))
-    return run_findfs_uuid (args_tuple);
+    return run_findfs_uuid (retbuff, buff, index);
   else if (atom_equals (fun, "fsck"))
-    return run_fsck (args_tuple);
+    return run_fsck (retbuff, buff, index);
   else if (atom_equals (fun, "fstrim"))
-    return run_fstrim (args_tuple);
+    return run_fstrim (retbuff, buff, index);
   else if (atom_equals (fun, "get_append"))
-    return run_get_append (args_tuple);
+    return run_get_append (retbuff, buff, index);
   else if (atom_equals (fun, "get_attach_method"))
-    return run_get_attach_method (args_tuple);
+    return run_get_attach_method (retbuff, buff, index);
   else if (atom_equals (fun, "get_autosync"))
-    return run_get_autosync (args_tuple);
+    return run_get_autosync (retbuff, buff, index);
   else if (atom_equals (fun, "get_backend"))
-    return run_get_backend (args_tuple);
+    return run_get_backend (retbuff, buff, index);
   else if (atom_equals (fun, "get_backend_setting"))
-    return run_get_backend_setting (args_tuple);
+    return run_get_backend_setting (retbuff, buff, index);
   else if (atom_equals (fun, "get_backend_settings"))
-    return run_get_backend_settings (args_tuple);
+    return run_get_backend_settings (retbuff, buff, index);
   else if (atom_equals (fun, "get_cachedir"))
-    return run_get_cachedir (args_tuple);
+    return run_get_cachedir (retbuff, buff, index);
   else if (atom_equals (fun, "get_direct"))
-    return run_get_direct (args_tuple);
+    return run_get_direct (retbuff, buff, index);
   else if (atom_equals (fun, "get_e2attrs"))
-    return run_get_e2attrs (args_tuple);
+    return run_get_e2attrs (retbuff, buff, index);
   else if (atom_equals (fun, "get_e2generation"))
-    return run_get_e2generation (args_tuple);
+    return run_get_e2generation (retbuff, buff, index);
   else if (atom_equals (fun, "get_e2label"))
-    return run_get_e2label (args_tuple);
+    return run_get_e2label (retbuff, buff, index);
   else if (atom_equals (fun, "get_e2uuid"))
-    return run_get_e2uuid (args_tuple);
+    return run_get_e2uuid (retbuff, buff, index);
   else if (atom_equals (fun, "get_hv"))
-    return run_get_hv (args_tuple);
+    return run_get_hv (retbuff, buff, index);
   else if (atom_equals (fun, "get_identifier"))
-    return run_get_identifier (args_tuple);
+    return run_get_identifier (retbuff, buff, index);
   else if (atom_equals (fun, "get_libvirt_requested_credential_challenge"))
-    return run_get_libvirt_requested_credential_challenge (args_tuple);
+    return run_get_libvirt_requested_credential_challenge (retbuff, buff, index);
   else if (atom_equals (fun, "get_libvirt_requested_credential_defresult"))
-    return run_get_libvirt_requested_credential_defresult (args_tuple);
+    return run_get_libvirt_requested_credential_defresult (retbuff, buff, index);
   else if (atom_equals (fun, "get_libvirt_requested_credential_prompt"))
-    return run_get_libvirt_requested_credential_prompt (args_tuple);
+    return run_get_libvirt_requested_credential_prompt (retbuff, buff, index);
   else if (atom_equals (fun, "get_libvirt_requested_credentials"))
-    return run_get_libvirt_requested_credentials (args_tuple);
+    return run_get_libvirt_requested_credentials (retbuff, buff, index);
   else if (atom_equals (fun, "get_memsize"))
-    return run_get_memsize (args_tuple);
+    return run_get_memsize (retbuff, buff, index);
   else if (atom_equals (fun, "get_network"))
-    return run_get_network (args_tuple);
+    return run_get_network (retbuff, buff, index);
   else if (atom_equals (fun, "get_path"))
-    return run_get_path (args_tuple);
+    return run_get_path (retbuff, buff, index);
   else if (atom_equals (fun, "get_pgroup"))
-    return run_get_pgroup (args_tuple);
+    return run_get_pgroup (retbuff, buff, index);
   else if (atom_equals (fun, "get_pid"))
-    return run_get_pid (args_tuple);
+    return run_get_pid (retbuff, buff, index);
   else if (atom_equals (fun, "get_program"))
-    return run_get_program (args_tuple);
+    return run_get_program (retbuff, buff, index);
   else if (atom_equals (fun, "get_qemu"))
-    return run_get_qemu (args_tuple);
+    return run_get_qemu (retbuff, buff, index);
   else if (atom_equals (fun, "get_recovery_proc"))
-    return run_get_recovery_proc (args_tuple);
+    return run_get_recovery_proc (retbuff, buff, index);
   else if (atom_equals (fun, "get_selinux"))
-    return run_get_selinux (args_tuple);
+    return run_get_selinux (retbuff, buff, index);
   else if (atom_equals (fun, "get_smp"))
-    return run_get_smp (args_tuple);
+    return run_get_smp (retbuff, buff, index);
   else if (atom_equals (fun, "get_sockdir"))
-    return run_get_sockdir (args_tuple);
+    return run_get_sockdir (retbuff, buff, index);
   else if (atom_equals (fun, "get_state"))
-    return run_get_state (args_tuple);
+    return run_get_state (retbuff, buff, index);
   else if (atom_equals (fun, "get_tmpdir"))
-    return run_get_tmpdir (args_tuple);
+    return run_get_tmpdir (retbuff, buff, index);
   else if (atom_equals (fun, "get_trace"))
-    return run_get_trace (args_tuple);
+    return run_get_trace (retbuff, buff, index);
   else if (atom_equals (fun, "get_umask"))
-    return run_get_umask (args_tuple);
+    return run_get_umask (retbuff, buff, index);
   else if (atom_equals (fun, "get_verbose"))
-    return run_get_verbose (args_tuple);
+    return run_get_verbose (retbuff, buff, index);
   else if (atom_equals (fun, "getcon"))
-    return run_getcon (args_tuple);
+    return run_getcon (retbuff, buff, index);
   else if (atom_equals (fun, "getxattr"))
-    return run_getxattr (args_tuple);
+    return run_getxattr (retbuff, buff, index);
   else if (atom_equals (fun, "getxattrs"))
-    return run_getxattrs (args_tuple);
+    return run_getxattrs (retbuff, buff, index);
   else if (atom_equals (fun, "glob_expand"))
-    return run_glob_expand (args_tuple);
+    return run_glob_expand (retbuff, buff, index);
   else if (atom_equals (fun, "grep"))
-    return run_grep (args_tuple);
+    return run_grep (retbuff, buff, index);
   else if (atom_equals (fun, "grepi"))
-    return run_grepi (args_tuple);
+    return run_grepi (retbuff, buff, index);
   else if (atom_equals (fun, "grub_install"))
-    return run_grub_install (args_tuple);
+    return run_grub_install (retbuff, buff, index);
   else if (atom_equals (fun, "head"))
-    return run_head (args_tuple);
+    return run_head (retbuff, buff, index);
   else if (atom_equals (fun, "head_n"))
-    return run_head_n (args_tuple);
+    return run_head_n (retbuff, buff, index);
   else if (atom_equals (fun, "hexdump"))
-    return run_hexdump (args_tuple);
+    return run_hexdump (retbuff, buff, index);
   else if (atom_equals (fun, "hivex_close"))
-    return run_hivex_close (args_tuple);
+    return run_hivex_close (retbuff, buff, index);
   else if (atom_equals (fun, "hivex_commit"))
-    return run_hivex_commit (args_tuple);
+    return run_hivex_commit (retbuff, buff, index);
   else if (atom_equals (fun, "hivex_node_add_child"))
-    return run_hivex_node_add_child (args_tuple);
+    return run_hivex_node_add_child (retbuff, buff, index);
   else if (atom_equals (fun, "hivex_node_children"))
-    return run_hivex_node_children (args_tuple);
+    return run_hivex_node_children (retbuff, buff, index);
   else if (atom_equals (fun, "hivex_node_delete_child"))
-    return run_hivex_node_delete_child (args_tuple);
+    return run_hivex_node_delete_child (retbuff, buff, index);
   else if (atom_equals (fun, "hivex_node_get_child"))
-    return run_hivex_node_get_child (args_tuple);
+    return run_hivex_node_get_child (retbuff, buff, index);
   else if (atom_equals (fun, "hivex_node_get_value"))
-    return run_hivex_node_get_value (args_tuple);
+    return run_hivex_node_get_value (retbuff, buff, index);
   else if (atom_equals (fun, "hivex_node_name"))
-    return run_hivex_node_name (args_tuple);
+    return run_hivex_node_name (retbuff, buff, index);
   else if (atom_equals (fun, "hivex_node_parent"))
-    return run_hivex_node_parent (args_tuple);
+    return run_hivex_node_parent (retbuff, buff, index);
   else if (atom_equals (fun, "hivex_node_set_value"))
-    return run_hivex_node_set_value (args_tuple);
+    return run_hivex_node_set_value (retbuff, buff, index);
   else if (atom_equals (fun, "hivex_node_values"))
-    return run_hivex_node_values (args_tuple);
+    return run_hivex_node_values (retbuff, buff, index);
   else if (atom_equals (fun, "hivex_open"))
-    return run_hivex_open (args_tuple);
+    return run_hivex_open (retbuff, buff, index);
   else if (atom_equals (fun, "hivex_root"))
-    return run_hivex_root (args_tuple);
+    return run_hivex_root (retbuff, buff, index);
   else if (atom_equals (fun, "hivex_value_key"))
-    return run_hivex_value_key (args_tuple);
+    return run_hivex_value_key (retbuff, buff, index);
   else if (atom_equals (fun, "hivex_value_string"))
-    return run_hivex_value_string (args_tuple);
+    return run_hivex_value_string (retbuff, buff, index);
   else if (atom_equals (fun, "hivex_value_type"))
-    return run_hivex_value_type (args_tuple);
+    return run_hivex_value_type (retbuff, buff, index);
   else if (atom_equals (fun, "hivex_value_utf8"))
-    return run_hivex_value_utf8 (args_tuple);
+    return run_hivex_value_utf8 (retbuff, buff, index);
   else if (atom_equals (fun, "hivex_value_value"))
-    return run_hivex_value_value (args_tuple);
+    return run_hivex_value_value (retbuff, buff, index);
   else if (atom_equals (fun, "initrd_cat"))
-    return run_initrd_cat (args_tuple);
+    return run_initrd_cat (retbuff, buff, index);
   else if (atom_equals (fun, "initrd_list"))
-    return run_initrd_list (args_tuple);
+    return run_initrd_list (retbuff, buff, index);
   else if (atom_equals (fun, "inotify_add_watch"))
-    return run_inotify_add_watch (args_tuple);
+    return run_inotify_add_watch (retbuff, buff, index);
   else if (atom_equals (fun, "inotify_close"))
-    return run_inotify_close (args_tuple);
+    return run_inotify_close (retbuff, buff, index);
   else if (atom_equals (fun, "inotify_files"))
-    return run_inotify_files (args_tuple);
+    return run_inotify_files (retbuff, buff, index);
   else if (atom_equals (fun, "inotify_init"))
-    return run_inotify_init (args_tuple);
+    return run_inotify_init (retbuff, buff, index);
   else if (atom_equals (fun, "inotify_read"))
-    return run_inotify_read (args_tuple);
+    return run_inotify_read (retbuff, buff, index);
   else if (atom_equals (fun, "inotify_rm_watch"))
-    return run_inotify_rm_watch (args_tuple);
+    return run_inotify_rm_watch (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_arch"))
-    return run_inspect_get_arch (args_tuple);
+    return run_inspect_get_arch (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_distro"))
-    return run_inspect_get_distro (args_tuple);
+    return run_inspect_get_distro (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_drive_mappings"))
-    return run_inspect_get_drive_mappings (args_tuple);
+    return run_inspect_get_drive_mappings (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_filesystems"))
-    return run_inspect_get_filesystems (args_tuple);
+    return run_inspect_get_filesystems (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_format"))
-    return run_inspect_get_format (args_tuple);
+    return run_inspect_get_format (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_hostname"))
-    return run_inspect_get_hostname (args_tuple);
+    return run_inspect_get_hostname (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_icon"))
-    return run_inspect_get_icon (args_tuple);
+    return run_inspect_get_icon (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_major_version"))
-    return run_inspect_get_major_version (args_tuple);
+    return run_inspect_get_major_version (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_minor_version"))
-    return run_inspect_get_minor_version (args_tuple);
+    return run_inspect_get_minor_version (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_mountpoints"))
-    return run_inspect_get_mountpoints (args_tuple);
+    return run_inspect_get_mountpoints (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_osinfo"))
-    return run_inspect_get_osinfo (args_tuple);
+    return run_inspect_get_osinfo (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_package_format"))
-    return run_inspect_get_package_format (args_tuple);
+    return run_inspect_get_package_format (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_package_management"))
-    return run_inspect_get_package_management (args_tuple);
+    return run_inspect_get_package_management (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_product_name"))
-    return run_inspect_get_product_name (args_tuple);
+    return run_inspect_get_product_name (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_product_variant"))
-    return run_inspect_get_product_variant (args_tuple);
+    return run_inspect_get_product_variant (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_roots"))
-    return run_inspect_get_roots (args_tuple);
+    return run_inspect_get_roots (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_type"))
-    return run_inspect_get_type (args_tuple);
+    return run_inspect_get_type (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_windows_current_control_set"))
-    return run_inspect_get_windows_current_control_set (args_tuple);
+    return run_inspect_get_windows_current_control_set (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_windows_software_hive"))
-    return run_inspect_get_windows_software_hive (args_tuple);
+    return run_inspect_get_windows_software_hive (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_windows_system_hive"))
-    return run_inspect_get_windows_system_hive (args_tuple);
+    return run_inspect_get_windows_system_hive (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_windows_systemroot"))
-    return run_inspect_get_windows_systemroot (args_tuple);
+    return run_inspect_get_windows_systemroot (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_is_live"))
-    return run_inspect_is_live (args_tuple);
+    return run_inspect_is_live (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_is_multipart"))
-    return run_inspect_is_multipart (args_tuple);
+    return run_inspect_is_multipart (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_is_netinst"))
-    return run_inspect_is_netinst (args_tuple);
+    return run_inspect_is_netinst (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_list_applications"))
-    return run_inspect_list_applications (args_tuple);
+    return run_inspect_list_applications (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_list_applications2"))
-    return run_inspect_list_applications2 (args_tuple);
+    return run_inspect_list_applications2 (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_os"))
-    return run_inspect_os (args_tuple);
+    return run_inspect_os (retbuff, buff, index);
   else if (atom_equals (fun, "internal_exit"))
-    return run_internal_exit (args_tuple);
+    return run_internal_exit (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test"))
-    return run_internal_test (args_tuple);
+    return run_internal_test (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_63_optargs"))
-    return run_internal_test_63_optargs (args_tuple);
+    return run_internal_test_63_optargs (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_close_output"))
-    return run_internal_test_close_output (args_tuple);
+    return run_internal_test_close_output (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_only_optargs"))
-    return run_internal_test_only_optargs (args_tuple);
+    return run_internal_test_only_optargs (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rbool"))
-    return run_internal_test_rbool (args_tuple);
+    return run_internal_test_rbool (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rboolerr"))
-    return run_internal_test_rboolerr (args_tuple);
+    return run_internal_test_rboolerr (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rbufferout"))
-    return run_internal_test_rbufferout (args_tuple);
+    return run_internal_test_rbufferout (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rbufferouterr"))
-    return run_internal_test_rbufferouterr (args_tuple);
+    return run_internal_test_rbufferouterr (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rconstoptstring"))
-    return run_internal_test_rconstoptstring (args_tuple);
+    return run_internal_test_rconstoptstring (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rconstoptstringerr"))
-    return run_internal_test_rconstoptstringerr (args_tuple);
+    return run_internal_test_rconstoptstringerr (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rconststring"))
-    return run_internal_test_rconststring (args_tuple);
+    return run_internal_test_rconststring (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rconststringerr"))
-    return run_internal_test_rconststringerr (args_tuple);
+    return run_internal_test_rconststringerr (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rhashtable"))
-    return run_internal_test_rhashtable (args_tuple);
+    return run_internal_test_rhashtable (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rhashtableerr"))
-    return run_internal_test_rhashtableerr (args_tuple);
+    return run_internal_test_rhashtableerr (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rint"))
-    return run_internal_test_rint (args_tuple);
+    return run_internal_test_rint (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rint64"))
-    return run_internal_test_rint64 (args_tuple);
+    return run_internal_test_rint64 (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rint64err"))
-    return run_internal_test_rint64err (args_tuple);
+    return run_internal_test_rint64err (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rinterr"))
-    return run_internal_test_rinterr (args_tuple);
+    return run_internal_test_rinterr (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rstring"))
-    return run_internal_test_rstring (args_tuple);
+    return run_internal_test_rstring (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rstringerr"))
-    return run_internal_test_rstringerr (args_tuple);
+    return run_internal_test_rstringerr (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rstringlist"))
-    return run_internal_test_rstringlist (args_tuple);
+    return run_internal_test_rstringlist (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rstringlisterr"))
-    return run_internal_test_rstringlisterr (args_tuple);
+    return run_internal_test_rstringlisterr (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rstruct"))
-    return run_internal_test_rstruct (args_tuple);
+    return run_internal_test_rstruct (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rstructerr"))
-    return run_internal_test_rstructerr (args_tuple);
+    return run_internal_test_rstructerr (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rstructlist"))
-    return run_internal_test_rstructlist (args_tuple);
+    return run_internal_test_rstructlist (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_rstructlisterr"))
-    return run_internal_test_rstructlisterr (args_tuple);
+    return run_internal_test_rstructlisterr (retbuff, buff, index);
   else if (atom_equals (fun, "internal_test_set_output"))
-    return run_internal_test_set_output (args_tuple);
+    return run_internal_test_set_output (retbuff, buff, index);
   else if (atom_equals (fun, "is_blockdev"))
-    return run_is_blockdev (args_tuple);
+    return run_is_blockdev (retbuff, buff, index);
   else if (atom_equals (fun, "is_busy"))
-    return run_is_busy (args_tuple);
+    return run_is_busy (retbuff, buff, index);
   else if (atom_equals (fun, "is_chardev"))
-    return run_is_chardev (args_tuple);
+    return run_is_chardev (retbuff, buff, index);
   else if (atom_equals (fun, "is_config"))
-    return run_is_config (args_tuple);
+    return run_is_config (retbuff, buff, index);
   else if (atom_equals (fun, "is_dir"))
-    return run_is_dir (args_tuple);
+    return run_is_dir (retbuff, buff, index);
   else if (atom_equals (fun, "is_fifo"))
-    return run_is_fifo (args_tuple);
+    return run_is_fifo (retbuff, buff, index);
   else if (atom_equals (fun, "is_file"))
-    return run_is_file (args_tuple);
+    return run_is_file (retbuff, buff, index);
   else if (atom_equals (fun, "is_launching"))
-    return run_is_launching (args_tuple);
+    return run_is_launching (retbuff, buff, index);
   else if (atom_equals (fun, "is_lv"))
-    return run_is_lv (args_tuple);
+    return run_is_lv (retbuff, buff, index);
   else if (atom_equals (fun, "is_ready"))
-    return run_is_ready (args_tuple);
+    return run_is_ready (retbuff, buff, index);
   else if (atom_equals (fun, "is_socket"))
-    return run_is_socket (args_tuple);
+    return run_is_socket (retbuff, buff, index);
   else if (atom_equals (fun, "is_symlink"))
-    return run_is_symlink (args_tuple);
+    return run_is_symlink (retbuff, buff, index);
   else if (atom_equals (fun, "is_whole_device"))
-    return run_is_whole_device (args_tuple);
+    return run_is_whole_device (retbuff, buff, index);
   else if (atom_equals (fun, "is_zero"))
-    return run_is_zero (args_tuple);
+    return run_is_zero (retbuff, buff, index);
   else if (atom_equals (fun, "is_zero_device"))
-    return run_is_zero_device (args_tuple);
+    return run_is_zero_device (retbuff, buff, index);
   else if (atom_equals (fun, "isoinfo"))
-    return run_isoinfo (args_tuple);
+    return run_isoinfo (retbuff, buff, index);
   else if (atom_equals (fun, "isoinfo_device"))
-    return run_isoinfo_device (args_tuple);
+    return run_isoinfo_device (retbuff, buff, index);
   else if (atom_equals (fun, "journal_close"))
-    return run_journal_close (args_tuple);
+    return run_journal_close (retbuff, buff, index);
   else if (atom_equals (fun, "journal_get"))
-    return run_journal_get (args_tuple);
+    return run_journal_get (retbuff, buff, index);
   else if (atom_equals (fun, "journal_get_data_threshold"))
-    return run_journal_get_data_threshold (args_tuple);
+    return run_journal_get_data_threshold (retbuff, buff, index);
   else if (atom_equals (fun, "journal_get_realtime_usec"))
-    return run_journal_get_realtime_usec (args_tuple);
+    return run_journal_get_realtime_usec (retbuff, buff, index);
   else if (atom_equals (fun, "journal_next"))
-    return run_journal_next (args_tuple);
+    return run_journal_next (retbuff, buff, index);
   else if (atom_equals (fun, "journal_open"))
-    return run_journal_open (args_tuple);
+    return run_journal_open (retbuff, buff, index);
   else if (atom_equals (fun, "journal_set_data_threshold"))
-    return run_journal_set_data_threshold (args_tuple);
+    return run_journal_set_data_threshold (retbuff, buff, index);
   else if (atom_equals (fun, "journal_skip"))
-    return run_journal_skip (args_tuple);
+    return run_journal_skip (retbuff, buff, index);
   else if (atom_equals (fun, "kill_subprocess"))
-    return run_kill_subprocess (args_tuple);
+    return run_kill_subprocess (retbuff, buff, index);
   else if (atom_equals (fun, "launch"))
-    return run_launch (args_tuple);
+    return run_launch (retbuff, buff, index);
   else if (atom_equals (fun, "lchown"))
-    return run_lchown (args_tuple);
+    return run_lchown (retbuff, buff, index);
   else if (atom_equals (fun, "ldmtool_create_all"))
-    return run_ldmtool_create_all (args_tuple);
+    return run_ldmtool_create_all (retbuff, buff, index);
   else if (atom_equals (fun, "ldmtool_diskgroup_disks"))
-    return run_ldmtool_diskgroup_disks (args_tuple);
+    return run_ldmtool_diskgroup_disks (retbuff, buff, index);
   else if (atom_equals (fun, "ldmtool_diskgroup_name"))
-    return run_ldmtool_diskgroup_name (args_tuple);
+    return run_ldmtool_diskgroup_name (retbuff, buff, index);
   else if (atom_equals (fun, "ldmtool_diskgroup_volumes"))
-    return run_ldmtool_diskgroup_volumes (args_tuple);
+    return run_ldmtool_diskgroup_volumes (retbuff, buff, index);
   else if (atom_equals (fun, "ldmtool_remove_all"))
-    return run_ldmtool_remove_all (args_tuple);
+    return run_ldmtool_remove_all (retbuff, buff, index);
   else if (atom_equals (fun, "ldmtool_scan"))
-    return run_ldmtool_scan (args_tuple);
+    return run_ldmtool_scan (retbuff, buff, index);
   else if (atom_equals (fun, "ldmtool_scan_devices"))
-    return run_ldmtool_scan_devices (args_tuple);
+    return run_ldmtool_scan_devices (retbuff, buff, index);
   else if (atom_equals (fun, "ldmtool_volume_hint"))
-    return run_ldmtool_volume_hint (args_tuple);
+    return run_ldmtool_volume_hint (retbuff, buff, index);
   else if (atom_equals (fun, "ldmtool_volume_partitions"))
-    return run_ldmtool_volume_partitions (args_tuple);
+    return run_ldmtool_volume_partitions (retbuff, buff, index);
   else if (atom_equals (fun, "ldmtool_volume_type"))
-    return run_ldmtool_volume_type (args_tuple);
+    return run_ldmtool_volume_type (retbuff, buff, index);
   else if (atom_equals (fun, "lgetxattr"))
-    return run_lgetxattr (args_tuple);
+    return run_lgetxattr (retbuff, buff, index);
   else if (atom_equals (fun, "lgetxattrs"))
-    return run_lgetxattrs (args_tuple);
+    return run_lgetxattrs (retbuff, buff, index);
   else if (atom_equals (fun, "list_9p"))
-    return run_list_9p (args_tuple);
+    return run_list_9p (retbuff, buff, index);
   else if (atom_equals (fun, "list_devices"))
-    return run_list_devices (args_tuple);
+    return run_list_devices (retbuff, buff, index);
   else if (atom_equals (fun, "list_disk_labels"))
-    return run_list_disk_labels (args_tuple);
+    return run_list_disk_labels (retbuff, buff, index);
   else if (atom_equals (fun, "list_dm_devices"))
-    return run_list_dm_devices (args_tuple);
+    return run_list_dm_devices (retbuff, buff, index);
   else if (atom_equals (fun, "list_filesystems"))
-    return run_list_filesystems (args_tuple);
+    return run_list_filesystems (retbuff, buff, index);
   else if (atom_equals (fun, "list_ldm_partitions"))
-    return run_list_ldm_partitions (args_tuple);
+    return run_list_ldm_partitions (retbuff, buff, index);
   else if (atom_equals (fun, "list_ldm_volumes"))
-    return run_list_ldm_volumes (args_tuple);
+    return run_list_ldm_volumes (retbuff, buff, index);
   else if (atom_equals (fun, "list_md_devices"))
-    return run_list_md_devices (args_tuple);
+    return run_list_md_devices (retbuff, buff, index);
   else if (atom_equals (fun, "list_partitions"))
-    return run_list_partitions (args_tuple);
+    return run_list_partitions (retbuff, buff, index);
   else if (atom_equals (fun, "ll"))
-    return run_ll (args_tuple);
+    return run_ll (retbuff, buff, index);
   else if (atom_equals (fun, "llz"))
-    return run_llz (args_tuple);
+    return run_llz (retbuff, buff, index);
   else if (atom_equals (fun, "ln"))
-    return run_ln (args_tuple);
+    return run_ln (retbuff, buff, index);
   else if (atom_equals (fun, "ln_f"))
-    return run_ln_f (args_tuple);
+    return run_ln_f (retbuff, buff, index);
   else if (atom_equals (fun, "ln_s"))
-    return run_ln_s (args_tuple);
+    return run_ln_s (retbuff, buff, index);
   else if (atom_equals (fun, "ln_sf"))
-    return run_ln_sf (args_tuple);
+    return run_ln_sf (retbuff, buff, index);
   else if (atom_equals (fun, "lremovexattr"))
-    return run_lremovexattr (args_tuple);
+    return run_lremovexattr (retbuff, buff, index);
   else if (atom_equals (fun, "ls"))
-    return run_ls (args_tuple);
+    return run_ls (retbuff, buff, index);
   else if (atom_equals (fun, "ls0"))
-    return run_ls0 (args_tuple);
+    return run_ls0 (retbuff, buff, index);
   else if (atom_equals (fun, "lsetxattr"))
-    return run_lsetxattr (args_tuple);
+    return run_lsetxattr (retbuff, buff, index);
   else if (atom_equals (fun, "lstat"))
-    return run_lstat (args_tuple);
+    return run_lstat (retbuff, buff, index);
   else if (atom_equals (fun, "lstatlist"))
-    return run_lstatlist (args_tuple);
+    return run_lstatlist (retbuff, buff, index);
   else if (atom_equals (fun, "lstatns"))
-    return run_lstatns (args_tuple);
+    return run_lstatns (retbuff, buff, index);
   else if (atom_equals (fun, "lstatnslist"))
-    return run_lstatnslist (args_tuple);
+    return run_lstatnslist (retbuff, buff, index);
   else if (atom_equals (fun, "luks_add_key"))
-    return run_luks_add_key (args_tuple);
+    return run_luks_add_key (retbuff, buff, index);
   else if (atom_equals (fun, "luks_close"))
-    return run_luks_close (args_tuple);
+    return run_luks_close (retbuff, buff, index);
   else if (atom_equals (fun, "luks_format"))
-    return run_luks_format (args_tuple);
+    return run_luks_format (retbuff, buff, index);
   else if (atom_equals (fun, "luks_format_cipher"))
-    return run_luks_format_cipher (args_tuple);
+    return run_luks_format_cipher (retbuff, buff, index);
   else if (atom_equals (fun, "luks_kill_slot"))
-    return run_luks_kill_slot (args_tuple);
+    return run_luks_kill_slot (retbuff, buff, index);
   else if (atom_equals (fun, "luks_open"))
-    return run_luks_open (args_tuple);
+    return run_luks_open (retbuff, buff, index);
   else if (atom_equals (fun, "luks_open_ro"))
-    return run_luks_open_ro (args_tuple);
+    return run_luks_open_ro (retbuff, buff, index);
   else if (atom_equals (fun, "luks_uuid"))
-    return run_luks_uuid (args_tuple);
+    return run_luks_uuid (retbuff, buff, index);
   else if (atom_equals (fun, "lvcreate"))
-    return run_lvcreate (args_tuple);
+    return run_lvcreate (retbuff, buff, index);
   else if (atom_equals (fun, "lvcreate_free"))
-    return run_lvcreate_free (args_tuple);
+    return run_lvcreate_free (retbuff, buff, index);
   else if (atom_equals (fun, "lvm_canonical_lv_name"))
-    return run_lvm_canonical_lv_name (args_tuple);
+    return run_lvm_canonical_lv_name (retbuff, buff, index);
   else if (atom_equals (fun, "lvm_clear_filter"))
-    return run_lvm_clear_filter (args_tuple);
+    return run_lvm_clear_filter (retbuff, buff, index);
   else if (atom_equals (fun, "lvm_remove_all"))
-    return run_lvm_remove_all (args_tuple);
+    return run_lvm_remove_all (retbuff, buff, index);
   else if (atom_equals (fun, "lvm_scan"))
-    return run_lvm_scan (args_tuple);
+    return run_lvm_scan (retbuff, buff, index);
   else if (atom_equals (fun, "lvm_set_filter"))
-    return run_lvm_set_filter (args_tuple);
+    return run_lvm_set_filter (retbuff, buff, index);
   else if (atom_equals (fun, "lvremove"))
-    return run_lvremove (args_tuple);
+    return run_lvremove (retbuff, buff, index);
   else if (atom_equals (fun, "lvrename"))
-    return run_lvrename (args_tuple);
+    return run_lvrename (retbuff, buff, index);
   else if (atom_equals (fun, "lvresize"))
-    return run_lvresize (args_tuple);
+    return run_lvresize (retbuff, buff, index);
   else if (atom_equals (fun, "lvresize_free"))
-    return run_lvresize_free (args_tuple);
+    return run_lvresize_free (retbuff, buff, index);
   else if (atom_equals (fun, "lvs"))
-    return run_lvs (args_tuple);
+    return run_lvs (retbuff, buff, index);
   else if (atom_equals (fun, "lvs_full"))
-    return run_lvs_full (args_tuple);
+    return run_lvs_full (retbuff, buff, index);
   else if (atom_equals (fun, "lvuuid"))
-    return run_lvuuid (args_tuple);
+    return run_lvuuid (retbuff, buff, index);
   else if (atom_equals (fun, "lxattrlist"))
-    return run_lxattrlist (args_tuple);
+    return run_lxattrlist (retbuff, buff, index);
   else if (atom_equals (fun, "max_disks"))
-    return run_max_disks (args_tuple);
+    return run_max_disks (retbuff, buff, index);
   else if (atom_equals (fun, "md_create"))
-    return run_md_create (args_tuple);
+    return run_md_create (retbuff, buff, index);
   else if (atom_equals (fun, "md_detail"))
-    return run_md_detail (args_tuple);
+    return run_md_detail (retbuff, buff, index);
   else if (atom_equals (fun, "md_stat"))
-    return run_md_stat (args_tuple);
+    return run_md_stat (retbuff, buff, index);
   else if (atom_equals (fun, "md_stop"))
-    return run_md_stop (args_tuple);
+    return run_md_stop (retbuff, buff, index);
   else if (atom_equals (fun, "mkdir"))
-    return run_mkdir (args_tuple);
+    return run_mkdir (retbuff, buff, index);
   else if (atom_equals (fun, "mkdir_mode"))
-    return run_mkdir_mode (args_tuple);
+    return run_mkdir_mode (retbuff, buff, index);
   else if (atom_equals (fun, "mkdir_p"))
-    return run_mkdir_p (args_tuple);
+    return run_mkdir_p (retbuff, buff, index);
   else if (atom_equals (fun, "mkdtemp"))
-    return run_mkdtemp (args_tuple);
+    return run_mkdtemp (retbuff, buff, index);
   else if (atom_equals (fun, "mke2fs"))
-    return run_mke2fs (args_tuple);
+    return run_mke2fs (retbuff, buff, index);
   else if (atom_equals (fun, "mke2fs_J"))
-    return run_mke2fs_J (args_tuple);
+    return run_mke2fs_J (retbuff, buff, index);
   else if (atom_equals (fun, "mke2fs_JL"))
-    return run_mke2fs_JL (args_tuple);
+    return run_mke2fs_JL (retbuff, buff, index);
   else if (atom_equals (fun, "mke2fs_JU"))
-    return run_mke2fs_JU (args_tuple);
+    return run_mke2fs_JU (retbuff, buff, index);
   else if (atom_equals (fun, "mke2journal"))
-    return run_mke2journal (args_tuple);
+    return run_mke2journal (retbuff, buff, index);
   else if (atom_equals (fun, "mke2journal_L"))
-    return run_mke2journal_L (args_tuple);
+    return run_mke2journal_L (retbuff, buff, index);
   else if (atom_equals (fun, "mke2journal_U"))
-    return run_mke2journal_U (args_tuple);
+    return run_mke2journal_U (retbuff, buff, index);
   else if (atom_equals (fun, "mkfifo"))
-    return run_mkfifo (args_tuple);
+    return run_mkfifo (retbuff, buff, index);
   else if (atom_equals (fun, "mkfs"))
-    return run_mkfs (args_tuple);
+    return run_mkfs (retbuff, buff, index);
   else if (atom_equals (fun, "mkfs_b"))
-    return run_mkfs_b (args_tuple);
+    return run_mkfs_b (retbuff, buff, index);
   else if (atom_equals (fun, "mkfs_btrfs"))
-    return run_mkfs_btrfs (args_tuple);
+    return run_mkfs_btrfs (retbuff, buff, index);
   else if (atom_equals (fun, "mklost_and_found"))
-    return run_mklost_and_found (args_tuple);
+    return run_mklost_and_found (retbuff, buff, index);
   else if (atom_equals (fun, "mkmountpoint"))
-    return run_mkmountpoint (args_tuple);
+    return run_mkmountpoint (retbuff, buff, index);
   else if (atom_equals (fun, "mknod"))
-    return run_mknod (args_tuple);
+    return run_mknod (retbuff, buff, index);
   else if (atom_equals (fun, "mknod_b"))
-    return run_mknod_b (args_tuple);
+    return run_mknod_b (retbuff, buff, index);
   else if (atom_equals (fun, "mknod_c"))
-    return run_mknod_c (args_tuple);
+    return run_mknod_c (retbuff, buff, index);
   else if (atom_equals (fun, "mksquashfs"))
-    return run_mksquashfs (args_tuple);
+    return run_mksquashfs (retbuff, buff, index);
   else if (atom_equals (fun, "mkswap"))
-    return run_mkswap (args_tuple);
+    return run_mkswap (retbuff, buff, index);
   else if (atom_equals (fun, "mkswap_L"))
-    return run_mkswap_L (args_tuple);
+    return run_mkswap_L (retbuff, buff, index);
   else if (atom_equals (fun, "mkswap_U"))
-    return run_mkswap_U (args_tuple);
+    return run_mkswap_U (retbuff, buff, index);
   else if (atom_equals (fun, "mkswap_file"))
-    return run_mkswap_file (args_tuple);
+    return run_mkswap_file (retbuff, buff, index);
   else if (atom_equals (fun, "mktemp"))
-    return run_mktemp (args_tuple);
+    return run_mktemp (retbuff, buff, index);
   else if (atom_equals (fun, "modprobe"))
-    return run_modprobe (args_tuple);
+    return run_modprobe (retbuff, buff, index);
   else if (atom_equals (fun, "mount"))
-    return run_mount (args_tuple);
+    return run_mount (retbuff, buff, index);
   else if (atom_equals (fun, "mount_9p"))
-    return run_mount_9p (args_tuple);
+    return run_mount_9p (retbuff, buff, index);
   else if (atom_equals (fun, "mount_local"))
-    return run_mount_local (args_tuple);
+    return run_mount_local (retbuff, buff, index);
   else if (atom_equals (fun, "mount_local_run"))
-    return run_mount_local_run (args_tuple);
+    return run_mount_local_run (retbuff, buff, index);
   else if (atom_equals (fun, "mount_loop"))
-    return run_mount_loop (args_tuple);
+    return run_mount_loop (retbuff, buff, index);
   else if (atom_equals (fun, "mount_options"))
-    return run_mount_options (args_tuple);
+    return run_mount_options (retbuff, buff, index);
   else if (atom_equals (fun, "mount_ro"))
-    return run_mount_ro (args_tuple);
+    return run_mount_ro (retbuff, buff, index);
   else if (atom_equals (fun, "mount_vfs"))
-    return run_mount_vfs (args_tuple);
+    return run_mount_vfs (retbuff, buff, index);
   else if (atom_equals (fun, "mountable_device"))
-    return run_mountable_device (args_tuple);
+    return run_mountable_device (retbuff, buff, index);
   else if (atom_equals (fun, "mountable_subvolume"))
-    return run_mountable_subvolume (args_tuple);
+    return run_mountable_subvolume (retbuff, buff, index);
   else if (atom_equals (fun, "mountpoints"))
-    return run_mountpoints (args_tuple);
+    return run_mountpoints (retbuff, buff, index);
   else if (atom_equals (fun, "mounts"))
-    return run_mounts (args_tuple);
+    return run_mounts (retbuff, buff, index);
   else if (atom_equals (fun, "mv"))
-    return run_mv (args_tuple);
+    return run_mv (retbuff, buff, index);
   else if (atom_equals (fun, "nr_devices"))
-    return run_nr_devices (args_tuple);
+    return run_nr_devices (retbuff, buff, index);
   else if (atom_equals (fun, "ntfs_3g_probe"))
-    return run_ntfs_3g_probe (args_tuple);
+    return run_ntfs_3g_probe (retbuff, buff, index);
   else if (atom_equals (fun, "ntfscat_i"))
-    return run_ntfscat_i (args_tuple);
+    return run_ntfscat_i (retbuff, buff, index);
   else if (atom_equals (fun, "ntfsclone_in"))
-    return run_ntfsclone_in (args_tuple);
+    return run_ntfsclone_in (retbuff, buff, index);
   else if (atom_equals (fun, "ntfsclone_out"))
-    return run_ntfsclone_out (args_tuple);
+    return run_ntfsclone_out (retbuff, buff, index);
   else if (atom_equals (fun, "ntfsfix"))
-    return run_ntfsfix (args_tuple);
+    return run_ntfsfix (retbuff, buff, index);
   else if (atom_equals (fun, "ntfsresize"))
-    return run_ntfsresize (args_tuple);
+    return run_ntfsresize (retbuff, buff, index);
   else if (atom_equals (fun, "ntfsresize_size"))
-    return run_ntfsresize_size (args_tuple);
+    return run_ntfsresize_size (retbuff, buff, index);
   else if (atom_equals (fun, "parse_environment"))
-    return run_parse_environment (args_tuple);
+    return run_parse_environment (retbuff, buff, index);
   else if (atom_equals (fun, "parse_environment_list"))
-    return run_parse_environment_list (args_tuple);
+    return run_parse_environment_list (retbuff, buff, index);
   else if (atom_equals (fun, "part_add"))
-    return run_part_add (args_tuple);
+    return run_part_add (retbuff, buff, index);
   else if (atom_equals (fun, "part_del"))
-    return run_part_del (args_tuple);
+    return run_part_del (retbuff, buff, index);
   else if (atom_equals (fun, "part_disk"))
-    return run_part_disk (args_tuple);
+    return run_part_disk (retbuff, buff, index);
   else if (atom_equals (fun, "part_expand_gpt"))
-    return run_part_expand_gpt (args_tuple);
+    return run_part_expand_gpt (retbuff, buff, index);
   else if (atom_equals (fun, "part_get_bootable"))
-    return run_part_get_bootable (args_tuple);
+    return run_part_get_bootable (retbuff, buff, index);
   else if (atom_equals (fun, "part_get_disk_guid"))
-    return run_part_get_disk_guid (args_tuple);
+    return run_part_get_disk_guid (retbuff, buff, index);
   else if (atom_equals (fun, "part_get_gpt_attributes"))
-    return run_part_get_gpt_attributes (args_tuple);
+    return run_part_get_gpt_attributes (retbuff, buff, index);
   else if (atom_equals (fun, "part_get_gpt_guid"))
-    return run_part_get_gpt_guid (args_tuple);
+    return run_part_get_gpt_guid (retbuff, buff, index);
   else if (atom_equals (fun, "part_get_gpt_type"))
-    return run_part_get_gpt_type (args_tuple);
+    return run_part_get_gpt_type (retbuff, buff, index);
   else if (atom_equals (fun, "part_get_mbr_id"))
-    return run_part_get_mbr_id (args_tuple);
+    return run_part_get_mbr_id (retbuff, buff, index);
   else if (atom_equals (fun, "part_get_mbr_part_type"))
-    return run_part_get_mbr_part_type (args_tuple);
+    return run_part_get_mbr_part_type (retbuff, buff, index);
   else if (atom_equals (fun, "part_get_name"))
-    return run_part_get_name (args_tuple);
+    return run_part_get_name (retbuff, buff, index);
   else if (atom_equals (fun, "part_get_parttype"))
-    return run_part_get_parttype (args_tuple);
+    return run_part_get_parttype (retbuff, buff, index);
   else if (atom_equals (fun, "part_init"))
-    return run_part_init (args_tuple);
+    return run_part_init (retbuff, buff, index);
   else if (atom_equals (fun, "part_list"))
-    return run_part_list (args_tuple);
+    return run_part_list (retbuff, buff, index);
   else if (atom_equals (fun, "part_resize"))
-    return run_part_resize (args_tuple);
+    return run_part_resize (retbuff, buff, index);
   else if (atom_equals (fun, "part_set_bootable"))
-    return run_part_set_bootable (args_tuple);
+    return run_part_set_bootable (retbuff, buff, index);
   else if (atom_equals (fun, "part_set_disk_guid"))
-    return run_part_set_disk_guid (args_tuple);
+    return run_part_set_disk_guid (retbuff, buff, index);
   else if (atom_equals (fun, "part_set_disk_guid_random"))
-    return run_part_set_disk_guid_random (args_tuple);
+    return run_part_set_disk_guid_random (retbuff, buff, index);
   else if (atom_equals (fun, "part_set_gpt_attributes"))
-    return run_part_set_gpt_attributes (args_tuple);
+    return run_part_set_gpt_attributes (retbuff, buff, index);
   else if (atom_equals (fun, "part_set_gpt_guid"))
-    return run_part_set_gpt_guid (args_tuple);
+    return run_part_set_gpt_guid (retbuff, buff, index);
   else if (atom_equals (fun, "part_set_gpt_type"))
-    return run_part_set_gpt_type (args_tuple);
+    return run_part_set_gpt_type (retbuff, buff, index);
   else if (atom_equals (fun, "part_set_mbr_id"))
-    return run_part_set_mbr_id (args_tuple);
+    return run_part_set_mbr_id (retbuff, buff, index);
   else if (atom_equals (fun, "part_set_name"))
-    return run_part_set_name (args_tuple);
+    return run_part_set_name (retbuff, buff, index);
   else if (atom_equals (fun, "part_to_dev"))
-    return run_part_to_dev (args_tuple);
+    return run_part_to_dev (retbuff, buff, index);
   else if (atom_equals (fun, "part_to_partnum"))
-    return run_part_to_partnum (args_tuple);
+    return run_part_to_partnum (retbuff, buff, index);
   else if (atom_equals (fun, "ping_daemon"))
-    return run_ping_daemon (args_tuple);
+    return run_ping_daemon (retbuff, buff, index);
   else if (atom_equals (fun, "pread"))
-    return run_pread (args_tuple);
+    return run_pread (retbuff, buff, index);
   else if (atom_equals (fun, "pread_device"))
-    return run_pread_device (args_tuple);
+    return run_pread_device (retbuff, buff, index);
   else if (atom_equals (fun, "pvchange_uuid"))
-    return run_pvchange_uuid (args_tuple);
+    return run_pvchange_uuid (retbuff, buff, index);
   else if (atom_equals (fun, "pvchange_uuid_all"))
-    return run_pvchange_uuid_all (args_tuple);
+    return run_pvchange_uuid_all (retbuff, buff, index);
   else if (atom_equals (fun, "pvcreate"))
-    return run_pvcreate (args_tuple);
+    return run_pvcreate (retbuff, buff, index);
   else if (atom_equals (fun, "pvremove"))
-    return run_pvremove (args_tuple);
+    return run_pvremove (retbuff, buff, index);
   else if (atom_equals (fun, "pvresize"))
-    return run_pvresize (args_tuple);
+    return run_pvresize (retbuff, buff, index);
   else if (atom_equals (fun, "pvresize_size"))
-    return run_pvresize_size (args_tuple);
+    return run_pvresize_size (retbuff, buff, index);
   else if (atom_equals (fun, "pvs"))
-    return run_pvs (args_tuple);
+    return run_pvs (retbuff, buff, index);
   else if (atom_equals (fun, "pvs_full"))
-    return run_pvs_full (args_tuple);
+    return run_pvs_full (retbuff, buff, index);
   else if (atom_equals (fun, "pvuuid"))
-    return run_pvuuid (args_tuple);
+    return run_pvuuid (retbuff, buff, index);
   else if (atom_equals (fun, "pwrite"))
-    return run_pwrite (args_tuple);
+    return run_pwrite (retbuff, buff, index);
   else if (atom_equals (fun, "pwrite_device"))
-    return run_pwrite_device (args_tuple);
+    return run_pwrite_device (retbuff, buff, index);
   else if (atom_equals (fun, "read_file"))
-    return run_read_file (args_tuple);
+    return run_read_file (retbuff, buff, index);
   else if (atom_equals (fun, "read_lines"))
-    return run_read_lines (args_tuple);
+    return run_read_lines (retbuff, buff, index);
   else if (atom_equals (fun, "readdir"))
-    return run_readdir (args_tuple);
+    return run_readdir (retbuff, buff, index);
   else if (atom_equals (fun, "readlink"))
-    return run_readlink (args_tuple);
+    return run_readlink (retbuff, buff, index);
   else if (atom_equals (fun, "readlinklist"))
-    return run_readlinklist (args_tuple);
+    return run_readlinklist (retbuff, buff, index);
   else if (atom_equals (fun, "realpath"))
-    return run_realpath (args_tuple);
+    return run_realpath (retbuff, buff, index);
   else if (atom_equals (fun, "remount"))
-    return run_remount (args_tuple);
+    return run_remount (retbuff, buff, index);
   else if (atom_equals (fun, "remove_drive"))
-    return run_remove_drive (args_tuple);
+    return run_remove_drive (retbuff, buff, index);
   else if (atom_equals (fun, "removexattr"))
-    return run_removexattr (args_tuple);
+    return run_removexattr (retbuff, buff, index);
   else if (atom_equals (fun, "rename"))
-    return run_rename (args_tuple);
+    return run_rename (retbuff, buff, index);
   else if (atom_equals (fun, "resize2fs"))
-    return run_resize2fs (args_tuple);
+    return run_resize2fs (retbuff, buff, index);
   else if (atom_equals (fun, "resize2fs_M"))
-    return run_resize2fs_M (args_tuple);
+    return run_resize2fs_M (retbuff, buff, index);
   else if (atom_equals (fun, "resize2fs_size"))
-    return run_resize2fs_size (args_tuple);
+    return run_resize2fs_size (retbuff, buff, index);
   else if (atom_equals (fun, "rm"))
-    return run_rm (args_tuple);
+    return run_rm (retbuff, buff, index);
   else if (atom_equals (fun, "rm_f"))
-    return run_rm_f (args_tuple);
+    return run_rm_f (retbuff, buff, index);
   else if (atom_equals (fun, "rm_rf"))
-    return run_rm_rf (args_tuple);
+    return run_rm_rf (retbuff, buff, index);
   else if (atom_equals (fun, "rmdir"))
-    return run_rmdir (args_tuple);
+    return run_rmdir (retbuff, buff, index);
   else if (atom_equals (fun, "rmmountpoint"))
-    return run_rmmountpoint (args_tuple);
+    return run_rmmountpoint (retbuff, buff, index);
   else if (atom_equals (fun, "rsync"))
-    return run_rsync (args_tuple);
+    return run_rsync (retbuff, buff, index);
   else if (atom_equals (fun, "rsync_in"))
-    return run_rsync_in (args_tuple);
+    return run_rsync_in (retbuff, buff, index);
   else if (atom_equals (fun, "rsync_out"))
-    return run_rsync_out (args_tuple);
+    return run_rsync_out (retbuff, buff, index);
   else if (atom_equals (fun, "scrub_device"))
-    return run_scrub_device (args_tuple);
+    return run_scrub_device (retbuff, buff, index);
   else if (atom_equals (fun, "scrub_file"))
-    return run_scrub_file (args_tuple);
+    return run_scrub_file (retbuff, buff, index);
   else if (atom_equals (fun, "scrub_freespace"))
-    return run_scrub_freespace (args_tuple);
+    return run_scrub_freespace (retbuff, buff, index);
   else if (atom_equals (fun, "selinux_relabel"))
-    return run_selinux_relabel (args_tuple);
+    return run_selinux_relabel (retbuff, buff, index);
   else if (atom_equals (fun, "set_append"))
-    return run_set_append (args_tuple);
+    return run_set_append (retbuff, buff, index);
   else if (atom_equals (fun, "set_attach_method"))
-    return run_set_attach_method (args_tuple);
+    return run_set_attach_method (retbuff, buff, index);
   else if (atom_equals (fun, "set_autosync"))
-    return run_set_autosync (args_tuple);
+    return run_set_autosync (retbuff, buff, index);
   else if (atom_equals (fun, "set_backend"))
-    return run_set_backend (args_tuple);
+    return run_set_backend (retbuff, buff, index);
   else if (atom_equals (fun, "set_backend_setting"))
-    return run_set_backend_setting (args_tuple);
+    return run_set_backend_setting (retbuff, buff, index);
   else if (atom_equals (fun, "set_backend_settings"))
-    return run_set_backend_settings (args_tuple);
+    return run_set_backend_settings (retbuff, buff, index);
   else if (atom_equals (fun, "set_cachedir"))
-    return run_set_cachedir (args_tuple);
+    return run_set_cachedir (retbuff, buff, index);
   else if (atom_equals (fun, "set_direct"))
-    return run_set_direct (args_tuple);
+    return run_set_direct (retbuff, buff, index);
   else if (atom_equals (fun, "set_e2attrs"))
-    return run_set_e2attrs (args_tuple);
+    return run_set_e2attrs (retbuff, buff, index);
   else if (atom_equals (fun, "set_e2generation"))
-    return run_set_e2generation (args_tuple);
+    return run_set_e2generation (retbuff, buff, index);
   else if (atom_equals (fun, "set_e2label"))
-    return run_set_e2label (args_tuple);
+    return run_set_e2label (retbuff, buff, index);
   else if (atom_equals (fun, "set_e2uuid"))
-    return run_set_e2uuid (args_tuple);
+    return run_set_e2uuid (retbuff, buff, index);
   else if (atom_equals (fun, "set_hv"))
-    return run_set_hv (args_tuple);
+    return run_set_hv (retbuff, buff, index);
   else if (atom_equals (fun, "set_identifier"))
-    return run_set_identifier (args_tuple);
+    return run_set_identifier (retbuff, buff, index);
   else if (atom_equals (fun, "set_label"))
-    return run_set_label (args_tuple);
+    return run_set_label (retbuff, buff, index);
   else if (atom_equals (fun, "set_libvirt_requested_credential"))
-    return run_set_libvirt_requested_credential (args_tuple);
+    return run_set_libvirt_requested_credential (retbuff, buff, index);
   else if (atom_equals (fun, "set_libvirt_supported_credentials"))
-    return run_set_libvirt_supported_credentials (args_tuple);
+    return run_set_libvirt_supported_credentials (retbuff, buff, index);
   else if (atom_equals (fun, "set_memsize"))
-    return run_set_memsize (args_tuple);
+    return run_set_memsize (retbuff, buff, index);
   else if (atom_equals (fun, "set_network"))
-    return run_set_network (args_tuple);
+    return run_set_network (retbuff, buff, index);
   else if (atom_equals (fun, "set_path"))
-    return run_set_path (args_tuple);
+    return run_set_path (retbuff, buff, index);
   else if (atom_equals (fun, "set_pgroup"))
-    return run_set_pgroup (args_tuple);
+    return run_set_pgroup (retbuff, buff, index);
   else if (atom_equals (fun, "set_program"))
-    return run_set_program (args_tuple);
+    return run_set_program (retbuff, buff, index);
   else if (atom_equals (fun, "set_qemu"))
-    return run_set_qemu (args_tuple);
+    return run_set_qemu (retbuff, buff, index);
   else if (atom_equals (fun, "set_recovery_proc"))
-    return run_set_recovery_proc (args_tuple);
+    return run_set_recovery_proc (retbuff, buff, index);
   else if (atom_equals (fun, "set_selinux"))
-    return run_set_selinux (args_tuple);
+    return run_set_selinux (retbuff, buff, index);
   else if (atom_equals (fun, "set_smp"))
-    return run_set_smp (args_tuple);
+    return run_set_smp (retbuff, buff, index);
   else if (atom_equals (fun, "set_tmpdir"))
-    return run_set_tmpdir (args_tuple);
+    return run_set_tmpdir (retbuff, buff, index);
   else if (atom_equals (fun, "set_trace"))
-    return run_set_trace (args_tuple);
+    return run_set_trace (retbuff, buff, index);
   else if (atom_equals (fun, "set_uuid"))
-    return run_set_uuid (args_tuple);
+    return run_set_uuid (retbuff, buff, index);
   else if (atom_equals (fun, "set_uuid_random"))
-    return run_set_uuid_random (args_tuple);
+    return run_set_uuid_random (retbuff, buff, index);
   else if (atom_equals (fun, "set_verbose"))
-    return run_set_verbose (args_tuple);
+    return run_set_verbose (retbuff, buff, index);
   else if (atom_equals (fun, "setcon"))
-    return run_setcon (args_tuple);
+    return run_setcon (retbuff, buff, index);
   else if (atom_equals (fun, "setxattr"))
-    return run_setxattr (args_tuple);
+    return run_setxattr (retbuff, buff, index);
   else if (atom_equals (fun, "sfdisk"))
-    return run_sfdisk (args_tuple);
+    return run_sfdisk (retbuff, buff, index);
   else if (atom_equals (fun, "sfdiskM"))
-    return run_sfdiskM (args_tuple);
+    return run_sfdiskM (retbuff, buff, index);
   else if (atom_equals (fun, "sfdisk_N"))
-    return run_sfdisk_N (args_tuple);
+    return run_sfdisk_N (retbuff, buff, index);
   else if (atom_equals (fun, "sfdisk_disk_geometry"))
-    return run_sfdisk_disk_geometry (args_tuple);
+    return run_sfdisk_disk_geometry (retbuff, buff, index);
   else if (atom_equals (fun, "sfdisk_kernel_geometry"))
-    return run_sfdisk_kernel_geometry (args_tuple);
+    return run_sfdisk_kernel_geometry (retbuff, buff, index);
   else if (atom_equals (fun, "sfdisk_l"))
-    return run_sfdisk_l (args_tuple);
+    return run_sfdisk_l (retbuff, buff, index);
   else if (atom_equals (fun, "sh"))
-    return run_sh (args_tuple);
+    return run_sh (retbuff, buff, index);
   else if (atom_equals (fun, "sh_lines"))
-    return run_sh_lines (args_tuple);
+    return run_sh_lines (retbuff, buff, index);
   else if (atom_equals (fun, "shutdown"))
-    return run_shutdown (args_tuple);
+    return run_shutdown (retbuff, buff, index);
   else if (atom_equals (fun, "sleep"))
-    return run_sleep (args_tuple);
+    return run_sleep (retbuff, buff, index);
   else if (atom_equals (fun, "stat"))
-    return run_stat (args_tuple);
+    return run_stat (retbuff, buff, index);
   else if (atom_equals (fun, "statns"))
-    return run_statns (args_tuple);
+    return run_statns (retbuff, buff, index);
   else if (atom_equals (fun, "statvfs"))
-    return run_statvfs (args_tuple);
+    return run_statvfs (retbuff, buff, index);
   else if (atom_equals (fun, "strings"))
-    return run_strings (args_tuple);
+    return run_strings (retbuff, buff, index);
   else if (atom_equals (fun, "strings_e"))
-    return run_strings_e (args_tuple);
+    return run_strings_e (retbuff, buff, index);
   else if (atom_equals (fun, "swapoff_device"))
-    return run_swapoff_device (args_tuple);
+    return run_swapoff_device (retbuff, buff, index);
   else if (atom_equals (fun, "swapoff_file"))
-    return run_swapoff_file (args_tuple);
+    return run_swapoff_file (retbuff, buff, index);
   else if (atom_equals (fun, "swapoff_label"))
-    return run_swapoff_label (args_tuple);
+    return run_swapoff_label (retbuff, buff, index);
   else if (atom_equals (fun, "swapoff_uuid"))
-    return run_swapoff_uuid (args_tuple);
+    return run_swapoff_uuid (retbuff, buff, index);
   else if (atom_equals (fun, "swapon_device"))
-    return run_swapon_device (args_tuple);
+    return run_swapon_device (retbuff, buff, index);
   else if (atom_equals (fun, "swapon_file"))
-    return run_swapon_file (args_tuple);
+    return run_swapon_file (retbuff, buff, index);
   else if (atom_equals (fun, "swapon_label"))
-    return run_swapon_label (args_tuple);
+    return run_swapon_label (retbuff, buff, index);
   else if (atom_equals (fun, "swapon_uuid"))
-    return run_swapon_uuid (args_tuple);
+    return run_swapon_uuid (retbuff, buff, index);
   else if (atom_equals (fun, "sync"))
-    return run_sync (args_tuple);
+    return run_sync (retbuff, buff, index);
   else if (atom_equals (fun, "syslinux"))
-    return run_syslinux (args_tuple);
+    return run_syslinux (retbuff, buff, index);
   else if (atom_equals (fun, "tail"))
-    return run_tail (args_tuple);
+    return run_tail (retbuff, buff, index);
   else if (atom_equals (fun, "tail_n"))
-    return run_tail_n (args_tuple);
+    return run_tail_n (retbuff, buff, index);
   else if (atom_equals (fun, "tar_in"))
-    return run_tar_in (args_tuple);
+    return run_tar_in (retbuff, buff, index);
   else if (atom_equals (fun, "tar_out"))
-    return run_tar_out (args_tuple);
+    return run_tar_out (retbuff, buff, index);
   else if (atom_equals (fun, "tgz_in"))
-    return run_tgz_in (args_tuple);
+    return run_tgz_in (retbuff, buff, index);
   else if (atom_equals (fun, "tgz_out"))
-    return run_tgz_out (args_tuple);
+    return run_tgz_out (retbuff, buff, index);
   else if (atom_equals (fun, "touch"))
-    return run_touch (args_tuple);
+    return run_touch (retbuff, buff, index);
   else if (atom_equals (fun, "truncate"))
-    return run_truncate (args_tuple);
+    return run_truncate (retbuff, buff, index);
   else if (atom_equals (fun, "truncate_size"))
-    return run_truncate_size (args_tuple);
+    return run_truncate_size (retbuff, buff, index);
   else if (atom_equals (fun, "tune2fs"))
-    return run_tune2fs (args_tuple);
+    return run_tune2fs (retbuff, buff, index);
   else if (atom_equals (fun, "tune2fs_l"))
-    return run_tune2fs_l (args_tuple);
+    return run_tune2fs_l (retbuff, buff, index);
   else if (atom_equals (fun, "txz_in"))
-    return run_txz_in (args_tuple);
+    return run_txz_in (retbuff, buff, index);
   else if (atom_equals (fun, "txz_out"))
-    return run_txz_out (args_tuple);
+    return run_txz_out (retbuff, buff, index);
   else if (atom_equals (fun, "umask"))
-    return run_umask (args_tuple);
+    return run_umask (retbuff, buff, index);
   else if (atom_equals (fun, "umount"))
-    return run_umount (args_tuple);
+    return run_umount (retbuff, buff, index);
   else if (atom_equals (fun, "umount_all"))
-    return run_umount_all (args_tuple);
+    return run_umount_all (retbuff, buff, index);
   else if (atom_equals (fun, "umount_local"))
-    return run_umount_local (args_tuple);
+    return run_umount_local (retbuff, buff, index);
   else if (atom_equals (fun, "upload"))
-    return run_upload (args_tuple);
+    return run_upload (retbuff, buff, index);
   else if (atom_equals (fun, "upload_offset"))
-    return run_upload_offset (args_tuple);
+    return run_upload_offset (retbuff, buff, index);
   else if (atom_equals (fun, "user_cancel"))
-    return run_user_cancel (args_tuple);
+    return run_user_cancel (retbuff, buff, index);
   else if (atom_equals (fun, "utimens"))
-    return run_utimens (args_tuple);
+    return run_utimens (retbuff, buff, index);
   else if (atom_equals (fun, "utsname"))
-    return run_utsname (args_tuple);
+    return run_utsname (retbuff, buff, index);
   else if (atom_equals (fun, "version"))
-    return run_version (args_tuple);
+    return run_version (retbuff, buff, index);
   else if (atom_equals (fun, "vfs_label"))
-    return run_vfs_label (args_tuple);
+    return run_vfs_label (retbuff, buff, index);
   else if (atom_equals (fun, "vfs_minimum_size"))
-    return run_vfs_minimum_size (args_tuple);
+    return run_vfs_minimum_size (retbuff, buff, index);
   else if (atom_equals (fun, "vfs_type"))
-    return run_vfs_type (args_tuple);
+    return run_vfs_type (retbuff, buff, index);
   else if (atom_equals (fun, "vfs_uuid"))
-    return run_vfs_uuid (args_tuple);
+    return run_vfs_uuid (retbuff, buff, index);
   else if (atom_equals (fun, "vg_activate"))
-    return run_vg_activate (args_tuple);
+    return run_vg_activate (retbuff, buff, index);
   else if (atom_equals (fun, "vg_activate_all"))
-    return run_vg_activate_all (args_tuple);
+    return run_vg_activate_all (retbuff, buff, index);
   else if (atom_equals (fun, "vgchange_uuid"))
-    return run_vgchange_uuid (args_tuple);
+    return run_vgchange_uuid (retbuff, buff, index);
   else if (atom_equals (fun, "vgchange_uuid_all"))
-    return run_vgchange_uuid_all (args_tuple);
+    return run_vgchange_uuid_all (retbuff, buff, index);
   else if (atom_equals (fun, "vgcreate"))
-    return run_vgcreate (args_tuple);
+    return run_vgcreate (retbuff, buff, index);
   else if (atom_equals (fun, "vglvuuids"))
-    return run_vglvuuids (args_tuple);
+    return run_vglvuuids (retbuff, buff, index);
   else if (atom_equals (fun, "vgmeta"))
-    return run_vgmeta (args_tuple);
+    return run_vgmeta (retbuff, buff, index);
   else if (atom_equals (fun, "vgpvuuids"))
-    return run_vgpvuuids (args_tuple);
+    return run_vgpvuuids (retbuff, buff, index);
   else if (atom_equals (fun, "vgremove"))
-    return run_vgremove (args_tuple);
+    return run_vgremove (retbuff, buff, index);
   else if (atom_equals (fun, "vgrename"))
-    return run_vgrename (args_tuple);
+    return run_vgrename (retbuff, buff, index);
   else if (atom_equals (fun, "vgs"))
-    return run_vgs (args_tuple);
+    return run_vgs (retbuff, buff, index);
   else if (atom_equals (fun, "vgs_full"))
-    return run_vgs_full (args_tuple);
+    return run_vgs_full (retbuff, buff, index);
   else if (atom_equals (fun, "vgscan"))
-    return run_vgscan (args_tuple);
+    return run_vgscan (retbuff, buff, index);
   else if (atom_equals (fun, "vguuid"))
-    return run_vguuid (args_tuple);
+    return run_vguuid (retbuff, buff, index);
   else if (atom_equals (fun, "wait_ready"))
-    return run_wait_ready (args_tuple);
+    return run_wait_ready (retbuff, buff, index);
   else if (atom_equals (fun, "wc_c"))
-    return run_wc_c (args_tuple);
+    return run_wc_c (retbuff, buff, index);
   else if (atom_equals (fun, "wc_l"))
-    return run_wc_l (args_tuple);
+    return run_wc_l (retbuff, buff, index);
   else if (atom_equals (fun, "wc_w"))
-    return run_wc_w (args_tuple);
+    return run_wc_w (retbuff, buff, index);
   else if (atom_equals (fun, "wipefs"))
-    return run_wipefs (args_tuple);
+    return run_wipefs (retbuff, buff, index);
   else if (atom_equals (fun, "write"))
-    return run_write (args_tuple);
+    return run_write (retbuff, buff, index);
   else if (atom_equals (fun, "write_append"))
-    return run_write_append (args_tuple);
+    return run_write_append (retbuff, buff, index);
   else if (atom_equals (fun, "write_file"))
-    return run_write_file (args_tuple);
+    return run_write_file (retbuff, buff, index);
   else if (atom_equals (fun, "xfs_admin"))
-    return run_xfs_admin (args_tuple);
+    return run_xfs_admin (retbuff, buff, index);
   else if (atom_equals (fun, "xfs_growfs"))
-    return run_xfs_growfs (args_tuple);
+    return run_xfs_growfs (retbuff, buff, index);
   else if (atom_equals (fun, "xfs_info"))
-    return run_xfs_info (args_tuple);
+    return run_xfs_info (retbuff, buff, index);
   else if (atom_equals (fun, "xfs_repair"))
-    return run_xfs_repair (args_tuple);
+    return run_xfs_repair (retbuff, buff, index);
   else if (atom_equals (fun, "yara_destroy"))
-    return run_yara_destroy (args_tuple);
+    return run_yara_destroy (retbuff, buff, index);
   else if (atom_equals (fun, "yara_load"))
-    return run_yara_load (args_tuple);
+    return run_yara_load (retbuff, buff, index);
   else if (atom_equals (fun, "yara_scan"))
-    return run_yara_scan (args_tuple);
+    return run_yara_scan (retbuff, buff, index);
   else if (atom_equals (fun, "zegrep"))
-    return run_zegrep (args_tuple);
+    return run_zegrep (retbuff, buff, index);
   else if (atom_equals (fun, "zegrepi"))
-    return run_zegrepi (args_tuple);
+    return run_zegrepi (retbuff, buff, index);
   else if (atom_equals (fun, "zero"))
-    return run_zero (args_tuple);
+    return run_zero (retbuff, buff, index);
   else if (atom_equals (fun, "zero_device"))
-    return run_zero_device (args_tuple);
+    return run_zero_device (retbuff, buff, index);
   else if (atom_equals (fun, "zero_free_space"))
-    return run_zero_free_space (args_tuple);
+    return run_zero_free_space (retbuff, buff, index);
   else if (atom_equals (fun, "zerofree"))
-    return run_zerofree (args_tuple);
+    return run_zerofree (retbuff, buff, index);
   else if (atom_equals (fun, "zfgrep"))
-    return run_zfgrep (args_tuple);
+    return run_zfgrep (retbuff, buff, index);
   else if (atom_equals (fun, "zfgrepi"))
-    return run_zfgrepi (args_tuple);
+    return run_zfgrepi (retbuff, buff, index);
   else if (atom_equals (fun, "zfile"))
-    return run_zfile (args_tuple);
+    return run_zfile (retbuff, buff, index);
   else if (atom_equals (fun, "zgrep"))
-    return run_zgrep (args_tuple);
+    return run_zgrep (retbuff, buff, index);
   else if (atom_equals (fun, "zgrepi"))
-    return run_zgrepi (args_tuple);
-  else return unknown_function (fun);
+    return run_zgrepi (retbuff, buff, index);
+  else return unknown_function (retbuff, fun);
 }

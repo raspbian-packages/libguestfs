@@ -64,6 +64,8 @@
 #define GUESTFS_COPY_FILE_TO_FILE_SPARSE_BITMASK (UINT64_C(1)<<3)
 #define GUESTFS_COPY_FILE_TO_FILE_APPEND_BITMASK (UINT64_C(1)<<4)
 #define GUESTFS_CPIO_OUT_FORMAT_BITMASK (UINT64_C(1)<<0)
+#define GUESTFS_CRYPTSETUP_OPEN_READONLY_BITMASK (UINT64_C(1)<<0)
+#define GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK (UINT64_C(1)<<1)
 #define GUESTFS_DOWNLOAD_BLOCKS_UNALLOCATED_BITMASK (UINT64_C(1)<<0)
 #define GUESTFS_E2FSCK_CORRECT_BITMASK (UINT64_C(1)<<0)
 #define GUESTFS_E2FSCK_FORCEALL_BITMASK (UINT64_C(1)<<1)
@@ -310,6 +312,8 @@ extern int do_cp (const char *src, const char *dest);
 extern int do_cp_a (const char *src, const char *dest);
 extern int do_cp_r (const char *src, const char *dest);
 extern int do_cpio_out (const char *directory, const char *format);
+extern int do_cryptsetup_close (const char *device);
+extern int do_cryptsetup_open (const char *device, const char *key, const char *mapname, int readonly, const char *crypttype);
 extern int do_dd (const char *src, const char *dest);
 extern char *do_debug (const char *subcmd, char *const *extraargs);
 extern int do_debug_upload (const char *tmpname, int mode);

@@ -1,6 +1,6 @@
 ## DO NOT EDIT! GENERATED AUTOMATICALLY!
 ## Process this file with automake to produce Makefile.in.
-# Copyright (C) 2002-2020 Free Software Foundation, Inc.
+# Copyright (C) 2002-2021 Free Software Foundation, Inc.
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ AM_CPPFLAGS = \
   -I../.. -I$(srcdir)/../.. \
   -I../../gnulib/lib -I$(srcdir)/../../gnulib/lib
 
-LDADD = libtests.a ../../gnulib/lib/libgnu.la libtests.a $(LIBTESTS_LIBDEPS)
+LDADD = libtests.a ../../gnulib/lib/libgnu.la libtests.a ../../gnulib/lib/libgnu.la libtests.a $(LIBTESTS_LIBDEPS)
 
 libtests_a_SOURCES =
 libtests_a_LIBADD = $(gltests_LIBOBJS)
@@ -76,6 +76,23 @@ test_accept4_LDADD = $(LDADD) @LIBSOCKET@
 EXTRA_DIST += test-accept4.c signature.h macros.h
 
 ## end   gnulib module accept4-tests
+
+## begin gnulib module access
+
+
+EXTRA_DIST += access.c
+
+EXTRA_libtests_a_SOURCES += access.c
+
+## end   gnulib module access
+
+## begin gnulib module access-tests
+
+TESTS += test-access
+check_PROGRAMS += test-access
+EXTRA_DIST += test-access.c signature.h macros.h
+
+## end   gnulib module access-tests
 
 ## begin gnulib module alloca-opt-tests
 
@@ -201,15 +218,6 @@ EXTRA_DIST += test-bitrotate.c macros.h
 
 ## end   gnulib module bitrotate-tests
 
-## begin gnulib module btowc
-
-
-EXTRA_DIST += btowc.c
-
-EXTRA_libtests_a_SOURCES += btowc.c
-
-## end   gnulib module btowc
-
 ## begin gnulib module btowc-tests
 
 TESTS += test-btowc1.sh test-btowc2.sh
@@ -272,6 +280,14 @@ EXTRA_DIST += test-close.c signature.h macros.h
 
 ## end   gnulib module close-tests
 
+## begin gnulib module concat-filename
+
+libtests_a_SOURCES += concat-filename.c
+
+EXTRA_DIST += concat-filename.h
+
+## end   gnulib module concat-filename
+
 ## begin gnulib module connect-tests
 
 TESTS += test-connect
@@ -281,32 +297,22 @@ EXTRA_DIST += test-connect.c signature.h macros.h
 
 ## end   gnulib module connect-tests
 
-## begin gnulib module ctype
+## begin gnulib module creat
 
-BUILT_SOURCES += ctype.h
 
-# We need the following in order to create <ctype.h> when the system
-# doesn't have one that works with the given compiler.
-ctype.h: ctype.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(WARN_ON_USE_H)
-	$(AM_V_GEN)rm -f $@-t $@ && \
-	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
-	  sed -e 's|@''GUARD_PREFIX''@|GL|g' \
-	      -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
-	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
-	      -e 's|@''PRAGMA_COLUMNS''@|@PRAGMA_COLUMNS@|g' \
-	      -e 's|@''NEXT_CTYPE_H''@|$(NEXT_CTYPE_H)|g' \
-	      -e 's/@''GNULIB_ISBLANK''@/$(GNULIB_ISBLANK)/g' \
-	      -e 's/@''HAVE_ISBLANK''@/$(HAVE_ISBLANK)/g' \
-	      -e '/definitions of _GL_FUNCDECL_RPL/r $(CXXDEFS_H)' \
-	      -e '/definition of _GL_WARN_ON_USE/r $(WARN_ON_USE_H)' \
-	      < $(srcdir)/ctype.in.h; \
-	} > $@-t && \
-	mv $@-t $@
-MOSTLYCLEANFILES += ctype.h ctype.h-t
+EXTRA_DIST += creat.c
 
-EXTRA_DIST += ctype.in.h
+EXTRA_libtests_a_SOURCES += creat.c
 
-## end   gnulib module ctype
+## end   gnulib module creat
+
+## begin gnulib module creat-tests
+
+TESTS += test-creat
+check_PROGRAMS += test-creat
+EXTRA_DIST += test-creat.c signature.h macros.h
+
+## end   gnulib module creat-tests
 
 ## begin gnulib module ctype-tests
 
@@ -428,6 +434,12 @@ check_PROGRAMS += test-fgetc
 EXTRA_DIST += test-fgetc.c signature.h macros.h
 
 ## end   gnulib module fgetc-tests
+
+## begin gnulib module findprog-in
+
+libtests_a_SOURCES += findprog.h findprog-in.c
+
+## end   gnulib module findprog-in
 
 ## begin gnulib module float-tests
 
@@ -645,6 +657,15 @@ EXTRA_DIST += test-getprogname.c
 
 ## end   gnulib module getprogname-tests
 
+## begin gnulib module getrandom-tests
+
+TESTS += test-getrandom
+check_PROGRAMS += test-getrandom
+test_getrandom_LDADD = $(LDADD) @LIB_GETRANDOM@
+EXTRA_DIST += test-getrandom.c signature.h macros.h
+
+## end   gnulib module getrandom-tests
+
 ## begin gnulib module getsockname
 
 
@@ -764,12 +785,7 @@ EXTRA_DIST += test-intprops.c macros.h
 
 ## begin gnulib module inttostr
 
-libtests_a_SOURCES += \
-  imaxtostr.c \
-  inttostr.c \
-  offtostr.c \
-  uinttostr.c \
-  umaxtostr.c
+libtests_a_SOURCES +=    imaxtostr.c    inttostr.c    offtostr.c    uinttostr.c    umaxtostr.c
 
 EXTRA_DIST += anytostr.c inttostr.h
 
@@ -800,15 +816,6 @@ check_PROGRAMS += test-ioctl
 EXTRA_DIST += test-ioctl.c signature.h macros.h
 
 ## end   gnulib module ioctl-tests
-
-## begin gnulib module isblank
-
-
-EXTRA_DIST += isblank.c
-
-EXTRA_libtests_a_SOURCES += isblank.c
-
-## end   gnulib module isblank
 
 ## begin gnulib module isblank-tests
 
@@ -938,7 +945,7 @@ test_once1_SOURCES = test-once.c
 test_once1_LDADD = $(LDADD) @LIBTHREAD@
 test_once2_SOURCES = test-once.c
 test_once2_LDADD = $(LDADD) @LIBMULTITHREAD@
-EXTRA_DIST += test-rwlock1.c test-lock.c test-once.c
+EXTRA_DIST += test-rwlock1.c test-lock.c test-once.c atomic-int-gnulib.h
 
 ## end   gnulib module lock-tests
 
@@ -1009,15 +1016,6 @@ test_mbsrtowcs_LDADD = $(LDADD) $(LIB_SETLOCALE) $(LIB_MBRTOWC)
 EXTRA_DIST += test-mbsrtowcs1.sh test-mbsrtowcs2.sh test-mbsrtowcs3.sh test-mbsrtowcs4.sh test-mbsrtowcs.c signature.h macros.h
 
 ## end   gnulib module mbsrtowcs-tests
-
-## begin gnulib module mbtowc
-
-
-EXTRA_DIST += mbtowc-impl.h mbtowc.c
-
-EXTRA_libtests_a_SOURCES += mbtowc.c
-
-## end   gnulib module mbtowc
 
 ## begin gnulib module memchr-tests
 
@@ -1121,7 +1119,7 @@ EXTRA_DIST += test-netinet_in.c
 
 TESTS += test-nonblocking-pipe.sh
 check_PROGRAMS += test-nonblocking-pipe-main test-nonblocking-pipe-child
-test_nonblocking_pipe_main_LDADD = $(LDADD) @LIBINTL@
+test_nonblocking_pipe_main_LDADD = $(LDADD) @LIBINTL@ $(LIBTHREAD)
 EXTRA_DIST += test-nonblocking-pipe.sh test-nonblocking-pipe-main.c test-nonblocking-pipe-child.c test-nonblocking-pipe.h test-nonblocking-writer.h test-nonblocking-reader.h test-nonblocking-misc.h macros.h
 
 ## end   gnulib module nonblocking-pipe-tests
@@ -1130,7 +1128,7 @@ EXTRA_DIST += test-nonblocking-pipe.sh test-nonblocking-pipe-main.c test-nonbloc
 
 TESTS += test-nonblocking-socket.sh
 check_PROGRAMS += test-nonblocking-socket-main test-nonblocking-socket-child
-test_nonblocking_socket_main_LDADD = $(LDADD) $(LIBSOCKET) @LIBINTL@
+test_nonblocking_socket_main_LDADD = $(LDADD) $(LIBSOCKET) @LIBINTL@ $(LIBTHREAD)
 test_nonblocking_socket_child_LDADD = $(LDADD) $(LIBSOCKET)
 EXTRA_DIST += test-nonblocking-socket.sh test-nonblocking-socket-main.c test-nonblocking-socket-child.c test-nonblocking-socket.h test-nonblocking-writer.h test-nonblocking-reader.h test-nonblocking-misc.h socket-server.h socket-client.h macros.h
 
@@ -1177,15 +1175,6 @@ check_PROGRAMS += test-perror test-perror2
 EXTRA_DIST += macros.h signature.h test-perror.c test-perror2.c test-perror.sh
 
 ## end   gnulib module perror-tests
-
-## begin gnulib module pipe-posix
-
-
-EXTRA_DIST += pipe.c
-
-EXTRA_libtests_a_SOURCES += pipe.c
-
-## end   gnulib module pipe-posix
 
 ## begin gnulib module pipe-posix-tests
 
@@ -1329,25 +1318,31 @@ EXTRA_libtests_a_SOURCES += spawnp.c
 
 ## begin gnulib module posix_spawnp-tests
 
-if POSIX_SPAWN_PORTED
-TESTS += test-posix_spawn1 test-posix_spawn2
-check_PROGRAMS += test-posix_spawn1 test-posix_spawn2
+TESTS += \
+  test-posix_spawn-dup2-stdout \
+  test-posix_spawn-dup2-stdin \
+  test-posix_spawnp-script
+check_PROGRAMS += \
+  test-posix_spawn-dup2-stdout \
+  test-posix_spawn-dup2-stdin \
+  test-posix_spawnp-script
 
-BUILT_SOURCES += test-posix_spawn1.sh
-test-posix_spawn1.sh: test-posix_spawn1.in.sh
+BUILT_SOURCES += test-posix_spawn-dup2-stdout.sh
+test-posix_spawn-dup2-stdout.sh: test-posix_spawn-dup2-stdout.in.sh
 	$(AM_V_GEN)rm -f $@-t $@ && \
-	cp $(srcdir)/test-posix_spawn1.in.sh $@-t && \
+	cp $(srcdir)/test-posix_spawn-dup2-stdout.in.sh $@-t && \
 	mv $@-t $@
-MOSTLYCLEANFILES += test-posix_spawn1.sh test-posix_spawn1.sh-t
+MOSTLYCLEANFILES += test-posix_spawn-dup2-stdout.sh test-posix_spawn-dup2-stdout.sh-t
 
-BUILT_SOURCES += test-posix_spawn2.sh
-test-posix_spawn2.sh: test-posix_spawn2.in.sh
+BUILT_SOURCES += test-posix_spawn-dup2-stdin.sh
+test-posix_spawn-dup2-stdin.sh: test-posix_spawn-dup2-stdin.in.sh
 	$(AM_V_GEN)rm -f $@-t $@ && \
-	cp $(srcdir)/test-posix_spawn2.in.sh $@-t && \
+	cp $(srcdir)/test-posix_spawn-dup2-stdin.in.sh $@-t && \
 	mv $@-t $@
-MOSTLYCLEANFILES += test-posix_spawn2.sh test-posix_spawn2.sh-t
-endif
-EXTRA_DIST += test-posix_spawn1.c test-posix_spawn1.in.sh test-posix_spawn2.c test-posix_spawn2.in.sh signature.h
+MOSTLYCLEANFILES += test-posix_spawn-dup2-stdin.sh test-posix_spawn-dup2-stdin.sh-t
+
+test_posix_spawnp_script_CPPFLAGS = $(AM_CPPFLAGS) -DSRCDIR=\"$(srcdir)/\"
+EXTRA_DIST += test-posix_spawn-dup2-stdout.c test-posix_spawn-dup2-stdout.in.sh test-posix_spawn-dup2-stdin.c test-posix_spawn-dup2-stdin.in.sh test-posix_spawnp-script.c executable-script executable-script.sh executable-shell-script signature.h
 
 ## end   gnulib module posix_spawnp-tests
 
@@ -2057,6 +2052,15 @@ EXTRA_DIST += test-stdlib.c test-sys_wait.h
 
 ## end   gnulib module stdlib-tests
 
+## begin gnulib module stpcpy
+
+
+EXTRA_DIST += stpcpy.c
+
+EXTRA_libtests_a_SOURCES += stpcpy.c
+
+## end   gnulib module stpcpy
+
 ## begin gnulib module strchrnul-tests
 
 TESTS += test-strchrnul
@@ -2164,6 +2168,14 @@ EXTRA_DIST += test-sys_ioctl.c
 
 ## end   gnulib module sys_ioctl-tests
 
+## begin gnulib module sys_random-tests
+
+TESTS += test-sys_random
+check_PROGRAMS += test-sys_random
+EXTRA_DIST += test-sys_random.c
+
+## end   gnulib module sys_random-tests
+
 ## begin gnulib module sys_select-tests
 
 TESTS += test-sys_select
@@ -2233,6 +2245,13 @@ EXTRA_DIST += test-init.sh
 libtests_a_SOURCES += glthread/thread.h glthread/thread.c
 
 ## end   gnulib module thread
+
+## begin gnulib module thread-optim
+
+
+EXTRA_DIST += thread-optim.h
+
+## end   gnulib module thread-optim
 
 ## begin gnulib module thread-tests
 
@@ -2564,6 +2583,15 @@ check_PROGRAMS += test-wctype-h
 EXTRA_DIST += test-wctype-h.c macros.h
 
 ## end   gnulib module wctype-h-tests
+
+## begin gnulib module windows-spawn
+
+
+EXTRA_DIST += windows-spawn.c windows-spawn.h
+
+EXTRA_libtests_a_SOURCES += windows-spawn.c
+
+## end   gnulib module windows-spawn
 
 ## begin gnulib module windows-thread
 

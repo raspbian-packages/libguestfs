@@ -358,6 +358,7 @@ and os_of_string os ver =
   | "ubuntu", "14.04" -> Ubuntu (ver, "trusty")
   | "ubuntu", "16.04" -> Ubuntu (ver, "xenial")
   | "ubuntu", "18.04" -> Ubuntu (ver, "bionic")
+  | "ubuntu", "20.04" -> Ubuntu (ver, "focal")
   | "fedora", ver -> Fedora (int_of_string ver)
   | "freebsd", ver -> let maj, min = parse_major_minor ver in FreeBSD (maj, min)
   | "windows", ver -> parse_windows_version ver
@@ -895,22 +896,22 @@ and make_boot_media os arch =
      Location (sprintf "http://download.devel.redhat.com/released/RHEL-6/6.%d/Server/x86_64/os" minor)
 
   | RHEL (7, minor), X86_64 ->
-     Location (sprintf "http://download.devel.redhat.com/released/RHEL-7/7.%d/Server/x86_64/os" minor)
+     Location (sprintf "http://download.devel.redhat.com/released/rhel-6-7-8/rhel-7/RHEL-7/7.%d/Server/x86_64/os" minor)
 
   | RHEL (7, minor), PPC64 ->
-     Location (sprintf "http://download.devel.redhat.com/released/RHEL-7/7.%d/Server/ppc64/os" minor)
+     Location (sprintf "http://download.devel.redhat.com/released/rhel-6-7-8/rhel-7/RHEL-7/7.%d/Server/ppc64/os" minor)
 
   | RHEL (7, minor), PPC64le ->
-     Location (sprintf "http://download.devel.redhat.com/released/RHEL-7/7.%d/Server/ppc64le/os" minor)
+     Location (sprintf "http://download.devel.redhat.com/released/rhel-6-7-8/rhel-7/RHEL-7/7.%d/Server/ppc64le/os" minor)
 
   | RHEL (7, minor), S390X ->
-     Location (sprintf "http://download.devel.redhat.com/released/RHEL-7/7.%d/Server/s390x/os" minor)
+     Location (sprintf "http://download.devel.redhat.com/released/rhel-6-7-8/rhel-7/RHEL-7/7.%d/Server/s390x/os" minor)
 
   | RHEL (7, minor), Aarch64 ->
      Location (sprintf "http://download.eng.bos.redhat.com/released/RHEL-ALT-7/7.%d/Server/aarch64/os" minor)
 
   | RHEL (8, minor), arch ->
-     Location (sprintf "http://download.eng.bos.redhat.com/released/RHEL-8/8.%d.0/BaseOS/%s/os" minor (string_of_arch arch))
+     Location (sprintf "http://download.eng.bos.redhat.com/released/rhel-6-7-8/rhel-8/RHEL-8/8.%d.0/BaseOS/%s/os" minor (string_of_arch arch))
 
   | Ubuntu (_, dist), X86_64 ->
      Location (sprintf "http://archive.ubuntu.com/ubuntu/dists/%s/main/installer-amd64" dist)
@@ -1162,8 +1163,8 @@ and os_variant_of_os ?(for_fedora = false) os arch =
     | Debian (ver, _), _ when ver <= 8 -> sprintf "debian%d" ver
     | Debian _, _ -> "debian8" (* max version known in Fedora 26 *)
 
-    | Ubuntu (ver, _), _ when ver < "18.04" -> sprintf "ubuntu%s" ver
-    | Ubuntu ("18.04", _), _ -> "ubuntu17.04"
+    | Ubuntu (ver, _), _ when ver < "20.04" -> sprintf "ubuntu%s" ver
+    | Ubuntu ("20.04", _), _ -> "ubuntu19.10"
     | Ubuntu _, _ -> assert false
 
     | FreeBSD (major, minor), _ -> sprintf "freebsd%d.%d" major minor
@@ -1238,7 +1239,8 @@ and make_rhel_yum_conf major minor arch =
                    major major minor in
          sprintf "%s/Server/%s/os" topurl arch,
          sprintf "%s/source/SRPMS" topurl,
-         Some (sprintf "%s/Server/optional/%s/os" arch topurl,
+         Some ("Optional",
+               sprintf "%s/Server/optional/%s/os" arch topurl,
                sprintf "%s/Server/optional/source/SRPMS" topurl)
       | 7, (X86_64|PPC64|PPC64le|S390X) ->
          let topurl =
@@ -1246,7 +1248,8 @@ and make_rhel_yum_conf major minor arch =
                    major major minor in
          sprintf "%s/Server/%s/os" topurl (string_of_arch arch),
          sprintf "%s/Server/source/tree" topurl,
-         Some (sprintf "%s/Server-optional/%s/os" topurl (string_of_arch arch),
+         Some ("Optional",
+               sprintf "%s/Server-optional/%s/os" topurl (string_of_arch arch),
                sprintf "%s/Server-optional/source/tree" topurl)
       | 7, Aarch64 ->
          let topurl =
@@ -1254,7 +1257,8 @@ and make_rhel_yum_conf major minor arch =
                    major major minor in
          sprintf "%s/Server/%s/os" topurl (string_of_arch arch),
          sprintf "%s/Server/source/tree" topurl,
-         Some (sprintf "%s/Server-optional/%s/os" topurl (string_of_arch arch),
+         Some ("Optional",
+               sprintf "%s/Server-optional/%s/os" topurl (string_of_arch arch),
                sprintf "%s/Server-optional/source/tree" topurl)
       | 8, arch ->
          let topurl =
@@ -1262,7 +1266,9 @@ and make_rhel_yum_conf major minor arch =
                    major major minor in
          sprintf "%s/BaseOS/%s/os" topurl (string_of_arch arch),
          sprintf "%s/BaseOS/source/tree" topurl,
-         None (* XXX sort out AppStream and CRB *)
+         Some ("AppStream",
+               sprintf "%s/AppStream/%s/os" topurl (string_of_arch arch),
+               sprintf "%s/AppStream/source/tree" topurl)
       | _ -> assert false in
 
     bpf "\
@@ -1285,23 +1291,25 @@ keepcache=0
 
     (match optional with
      | None -> ()
-     | Some (optionalbaseurl, optionalsrpms) ->
+     | Some (name, optionalbaseurl, optionalsrpms) ->
+        let lc_name = String.lowercase_ascii name in
         bpf "\
 
-[rhel%d-optional]
-name=RHEL %d Server Optional
+[rhel%d-%s]
+name=RHEL %d Server %s
 baseurl=%s
 enabled=1
 gpgcheck=0
 keepcache=0
 
-[rhel%d-optional-source]
-name=RHEL %d Server Optional
+[rhel%d-%s-source]
+name=RHEL %d Server %s
 baseurl=%s
 enabled=0
 gpgcheck=0
 keepcache=0
-" major major optionalbaseurl major major optionalsrpms
+" major lc_name major lc_name optionalbaseurl
+  major lc_name major lc_name optionalsrpms
     )
   ) else (
     assert false (* not implemented for RHEL major >= 9 *)

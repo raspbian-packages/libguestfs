@@ -25,6 +25,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <libintl.h>
 #include <error.h>
@@ -38,18 +39,18 @@
 
 /**
  * Make a LUKS map name from the partition name,
- * eg. C<"/dev/vda2" =E<gt> "luksvda2">
+ * eg. C<"/dev/vda2" =E<gt> "cryptvda2">
  */
 static void
 make_mapname (const char *device, char *mapname, size_t len)
 {
   size_t i = 0;
 
-  if (len < 5)
+  if (len < 6)
     abort ();
-  strcpy (mapname, "luks");
-  mapname += 4;
-  len -= 4;
+  strcpy (mapname, "crypt");
+  mapname += 5;
+  len -= 5;
 
   if (STRPREFIX (device, "/dev/"))
     i = 5;
@@ -65,10 +66,8 @@ make_mapname (const char *device, char *mapname, size_t len)
 }
 
 /**
- * Simple implementation of decryption: look for any C<crypto_LUKS>
- * partitions and decrypt them, then rescan for VGs.  This only works
- * for Fedora whole-disk encryption.  WIP to make this work for other
- * encryption schemes.
+ * Simple implementation of decryption: look for any encrypted
+ * partitions and decrypt them, then rescan for VGs.
  */
 void
 inspect_do_decrypt (guestfs_h *g, struct key_store *ks)
@@ -82,12 +81,21 @@ inspect_do_decrypt (guestfs_h *g, struct key_store *ks)
 
   for (i = 0; partitions[i] != NULL; ++i) {
     CLEANUP_FREE char *type = guestfs_vfs_type (g, partitions[i]);
-    if (type && STREQ (type, "crypto_LUKS")) {
+    if (type &&
+        (STREQ (type, "crypto_LUKS") || STREQ (type, "BitLocker"))) {
+      bool is_bitlocker = STREQ (type, "BitLocker");
       char mapname[32];
       make_mapname (partitions[i], mapname, sizeof mapname);
 
 #ifdef GUESTFS_HAVE_LUKS_UUID
-      CLEANUP_FREE char *uuid = guestfs_luks_uuid (g, partitions[i]);
+      CLEANUP_FREE char *uuid = NULL;
+
+      /* This fails for Windows BitLocker disks because cryptsetup
+       * luksUUID cannot read a UUID (unclear if this is a limitation
+       * of the format or cryptsetup).
+       */
+      if (!is_bitlocker)
+        uuid = guestfs_luks_uuid (g, partitions[i]);
 #else
       const char *uuid = NULL;
 #endif
@@ -97,11 +105,15 @@ inspect_do_decrypt (guestfs_h *g, struct key_store *ks)
 
       /* Try each key in turn. */
       for (j = 0; keys[j] != NULL; ++j) {
-        /* XXX Should we call guestfs_luks_open_ro if readonly flag
+        /* XXX Should we set GUESTFS_CRYPTSETUP_OPEN_READONLY if readonly
          * is set?  This might break 'mount_ro'.
          */
         guestfs_push_error_handler (g, NULL, NULL);
+#ifdef GUESTFS_HAVE_CRYPTSETUP_OPEN
+        r = guestfs_cryptsetup_open (g, partitions[i], keys[j], mapname, -1);
+#else
         r = guestfs_luks_open (g, partitions[i], keys[j], mapname);
+#endif
         guestfs_pop_error_handler (g);
         if (r == 0)
           goto opened;

@@ -627,6 +627,8 @@ list_commands (void)
   printf ("%-20s %s\n", "cp-a", _("copy a file or directory recursively"));
   printf ("%-20s %s\n", "cp-r", _("copy a file or directory recursively"));
   printf ("%-20s %s\n", "cpio-out", _("pack directory into cpio file"));
+  printf ("%-20s %s\n", "cryptsetup-close", _("close an encrypted device"));
+  printf ("%-20s %s\n", "cryptsetup-open", _("open an encrypted block device"));
   printf ("%-20s %s\n", "dd", _("copy from source to destination using dd"));
   printf ("%-20s %s\n", "debug", _("debugging and internals"));
   printf ("%-20s %s\n", "debug-drives", _("debug the drives (internal use only)"));

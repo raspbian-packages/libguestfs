@@ -2917,6 +2917,8 @@ guestfs_int_ruby_lstatlist (VALUE gv, VALUE pathv, VALUE namesv)
  *
  * [Since] Added in version 1.5.1.
  *
+ * [Deprecated] In new code, use rdoc-ref:cryptsetup_open instead.
+ *
  * [Feature] This function depends on the feature +luks+.  See also {#feature_available}[rdoc-ref:feature_available].
  *
  * [C API] For the C API documentation for this function, see
@@ -2929,6 +2931,8 @@ guestfs_int_ruby_luks_open (VALUE gv, VALUE devicev, VALUE keyv, VALUE mapnamev)
   Data_Get_Struct (gv, guestfs_h, g);
   if (!g)
     rb_raise (rb_eArgError, "%s: used handle after closing it", "luks_open");
+
+  rb_warn ("Guestfs#luks_open is deprecated; use #cryptsetup_open instead");
 
   const char *device = StringValueCStr (devicev);
   const char *key = StringValueCStr (keyv);
@@ -2955,6 +2959,8 @@ guestfs_int_ruby_luks_open (VALUE gv, VALUE devicev, VALUE keyv, VALUE mapnamev)
  *
  * [Since] Added in version 1.5.1.
  *
+ * [Deprecated] In new code, use rdoc-ref:cryptsetup_open instead.
+ *
  * [Feature] This function depends on the feature +luks+.  See also {#feature_available}[rdoc-ref:feature_available].
  *
  * [C API] For the C API documentation for this function, see
@@ -2967,6 +2973,8 @@ guestfs_int_ruby_luks_open_ro (VALUE gv, VALUE devicev, VALUE keyv, VALUE mapnam
   Data_Get_Struct (gv, guestfs_h, g);
   if (!g)
     rb_raise (rb_eArgError, "%s: used handle after closing it", "luks_open_ro");
+
+  rb_warn ("Guestfs#luks_open_ro is deprecated; use #cryptsetup_open instead");
 
   const char *device = StringValueCStr (devicev);
   const char *key = StringValueCStr (keyv);

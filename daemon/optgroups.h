@@ -252,6 +252,8 @@ extern int optgroup_zerofree_available (void);
   int optgroup_linuxxattrs_available (void) { return 0; }
 
 #define OPTGROUP_LUKS_NOT_AVAILABLE \
+  int __attribute__((noreturn)) do_cryptsetup_close (const char *device) { abort (); } \
+  int __attribute__((noreturn)) do_cryptsetup_open (const char *device, const char *key, const char *mapname, int readonly, const char *crypttype) { abort (); } \
   int __attribute__((noreturn)) do_luks_add_key (const char *device, const char *key, const char *newkey, int keyslot) { abort (); } \
   int __attribute__((noreturn)) do_luks_close (const char *device) { abort (); } \
   int __attribute__((noreturn)) do_luks_format (const char *device, const char *key, int keyslot) { abort (); } \

@@ -6166,6 +6166,141 @@ guestfs_session_cpio_out (GuestfsSession *session, const gchar *directory, const
 }
 
 /**
+ * guestfs_session_cryptsetup_close:
+ * @session: (transfer none): A GuestfsSession object
+ * @device: (transfer none) (type filename):
+ * @err: A GError object to receive any generated errors
+ *
+ * close an encrypted device
+ *
+ * This closes an encrypted device that was created earlier by
+ * guestfs_session_cryptsetup_open(). The @device parameter must be the
+ * name of the mapping device (ie. /dev/mapper/mapname) and *not* the name
+ * of the underlying block device.
+ * 
+ * This function depends on the feature "luks".
+ * See also guestfs_session_feature_available().
+ *
+ * Returns: true on success, false on error
+ * Since: 1.43.2
+ */
+gboolean
+guestfs_session_cryptsetup_close (GuestfsSession *session, const gchar *device, GError **err)
+{
+  guestfs_h *g = session->priv->g;
+  if (g == NULL) {
+    g_set_error (err, GUESTFS_ERROR, 0,
+                "attempt to call %s after the session has been closed",
+                "cryptsetup_close");
+    return FALSE;
+  }
+
+  int ret = guestfs_cryptsetup_close (g, device);
+  if (ret == -1) {
+    g_set_error_literal (err, GUESTFS_ERROR, 0, guestfs_last_error (g));
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+/**
+ * guestfs_session_cryptsetup_open:
+ * @session: (transfer none): A GuestfsSession object
+ * @device: (transfer none) (type filename):
+ * @key: (transfer none) (type utf8):
+ * @mapname: (transfer none) (type utf8):
+ * @optargs: (transfer none) (allow-none): a GuestfsCryptsetupOpen containing optional arguments
+ * @err: A GError object to receive any generated errors
+ *
+ * open an encrypted block device
+ *
+ * This command opens a block device which has been encrypted according to
+ * the Linux Unified Key Setup (LUKS) standard, Windows BitLocker, or some
+ * other types.
+ * 
+ * @device is the encrypted block device or partition.
+ * 
+ * The caller must supply one of the keys associated with the encrypted
+ * block device, in the @key parameter.
+ * 
+ * This creates a new block device called /dev/mapper/mapname. Reads and
+ * writes to this block device are decrypted from and encrypted to the
+ * underlying @device respectively.
+ * 
+ * @mapname cannot be "control" because that name is reserved by
+ * device-mapper.
+ * 
+ * If the optional @crypttype parameter is not present then libguestfs
+ * tries to guess the correct type (for example LUKS or BitLocker). However
+ * you can override this by specifying one of the following types:
+ * 
+ * @luks
+ * A Linux LUKS device.
+ * 
+ * @bitlk
+ * A Windows BitLocker device.
+ * 
+ * The optional @readonly flag, if set to true, creates a read-only
+ * mapping.
+ * 
+ * If this block device contains LVM volume groups, then calling
+ * guestfs_session_lvm_scan() with the @activate parameter @true will make
+ * them visible.
+ * 
+ * Use guestfs_session_list_dm_devices() to list all device mapper devices.
+ * 
+ * This function depends on the feature "luks".
+ * See also guestfs_session_feature_available().
+ *
+ * Returns: true on success, false on error
+ * Since: 1.43.2
+ */
+gboolean
+guestfs_session_cryptsetup_open (GuestfsSession *session, const gchar *device, const gchar *key, const gchar *mapname, GuestfsCryptsetupOpen *optargs, GError **err)
+{
+  guestfs_h *g = session->priv->g;
+  if (g == NULL) {
+    g_set_error (err, GUESTFS_ERROR, 0,
+                "attempt to call %s after the session has been closed",
+                "cryptsetup_open");
+    return FALSE;
+  }
+
+  struct guestfs_cryptsetup_open_argv argv;
+  struct guestfs_cryptsetup_open_argv *argvp = NULL;
+
+  if (optargs) {
+    argv.bitmask = 0;
+
+    GValue readonly_v = {0, };
+    g_value_init (&readonly_v, GUESTFS_TYPE_TRISTATE);
+    g_object_get_property (G_OBJECT (optargs), "readonly", &readonly_v);
+    GuestfsTristate readonly = g_value_get_enum (&readonly_v);
+    if (readonly != GUESTFS_TRISTATE_NONE) {
+      argv.bitmask |= GUESTFS_CRYPTSETUP_OPEN_READONLY_BITMASK;
+      argv.readonly = readonly;
+    }
+    GValue crypttype_v = {0, };
+    g_value_init (&crypttype_v, G_TYPE_STRING);
+    g_object_get_property (G_OBJECT (optargs), "crypttype", &crypttype_v);
+    const gchar *crypttype = g_value_get_string (&crypttype_v);
+    if (crypttype != NULL) {
+      argv.bitmask |= GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK;
+      argv.crypttype = crypttype;
+    }
+    argvp = &argv;
+  }
+  int ret = guestfs_cryptsetup_open_argv (g, device, key, mapname, argvp);
+  if (ret == -1) {
+    g_set_error_literal (err, GUESTFS_ERROR, 0, guestfs_last_error (g));
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+/**
  * guestfs_session_dd:
  * @session: (transfer none): A GuestfsSession object
  * @src: (transfer none) (type filename):
@@ -17526,6 +17661,7 @@ guestfs_session_luks_add_key (GuestfsSession *session, const gchar *device, cons
  * See also guestfs_session_feature_available().
  *
  * Returns: true on success, false on error
+ * Deprecated: In new code, use guestfs_session_cryptsetup_close() instead
  * Since: 1.5.1
  */
 gboolean
@@ -17699,6 +17835,7 @@ guestfs_session_luks_kill_slot (GuestfsSession *session, const gchar *device, co
  * See also guestfs_session_feature_available().
  *
  * Returns: true on success, false on error
+ * Deprecated: In new code, use guestfs_session_cryptsetup_open() instead
  * Since: 1.5.1
  */
 gboolean
@@ -17738,6 +17875,7 @@ guestfs_session_luks_open (GuestfsSession *session, const gchar *device, const g
  * See also guestfs_session_feature_available().
  *
  * Returns: true on success, false on error
+ * Deprecated: In new code, use guestfs_session_cryptsetup_open() instead
  * Since: 1.5.1
  */
 gboolean
@@ -17889,7 +18027,7 @@ guestfs_session_lvcreate_free (GuestfsSession *session, const gchar *logvol, con
  * /dev/VG/LV.
  * 
  * This command returns an error if the @lvname parameter does not refer to
- * a logical volume.
+ * a logical volume. In this case errno will be set to @EINVAL.
  * 
  * See also guestfs_session_is_lv(),
  * guestfs_session_canonical_device_name().

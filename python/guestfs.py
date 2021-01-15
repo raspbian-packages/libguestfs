@@ -71,6 +71,7 @@ logvols = g.lvs()
 import os
 import sys
 import libguestfsmod
+from typing import Union, List, Tuple, Optional
 
 EVENT_CLOSE = 0x1
 EVENT_SUBPROCESS_QUIT = 0x2
@@ -182,7 +183,7 @@ class GuestFS(object):
         self._check_not_closed()
         libguestfsmod.delete_event_callback(self._o, event_handle)
 
-    def acl_delete_def_file(self, dir):
+    def acl_delete_def_file(self, dir: str) -> None:
         """This function deletes the default POSIX Access Control
         List (ACL) attached to directory "dir".
 
@@ -193,7 +194,7 @@ class GuestFS(object):
         r = libguestfsmod.acl_delete_def_file(self._o, dir)
         return r
 
-    def acl_get_file(self, path, acltype):
+    def acl_get_file(self, path: str, acltype: str) -> str:
         """This function returns the POSIX Access Control List
         (ACL) attached to "path". The ACL is returned in "long
         text form" (see acl(5)).
@@ -215,7 +216,7 @@ class GuestFS(object):
         r = libguestfsmod.acl_get_file(self._o, path, acltype)
         return r
 
-    def acl_set_file(self, path, acltype, acl):
+    def acl_set_file(self, path: str, acltype: str, acl: str) -> None:
         """This function sets the POSIX Access Control List (ACL)
         attached to "path".
 
@@ -255,7 +256,7 @@ class GuestFS(object):
         r = libguestfsmod.acl_set_file(self._o, path, acltype, acl)
         return r
 
-    def add_cdrom(self, filename):
+    def add_cdrom(self, filename: str) -> None:
         """This function adds a virtual CD-ROM disk image to the
         guest.
 
@@ -277,9 +278,14 @@ class GuestFS(object):
         r = libguestfsmod.add_cdrom(self._o, filename)
         return r
 
-    def add_domain(self, dom, libvirturi=None, readonly=None, iface=None,
-                   live=None, allowuuid=None, readonlydisk=None,
-                   cachemode=None, discard=None, copyonread=None):
+    def add_domain(self, dom: str, libvirturi: Optional[str] = None,
+                   readonly: Optional[bool] = None,
+                   iface: Optional[str] = None, live: Optional[bool] = None,
+                   allowuuid: Optional[bool] = None,
+                   readonlydisk: Optional[str] = None,
+                   cachemode: Optional[str] = None,
+                   discard: Optional[str] = None,
+                   copyonread: Optional[bool] = None) -> int:
         """This function adds the disk(s) attached to the named
         libvirt domain "dom". It works by connecting to libvirt,
         requesting the domain and domain XML from libvirt,
@@ -372,10 +378,16 @@ class GuestFS(object):
                                      discard, copyonread)
         return r
 
-    def add_drive(self, filename, readonly=None, format=None, iface=None,
-                  name=None, label=None, protocol=None, server=None,
-                  username=None, secret=None, cachemode=None, discard=None,
-                  copyonread=None, blocksize=None):
+    def add_drive(self, filename: str, readonly: Optional[bool] = None,
+                  format: Optional[str] = None, iface: Optional[str] = None,
+                  name: Optional[str] = None, label: Optional[str] = None,
+                  protocol: Optional[str] = None,
+                  server: Optional[List[str]] = None,
+                  username: Optional[str] = None, secret: Optional[str] = None,
+                  cachemode: Optional[str] = None,
+                  discard: Optional[str] = None,
+                  copyonread: Optional[bool] = None,
+                  blocksize: Optional[int] = None) -> None:
         """This function adds a disk image called filename to the
         handle. filename may be a regular host file or a host
         device.
@@ -634,7 +646,7 @@ class GuestFS(object):
 
     add_drive_opts = add_drive
 
-    def add_drive_ro(self, filename):
+    def add_drive_ro(self, filename: str) -> None:
         """This function is the equivalent of calling
         "g.add_drive_opts" with the optional parameter
         "GUESTFS_ADD_DRIVE_OPTS_READONLY" set to 1, so the disk
@@ -645,7 +657,7 @@ class GuestFS(object):
         r = libguestfsmod.add_drive_ro(self._o, filename)
         return r
 
-    def add_drive_ro_with_if(self, filename, iface):
+    def add_drive_ro_with_if(self, filename: str, iface: str) -> None:
         """This is the same as "g.add_drive_ro" but it allows you
         to specify the QEMU interface emulation to use at run
         time.
@@ -665,7 +677,9 @@ class GuestFS(object):
         r = libguestfsmod.add_drive_ro_with_if(self._o, filename, iface)
         return r
 
-    def add_drive_scratch(self, size, name=None, label=None, blocksize=None):
+    def add_drive_scratch(self, size: int, name: Optional[str] = None,
+                          label: Optional[str] = None,
+                          blocksize: Optional[int] = None) -> None:
         """This command adds a temporary scratch drive to the
         handle. The "size" parameter is the virtual size (in
         bytes). The scratch drive is blank initially (all reads
@@ -680,7 +694,7 @@ class GuestFS(object):
                                             blocksize)
         return r
 
-    def add_drive_with_if(self, filename, iface):
+    def add_drive_with_if(self, filename: str, iface: str) -> None:
         """This is the same as "g.add_drive" but it allows you to
         specify the QEMU interface emulation to use at run time.
 
@@ -699,9 +713,13 @@ class GuestFS(object):
         r = libguestfsmod.add_drive_with_if(self._o, filename, iface)
         return r
 
-    def add_libvirt_dom(self, dom, readonly=None, iface=None, live=None,
-                        readonlydisk=None, cachemode=None, discard=None,
-                        copyonread=None):
+    def add_libvirt_dom(self, dom, readonly: Optional[bool] = None,
+                        iface: Optional[str] = None,
+                        live: Optional[bool] = None,
+                        readonlydisk: Optional[str] = None,
+                        cachemode: Optional[str] = None,
+                        discard: Optional[str] = None,
+                        copyonread: Optional[bool] = None) -> int:
         """This function adds the disk(s) attached to the libvirt
         domain "dom". It works by requesting the domain XML from
         libvirt, parsing it for disks, and calling
@@ -751,7 +769,7 @@ class GuestFS(object):
                                           copyonread)
         return r
 
-    def aug_clear(self, augpath):
+    def aug_clear(self, augpath: str) -> None:
         """Set the value associated with "path" to "NULL". This is
         the same as the augtool(1) "clear" command.
         """
@@ -759,7 +777,7 @@ class GuestFS(object):
         r = libguestfsmod.aug_clear(self._o, augpath)
         return r
 
-    def aug_close(self):
+    def aug_close(self) -> None:
         """Close the current Augeas handle and free up any
         resources used by it. After calling this, you have to
         call "g.aug_init" again before you can use any other
@@ -769,7 +787,7 @@ class GuestFS(object):
         r = libguestfsmod.aug_close(self._o)
         return r
 
-    def aug_defnode(self, name, expr, val):
+    def aug_defnode(self, name: str, expr: str, val: str) -> dict:
         """Defines a variable "name" whose value is the result of
         evaluating "expr".
 
@@ -789,7 +807,7 @@ class GuestFS(object):
         r = libguestfsmod.aug_defnode(self._o, name, expr, val)
         return r
 
-    def aug_defvar(self, name, expr):
+    def aug_defvar(self, name: str, expr: Optional[str]) -> int:
         """Defines an Augeas variable "name" whose value is the
         result of evaluating "expr". If "expr" is NULL, then
         "name" is undefined.
@@ -802,7 +820,7 @@ class GuestFS(object):
         r = libguestfsmod.aug_defvar(self._o, name, expr)
         return r
 
-    def aug_get(self, augpath):
+    def aug_get(self, augpath: str) -> str:
         """Look up the value associated with "path". If "path"
         matches exactly one node, the "value" is returned.
         """
@@ -810,7 +828,7 @@ class GuestFS(object):
         r = libguestfsmod.aug_get(self._o, augpath)
         return r
 
-    def aug_init(self, root, flags):
+    def aug_init(self, root: str, flags: int) -> None:
         """Create a new Augeas handle for editing configuration
         files. If there was any previous Augeas handle
         associated with this guestfs session, then it is closed.
@@ -859,7 +877,7 @@ class GuestFS(object):
         r = libguestfsmod.aug_init(self._o, root, flags)
         return r
 
-    def aug_insert(self, augpath, label, before):
+    def aug_insert(self, augpath: str, label: str, before: bool) -> None:
         """Create a new sibling "label" for "path", inserting it
         into the tree before or after "path" (depending on the
         boolean flag "before").
@@ -872,7 +890,7 @@ class GuestFS(object):
         r = libguestfsmod.aug_insert(self._o, augpath, label, before)
         return r
 
-    def aug_label(self, augpath):
+    def aug_label(self, augpath: str) -> str:
         """The label (name of the last element) of the Augeas path
         expression "augpath" is returned. "augpath" must match
         exactly one node, else this function returns an error.
@@ -881,7 +899,7 @@ class GuestFS(object):
         r = libguestfsmod.aug_label(self._o, augpath)
         return r
 
-    def aug_load(self):
+    def aug_load(self) -> None:
         """Load files into the tree.
 
         See "aug_load" in the Augeas documentation for the full
@@ -891,7 +909,7 @@ class GuestFS(object):
         r = libguestfsmod.aug_load(self._o)
         return r
 
-    def aug_ls(self, augpath):
+    def aug_ls(self, augpath: str) -> List[str]:
         """This is just a shortcut for listing "g.aug_match"
         "path/*" and sorting the resulting nodes into
         alphabetical order.
@@ -902,7 +920,7 @@ class GuestFS(object):
         r = libguestfsmod.aug_ls(self._o, augpath)
         return r
 
-    def aug_match(self, augpath):
+    def aug_match(self, augpath: str) -> List[str]:
         """Returns a list of paths which match the path expression
         "path". The returned paths are sufficiently qualified so
         that they match exactly one node in the current tree.
@@ -913,7 +931,7 @@ class GuestFS(object):
         r = libguestfsmod.aug_match(self._o, augpath)
         return r
 
-    def aug_mv(self, src, dest):
+    def aug_mv(self, src: str, dest: str) -> None:
         """Move the node "src" to "dest". "src" must match exactly
         one node. "dest" is overwritten if it exists.
         """
@@ -921,7 +939,7 @@ class GuestFS(object):
         r = libguestfsmod.aug_mv(self._o, src, dest)
         return r
 
-    def aug_rm(self, augpath):
+    def aug_rm(self, augpath: str) -> int:
         """Remove "path" and all of its children.
 
         On success this returns the number of entries which were
@@ -931,7 +949,7 @@ class GuestFS(object):
         r = libguestfsmod.aug_rm(self._o, augpath)
         return r
 
-    def aug_save(self):
+    def aug_save(self) -> None:
         """This writes all pending changes to disk.
 
         The flags which were passed to "g.aug_init" affect
@@ -941,7 +959,7 @@ class GuestFS(object):
         r = libguestfsmod.aug_save(self._o)
         return r
 
-    def aug_set(self, augpath, val):
+    def aug_set(self, augpath: str, val: str) -> None:
         """Set the value associated with "augpath" to "val".
 
         In the Augeas API, it is possible to clear a node by
@@ -953,7 +971,7 @@ class GuestFS(object):
         r = libguestfsmod.aug_set(self._o, augpath, val)
         return r
 
-    def aug_setm(self, base, sub, val):
+    def aug_setm(self, base: str, sub: Optional[str], val: str) -> int:
         """Change multiple Augeas nodes in a single operation.
         "base" is an expression matching multiple nodes. "sub"
         is a path expression relative to "base". All nodes
@@ -967,7 +985,8 @@ class GuestFS(object):
         r = libguestfsmod.aug_setm(self._o, base, sub, val)
         return r
 
-    def aug_transform(self, lens, file, remove=None):
+    def aug_transform(self, lens: str, file: str,
+                      remove: Optional[bool] = None) -> None:
         """Add an Augeas transformation for the specified "lens" so
         it can handle "file".
 
@@ -978,7 +997,7 @@ class GuestFS(object):
         r = libguestfsmod.aug_transform(self._o, lens, file, remove)
         return r
 
-    def available(self, groups):
+    def available(self, groups: List[str]) -> None:
         """This command is used to check the availability of some
         groups of functionality in the appliance, which not all
         builds of the libguestfs appliance will be able to
@@ -1040,7 +1059,7 @@ class GuestFS(object):
         r = libguestfsmod.available(self._o, groups)
         return r
 
-    def available_all_groups(self):
+    def available_all_groups(self) -> List[str]:
         """This command returns a list of all optional groups that
         this daemon knows about. Note this returns both
         supported and unsupported groups. To find out which ones
@@ -1057,7 +1076,7 @@ class GuestFS(object):
         r = libguestfsmod.available_all_groups(self._o)
         return r
 
-    def base64_in(self, base64file, filename):
+    def base64_in(self, base64file: str, filename: str) -> None:
         """This command uploads base64-encoded data from
         "base64file" to filename.
         """
@@ -1065,7 +1084,7 @@ class GuestFS(object):
         r = libguestfsmod.base64_in(self._o, base64file, filename)
         return r
 
-    def base64_out(self, filename, base64file):
+    def base64_out(self, filename: str, base64file: str) -> None:
         """This command downloads the contents of filename, writing
         it out to local file "base64file" encoded as base64.
         """
@@ -1073,7 +1092,7 @@ class GuestFS(object):
         r = libguestfsmod.base64_out(self._o, filename, base64file)
         return r
 
-    def blkdiscard(self, device):
+    def blkdiscard(self, device: str) -> None:
         """This discards all blocks on the block device "device",
         giving the free space back to the host.
 
@@ -1091,7 +1110,7 @@ class GuestFS(object):
         r = libguestfsmod.blkdiscard(self._o, device)
         return r
 
-    def blkdiscardzeroes(self, device):
+    def blkdiscardzeroes(self, device: str) -> bool:
         """This call returns true if blocks on "device" that have
         been discarded by a call to "g.blkdiscard" are returned
         as blocks of zero bytes when read the next time.
@@ -1106,7 +1125,7 @@ class GuestFS(object):
         r = libguestfsmod.blkdiscardzeroes(self._o, device)
         return r
 
-    def blkid(self, device):
+    def blkid(self, device: str) -> Union[List[Tuple[str, str]], dict]:
         """This command returns block device attributes for
         "device". The following fields are usually present in
         the returned hash. Other fields may also be present.
@@ -1138,7 +1157,7 @@ class GuestFS(object):
         r = self._maybe_convert_to_dict(r)
         return r
 
-    def blockdev_flushbufs(self, device):
+    def blockdev_flushbufs(self, device: str) -> None:
         """This tells the kernel to flush internal buffers
         associated with "device".
 
@@ -1148,7 +1167,7 @@ class GuestFS(object):
         r = libguestfsmod.blockdev_flushbufs(self._o, device)
         return r
 
-    def blockdev_getbsz(self, device):
+    def blockdev_getbsz(self, device: str) -> int:
         """This returns the block size of a device.
 
         Note: this is different from both *size in blocks* and
@@ -1163,7 +1182,7 @@ class GuestFS(object):
         r = libguestfsmod.blockdev_getbsz(self._o, device)
         return r
 
-    def blockdev_getro(self, device):
+    def blockdev_getro(self, device: str) -> bool:
         """Returns a boolean indicating if the block device is
         read-only (true if read-only, false if not).
 
@@ -1173,7 +1192,7 @@ class GuestFS(object):
         r = libguestfsmod.blockdev_getro(self._o, device)
         return r
 
-    def blockdev_getsize64(self, device):
+    def blockdev_getsize64(self, device: str) -> int:
         """This returns the size of the device in bytes.
 
         See also "g.blockdev_getsz".
@@ -1184,7 +1203,7 @@ class GuestFS(object):
         r = libguestfsmod.blockdev_getsize64(self._o, device)
         return r
 
-    def blockdev_getss(self, device):
+    def blockdev_getss(self, device: str) -> int:
         """This returns the size of sectors on a block device.
         Usually 512, but can be larger for modern devices.
 
@@ -1197,7 +1216,7 @@ class GuestFS(object):
         r = libguestfsmod.blockdev_getss(self._o, device)
         return r
 
-    def blockdev_getsz(self, device):
+    def blockdev_getsz(self, device: str) -> int:
         """This returns the size of the device in units of 512-byte
         sectors (even if the sectorsize isn't 512 bytes ...
         weird).
@@ -1212,7 +1231,7 @@ class GuestFS(object):
         r = libguestfsmod.blockdev_getsz(self._o, device)
         return r
 
-    def blockdev_rereadpt(self, device):
+    def blockdev_rereadpt(self, device: str) -> None:
         """Reread the partition table on "device".
 
         This uses the blockdev(8) command.
@@ -1221,7 +1240,7 @@ class GuestFS(object):
         r = libguestfsmod.blockdev_rereadpt(self._o, device)
         return r
 
-    def blockdev_setbsz(self, device, blocksize):
+    def blockdev_setbsz(self, device: str, blocksize: int) -> None:
         """This call does nothing and has never done anything
         because of a bug in blockdev. Do not use it.
 
@@ -1243,7 +1262,7 @@ class GuestFS(object):
         r = libguestfsmod.blockdev_setbsz(self._o, device, blocksize)
         return r
 
-    def blockdev_setra(self, device, sectors):
+    def blockdev_setra(self, device: str, sectors: int) -> None:
         """Set readahead (in 512-byte sectors) for the device.
 
         This uses the blockdev(8) command.
@@ -1252,7 +1271,7 @@ class GuestFS(object):
         r = libguestfsmod.blockdev_setra(self._o, device, sectors)
         return r
 
-    def blockdev_setro(self, device):
+    def blockdev_setro(self, device: str) -> None:
         """Sets the block device named "device" to read-only.
 
         This uses the blockdev(8) command.
@@ -1261,7 +1280,7 @@ class GuestFS(object):
         r = libguestfsmod.blockdev_setro(self._o, device)
         return r
 
-    def blockdev_setrw(self, device):
+    def blockdev_setrw(self, device: str) -> None:
         """Sets the block device named "device" to read-write.
 
         This uses the blockdev(8) command.
@@ -1270,7 +1289,7 @@ class GuestFS(object):
         r = libguestfsmod.blockdev_setrw(self._o, device)
         return r
 
-    def btrfs_balance_cancel(self, path):
+    def btrfs_balance_cancel(self, path: str) -> None:
         """Cancel a running balance on a btrfs filesystem.
 
         This function depends on the feature "btrfs". See also
@@ -1280,7 +1299,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_balance_cancel(self._o, path)
         return r
 
-    def btrfs_balance_pause(self, path):
+    def btrfs_balance_pause(self, path: str) -> None:
         """Pause a running balance on a btrfs filesystem.
 
         This function depends on the feature "btrfs". See also
@@ -1290,7 +1309,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_balance_pause(self._o, path)
         return r
 
-    def btrfs_balance_resume(self, path):
+    def btrfs_balance_resume(self, path: str) -> None:
         """Resume a paused balance on a btrfs filesystem.
 
         This function depends on the feature "btrfs". See also
@@ -1300,7 +1319,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_balance_resume(self._o, path)
         return r
 
-    def btrfs_balance_status(self, path):
+    def btrfs_balance_status(self, path: str) -> dict:
         """Show the status of a running or paused balance on a
         btrfs filesystem.
 
@@ -1315,7 +1334,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_balance_status(self._o, path)
         return r
 
-    def btrfs_device_add(self, devices, fs):
+    def btrfs_device_add(self, devices: List[str], fs: str) -> None:
         """Add the list of device(s) in "devices" to the btrfs
         filesystem mounted at "fs". If "devices" is an empty
         list, this does nothing.
@@ -1328,7 +1347,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_device_add(self._o, devices, fs)
         return r
 
-    def btrfs_device_delete(self, devices, fs):
+    def btrfs_device_delete(self, devices: List[str], fs: str) -> None:
         """Remove the "devices" from the btrfs filesystem mounted
         at "fs". If "devices" is an empty list, this does
         nothing.
@@ -1341,7 +1360,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_device_delete(self._o, devices, fs)
         return r
 
-    def btrfs_filesystem_balance(self, fs):
+    def btrfs_filesystem_balance(self, fs: str) -> None:
         """Balance the chunks in the btrfs filesystem mounted at
         "fs" across the underlying devices.
 
@@ -1352,7 +1371,9 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_filesystem_balance(self._o, fs)
         return r
 
-    def btrfs_filesystem_defragment(self, path, flush=None, compress=None):
+    def btrfs_filesystem_defragment(self, path: str,
+                                    flush: Optional[bool] = None,
+                                    compress: Optional[str] = None) -> None:
         """Defragment a file or directory on a btrfs filesystem.
         compress is one of zlib or lzo.
 
@@ -1364,7 +1385,8 @@ class GuestFS(object):
                                                       compress)
         return r
 
-    def btrfs_filesystem_resize(self, mountpoint, size=None):
+    def btrfs_filesystem_resize(self, mountpoint: str,
+                                size: Optional[int] = None) -> None:
         """This command resizes a btrfs filesystem.
 
         Note that unlike other resize calls, the filesystem has
@@ -1387,7 +1409,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_filesystem_resize(self._o, mountpoint, size)
         return r
 
-    def btrfs_filesystem_show(self, device):
+    def btrfs_filesystem_show(self, device: str) -> List[str]:
         """Show all the devices where the filesystems in "device"
         is spanned over.
 
@@ -1404,7 +1426,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_filesystem_show(self._o, device)
         return r
 
-    def btrfs_filesystem_sync(self, fs):
+    def btrfs_filesystem_sync(self, fs: str) -> None:
         """Force sync on the btrfs filesystem mounted at "fs".
 
         This function depends on the feature "btrfs". See also
@@ -1414,7 +1436,8 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_filesystem_sync(self._o, fs)
         return r
 
-    def btrfs_fsck(self, device, superblock=None, repair=None):
+    def btrfs_fsck(self, device: str, superblock: Optional[int] = None,
+                   repair: Optional[bool] = None) -> None:
         """Used to check a btrfs filesystem, "device" is the device
         file where the filesystem is stored.
 
@@ -1425,7 +1448,8 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_fsck(self._o, device, superblock, repair)
         return r
 
-    def btrfs_image(self, source, image, compresslevel=None):
+    def btrfs_image(self, source: List[str], image: str,
+                    compresslevel: Optional[int] = None) -> None:
         """This is used to create an image of a btrfs filesystem.
         All data will be zeroed, but metadata and the like is
         preserved.
@@ -1438,7 +1462,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_image(self._o, source, image, compresslevel)
         return r
 
-    def btrfs_qgroup_assign(self, src, dst, path):
+    def btrfs_qgroup_assign(self, src: str, dst: str, path: str) -> None:
         """Add qgroup "src" to parent qgroup "dst". This command
         can group several qgroups into a parent qgroup to share
         common limit.
@@ -1450,7 +1474,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_qgroup_assign(self._o, src, dst, path)
         return r
 
-    def btrfs_qgroup_create(self, qgroupid, subvolume):
+    def btrfs_qgroup_create(self, qgroupid: str, subvolume: str) -> None:
         """Create a quota group (qgroup) for subvolume at
         "subvolume".
 
@@ -1461,7 +1485,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_qgroup_create(self._o, qgroupid, subvolume)
         return r
 
-    def btrfs_qgroup_destroy(self, qgroupid, subvolume):
+    def btrfs_qgroup_destroy(self, qgroupid: str, subvolume: str) -> None:
         """Destroy a quota group.
 
         This function depends on the feature "btrfs". See also
@@ -1471,7 +1495,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_qgroup_destroy(self._o, qgroupid, subvolume)
         return r
 
-    def btrfs_qgroup_limit(self, subvolume, size):
+    def btrfs_qgroup_limit(self, subvolume: str, size: int) -> None:
         """Limit the size of the subvolume with path "subvolume".
 
         This function depends on the feature "btrfs". See also
@@ -1481,7 +1505,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_qgroup_limit(self._o, subvolume, size)
         return r
 
-    def btrfs_qgroup_remove(self, src, dst, path):
+    def btrfs_qgroup_remove(self, src: str, dst: str, path: str) -> None:
         """Remove qgroup "src" from the parent qgroup "dst".
 
         This function depends on the feature "btrfs". See also
@@ -1491,7 +1515,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_qgroup_remove(self._o, src, dst, path)
         return r
 
-    def btrfs_qgroup_show(self, path):
+    def btrfs_qgroup_show(self, path: str) -> List[dict]:
         """Show all subvolume quota groups in a btrfs filesystem,
         including their usages.
 
@@ -1505,7 +1529,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_qgroup_show(self._o, path)
         return r
 
-    def btrfs_quota_enable(self, fs, enable):
+    def btrfs_quota_enable(self, fs: str, enable: bool) -> None:
         """Enable or disable subvolume quota support for filesystem
         which contains "path".
 
@@ -1516,7 +1540,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_quota_enable(self._o, fs, enable)
         return r
 
-    def btrfs_quota_rescan(self, fs):
+    def btrfs_quota_rescan(self, fs: str) -> None:
         """Trash all qgroup numbers and scan the metadata again
         with the current config.
 
@@ -1527,7 +1551,8 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_quota_rescan(self._o, fs)
         return r
 
-    def btrfs_replace(self, srcdev, targetdev, mntpoint):
+    def btrfs_replace(self, srcdev: str, targetdev: str,
+                      mntpoint: str) -> None:
         """Replace device of a btrfs filesystem. On a live
         filesystem, duplicate the data to the target device
         which is currently stored on the source device. After
@@ -1545,7 +1570,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_replace(self._o, srcdev, targetdev, mntpoint)
         return r
 
-    def btrfs_rescue_chunk_recover(self, device):
+    def btrfs_rescue_chunk_recover(self, device: str) -> None:
         """Recover the chunk tree of btrfs filesystem by scanning
         the devices one by one.
 
@@ -1556,7 +1581,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_rescue_chunk_recover(self._o, device)
         return r
 
-    def btrfs_rescue_super_recover(self, device):
+    def btrfs_rescue_super_recover(self, device: str) -> None:
         """Recover bad superblocks from good copies.
 
         This function depends on the feature "btrfs". See also
@@ -1566,7 +1591,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_rescue_super_recover(self._o, device)
         return r
 
-    def btrfs_scrub_cancel(self, path):
+    def btrfs_scrub_cancel(self, path: str) -> None:
         """Cancel a running scrub on a btrfs filesystem.
 
         This function depends on the feature "btrfs". See also
@@ -1576,7 +1601,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_scrub_cancel(self._o, path)
         return r
 
-    def btrfs_scrub_resume(self, path):
+    def btrfs_scrub_resume(self, path: str) -> None:
         """Resume a previously canceled or interrupted scrub on a
         btrfs filesystem.
 
@@ -1587,7 +1612,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_scrub_resume(self._o, path)
         return r
 
-    def btrfs_scrub_start(self, path):
+    def btrfs_scrub_start(self, path: str) -> None:
         """Reads all the data and metadata on the filesystem, and
         uses checksums and the duplicate copies from RAID
         storage to identify and repair any corrupt data.
@@ -1599,7 +1624,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_scrub_start(self._o, path)
         return r
 
-    def btrfs_scrub_status(self, path):
+    def btrfs_scrub_status(self, path: str) -> dict:
         """Show status of running or finished scrub on a btrfs
         filesystem.
 
@@ -1613,7 +1638,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_scrub_status(self._o, path)
         return r
 
-    def btrfs_set_seeding(self, device, seeding):
+    def btrfs_set_seeding(self, device: str, seeding: bool) -> None:
         """Enable or disable the seeding feature of a device that
         contains a btrfs filesystem.
 
@@ -1624,7 +1649,8 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_set_seeding(self._o, device, seeding)
         return r
 
-    def btrfs_subvolume_create(self, dest, qgroupid=None):
+    def btrfs_subvolume_create(self, dest: str,
+                               qgroupid: Optional[str] = None) -> None:
         """Create a btrfs subvolume. The "dest" argument is the
         destination directory and the name of the subvolume, in
         the form /path/to/dest/name. The optional parameter
@@ -1640,7 +1666,7 @@ class GuestFS(object):
 
     btrfs_subvolume_create_opts = btrfs_subvolume_create
 
-    def btrfs_subvolume_delete(self, subvolume):
+    def btrfs_subvolume_delete(self, subvolume: str) -> None:
         """Delete the named btrfs subvolume or snapshot.
 
         This function depends on the feature "btrfs". See also
@@ -1650,7 +1676,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_subvolume_delete(self._o, subvolume)
         return r
 
-    def btrfs_subvolume_get_default(self, fs):
+    def btrfs_subvolume_get_default(self, fs: str) -> int:
         """Get the default subvolume or snapshot of a filesystem
         mounted at "mountpoint".
 
@@ -1661,7 +1687,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_subvolume_get_default(self._o, fs)
         return r
 
-    def btrfs_subvolume_list(self, fs):
+    def btrfs_subvolume_list(self, fs: str) -> List[dict]:
         """List the btrfs snapshots and subvolumes of the btrfs
         filesystem which is mounted at "fs".
 
@@ -1675,7 +1701,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_subvolume_list(self._o, fs)
         return r
 
-    def btrfs_subvolume_set_default(self, id, fs):
+    def btrfs_subvolume_set_default(self, id: int, fs: str) -> None:
         """Set the subvolume of the btrfs filesystem "fs" which
         will be mounted by default. See "g.btrfs_subvolume_list"
         to get a list of subvolumes.
@@ -1687,7 +1713,8 @@ class GuestFS(object):
         r = libguestfsmod.btrfs_subvolume_set_default(self._o, id, fs)
         return r
 
-    def btrfs_subvolume_show(self, subvolume):
+    def btrfs_subvolume_show(self, subvolume: str) -> Union[List[Tuple[str,
+                             str]], dict]:
         """Return detailed information of the subvolume.
 
         This function returns a hash. If the GuestFS constructor
@@ -1704,7 +1731,9 @@ class GuestFS(object):
         r = self._maybe_convert_to_dict(r)
         return r
 
-    def btrfs_subvolume_snapshot(self, source, dest, ro=None, qgroupid=None):
+    def btrfs_subvolume_snapshot(self, source: str, dest: str,
+                                 ro: Optional[bool] = None,
+                                 qgroupid: Optional[str] = None) -> None:
         """Create a snapshot of the btrfs subvolume "source". The
         "dest" argument is the destination directory and the
         name of the snapshot, in the form /path/to/dest/name. By
@@ -1724,7 +1753,7 @@ class GuestFS(object):
 
     btrfs_subvolume_snapshot_opts = btrfs_subvolume_snapshot
 
-    def btrfstune_enable_extended_inode_refs(self, device):
+    def btrfstune_enable_extended_inode_refs(self, device: str) -> None:
         """This will Enable extended inode refs.
 
         This function depends on the feature "btrfs". See also
@@ -1734,7 +1763,8 @@ class GuestFS(object):
         r = libguestfsmod.btrfstune_enable_extended_inode_refs(self._o, device)
         return r
 
-    def btrfstune_enable_skinny_metadata_extent_refs(self, device):
+    def btrfstune_enable_skinny_metadata_extent_refs(self,
+                                                     device: str) -> None:
         """This enable skinny metadata extent refs.
 
         This function depends on the feature "btrfs". See also
@@ -1745,7 +1775,7 @@ class GuestFS(object):
                                                                        device)
         return r
 
-    def btrfstune_seeding(self, device, seeding):
+    def btrfstune_seeding(self, device: str, seeding: bool) -> None:
         """Enable seeding of a btrfs device, this will force a fs
         readonly so that you can use it to build other
         filesystems.
@@ -1757,7 +1787,7 @@ class GuestFS(object):
         r = libguestfsmod.btrfstune_seeding(self._o, device, seeding)
         return r
 
-    def c_pointer(self):
+    def c_pointer(self) -> int:
         """In non-C language bindings, this allows you to retrieve
         the underlying C pointer to the handle (ie. "g.h *").
         The purpose of this is to allow other libraries to
@@ -1767,7 +1797,7 @@ class GuestFS(object):
         r = libguestfsmod.c_pointer(self._o)
         return r
 
-    def canonical_device_name(self, device):
+    def canonical_device_name(self, device: str) -> str:
         """This utility function is useful when displaying device
         names to the user. It takes a number of irregular device
         names and returns them in a consistent format:
@@ -1790,7 +1820,7 @@ class GuestFS(object):
         r = libguestfsmod.canonical_device_name(self._o, device)
         return r
 
-    def cap_get_file(self, path):
+    def cap_get_file(self, path: str) -> str:
         """This function returns the Linux capabilities attached to
         "path". The capabilities set is returned in text form
         (see cap_to_text(3)).
@@ -1805,7 +1835,7 @@ class GuestFS(object):
         r = libguestfsmod.cap_get_file(self._o, path)
         return r
 
-    def cap_set_file(self, path, cap):
+    def cap_set_file(self, path: str, cap: str) -> None:
         """This function sets the Linux capabilities attached to
         "path". The capabilities set "cap" should be passed in
         text form (see cap_from_text(3)).
@@ -1817,7 +1847,7 @@ class GuestFS(object):
         r = libguestfsmod.cap_set_file(self._o, path, cap)
         return r
 
-    def case_sensitive_path(self, path):
+    def case_sensitive_path(self, path: str) -> str:
         """This can be used to resolve case insensitive paths on a
         filesystem which is case sensitive. The use case is to
         resolve paths which you have read from Windows
@@ -1871,7 +1901,7 @@ class GuestFS(object):
         r = libguestfsmod.case_sensitive_path(self._o, path)
         return r
 
-    def cat(self, path):
+    def cat(self, path: str) -> str:
         """Return the contents of the file named "path".
 
         Because, in C, this function returns a "char *", there
@@ -1883,7 +1913,7 @@ class GuestFS(object):
         r = libguestfsmod.cat(self._o, path)
         return r
 
-    def checksum(self, csumtype, path):
+    def checksum(self, csumtype: str, path: str) -> str:
         """This call computes the MD5, SHAx or CRC checksum of the
         file named "path".
 
@@ -1930,7 +1960,7 @@ class GuestFS(object):
         r = libguestfsmod.checksum(self._o, csumtype, path)
         return r
 
-    def checksum_device(self, csumtype, device):
+    def checksum_device(self, csumtype: str, device: str) -> str:
         """This call computes the MD5, SHAx or CRC checksum of the
         contents of the device named "device". For the types of
         checksums supported see the "g.checksum" command.
@@ -1939,7 +1969,8 @@ class GuestFS(object):
         r = libguestfsmod.checksum_device(self._o, csumtype, device)
         return r
 
-    def checksums_out(self, csumtype, directory, sumsfile):
+    def checksums_out(self, csumtype: str, directory: str,
+                      sumsfile: str) -> None:
         """This command computes the checksums of all regular files
         in directory and then emits a list of those checksums to
         the local output file "sumsfile".
@@ -1956,7 +1987,7 @@ class GuestFS(object):
         r = libguestfsmod.checksums_out(self._o, csumtype, directory, sumsfile)
         return r
 
-    def chmod(self, mode, path):
+    def chmod(self, mode: int, path: str) -> None:
         """Change the mode (permissions) of "path" to "mode". Only
         numeric modes are supported.
 
@@ -1970,7 +2001,7 @@ class GuestFS(object):
         r = libguestfsmod.chmod(self._o, mode, path)
         return r
 
-    def chown(self, owner, group, path):
+    def chown(self, owner: int, group: int, path: str) -> None:
         """Change the file owner to "owner" and group to "group".
 
         Only numeric uid and gid are supported. If you want to
@@ -1982,7 +2013,7 @@ class GuestFS(object):
         r = libguestfsmod.chown(self._o, owner, group, path)
         return r
 
-    def clear_backend_setting(self, name):
+    def clear_backend_setting(self, name: str) -> int:
         """If there is a backend setting string matching "name" or
         beginning with "name=", then that string is removed from
         the backend settings.
@@ -1997,7 +2028,7 @@ class GuestFS(object):
         r = libguestfsmod.clear_backend_setting(self._o, name)
         return r
 
-    def command(self, arguments):
+    def command(self, arguments: List[str]) -> str:
         """This call runs a command from the guest filesystem. The
         filesystem must be mounted, and must contain a
         compatible operating system (ie. something Linux, with
@@ -2037,7 +2068,7 @@ class GuestFS(object):
         r = libguestfsmod.command(self._o, arguments)
         return r
 
-    def command_lines(self, arguments):
+    def command_lines(self, arguments: List[str]) -> List[str]:
         """This is the same as "g.command", but splits the result
         into a list of lines.
 
@@ -2054,7 +2085,8 @@ class GuestFS(object):
         r = libguestfsmod.command_lines(self._o, arguments)
         return r
 
-    def compress_device_out(self, ctype, device, zdevice, level=None):
+    def compress_device_out(self, ctype: str, device: str, zdevice: str,
+                            level: Optional[int] = None) -> None:
         """This command compresses "device" and writes it out to
         the local file "zdevice".
 
@@ -2066,7 +2098,8 @@ class GuestFS(object):
                                               level)
         return r
 
-    def compress_out(self, ctype, file, zfile, level=None):
+    def compress_out(self, ctype: str, file: str, zfile: str,
+                     level: Optional[int] = None) -> None:
         """This command compresses file and writes it out to the
         local file zfile.
 
@@ -2085,7 +2118,7 @@ class GuestFS(object):
         r = libguestfsmod.compress_out(self._o, ctype, file, zfile, level)
         return r
 
-    def config(self, hvparam, hvvalue):
+    def config(self, hvparam: str, hvvalue: Optional[str]) -> None:
         """This can be used to add arbitrary hypervisor parameters
         of the form *-param value*. Actually it’s not quite
         arbitrary - we prevent you from setting some parameters
@@ -2100,8 +2133,10 @@ class GuestFS(object):
         r = libguestfsmod.config(self._o, hvparam, hvvalue)
         return r
 
-    def copy_attributes(self, src, dest, all=None, mode=None, xattributes=None,
-                        ownership=None):
+    def copy_attributes(self, src: str, dest: str, all: Optional[bool] = None,
+                        mode: Optional[bool] = None,
+                        xattributes: Optional[bool] = None,
+                        ownership: Optional[bool] = None) -> None:
         """Copy the attributes of a path (which can be a file or a
         directory) to another path.
 
@@ -2136,8 +2171,12 @@ class GuestFS(object):
                                           xattributes, ownership)
         return r
 
-    def copy_device_to_device(self, src, dest, srcoffset=None, destoffset=None,
-                              size=None, sparse=None, append=None):
+    def copy_device_to_device(self, src: str, dest: str,
+                              srcoffset: Optional[int] = None,
+                              destoffset: Optional[int] = None,
+                              size: Optional[int] = None,
+                              sparse: Optional[bool] = None,
+                              append: Optional[bool] = None) -> None:
         """The four calls "g.copy_device_to_device",
         "g.copy_device_to_file", "g.copy_file_to_device", and
         "g.copy_file_to_file" let you copy from a source
@@ -2176,8 +2215,12 @@ class GuestFS(object):
                                                 append)
         return r
 
-    def copy_device_to_file(self, src, dest, srcoffset=None, destoffset=None,
-                            size=None, sparse=None, append=None):
+    def copy_device_to_file(self, src: str, dest: str,
+                            srcoffset: Optional[int] = None,
+                            destoffset: Optional[int] = None,
+                            size: Optional[int] = None,
+                            sparse: Optional[bool] = None,
+                            append: Optional[bool] = None) -> None:
         """See "g.copy_device_to_device" for a general overview of
         this call.
         """
@@ -2186,8 +2229,12 @@ class GuestFS(object):
                                               destoffset, size, sparse, append)
         return r
 
-    def copy_file_to_device(self, src, dest, srcoffset=None, destoffset=None,
-                            size=None, sparse=None, append=None):
+    def copy_file_to_device(self, src: str, dest: str,
+                            srcoffset: Optional[int] = None,
+                            destoffset: Optional[int] = None,
+                            size: Optional[int] = None,
+                            sparse: Optional[bool] = None,
+                            append: Optional[bool] = None) -> None:
         """See "g.copy_device_to_device" for a general overview of
         this call.
         """
@@ -2196,8 +2243,12 @@ class GuestFS(object):
                                               destoffset, size, sparse, append)
         return r
 
-    def copy_file_to_file(self, src, dest, srcoffset=None, destoffset=None,
-                          size=None, sparse=None, append=None):
+    def copy_file_to_file(self, src: str, dest: str,
+                          srcoffset: Optional[int] = None,
+                          destoffset: Optional[int] = None,
+                          size: Optional[int] = None,
+                          sparse: Optional[bool] = None,
+                          append: Optional[bool] = None) -> None:
         """See "g.copy_device_to_device" for a general overview of
         this call.
 
@@ -2211,7 +2262,7 @@ class GuestFS(object):
                                             destoffset, size, sparse, append)
         return r
 
-    def copy_in(self, localpath, remotedir):
+    def copy_in(self, localpath: str, remotedir: str) -> None:
         """"g.copy_in" copies local files or directories
         recursively into the disk image, placing them in the
         directory called "remotedir" (which must exist).
@@ -2222,7 +2273,7 @@ class GuestFS(object):
         r = libguestfsmod.copy_in(self._o, localpath, remotedir)
         return r
 
-    def copy_out(self, remotepath, localdir):
+    def copy_out(self, remotepath: str, localdir: str) -> None:
         """"g.copy_out" copies remote files or directories
         recursively out of the disk image, placing them on the
         host disk in a local directory called "localdir" (which
@@ -2238,7 +2289,7 @@ class GuestFS(object):
         r = libguestfsmod.copy_out(self._o, remotepath, localdir)
         return r
 
-    def copy_size(self, src, dest, size):
+    def copy_size(self, src: str, dest: str, size: int) -> None:
         """This command copies exactly "size" bytes from one source
         device or file "src" to another destination device or
         file "dest".
@@ -2261,7 +2312,7 @@ class GuestFS(object):
         r = libguestfsmod.copy_size(self._o, src, dest, size)
         return r
 
-    def cp(self, src, dest):
+    def cp(self, src: str, dest: str) -> None:
         """This copies a file from "src" to "dest" where "dest" is
         either a destination filename or destination directory.
         """
@@ -2269,7 +2320,7 @@ class GuestFS(object):
         r = libguestfsmod.cp(self._o, src, dest)
         return r
 
-    def cp_a(self, src, dest):
+    def cp_a(self, src: str, dest: str) -> None:
         """This copies a file or directory from "src" to "dest"
         recursively using the "cp -a" command.
         """
@@ -2277,7 +2328,7 @@ class GuestFS(object):
         r = libguestfsmod.cp_a(self._o, src, dest)
         return r
 
-    def cp_r(self, src, dest):
+    def cp_r(self, src: str, dest: str) -> None:
         """This copies a file or directory from "src" to "dest"
         recursively using the "cp -rP" command.
 
@@ -2290,7 +2341,8 @@ class GuestFS(object):
         r = libguestfsmod.cp_r(self._o, src, dest)
         return r
 
-    def cpio_out(self, directory, cpiofile, format=None):
+    def cpio_out(self, directory: str, cpiofile: str,
+                 format: Optional[str] = None) -> None:
         """This command packs the contents of directory and
         downloads it to local file "cpiofile".
 
@@ -2312,7 +2364,69 @@ class GuestFS(object):
         r = libguestfsmod.cpio_out(self._o, directory, cpiofile, format)
         return r
 
-    def dd(self, src, dest):
+    def cryptsetup_close(self, device: str) -> None:
+        """This closes an encrypted device that was created earlier
+        by "g.cryptsetup_open". The "device" parameter must be
+        the name of the mapping device (ie. /dev/mapper/mapname)
+        and *not* the name of the underlying block device.
+
+        This function depends on the feature "luks". See also
+        "g.feature-available".
+        """
+        self._check_not_closed()
+        r = libguestfsmod.cryptsetup_close(self._o, device)
+        return r
+
+    def cryptsetup_open(self, device: str, key: str, mapname: str,
+                        readonly: Optional[bool] = None,
+                        crypttype: Optional[str] = None) -> None:
+        """This command opens a block device which has been
+        encrypted according to the Linux Unified Key Setup
+        (LUKS) standard, Windows BitLocker, or some other types.
+
+        "device" is the encrypted block device or partition.
+
+        The caller must supply one of the keys associated with
+        the encrypted block device, in the "key" parameter.
+
+        This creates a new block device called
+        /dev/mapper/mapname. Reads and writes to this block
+        device are decrypted from and encrypted to the
+        underlying "device" respectively.
+
+        "mapname" cannot be "control" because that name is
+        reserved by device-mapper.
+
+        If the optional "crypttype" parameter is not present
+        then libguestfs tries to guess the correct type (for
+        example LUKS or BitLocker). However you can override
+        this by specifying one of the following types:
+
+        "luks"
+        A Linux LUKS device.
+
+        "bitlk"
+        A Windows BitLocker device.
+
+        The optional "readonly" flag, if set to true, creates a
+        read-only mapping.
+
+        If this block device contains LVM volume groups, then
+        calling "g.lvm_scan" with the "activate" parameter
+        "true" will make them visible.
+
+        Use "g.list_dm_devices" to list all device mapper
+        devices.
+
+        This function depends on the feature "luks". See also
+        "g.feature-available".
+        """
+        self._check_not_closed()
+        r = libguestfsmod.cryptsetup_open(self._o, device, key, mapname,
+                                          readonly, crypttype)
+        return r
+
+    def dd(self, src: str, dest: str) -> None:
         """This command copies from one source device or file "src"
         to another destination device or file "dest". Normally
         you would use this to copy to or from a device or
@@ -2338,23 +2452,23 @@ class GuestFS(object):
         r = libguestfsmod.dd(self._o, src, dest)
         return r
 
-    def debug(self, subcmd, extraargs):
+    def debug(self, subcmd: str, extraargs: List[str]) -> str:
         extraargs = list(extraargs)
         self._check_not_closed()
         r = libguestfsmod.debug(self._o, subcmd, extraargs)
         return r
 
-    def debug_drives(self):
+    def debug_drives(self) -> List[str]:
         self._check_not_closed()
         r = libguestfsmod.debug_drives(self._o)
         return r
 
-    def debug_upload(self, filename, tmpname, mode):
+    def debug_upload(self, filename: str, tmpname: str, mode: int) -> None:
         self._check_not_closed()
         r = libguestfsmod.debug_upload(self._o, filename, tmpname, mode)
         return r
 
-    def device_index(self, device):
+    def device_index(self, device: str) -> int:
         """This function takes a device name (eg. "/dev/sdb") and
         returns the index of the device in the list of devices.
 
@@ -2367,7 +2481,7 @@ class GuestFS(object):
         r = libguestfsmod.device_index(self._o, device)
         return r
 
-    def df(self):
+    def df(self) -> str:
         """This command runs the df(1) command to report disk space
         used.
 
@@ -2379,7 +2493,7 @@ class GuestFS(object):
         r = libguestfsmod.df(self._o)
         return r
 
-    def df_h(self):
+    def df_h(self) -> str:
         """This command runs the "df -h" command to report disk
         space used in human-readable format.
 
@@ -2391,9 +2505,12 @@ class GuestFS(object):
         r = libguestfsmod.df_h(self._o)
         return r
 
-    def disk_create(self, filename, format, size, backingfile=None,
-                    backingformat=None, preallocation=None, compat=None,
-                    clustersize=None):
+    def disk_create(self, filename: str, format: str, size: int,
+                    backingfile: Optional[str] = None,
+                    backingformat: Optional[str] = None,
+                    preallocation: Optional[str] = None,
+                    compat: Optional[str] = None,
+                    clustersize: Optional[int] = None) -> None:
         """Create a blank disk image called filename (a host file)
         with format "format" (usually "raw" or "qcow2"). The
         size is "size" bytes.
@@ -2441,7 +2558,7 @@ class GuestFS(object):
                                       preallocation, compat, clustersize)
         return r
 
-    def disk_format(self, filename):
+    def disk_format(self, filename: str) -> str:
         """Detect and return the format of the disk image called
         filename. filename can also be a host device, etc. If
         the format of the image could not be detected, then
@@ -2457,7 +2574,7 @@ class GuestFS(object):
         r = libguestfsmod.disk_format(self._o, filename)
         return r
 
-    def disk_has_backing_file(self, filename):
+    def disk_has_backing_file(self, filename: str) -> bool:
         """Detect and return whether the disk image filename has a
         backing file.
 
@@ -2468,7 +2585,7 @@ class GuestFS(object):
         r = libguestfsmod.disk_has_backing_file(self._o, filename)
         return r
 
-    def disk_virtual_size(self, filename):
+    def disk_virtual_size(self, filename: str) -> int:
         """Detect and return the virtual size in bytes of the disk
         image called filename.
 
@@ -2479,7 +2596,7 @@ class GuestFS(object):
         r = libguestfsmod.disk_virtual_size(self._o, filename)
         return r
 
-    def dmesg(self):
+    def dmesg(self) -> str:
         """This returns the kernel messages (dmesg(1) output) from
         the guest kernel. This is sometimes useful for extended
         debugging of problems.
@@ -2493,7 +2610,7 @@ class GuestFS(object):
         r = libguestfsmod.dmesg(self._o)
         return r
 
-    def download(self, remotefilename, filename):
+    def download(self, remotefilename: str, filename: str) -> None:
         """Download file remotefilename and save it as filename on
         the local machine.
 
@@ -2505,7 +2622,9 @@ class GuestFS(object):
         r = libguestfsmod.download(self._o, remotefilename, filename)
         return r
 
-    def download_blocks(self, device, start, stop, filename, unallocated=None):
+    def download_blocks(self, device: str, start: int, stop: int,
+                        filename: str,
+                        unallocated: Optional[bool] = None) -> None:
         """Download the data units from start address to stop from
         the disk partition (eg. /dev/sda1) and save them as
         filename on the local machine.
@@ -2533,7 +2652,7 @@ class GuestFS(object):
                                           filename, unallocated)
         return r
 
-    def download_inode(self, device, inode, filename):
+    def download_inode(self, device: str, inode: int, filename: str) -> None:
         """Download a file given its inode from the disk partition
         (eg. /dev/sda1) and save it as filename on the local
         machine.
@@ -2551,7 +2670,8 @@ class GuestFS(object):
         r = libguestfsmod.download_inode(self._o, device, inode, filename)
         return r
 
-    def download_offset(self, remotefilename, filename, offset, size):
+    def download_offset(self, remotefilename: str, filename: str, offset: int,
+                        size: int) -> None:
         """Download file remotefilename and save it as filename on
         the local machine.
 
@@ -2571,7 +2691,7 @@ class GuestFS(object):
                                           offset, size)
         return r
 
-    def drop_caches(self, whattodrop):
+    def drop_caches(self, whattodrop: int) -> None:
         """This instructs the guest kernel to drop its page cache,
         and/or dentries and inode caches. The parameter
         "whattodrop" tells the kernel what precisely to drop,
@@ -2586,7 +2706,7 @@ class GuestFS(object):
         r = libguestfsmod.drop_caches(self._o, whattodrop)
         return r
 
-    def du(self, path):
+    def du(self, path: str) -> int:
         """This command runs the "du -s" command to estimate file
         space usage for "path".
 
@@ -2601,7 +2721,8 @@ class GuestFS(object):
         r = libguestfsmod.du(self._o, path)
         return r
 
-    def e2fsck(self, device, correct=None, forceall=None):
+    def e2fsck(self, device: str, correct: Optional[bool] = None,
+               forceall: Optional[bool] = None) -> None:
         """This runs the ext2/ext3 filesystem checker on "device".
         It can take the following optional arguments:
 
@@ -2625,7 +2746,7 @@ class GuestFS(object):
         r = libguestfsmod.e2fsck(self._o, device, correct, forceall)
         return r
 
-    def e2fsck_f(self, device):
+    def e2fsck_f(self, device: str) -> None:
         """This runs "e2fsck -p -f device", ie. runs the ext2/ext3
         filesystem checker on "device", noninteractively (*-p*),
         even if the filesystem appears to be clean (*-f*).
@@ -2645,7 +2766,7 @@ class GuestFS(object):
         r = libguestfsmod.e2fsck_f(self._o, device)
         return r
 
-    def echo_daemon(self, words):
+    def echo_daemon(self, words: List[str]) -> str:
         """This command concatenates the list of "words" passed
         with single spaces between them and returns the
         resulting string.
@@ -2660,7 +2781,7 @@ class GuestFS(object):
         r = libguestfsmod.echo_daemon(self._o, words)
         return r
 
-    def egrep(self, regex, path):
+    def egrep(self, regex: str, path: str) -> List[str]:
         """This calls the external egrep(1) program and returns the
         matching lines.
 
@@ -2685,7 +2806,7 @@ class GuestFS(object):
         r = libguestfsmod.egrep(self._o, regex, path)
         return r
 
-    def egrepi(self, regex, path):
+    def egrepi(self, regex: str, path: str) -> List[str]:
         """This calls the external "egrep -i" program and returns
         the matching lines.
 
@@ -2710,7 +2831,7 @@ class GuestFS(object):
         r = libguestfsmod.egrepi(self._o, regex, path)
         return r
 
-    def equal(self, file1, file2):
+    def equal(self, file1: str, file2: str) -> bool:
         """This compares the two files file1 and file2 and returns
         true if their content is exactly equal, or false
         otherwise.
@@ -2721,7 +2842,7 @@ class GuestFS(object):
         r = libguestfsmod.equal(self._o, file1, file2)
         return r
 
-    def exists(self, path):
+    def exists(self, path: str) -> bool:
         """This returns "true" if and only if there is a file,
         directory (or anything) with the given "path" name.
 
@@ -2731,7 +2852,7 @@ class GuestFS(object):
         r = libguestfsmod.exists(self._o, path)
         return r
 
-    def extlinux(self, directory):
+    def extlinux(self, directory: str) -> None:
         """Install the SYSLINUX bootloader on the device mounted at
         directory. Unlike "g.syslinux" which requires a FAT
         filesystem, this can be used on an ext2/3/4 or btrfs
@@ -2761,7 +2882,7 @@ class GuestFS(object):
         r = libguestfsmod.extlinux(self._o, directory)
         return r
 
-    def f2fs_expand(self, device):
+    def f2fs_expand(self, device: str) -> None:
         """This expands a f2fs filesystem to match the size of the
         underlying device.
 
@@ -2772,7 +2893,7 @@ class GuestFS(object):
         r = libguestfsmod.f2fs_expand(self._o, device)
         return r
 
-    def fallocate(self, path, len):
+    def fallocate(self, path: str, len: int) -> None:
         """This command preallocates a file (containing zero bytes)
         named "path" of size "len" bytes. If the file exists
         already, it is overwritten.
@@ -2796,7 +2917,7 @@ class GuestFS(object):
         r = libguestfsmod.fallocate(self._o, path, len)
         return r
 
-    def fallocate64(self, path, len):
+    def fallocate64(self, path: str, len: int) -> None:
         """This command preallocates a file (containing zero bytes)
         named "path" of size "len" bytes. If the file exists
         already, it is overwritten.
@@ -2817,7 +2938,7 @@ class GuestFS(object):
         r = libguestfsmod.fallocate64(self._o, path, len)
         return r
 
-    def feature_available(self, groups):
+    def feature_available(self, groups: List[str]) -> bool:
         """This is the same as "g.available", but unlike that call
         it returns a simple true/false boolean result, instead
         of throwing an exception if a feature is not found. For
@@ -2828,7 +2949,7 @@ class GuestFS(object):
         r = libguestfsmod.feature_available(self._o, groups)
         return r
 
-    def fgrep(self, pattern, path):
+    def fgrep(self, pattern: str, path: str) -> List[str]:
         """This calls the external fgrep(1) program and returns the
         matching lines.
 
@@ -2853,7 +2974,7 @@ class GuestFS(object):
         r = libguestfsmod.fgrep(self._o, pattern, path)
         return r
 
-    def fgrepi(self, pattern, path):
+    def fgrepi(self, pattern: str, path: str) -> List[str]:
         """This calls the external "fgrep -i" program and returns
         the matching lines.
 
@@ -2878,7 +2999,7 @@ class GuestFS(object):
         r = libguestfsmod.fgrepi(self._o, pattern, path)
         return r
 
-    def file(self, path):
+    def file(self, path: str) -> str:
         """This call uses the standard file(1) command to determine
         the type or contents of the file.
 
@@ -2901,7 +3022,7 @@ class GuestFS(object):
         r = libguestfsmod.file(self._o, path)
         return r
 
-    def file_architecture(self, filename):
+    def file_architecture(self, filename: str) -> str:
         """This detects the architecture of the binary filename,
         and returns it if known.
 
@@ -2993,7 +3114,7 @@ class GuestFS(object):
         r = libguestfsmod.file_architecture(self._o, filename)
         return r
 
-    def filesize(self, file):
+    def filesize(self, file: str) -> int:
         """This command returns the size of file in bytes.
 
         To get other stats about a file, use "g.stat",
@@ -3004,7 +3125,7 @@ class GuestFS(object):
         r = libguestfsmod.filesize(self._o, file)
         return r
 
-    def filesystem_available(self, filesystem):
+    def filesystem_available(self, filesystem: str) -> bool:
         """Check whether libguestfs supports the named filesystem.
         The argument "filesystem" is a filesystem name, such as
         "ext3".
@@ -3025,7 +3146,7 @@ class GuestFS(object):
         r = libguestfsmod.filesystem_available(self._o, filesystem)
         return r
 
-    def filesystem_walk(self, device):
+    def filesystem_walk(self, device: str) -> List[dict]:
         """Walk through the internal structures of a disk partition
         (eg. /dev/sda1) in order to return a list of all the
         files and directories stored within.
@@ -3137,7 +3258,7 @@ class GuestFS(object):
         r = libguestfsmod.filesystem_walk(self._o, device)
         return r
 
-    def fill(self, c, len, path):
+    def fill(self, c: int, len: int, path: str) -> None:
         """This command creates a new file called "path". The
         initial content of the file is "len" octets of "c",
         where "c" must be a number in the range "[0..255]".
@@ -3151,7 +3272,7 @@ class GuestFS(object):
         r = libguestfsmod.fill(self._o, c, len, path)
         return r
 
-    def fill_dir(self, dir, nr):
+    def fill_dir(self, dir: str, nr: int) -> None:
         """This function, useful for testing filesystems, creates
         "nr" empty files in the directory "dir" with names
         00000000 through "nr-1" (ie. each file name is 8 digits
@@ -3161,7 +3282,7 @@ class GuestFS(object):
         r = libguestfsmod.fill_dir(self._o, dir, nr)
         return r
 
-    def fill_pattern(self, pattern, len, path):
+    def fill_pattern(self, pattern: str, len: int, path: str) -> None:
         """This function is like "g.fill" except that it creates a
         new file of length "len" containing the repeating
         pattern of bytes in "pattern". The pattern is truncated
@@ -3172,7 +3293,7 @@ class GuestFS(object):
         r = libguestfsmod.fill_pattern(self._o, pattern, len, path)
         return r
 
-    def find(self, directory):
+    def find(self, directory: str) -> List[str]:
         """This command lists out all files and directories,
         recursively, starting at directory. It is essentially
         equivalent to running the shell command "find directory
@@ -3205,7 +3326,7 @@ class GuestFS(object):
         r = libguestfsmod.find(self._o, directory)
         return r
 
-    def find0(self, directory, files):
+    def find0(self, directory: str, files: str) -> None:
         """This command lists out all files and directories,
         recursively, starting at directory, placing the
         resulting list in the external file called files.
@@ -3224,7 +3345,7 @@ class GuestFS(object):
         r = libguestfsmod.find0(self._o, directory, files)
         return r
 
-    def find_inode(self, device, inode):
+    def find_inode(self, device: str, inode: int) -> List[dict]:
         """Searches all the entries associated with the given
         inode.
 
@@ -3242,7 +3363,7 @@ class GuestFS(object):
         r = libguestfsmod.find_inode(self._o, device, inode)
         return r
 
-    def findfs_label(self, label):
+    def findfs_label(self, label: str) -> str:
         """This command searches the filesystems and returns the
         one which has the given label. An error is returned if
         no such filesystem can be found.
@@ -3253,7 +3374,7 @@ class GuestFS(object):
         r = libguestfsmod.findfs_label(self._o, label)
         return r
 
-    def findfs_uuid(self, uuid):
+    def findfs_uuid(self, uuid: str) -> str:
         """This command searches the filesystems and returns the
         one which has the given UUID. An error is returned if no
         such filesystem can be found.
@@ -3264,7 +3385,7 @@ class GuestFS(object):
         r = libguestfsmod.findfs_uuid(self._o, uuid)
         return r
 
-    def fsck(self, fstype, device):
+    def fsck(self, fstype: str, device: str) -> int:
         """This runs the filesystem checker (fsck) on "device"
         which should have filesystem type "fstype".
 
@@ -3289,8 +3410,9 @@ class GuestFS(object):
         r = libguestfsmod.fsck(self._o, fstype, device)
         return r
 
-    def fstrim(self, mountpoint, offset=None, length=None,
-               minimumfreeextent=None):
+    def fstrim(self, mountpoint: str, offset: Optional[int] = None,
+               length: Optional[int] = None,
+               minimumfreeextent: Optional[int] = None) -> None:
         """Trim the free space in the filesystem mounted on
         "mountpoint". The filesystem must be mounted read-write.
 
@@ -3323,7 +3445,7 @@ class GuestFS(object):
                                  minimumfreeextent)
         return r
 
-    def get_append(self):
+    def get_append(self) -> Optional[str]:
         """Return the additional kernel options which are added to
         the libguestfs appliance kernel command line.
 
@@ -3333,7 +3455,7 @@ class GuestFS(object):
         r = libguestfsmod.get_append(self._o)
         return r
 
-    def get_attach_method(self):
+    def get_attach_method(self) -> str:
         """Return the current backend.
 
         See "g.set_backend" and "BACKEND" in guestfs(3).
@@ -3353,14 +3475,14 @@ class GuestFS(object):
         r = libguestfsmod.get_attach_method(self._o)
         return r
 
-    def get_autosync(self):
+    def get_autosync(self) -> bool:
         """Get the autosync flag.
         """
         self._check_not_closed()
         r = libguestfsmod.get_autosync(self._o)
         return r
 
-    def get_backend(self):
+    def get_backend(self) -> str:
         """Return the current backend.
 
         This handle property was previously called the "attach
@@ -3372,7 +3494,7 @@ class GuestFS(object):
         r = libguestfsmod.get_backend(self._o)
         return r
 
-    def get_backend_setting(self, name):
+    def get_backend_setting(self, name: str) -> str:
         """Find a backend setting string which is either "name" or
         begins with "name=". If "name", this returns the string
         "1". If "name=", this returns the part after the equals
@@ -3389,7 +3511,7 @@ class GuestFS(object):
         r = libguestfsmod.get_backend_setting(self._o, name)
         return r
 
-    def get_backend_settings(self):
+    def get_backend_settings(self) -> List[str]:
         """Return the current backend settings.
 
         This call returns all backend settings strings. If you
@@ -3405,7 +3527,7 @@ class GuestFS(object):
         r = libguestfsmod.get_backend_settings(self._o)
         return r
 
-    def get_cachedir(self):
+    def get_cachedir(self) -> str:
         """Get the directory used by the handle to store the
         appliance cache.
         """
@@ -3413,7 +3535,7 @@ class GuestFS(object):
         r = libguestfsmod.get_cachedir(self._o)
         return r
 
-    def get_direct(self):
+    def get_direct(self) -> bool:
         """Return the direct appliance mode flag.
 
         *This function is deprecated.* In new code, use the
@@ -3431,7 +3553,7 @@ class GuestFS(object):
         r = libguestfsmod.get_direct(self._o)
         return r
 
-    def get_e2attrs(self, file):
+    def get_e2attrs(self, file: str) -> str:
         """This returns the file attributes associated with file.
 
         The attributes are a set of bits associated with each
@@ -3513,7 +3635,7 @@ class GuestFS(object):
         r = libguestfsmod.get_e2attrs(self._o, file)
         return r
 
-    def get_e2generation(self, file):
+    def get_e2generation(self, file: str) -> int:
         """This returns the ext2 file generation of a file. The
         generation (which used to be called the "version") is a
         number associated with an inode. This is most commonly
@@ -3529,7 +3651,7 @@ class GuestFS(object):
         r = libguestfsmod.get_e2generation(self._o, file)
         return r
 
-    def get_e2label(self, device):
+    def get_e2label(self, device: str) -> str:
         """This returns the ext2/3/4 filesystem label of the
         filesystem on "device".
 
@@ -3548,7 +3670,7 @@ class GuestFS(object):
         r = libguestfsmod.get_e2label(self._o, device)
         return r
 
-    def get_e2uuid(self, device):
+    def get_e2uuid(self, device: str) -> str:
         """This returns the ext2/3/4 filesystem UUID of the
         filesystem on "device".
 
@@ -3567,7 +3689,7 @@ class GuestFS(object):
         r = libguestfsmod.get_e2uuid(self._o, device)
         return r
 
-    def get_hv(self):
+    def get_hv(self) -> str:
         """Return the current hypervisor binary.
 
         This is always non-NULL. If it wasn't set already, then
@@ -3577,14 +3699,14 @@ class GuestFS(object):
         r = libguestfsmod.get_hv(self._o)
         return r
 
-    def get_identifier(self):
+    def get_identifier(self) -> str:
         """Get the handle identifier. See "g.set_identifier".
         """
         self._check_not_closed()
         r = libguestfsmod.get_identifier(self._o)
         return r
 
-    def get_libvirt_requested_credential_challenge(self, index):
+    def get_libvirt_requested_credential_challenge(self, index: int) -> str:
         """Get the challenge (provided by libvirt) for the
         "index"'th requested credential. If libvirt did not
         provide a challenge, this returns the empty string "".
@@ -3597,7 +3719,7 @@ class GuestFS(object):
                                                                      index)
         return r
 
-    def get_libvirt_requested_credential_defresult(self, index):
+    def get_libvirt_requested_credential_defresult(self, index: int) -> str:
         """Get the default result (provided by libvirt) for the
         "index"'th requested credential. If libvirt did not
         provide a default result, this returns the empty string
@@ -3611,7 +3733,7 @@ class GuestFS(object):
                                                                      index)
         return r
 
-    def get_libvirt_requested_credential_prompt(self, index):
+    def get_libvirt_requested_credential_prompt(self, index: int) -> str:
         """Get the prompt (provided by libvirt) for the "index"'th
         requested credential. If libvirt did not provide a
         prompt, this returns the empty string "".
@@ -3624,7 +3746,7 @@ class GuestFS(object):
                                                                   index)
         return r
 
-    def get_libvirt_requested_credentials(self):
+    def get_libvirt_requested_credentials(self) -> List[str]:
         """This should only be called during the event callback for
         events of type "GUESTFS_EVENT_LIBVIRT_AUTH".
 
@@ -3641,7 +3763,7 @@ class GuestFS(object):
         r = libguestfsmod.get_libvirt_requested_credentials(self._o)
         return r
 
-    def get_memsize(self):
+    def get_memsize(self) -> int:
         """This gets the memory size in megabytes allocated to the
         hypervisor.
 
@@ -3656,14 +3778,14 @@ class GuestFS(object):
         r = libguestfsmod.get_memsize(self._o)
         return r
 
-    def get_network(self):
+    def get_network(self) -> bool:
         """This returns the enable network flag.
         """
         self._check_not_closed()
         r = libguestfsmod.get_network(self._o)
         return r
 
-    def get_path(self):
+    def get_path(self) -> str:
         """Return the current search path.
 
         This is always non-NULL. If it wasn't set already, then
@@ -3673,14 +3795,14 @@ class GuestFS(object):
         r = libguestfsmod.get_path(self._o)
         return r
 
-    def get_pgroup(self):
+    def get_pgroup(self) -> bool:
         """This returns the process group flag.
         """
         self._check_not_closed()
         r = libguestfsmod.get_pgroup(self._o)
         return r
 
-    def get_pid(self):
+    def get_pid(self) -> int:
         """Return the process ID of the hypervisor. If there is no
         hypervisor running, then this will return an error.
 
@@ -3690,14 +3812,14 @@ class GuestFS(object):
         r = libguestfsmod.get_pid(self._o)
         return r
 
-    def get_program(self):
+    def get_program(self) -> str:
         """Get the program name. See "g.set_program".
         """
         self._check_not_closed()
         r = libguestfsmod.get_program(self._o)
         return r
 
-    def get_qemu(self):
+    def get_qemu(self) -> str:
         """Return the current hypervisor binary (usually qemu).
 
         This is always non-NULL. If it wasn't set already, then
@@ -3718,14 +3840,14 @@ class GuestFS(object):
         r = libguestfsmod.get_qemu(self._o)
         return r
 
-    def get_recovery_proc(self):
+    def get_recovery_proc(self) -> bool:
         """Return the recovery process enabled flag.
         """
         self._check_not_closed()
         r = libguestfsmod.get_recovery_proc(self._o)
         return r
 
-    def get_selinux(self):
+    def get_selinux(self) -> bool:
         """This returns the current setting of the selinux flag
         which is passed to the appliance at boot time. See
         "g.set_selinux".
@@ -3748,7 +3870,7 @@ class GuestFS(object):
         r = libguestfsmod.get_selinux(self._o)
         return r
 
-    def get_smp(self):
+    def get_smp(self) -> int:
         """This returns the number of virtual CPUs assigned to the
         appliance.
         """
@@ -3756,7 +3878,7 @@ class GuestFS(object):
         r = libguestfsmod.get_smp(self._o)
         return r
 
-    def get_sockdir(self):
+    def get_sockdir(self) -> str:
         """Get the directory used by the handle to store temporary
         socket files.
 
@@ -3773,7 +3895,7 @@ class GuestFS(object):
         r = libguestfsmod.get_sockdir(self._o)
         return r
 
-    def get_state(self):
+    def get_state(self) -> int:
         """This returns the current state as an opaque integer.
         This is only useful for printing debug and internal
         error messages.
@@ -3784,7 +3906,7 @@ class GuestFS(object):
         r = libguestfsmod.get_state(self._o)
         return r
 
-    def get_tmpdir(self):
+    def get_tmpdir(self) -> str:
         """Get the directory used by the handle to store temporary
         files.
         """
@@ -3792,14 +3914,14 @@ class GuestFS(object):
         r = libguestfsmod.get_tmpdir(self._o)
         return r
 
-    def get_trace(self):
+    def get_trace(self) -> bool:
         """Return the command trace flag.
         """
         self._check_not_closed()
         r = libguestfsmod.get_trace(self._o)
         return r
 
-    def get_umask(self):
+    def get_umask(self) -> int:
         """Return the current umask. By default the umask is 022
         unless it has been set by calling "g.umask".
         """
@@ -3807,14 +3929,14 @@ class GuestFS(object):
         r = libguestfsmod.get_umask(self._o)
         return r
 
-    def get_verbose(self):
+    def get_verbose(self) -> bool:
         """This returns the verbose messages flag.
         """
         self._check_not_closed()
         r = libguestfsmod.get_verbose(self._o)
         return r
 
-    def getcon(self):
+    def getcon(self) -> str:
         """This gets the SELinux security context of the daemon.
 
         See the documentation about SELINUX in guestfs(3), and
@@ -3838,7 +3960,7 @@ class GuestFS(object):
         r = libguestfsmod.getcon(self._o)
         return r
 
-    def getxattr(self, path, name):
+    def getxattr(self, path: str, name: str) -> bytes:
         """Get a single extended attribute from file "path" named
         "name". This call follows symlinks. If you want to
         lookup an extended attribute for the symlink itself, use
@@ -3865,7 +3987,7 @@ class GuestFS(object):
         r = libguestfsmod.getxattr(self._o, path, name)
         return r
 
-    def getxattrs(self, path):
+    def getxattrs(self, path: str) -> List[dict]:
         """This call lists the extended attributes of the file or
         directory "path".
 
@@ -3884,7 +4006,8 @@ class GuestFS(object):
         r = libguestfsmod.getxattrs(self._o, path)
         return r
 
-    def glob_expand(self, pattern, directoryslash=None):
+    def glob_expand(self, pattern: str,
+                    directoryslash: Optional[bool] = None) -> List[str]:
         """This command searches for all the pathnames matching
         "pattern" according to the wildcard expansion rules used
         by the shell.
@@ -3913,8 +4036,9 @@ class GuestFS(object):
 
     glob_expand_opts = glob_expand
 
-    def grep(self, regex, path, extended=None, fixed=None, insensitive=None,
-             compressed=None):
+    def grep(self, regex: str, path: str, extended: Optional[bool] = None,
+             fixed: Optional[bool] = None, insensitive: Optional[bool] = None,
+             compressed: Optional[bool] = None) -> List[str]:
         """This calls the external grep(1) program and returns the
         matching lines.
 
@@ -3949,7 +4073,7 @@ class GuestFS(object):
 
     grep_opts = grep
 
-    def grepi(self, regex, path):
+    def grepi(self, regex: str, path: str) -> List[str]:
         """This calls the external "grep -i" program and returns
         the matching lines.
 
@@ -3974,7 +4098,7 @@ class GuestFS(object):
         r = libguestfsmod.grepi(self._o, regex, path)
         return r
 
-    def grub_install(self, root, device):
+    def grub_install(self, root: str, device: str) -> None:
         """This command installs GRUB 1 (the Grand Unified
         Bootloader) on "device", with the root directory being
         "root".
@@ -4012,7 +4136,7 @@ class GuestFS(object):
         r = libguestfsmod.grub_install(self._o, root, device)
         return r
 
-    def head(self, path):
+    def head(self, path: str) -> List[str]:
         """This command returns up to the first 10 lines of a file
         as a list of strings.
 
@@ -4026,7 +4150,7 @@ class GuestFS(object):
         r = libguestfsmod.head(self._o, path)
         return r
 
-    def head_n(self, nrlines, path):
+    def head_n(self, nrlines: int, path: str) -> List[str]:
         """If the parameter "nrlines" is a positive number, this
         returns the first "nrlines" lines of the file "path".
 
@@ -4047,7 +4171,7 @@ class GuestFS(object):
         r = libguestfsmod.head_n(self._o, nrlines, path)
         return r
 
-    def hexdump(self, path):
+    def hexdump(self, path: str) -> str:
         """This runs "hexdump -C" on the given "path". The result
         is the human-readable, canonical hex dump of the file.
 
@@ -4059,7 +4183,7 @@ class GuestFS(object):
         r = libguestfsmod.hexdump(self._o, path)
         return r
 
-    def hivex_close(self):
+    def hivex_close(self) -> None:
         """Close the current hivex handle.
 
         This is a wrapper around the hivex(3) call of the same
@@ -4072,7 +4196,7 @@ class GuestFS(object):
         r = libguestfsmod.hivex_close(self._o)
         return r
 
-    def hivex_commit(self, filename):
+    def hivex_commit(self, filename: Optional[str]) -> None:
         """Commit (write) changes to the hive.
 
         If the optional filename parameter is null, then the
@@ -4091,7 +4215,7 @@ class GuestFS(object):
         r = libguestfsmod.hivex_commit(self._o, filename)
         return r
 
-    def hivex_node_add_child(self, parent, name):
+    def hivex_node_add_child(self, parent: int, name: str) -> int:
         """Add a child node to "parent" named "name".
 
         This is a wrapper around the hivex(3) call of the same
@@ -4104,7 +4228,7 @@ class GuestFS(object):
         r = libguestfsmod.hivex_node_add_child(self._o, parent, name)
         return r
 
-    def hivex_node_children(self, nodeh):
+    def hivex_node_children(self, nodeh: int) -> List[dict]:
         """Return the list of nodes which are subkeys of "nodeh".
 
         This is a wrapper around the hivex(3) call of the same
@@ -4120,7 +4244,7 @@ class GuestFS(object):
         r = libguestfsmod.hivex_node_children(self._o, nodeh)
         return r
 
-    def hivex_node_delete_child(self, nodeh):
+    def hivex_node_delete_child(self, nodeh: int) -> None:
         """Delete "nodeh", recursively if necessary.
 
         This is a wrapper around the hivex(3) call of the same
@@ -4133,7 +4257,7 @@ class GuestFS(object):
         r = libguestfsmod.hivex_node_delete_child(self._o, nodeh)
         return r
 
-    def hivex_node_get_child(self, nodeh, name):
+    def hivex_node_get_child(self, nodeh: int, name: str) -> int:
         """Return the child of "nodeh" with the name "name", if it
         exists. This can return 0 meaning the name was not
         found.
@@ -4148,7 +4272,7 @@ class GuestFS(object):
         r = libguestfsmod.hivex_node_get_child(self._o, nodeh, name)
         return r
 
-    def hivex_node_get_value(self, nodeh, key):
+    def hivex_node_get_value(self, nodeh: int, key: str) -> int:
         """Return the value attached to "nodeh" which has the name
         "key", if it exists. This can return 0 meaning the key
         was not found.
@@ -4163,7 +4287,7 @@ class GuestFS(object):
         r = libguestfsmod.hivex_node_get_value(self._o, nodeh, key)
         return r
 
-    def hivex_node_name(self, nodeh):
+    def hivex_node_name(self, nodeh: int) -> str:
         """Return the name of "nodeh".
 
         This is a wrapper around the hivex(3) call of the same
@@ -4176,7 +4300,7 @@ class GuestFS(object):
         r = libguestfsmod.hivex_node_name(self._o, nodeh)
         return r
 
-    def hivex_node_parent(self, nodeh):
+    def hivex_node_parent(self, nodeh: int) -> int:
         """Return the parent node of "nodeh".
 
         This is a wrapper around the hivex(3) call of the same
@@ -4189,7 +4313,8 @@ class GuestFS(object):
         r = libguestfsmod.hivex_node_parent(self._o, nodeh)
         return r
 
-    def hivex_node_set_value(self, nodeh, key, t, val):
+    def hivex_node_set_value(self, nodeh: int, key: str, t: int,
+                             val: bytes) -> None:
         """Set or replace a single value under the node "nodeh".
         The "key" is the name, "t" is the type, and "val" is the
         data.
@@ -4204,7 +4329,7 @@ class GuestFS(object):
         r = libguestfsmod.hivex_node_set_value(self._o, nodeh, key, t, val)
         return r
 
-    def hivex_node_values(self, nodeh):
+    def hivex_node_values(self, nodeh: int) -> List[dict]:
         """Return the array of (key, datatype, data) tuples
         attached to "nodeh".
 
@@ -4221,8 +4346,9 @@ class GuestFS(object):
         r = libguestfsmod.hivex_node_values(self._o, nodeh)
         return r
 
-    def hivex_open(self, filename, verbose=None, debug=None, write=None,
-                   unsafe=None):
+    def hivex_open(self, filename: str, verbose: Optional[bool] = None,
+                   debug: Optional[bool] = None, write: Optional[bool] = None,
+                   unsafe: Optional[bool] = None) -> None:
         """Open the Windows Registry hive file named filename. If
         there was any previous hivex handle associated with this
         guestfs session, then it is closed.
@@ -4238,7 +4364,7 @@ class GuestFS(object):
                                      unsafe)
         return r
 
-    def hivex_root(self):
+    def hivex_root(self) -> int:
         """Return the root node of the hive.
 
         This is a wrapper around the hivex(3) call of the same
@@ -4251,7 +4377,7 @@ class GuestFS(object):
         r = libguestfsmod.hivex_root(self._o)
         return r
 
-    def hivex_value_key(self, valueh):
+    def hivex_value_key(self, valueh: int) -> str:
         """Return the key (name) field of a (key, datatype, data)
         tuple.
 
@@ -4265,7 +4391,7 @@ class GuestFS(object):
         r = libguestfsmod.hivex_value_key(self._o, valueh)
         return r
 
-    def hivex_value_string(self, valueh):
+    def hivex_value_string(self, valueh: int) -> str:
         """This calls "g.hivex_value_value" (which returns the data
         field from a hivex value tuple). It then assumes that
         the field is a UTF-16LE string and converts the result
@@ -4284,7 +4410,7 @@ class GuestFS(object):
         r = libguestfsmod.hivex_value_string(self._o, valueh)
         return r
 
-    def hivex_value_type(self, valueh):
+    def hivex_value_type(self, valueh: int) -> int:
         """Return the data type field from a (key, datatype, data)
         tuple.
 
@@ -4298,7 +4424,7 @@ class GuestFS(object):
         r = libguestfsmod.hivex_value_type(self._o, valueh)
         return r
 
-    def hivex_value_utf8(self, valueh):
+    def hivex_value_utf8(self, valueh: int) -> str:
         """This calls "g.hivex_value_value" (which returns the data
         field from a hivex value tuple). It then assumes that
         the field is a UTF-16LE string and converts the result
@@ -4328,7 +4454,7 @@ class GuestFS(object):
         r = libguestfsmod.hivex_value_utf8(self._o, valueh)
         return r
 
-    def hivex_value_value(self, valueh):
+    def hivex_value_value(self, valueh: int) -> bytes:
         """Return the data field of a (key, datatype, data) tuple.
 
         This is a wrapper around the hivex(3) call of the same
@@ -4343,7 +4469,7 @@ class GuestFS(object):
         r = libguestfsmod.hivex_value_value(self._o, valueh)
         return r
 
-    def initrd_cat(self, initrdpath, filename):
+    def initrd_cat(self, initrdpath: str, filename: str) -> bytes:
         """This command unpacks the file filename from the initrd
         file called initrdpath. The filename must be given
         *without* the initial / character.
@@ -4364,7 +4490,7 @@ class GuestFS(object):
         r = libguestfsmod.initrd_cat(self._o, initrdpath, filename)
         return r
 
-    def initrd_list(self, path):
+    def initrd_list(self, path: str) -> List[str]:
         """This command lists out files contained in an initrd.
 
         The files are listed without any initial / character.
@@ -4382,7 +4508,7 @@ class GuestFS(object):
         r = libguestfsmod.initrd_list(self._o, path)
         return r
 
-    def inotify_add_watch(self, path, mask):
+    def inotify_add_watch(self, path: str, mask: int) -> int:
         """Watch "path" for the events listed in "mask".
 
         Note that if "path" is a directory then events within
@@ -4400,7 +4526,7 @@ class GuestFS(object):
         r = libguestfsmod.inotify_add_watch(self._o, path, mask)
         return r
 
-    def inotify_close(self):
+    def inotify_close(self) -> None:
         """This closes the inotify handle which was previously
         opened by inotify_init. It removes all watches, throws
         away any pending events, and deallocates all resources.
@@ -4412,7 +4538,7 @@ class GuestFS(object):
         r = libguestfsmod.inotify_close(self._o)
         return r
 
-    def inotify_files(self):
+    def inotify_files(self) -> List[str]:
         """This function is a helpful wrapper around
         "g.inotify_read" which just returns a list of pathnames
         of objects that were touched. The returned pathnames are
@@ -4427,7 +4553,7 @@ class GuestFS(object):
         r = libguestfsmod.inotify_files(self._o)
         return r
 
-    def inotify_init(self, maxevents):
+    def inotify_init(self, maxevents: int) -> None:
         """This command creates a new inotify handle. The inotify
         subsystem can be used to notify events which happen to
         objects in the guest filesystem.
@@ -4467,7 +4593,7 @@ class GuestFS(object):
         r = libguestfsmod.inotify_init(self._o, maxevents)
         return r
 
-    def inotify_read(self):
+    def inotify_read(self) -> List[dict]:
         """Return the complete queue of events that have happened
         since the previous read call.
 
@@ -4489,7 +4615,7 @@ class GuestFS(object):
         r = libguestfsmod.inotify_read(self._o)
         return r
 
-    def inotify_rm_watch(self, wd):
+    def inotify_rm_watch(self, wd: int) -> None:
         """Remove a previously defined inotify watch. See
         "g.inotify_add_watch".
 
@@ -4500,7 +4626,7 @@ class GuestFS(object):
         r = libguestfsmod.inotify_rm_watch(self._o, wd)
         return r
 
-    def inspect_get_arch(self, root):
+    def inspect_get_arch(self, root: str) -> str:
         """This returns the architecture of the inspected operating
         system. The possible return values are listed under
         "g.file_architecture".
@@ -4514,7 +4640,7 @@ class GuestFS(object):
         r = libguestfsmod.inspect_get_arch(self._o, root)
         return r
 
-    def inspect_get_distro(self, root):
+    def inspect_get_distro(self, root: str) -> str:
         """This returns the distro (distribution) of the inspected
         operating system.
 
@@ -4646,7 +4772,8 @@ class GuestFS(object):
         r = libguestfsmod.inspect_get_distro(self._o, root)
         return r
 
-    def inspect_get_drive_mappings(self, root):
+    def inspect_get_drive_mappings(self, root: str) -> Union[List[Tuple[str,
+                                   str]], dict]:
         """This call is useful for Windows which uses a primitive
         system of assigning drive letters (like C:\\) to
         partitions. This inspection API examines the Windows
@@ -4691,7 +4818,7 @@ class GuestFS(object):
         r = self._maybe_convert_to_dict(r)
         return r
 
-    def inspect_get_filesystems(self, root):
+    def inspect_get_filesystems(self, root: str) -> List[str]:
         """This returns a list of all the filesystems that we think
         are associated with this operating system. This includes
         the root filesystem, other ordinary filesystems, and
@@ -4710,7 +4837,7 @@ class GuestFS(object):
         r = libguestfsmod.inspect_get_filesystems(self._o, root)
         return r
 
-    def inspect_get_format(self, root):
+    def inspect_get_format(self, root: str) -> str:
         """Before libguestfs 1.38, there was some unreliable
         support for detecting installer CDs. This API would
         return:
@@ -4746,7 +4873,7 @@ class GuestFS(object):
         r = libguestfsmod.inspect_get_format(self._o, root)
         return r
 
-    def inspect_get_hostname(self, root):
+    def inspect_get_hostname(self, root: str) -> str:
         """This function returns the hostname of the operating
         system as found by inspection of the guest’s
         configuration files.
@@ -4760,7 +4887,8 @@ class GuestFS(object):
         r = libguestfsmod.inspect_get_hostname(self._o, root)
         return r
 
-    def inspect_get_icon(self, root, favicon=None, highquality=None):
+    def inspect_get_icon(self, root: str, favicon: Optional[bool] = None,
+                         highquality: Optional[bool] = None) -> bytes:
         """This function returns an icon corresponding to the
         inspected operating system. The icon is returned as a
         buffer containing a PNG image (re-encoded to PNG if
@@ -4817,7 +4945,7 @@ class GuestFS(object):
         r = libguestfsmod.inspect_get_icon(self._o, root, favicon, highquality)
         return r
 
-    def inspect_get_major_version(self, root):
+    def inspect_get_major_version(self, root: str) -> int:
         """This returns the major version number of the inspected
         operating system.
 
@@ -4837,7 +4965,7 @@ class GuestFS(object):
         r = libguestfsmod.inspect_get_major_version(self._o, root)
         return r
 
-    def inspect_get_minor_version(self, root):
+    def inspect_get_minor_version(self, root: str) -> int:
         """This returns the minor version number of the inspected
         operating system.
 
@@ -4851,7 +4979,8 @@ class GuestFS(object):
         r = libguestfsmod.inspect_get_minor_version(self._o, root)
         return r
 
-    def inspect_get_mountpoints(self, root):
+    def inspect_get_mountpoints(self, root: str) -> Union[List[Tuple[str,
+                                str]], dict]:
         """This returns a hash of where we think the filesystems
         associated with this operating system should be mounted.
         Callers should note that this is at best an educated
@@ -4889,7 +5018,7 @@ class GuestFS(object):
         r = self._maybe_convert_to_dict(r)
         return r
 
-    def inspect_get_osinfo(self, root):
+    def inspect_get_osinfo(self, root: str) -> str:
         """This function returns a possible short ID for libosinfo
         corresponding to the guest.
 
@@ -4904,7 +5033,7 @@ class GuestFS(object):
         r = libguestfsmod.inspect_get_osinfo(self._o, root)
         return r
 
-    def inspect_get_package_format(self, root):
+    def inspect_get_package_format(self, root: str) -> str:
         """This function and "g.inspect_get_package_management"
         return the package format and package management tool
         used by the inspected operating system. For example for
@@ -4926,7 +5055,7 @@ class GuestFS(object):
         r = libguestfsmod.inspect_get_package_format(self._o, root)
         return r
 
-    def inspect_get_package_management(self, root):
+    def inspect_get_package_management(self, root: str) -> str:
         """"g.inspect_get_package_format" and this function return
         the package format and package management tool used by
         the inspected operating system. For example for Fedora
@@ -4949,7 +5078,7 @@ class GuestFS(object):
         r = libguestfsmod.inspect_get_package_management(self._o, root)
         return r
 
-    def inspect_get_product_name(self, root):
+    def inspect_get_product_name(self, root: str) -> str:
         """This returns the product name of the inspected operating
         system. The product name is generally some freeform
         string which can be displayed to the user, but should
@@ -4964,7 +5093,7 @@ class GuestFS(object):
         r = libguestfsmod.inspect_get_product_name(self._o, root)
         return r
 
-    def inspect_get_product_variant(self, root):
+    def inspect_get_product_variant(self, root: str) -> str:
         """This returns the product variant of the inspected
         operating system.
 
@@ -4993,7 +5122,7 @@ class GuestFS(object):
         r = libguestfsmod.inspect_get_product_variant(self._o, root)
         return r
 
-    def inspect_get_roots(self):
+    def inspect_get_roots(self) -> List[str]:
         """This function is a convenient way to get the list of
         root devices, as returned from a previous call to
         "g.inspect_os", but without redoing the whole inspection
@@ -5010,7 +5139,7 @@ class GuestFS(object):
         r = libguestfsmod.inspect_get_roots(self._o)
         return r
 
-    def inspect_get_type(self, root):
+    def inspect_get_type(self, root: str) -> str:
         """This returns the type of the inspected operating system.
         Currently defined types are:
 
@@ -5051,7 +5180,7 @@ class GuestFS(object):
         r = libguestfsmod.inspect_get_type(self._o, root)
         return r
 
-    def inspect_get_windows_current_control_set(self, root):
+    def inspect_get_windows_current_control_set(self, root: str) -> str:
         """This returns the Windows CurrentControlSet of the
         inspected guest. The CurrentControlSet is a registry key
         name such as "ControlSet001".
@@ -5067,7 +5196,7 @@ class GuestFS(object):
                                                                   root)
         return r
 
-    def inspect_get_windows_software_hive(self, root):
+    def inspect_get_windows_software_hive(self, root: str) -> str:
         """This returns the path to the hive (binary Windows
         Registry file) corresponding to HKLM\\SOFTWARE.
 
@@ -5085,7 +5214,7 @@ class GuestFS(object):
         r = libguestfsmod.inspect_get_windows_software_hive(self._o, root)
         return r
 
-    def inspect_get_windows_system_hive(self, root):
+    def inspect_get_windows_system_hive(self, root: str) -> str:
         """This returns the path to the hive (binary Windows
         Registry file) corresponding to HKLM\\SYSTEM.
 
@@ -5103,7 +5232,7 @@ class GuestFS(object):
         r = libguestfsmod.inspect_get_windows_system_hive(self._o, root)
         return r
 
-    def inspect_get_windows_systemroot(self, root):
+    def inspect_get_windows_systemroot(self, root: str) -> str:
         """This returns the Windows systemroot of the inspected
         guest. The systemroot is a directory path such as
         /WINDOWS.
@@ -5118,7 +5247,7 @@ class GuestFS(object):
         r = libguestfsmod.inspect_get_windows_systemroot(self._o, root)
         return r
 
-    def inspect_is_live(self, root):
+    def inspect_is_live(self, root: str) -> bool:
         """This is deprecated and always returns "false".
 
         Please read "INSPECTION" in guestfs(3) for more details.
@@ -5138,7 +5267,7 @@ class GuestFS(object):
         r = libguestfsmod.inspect_is_live(self._o, root)
         return r
 
-    def inspect_is_multipart(self, root):
+    def inspect_is_multipart(self, root: str) -> bool:
         """This is deprecated and always returns "false".
 
         Please read "INSPECTION" in guestfs(3) for more details.
@@ -5158,7 +5287,7 @@ class GuestFS(object):
         r = libguestfsmod.inspect_is_multipart(self._o, root)
         return r
 
-    def inspect_is_netinst(self, root):
+    def inspect_is_netinst(self, root: str) -> bool:
         """This is deprecated and always returns "false".
 
         Please read "INSPECTION" in guestfs(3) for more details.
@@ -5178,7 +5307,7 @@ class GuestFS(object):
         r = libguestfsmod.inspect_is_netinst(self._o, root)
         return r
 
-    def inspect_list_applications(self, root):
+    def inspect_list_applications(self, root: str) -> List[dict]:
         """Return the list of applications installed in the
         operating system.
 
@@ -5283,7 +5412,7 @@ class GuestFS(object):
         r = libguestfsmod.inspect_list_applications(self._o, root)
         return r
 
-    def inspect_list_applications2(self, root):
+    def inspect_list_applications2(self, root: str) -> List[dict]:
         """Return the list of applications installed in the
         operating system.
 
@@ -5382,7 +5511,7 @@ class GuestFS(object):
         r = libguestfsmod.inspect_list_applications2(self._o, root)
         return r
 
-    def inspect_os(self):
+    def inspect_os(self) -> List[str]:
         """This function uses other libguestfs functions and
         certain heuristics to inspect the disk(s) (usually disks
         belonging to a virtual machine), looking for operating
@@ -5425,14 +5554,18 @@ class GuestFS(object):
         r = libguestfsmod.inspect_os(self._o)
         return r
 
-    def internal_exit(self):
+    def internal_exit(self) -> None:
         self._check_not_closed()
         r = libguestfsmod.internal_exit(self._o)
         return r
 
-    def internal_test(self, str, optstr, strlist, b, integer, integer64,
-                      filein, fileout, bufferin, obool=None, oint=None,
-                      oint64=None, ostring=None, ostringlist=None):
+    def internal_test(self, str: str, optstr: Optional[str],
+                      strlist: List[str], b: bool, integer: int,
+                      integer64: int, filein: str, fileout: str,
+                      bufferin: bytes, obool: Optional[bool] = None,
+                      oint: Optional[int] = None, oint64: Optional[int] = None,
+                      ostring: Optional[str] = None,
+                      ostringlist: Optional[List[str]] = None) -> None:
         strlist = list(strlist)
         self._check_not_closed()
         r = libguestfsmod.internal_test(self._o, str, optstr, strlist, b,
@@ -5441,27 +5574,69 @@ class GuestFS(object):
                                         ostringlist)
         return r
 
-    def internal_test_63_optargs(self, opt1=None, opt2=None, opt3=None,
-                                 opt4=None, opt5=None, opt6=None, opt7=None,
-                                 opt8=None, opt9=None, opt10=None, opt11=None,
-                                 opt12=None, opt13=None, opt14=None,
-                                 opt15=None, opt16=None, opt17=None,
-                                 opt18=None, opt19=None, opt20=None,
-                                 opt21=None, opt22=None, opt23=None,
-                                 opt24=None, opt25=None, opt26=None,
-                                 opt27=None, opt28=None, opt29=None,
-                                 opt30=None, opt31=None, opt32=None,
-                                 opt33=None, opt34=None, opt35=None,
-                                 opt36=None, opt37=None, opt38=None,
-                                 opt39=None, opt40=None, opt41=None,
-                                 opt42=None, opt43=None, opt44=None,
-                                 opt45=None, opt46=None, opt47=None,
-                                 opt48=None, opt49=None, opt50=None,
-                                 opt51=None, opt52=None, opt53=None,
-                                 opt54=None, opt55=None, opt56=None,
-                                 opt57=None, opt58=None, opt59=None,
-                                 opt60=None, opt61=None, opt62=None,
-                                 opt63=None):
+    def internal_test_63_optargs(self, opt1: Optional[int] = None,
+                                 opt2: Optional[int] = None,
+                                 opt3: Optional[int] = None,
+                                 opt4: Optional[int] = None,
+                                 opt5: Optional[int] = None,
+                                 opt6: Optional[int] = None,
+                                 opt7: Optional[int] = None,
+                                 opt8: Optional[int] = None,
+                                 opt9: Optional[int] = None,
+                                 opt10: Optional[int] = None,
+                                 opt11: Optional[int] = None,
+                                 opt12: Optional[int] = None,
+                                 opt13: Optional[int] = None,
+                                 opt14: Optional[int] = None,
+                                 opt15: Optional[int] = None,
+                                 opt16: Optional[int] = None,
+                                 opt17: Optional[int] = None,
+                                 opt18: Optional[int] = None,
+                                 opt19: Optional[int] = None,
+                                 opt20: Optional[int] = None,
+                                 opt21: Optional[int] = None,
+                                 opt22: Optional[int] = None,
+                                 opt23: Optional[int] = None,
+                                 opt24: Optional[int] = None,
+                                 opt25: Optional[int] = None,
+                                 opt26: Optional[int] = None,
+                                 opt27: Optional[int] = None,
+                                 opt28: Optional[int] = None,
+                                 opt29: Optional[int] = None,
+                                 opt30: Optional[int] = None,
+                                 opt31: Optional[int] = None,
+                                 opt32: Optional[int] = None,
+                                 opt33: Optional[int] = None,
+                                 opt34: Optional[int] = None,
+                                 opt35: Optional[int] = None,
+                                 opt36: Optional[int] = None,
+                                 opt37: Optional[int] = None,
+                                 opt38: Optional[int] = None,
+                                 opt39: Optional[int] = None,
+                                 opt40: Optional[int] = None,
+                                 opt41: Optional[int] = None,
+                                 opt42: Optional[int] = None,
+                                 opt43: Optional[int] = None,
+                                 opt44: Optional[int] = None,
+                                 opt45: Optional[int] = None,
+                                 opt46: Optional[int] = None,
+                                 opt47: Optional[int] = None,
+                                 opt48: Optional[int] = None,
+                                 opt49: Optional[int] = None,
+                                 opt50: Optional[int] = None,
+                                 opt51: Optional[int] = None,
+                                 opt52: Optional[int] = None,
+                                 opt53: Optional[int] = None,
+                                 opt54: Optional[int] = None,
+                                 opt55: Optional[int] = None,
+                                 opt56: Optional[int] = None,
+                                 opt57: Optional[int] = None,
+                                 opt58: Optional[int] = None,
+                                 opt59: Optional[int] = None,
+                                 opt60: Optional[int] = None,
+                                 opt61: Optional[int] = None,
+                                 opt62: Optional[int] = None,
+                                 opt63: Optional[int] = None) -> None:
         self._check_not_closed()
         r = libguestfsmod.internal_test_63_optargs(self._o, opt1, opt2, opt3,
                                                    opt4, opt5, opt6, opt7,
@@ -5481,134 +5656,137 @@ class GuestFS(object):
                                                    opt60, opt61, opt62, opt63)
         return r
 
-    def internal_test_close_output(self):
+    def internal_test_close_output(self) -> None:
         self._check_not_closed()
         r = libguestfsmod.internal_test_close_output(self._o)
         return r
 
-    def internal_test_only_optargs(self, test=None):
+    def internal_test_only_optargs(self, test: Optional[int] = None) -> None:
         self._check_not_closed()
         r = libguestfsmod.internal_test_only_optargs(self._o, test)
         return r
 
-    def internal_test_rbool(self, val):
+    def internal_test_rbool(self, val: str) -> bool:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rbool(self._o, val)
         return r
 
-    def internal_test_rboolerr(self):
+    def internal_test_rboolerr(self) -> bool:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rboolerr(self._o)
         return r
 
-    def internal_test_rbufferout(self, val):
+    def internal_test_rbufferout(self, val: str) -> bytes:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rbufferout(self._o, val)
         return r
 
-    def internal_test_rbufferouterr(self):
+    def internal_test_rbufferouterr(self) -> bytes:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rbufferouterr(self._o)
         return r
 
-    def internal_test_rconstoptstring(self, val):
+    def internal_test_rconstoptstring(self, val: str) -> Optional[str]:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rconstoptstring(self._o, val)
         return r
 
-    def internal_test_rconstoptstringerr(self):
+    def internal_test_rconstoptstringerr(self) -> Optional[str]:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rconstoptstringerr(self._o)
         return r
 
-    def internal_test_rconststring(self, val):
+    def internal_test_rconststring(self, val: str) -> str:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rconststring(self._o, val)
         return r
 
-    def internal_test_rconststringerr(self):
+    def internal_test_rconststringerr(self) -> str:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rconststringerr(self._o)
         return r
 
-    def internal_test_rhashtable(self, val):
+    def internal_test_rhashtable(self, val: str) -> Union[List[Tuple[str,
+                                 str]], dict]:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rhashtable(self._o, val)
         r = self._maybe_convert_to_dict(r)
         return r
 
-    def internal_test_rhashtableerr(self):
+    def internal_test_rhashtableerr(self) -> Union[List[Tuple[str, str]],
+                                    dict]:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rhashtableerr(self._o)
         r = self._maybe_convert_to_dict(r)
         return r
 
-    def internal_test_rint(self, val):
+    def internal_test_rint(self, val: str) -> int:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rint(self._o, val)
         return r
 
-    def internal_test_rint64(self, val):
+    def internal_test_rint64(self, val: str) -> int:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rint64(self._o, val)
         return r
 
-    def internal_test_rint64err(self):
+    def internal_test_rint64err(self) -> int:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rint64err(self._o)
         return r
 
-    def internal_test_rinterr(self):
+    def internal_test_rinterr(self) -> int:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rinterr(self._o)
         return r
 
-    def internal_test_rstring(self, val):
+    def internal_test_rstring(self, val: str) -> str:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rstring(self._o, val)
         return r
 
-    def internal_test_rstringerr(self):
+    def internal_test_rstringerr(self) -> str:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rstringerr(self._o)
         return r
 
-    def internal_test_rstringlist(self, val):
+    def internal_test_rstringlist(self, val: str) -> List[str]:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rstringlist(self._o, val)
         return r
 
-    def internal_test_rstringlisterr(self):
+    def internal_test_rstringlisterr(self) -> List[str]:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rstringlisterr(self._o)
         return r
 
-    def internal_test_rstruct(self, val):
+    def internal_test_rstruct(self, val: str) -> dict:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rstruct(self._o, val)
         return r
 
-    def internal_test_rstructerr(self):
+    def internal_test_rstructerr(self) -> dict:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rstructerr(self._o)
         return r
 
-    def internal_test_rstructlist(self, val):
+    def internal_test_rstructlist(self, val: str) -> List[dict]:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rstructlist(self._o, val)
         return r
 
-    def internal_test_rstructlisterr(self):
+    def internal_test_rstructlisterr(self) -> List[dict]:
         self._check_not_closed()
         r = libguestfsmod.internal_test_rstructlisterr(self._o)
         return r
 
-    def internal_test_set_output(self, filename):
+    def internal_test_set_output(self, filename: str) -> None:
         self._check_not_closed()
         r = libguestfsmod.internal_test_set_output(self._o, filename)
         return r
 
-    def is_blockdev(self, path, followsymlinks=None):
+    def is_blockdev(self, path: str,
+                    followsymlinks: Optional[bool] = None) -> bool:
         """This returns "true" if and only if there is a block
         device with the given "path" name.
 
@@ -5629,7 +5807,7 @@ class GuestFS(object):
 
     is_blockdev_opts = is_blockdev
 
-    def is_busy(self):
+    def is_busy(self) -> bool:
         """This always returns false. This function is deprecated
         with no replacement. Do not use this function.
 
@@ -5639,7 +5817,8 @@ class GuestFS(object):
         r = libguestfsmod.is_busy(self._o)
         return r
 
-    def is_chardev(self, path, followsymlinks=None):
+    def is_chardev(self, path: str,
+                   followsymlinks: Optional[bool] = None) -> bool:
         """This returns "true" if and only if there is a character
         device with the given "path" name.
 
@@ -5655,7 +5834,7 @@ class GuestFS(object):
 
     is_chardev_opts = is_chardev
 
-    def is_config(self):
+    def is_config(self) -> bool:
         """This returns true iff this handle is being configured
         (in the "CONFIG" state).
 
@@ -5665,7 +5844,8 @@ class GuestFS(object):
         r = libguestfsmod.is_config(self._o)
         return r
 
-    def is_dir(self, path, followsymlinks=None):
+    def is_dir(self, path: str,
+               followsymlinks: Optional[bool] = None) -> bool:
         """This returns "true" if and only if there is a directory
         with the given "path" name. Note that it returns false
         for other objects like files.
@@ -5682,7 +5862,8 @@ class GuestFS(object):
 
     is_dir_opts = is_dir
 
-    def is_fifo(self, path, followsymlinks=None):
+    def is_fifo(self, path: str,
+                followsymlinks: Optional[bool] = None) -> bool:
         """This returns "true" if and only if there is a FIFO
         (named pipe) with the given "path" name.
 
@@ -5698,7 +5879,8 @@ class GuestFS(object):
 
     is_fifo_opts = is_fifo
 
-    def is_file(self, path, followsymlinks=None):
+    def is_file(self, path: str,
+                followsymlinks: Optional[bool] = None) -> bool:
         """This returns "true" if and only if there is a regular
         file with the given "path" name. Note that it returns
         false for other objects like directories.
@@ -5715,7 +5897,7 @@ class GuestFS(object):
 
     is_file_opts = is_file
 
-    def is_launching(self):
+    def is_launching(self) -> bool:
         """This returns true iff this handle is launching the
         subprocess (in the "LAUNCHING" state).
 
@@ -5725,7 +5907,7 @@ class GuestFS(object):
         r = libguestfsmod.is_launching(self._o)
         return r
 
-    def is_lv(self, mountable):
+    def is_lv(self, mountable: str) -> bool:
         """This command tests whether "mountable" is a logical
         volume, and returns true iff this is the case.
         """
@@ -5733,7 +5915,7 @@ class GuestFS(object):
         r = libguestfsmod.is_lv(self._o, mountable)
         return r
 
-    def is_ready(self):
+    def is_ready(self) -> bool:
         """This returns true iff this handle is ready to accept
         commands (in the "READY" state).
 
@@ -5743,7 +5925,8 @@ class GuestFS(object):
         r = libguestfsmod.is_ready(self._o)
         return r
 
-    def is_socket(self, path, followsymlinks=None):
+    def is_socket(self, path: str,
+                  followsymlinks: Optional[bool] = None) -> bool:
         """This returns "true" if and only if there is a Unix
         domain socket with the given "path" name.
 
@@ -5759,7 +5942,7 @@ class GuestFS(object):
 
     is_socket_opts = is_socket
 
-    def is_symlink(self, path):
+    def is_symlink(self, path: str) -> bool:
         """This returns "true" if and only if there is a symbolic
         link with the given "path" name.
 
@@ -5769,7 +5952,7 @@ class GuestFS(object):
         r = libguestfsmod.is_symlink(self._o, path)
         return r
 
-    def is_whole_device(self, device):
+    def is_whole_device(self, device: str) -> bool:
         """This returns "true" if and only if "device" refers to a
         whole block device. That is, not a partition or a
         logical device.
@@ -5778,7 +5961,7 @@ class GuestFS(object):
         r = libguestfsmod.is_whole_device(self._o, device)
         return r
 
-    def is_zero(self, path):
+    def is_zero(self, path: str) -> bool:
         """This returns true iff the file exists and the file is
         empty or it contains all zero bytes.
         """
@@ -5786,7 +5969,7 @@ class GuestFS(object):
         r = libguestfsmod.is_zero(self._o, path)
         return r
 
-    def is_zero_device(self, device):
+    def is_zero_device(self, device: str) -> bool:
         """This returns true iff the device exists and contains all
         zero bytes.
 
@@ -5797,7 +5980,7 @@ class GuestFS(object):
         r = libguestfsmod.is_zero_device(self._o, device)
         return r
 
-    def isoinfo(self, isofile):
+    def isoinfo(self, isofile: str) -> dict:
         """This is the same as "g.isoinfo_device" except that it
         works for an ISO file located inside some other mounted
         filesystem. Note that in the common case where you have
@@ -5812,7 +5995,7 @@ class GuestFS(object):
         r = libguestfsmod.isoinfo(self._o, isofile)
         return r
 
-    def isoinfo_device(self, device):
+    def isoinfo_device(self, device: str) -> dict:
         """"device" is an ISO device. This returns a struct of
         information read from the primary volume descriptor (the
         ISO equivalent of the superblock) of the device.
@@ -5833,7 +6016,7 @@ class GuestFS(object):
         r = libguestfsmod.isoinfo_device(self._o, device)
         return r
 
-    def journal_close(self):
+    def journal_close(self) -> None:
         """Close the journal handle.
 
         This function depends on the feature "journal". See also
@@ -5843,7 +6026,7 @@ class GuestFS(object):
         r = libguestfsmod.journal_close(self._o)
         return r
 
-    def journal_get(self):
+    def journal_get(self) -> List[dict]:
         """Read the current journal entry. This returns all the
         fields in the journal as a set of "(attrname, attrval)"
         pairs. The "attrname" is the field name (a string).
@@ -5870,7 +6053,7 @@ class GuestFS(object):
         r = libguestfsmod.journal_get(self._o)
         return r
 
-    def journal_get_data_threshold(self):
+    def journal_get_data_threshold(self) -> int:
         """Get the current data threshold for reading journal
         entries. This is a hint to the journal that it may
         truncate data fields to this size when reading them
@@ -5886,7 +6069,7 @@ class GuestFS(object):
         r = libguestfsmod.journal_get_data_threshold(self._o)
         return r
 
-    def journal_get_realtime_usec(self):
+    def journal_get_realtime_usec(self) -> int:
         """Get the realtime (wallclock) timestamp of the current
         journal entry.
 
@@ -5897,7 +6080,7 @@ class GuestFS(object):
         r = libguestfsmod.journal_get_realtime_usec(self._o)
         return r
 
-    def journal_next(self):
+    def journal_next(self) -> bool:
         """Move to the next journal entry. You have to call this at
         least once after opening the handle before you are able
         to read data.
@@ -5914,7 +6097,7 @@ class GuestFS(object):
         r = libguestfsmod.journal_next(self._o)
         return r
 
-    def journal_open(self, directory):
+    def journal_open(self, directory: str) -> None:
         """Open the systemd journal located in directory. Any
         previously opened journal handle is closed.
 
@@ -5931,7 +6114,7 @@ class GuestFS(object):
         r = libguestfsmod.journal_open(self._o, directory)
         return r
 
-    def journal_set_data_threshold(self, threshold):
+    def journal_set_data_threshold(self, threshold: int) -> None:
         """Set the data threshold for reading journal entries. This
         is a hint to the journal that it may truncate data
         fields to this size when reading them (note also that it
@@ -5947,7 +6130,7 @@ class GuestFS(object):
         r = libguestfsmod.journal_set_data_threshold(self._o, threshold)
         return r
 
-    def journal_skip(self, skip):
+    def journal_skip(self, skip: int) -> int:
         """Skip forwards ("skip ≥ 0") or backwards ("skip < 0") in
         the journal.
 
@@ -5964,7 +6147,7 @@ class GuestFS(object):
         r = libguestfsmod.journal_skip(self._o, skip)
         return r
 
-    def kill_subprocess(self):
+    def kill_subprocess(self) -> None:
         """This kills the hypervisor.
 
         Do not call this. See: "g.shutdown" instead.
@@ -5984,7 +6167,7 @@ class GuestFS(object):
         r = libguestfsmod.kill_subprocess(self._o)
         return r
 
-    def launch(self):
+    def launch(self) -> None:
         """You should call this after configuring the handle (eg.
         adding drives) but before performing any actions.
 
@@ -5998,7 +6181,7 @@ class GuestFS(object):
         r = libguestfsmod.launch(self._o)
         return r
 
-    def lchown(self, owner, group, path):
+    def lchown(self, owner: int, group: int, path: str) -> None:
         """Change the file owner to "owner" and group to "group".
         This is like "g.chown" but if "path" is a symlink then
         the link itself is changed, not the target.
@@ -6012,7 +6195,7 @@ class GuestFS(object):
         r = libguestfsmod.lchown(self._o, owner, group, path)
         return r
 
-    def ldmtool_create_all(self):
+    def ldmtool_create_all(self) -> None:
         """This function scans all block devices looking for
         Windows dynamic disk volumes and partitions, and creates
         devices for any that were found.
@@ -6033,7 +6216,7 @@ class GuestFS(object):
         r = libguestfsmod.ldmtool_create_all(self._o)
         return r
 
-    def ldmtool_diskgroup_disks(self, diskgroup):
+    def ldmtool_diskgroup_disks(self, diskgroup: str) -> List[str]:
         """Return the disks in a Windows dynamic disk group. The
         "diskgroup" parameter should be the GUID of a disk
         group, one element from the list returned by
@@ -6048,7 +6231,7 @@ class GuestFS(object):
         r = libguestfsmod.ldmtool_diskgroup_disks(self._o, diskgroup)
         return r
 
-    def ldmtool_diskgroup_name(self, diskgroup):
+    def ldmtool_diskgroup_name(self, diskgroup: str) -> str:
         """Return the name of a Windows dynamic disk group. The
         "diskgroup" parameter should be the GUID of a disk
         group, one element from the list returned by
@@ -6061,7 +6244,7 @@ class GuestFS(object):
         r = libguestfsmod.ldmtool_diskgroup_name(self._o, diskgroup)
         return r
 
-    def ldmtool_diskgroup_volumes(self, diskgroup):
+    def ldmtool_diskgroup_volumes(self, diskgroup: str) -> List[str]:
         """Return the volumes in a Windows dynamic disk group. The
         "diskgroup" parameter should be the GUID of a disk
         group, one element from the list returned by
@@ -6076,7 +6259,7 @@ class GuestFS(object):
         r = libguestfsmod.ldmtool_diskgroup_volumes(self._o, diskgroup)
         return r
 
-    def ldmtool_remove_all(self):
+    def ldmtool_remove_all(self) -> None:
         """This is essentially the opposite of
         "g.ldmtool_create_all". It removes the device mapper
         mappings for all Windows dynamic disk volumes
@@ -6088,7 +6271,7 @@ class GuestFS(object):
         r = libguestfsmod.ldmtool_remove_all(self._o)
         return r
 
-    def ldmtool_scan(self):
+    def ldmtool_scan(self) -> List[str]:
         """This function scans for Windows dynamic disks. It
         returns a list of identifiers (GUIDs) for all disk
         groups that were found. These identifiers can be passed
@@ -6106,7 +6289,7 @@ class GuestFS(object):
         r = libguestfsmod.ldmtool_scan(self._o)
         return r
 
-    def ldmtool_scan_devices(self, devices):
+    def ldmtool_scan_devices(self, devices: List[str]) -> List[str]:
         """This function scans for Windows dynamic disks. It
         returns a list of identifiers (GUIDs) for all disk
         groups that were found. These identifiers can be passed
@@ -6126,7 +6309,7 @@ class GuestFS(object):
         r = libguestfsmod.ldmtool_scan_devices(self._o, devices)
         return r
 
-    def ldmtool_volume_hint(self, diskgroup, volume):
+    def ldmtool_volume_hint(self, diskgroup: str, volume: str) -> str:
         """Return the hint field of the volume named "volume" in
         the disk group with GUID "diskgroup". This may not be
         defined, in which case the empty string is returned. The
@@ -6140,7 +6323,8 @@ class GuestFS(object):
         r = libguestfsmod.ldmtool_volume_hint(self._o, diskgroup, volume)
         return r
 
-    def ldmtool_volume_partitions(self, diskgroup, volume):
+    def ldmtool_volume_partitions(self, diskgroup: str,
+                                  volume: str) -> List[str]:
         """Return the list of partitions in the volume named
         "volume" in the disk group with GUID "diskgroup".
 
@@ -6153,7 +6337,7 @@ class GuestFS(object):
         r = libguestfsmod.ldmtool_volume_partitions(self._o, diskgroup, volume)
         return r
 
-    def ldmtool_volume_type(self, diskgroup, volume):
+    def ldmtool_volume_type(self, diskgroup: str, volume: str) -> str:
         """Return the type of the volume named "volume" in the disk
         group with GUID "diskgroup".
 
@@ -6168,7 +6352,7 @@ class GuestFS(object):
         r = libguestfsmod.ldmtool_volume_type(self._o, diskgroup, volume)
         return r
 
-    def lgetxattr(self, path, name):
+    def lgetxattr(self, path: str, name: str) -> bytes:
         """Get a single extended attribute from file "path" named
         "name". If "path" is a symlink, then this call returns
         an extended attribute from the symlink.
@@ -6194,7 +6378,7 @@ class GuestFS(object):
         r = libguestfsmod.lgetxattr(self._o, path, name)
         return r
 
-    def lgetxattrs(self, path):
+    def lgetxattrs(self, path: str) -> List[dict]:
         """This is the same as "g.getxattrs", but if "path" is a
         symbolic link, then it returns the extended attributes
         of the link itself.
@@ -6209,7 +6393,7 @@ class GuestFS(object):
         r = libguestfsmod.lgetxattrs(self._o, path)
         return r
 
-    def list_9p(self):
+    def list_9p(self) -> List[str]:
         """List all 9p filesystems attached to the guest. A list of
         mount tags is returned.
 
@@ -6219,7 +6403,7 @@ class GuestFS(object):
         r = libguestfsmod.list_9p(self._o)
         return r
 
-    def list_devices(self):
+    def list_devices(self) -> List[str]:
         """List all the block devices.
 
         The full block device names are returned, eg. /dev/sda.
@@ -6232,7 +6416,7 @@ class GuestFS(object):
         r = libguestfsmod.list_devices(self._o)
         return r
 
-    def list_disk_labels(self):
+    def list_disk_labels(self) -> Union[List[Tuple[str, str]], dict]:
         """If you add drives using the optional "label" parameter
         of "g.add_drive_opts", you can use this call to map
         between disk labels, and raw block device and partition
@@ -6254,7 +6438,7 @@ class GuestFS(object):
         r = self._maybe_convert_to_dict(r)
         return r
 
-    def list_dm_devices(self):
+    def list_dm_devices(self) -> List[str]:
         """List all device mapper devices.
 
         The returned list contains /dev/mapper/* devices, eg.
@@ -6270,7 +6454,7 @@ class GuestFS(object):
         r = libguestfsmod.list_dm_devices(self._o)
         return r
 
-    def list_filesystems(self):
+    def list_filesystems(self) -> Union[List[Tuple[str, str]], dict]:
         """This inspection command looks for filesystems on
         partitions, block devices and logical volumes, returning
         a list of "mountables" containing filesystems and their
@@ -6318,7 +6502,7 @@ class GuestFS(object):
         r = self._maybe_convert_to_dict(r)
         return r
 
-    def list_ldm_partitions(self):
+    def list_ldm_partitions(self) -> List[str]:
         """This function returns all Windows dynamic disk
         partitions that were found at launch time. It returns a
         list of device names.
@@ -6332,7 +6516,7 @@ class GuestFS(object):
         r = libguestfsmod.list_ldm_partitions(self._o)
         return r
 
-    def list_ldm_volumes(self):
+    def list_ldm_volumes(self) -> List[str]:
         """This function returns all Windows dynamic disk volumes
         that were found at launch time. It returns a list of
         device names.
@@ -6346,7 +6530,7 @@ class GuestFS(object):
         r = libguestfsmod.list_ldm_volumes(self._o)
         return r
 
-    def list_md_devices(self):
+    def list_md_devices(self) -> List[str]:
         """List all Linux md devices.
 
         This function returns a list of strings.
@@ -6355,7 +6539,7 @@ class GuestFS(object):
         r = libguestfsmod.list_md_devices(self._o)
         return r
 
-    def list_partitions(self):
+    def list_partitions(self) -> List[str]:
         """List all the partitions detected on all block devices.
 
         The full partition device names are returned, eg.
@@ -6372,7 +6556,7 @@ class GuestFS(object):
         r = libguestfsmod.list_partitions(self._o)
         return r
 
-    def ll(self, directory):
+    def ll(self, directory: str) -> str:
         """List the files in directory (relative to the root
         directory, there is no cwd) in the format of "ls -la".
 
@@ -6384,7 +6568,7 @@ class GuestFS(object):
         r = libguestfsmod.ll(self._o, directory)
         return r
 
-    def llz(self, directory):
+    def llz(self, directory: str) -> str:
         """List the files in directory in the format of "ls -laZ".
 
         This command is mostly useful for interactive sessions.
@@ -6406,14 +6590,14 @@ class GuestFS(object):
         r = libguestfsmod.llz(self._o, directory)
         return r
 
-    def ln(self, target, linkname):
+    def ln(self, target: str, linkname: str) -> None:
         """This command creates a hard link.
         """
         self._check_not_closed()
         r = libguestfsmod.ln(self._o, target, linkname)
         return r
 
-    def ln_f(self, target, linkname):
+    def ln_f(self, target: str, linkname: str) -> None:
         """This command creates a hard link, removing the link
         "linkname" if it exists already.
         """
@@ -6421,7 +6605,7 @@ class GuestFS(object):
         r = libguestfsmod.ln_f(self._o, target, linkname)
         return r
 
-    def ln_s(self, target, linkname):
+    def ln_s(self, target: str, linkname: str) -> None:
         """This command creates a symbolic link using the "ln -s"
         command.
         """
@@ -6429,7 +6613,7 @@ class GuestFS(object):
         r = libguestfsmod.ln_s(self._o, target, linkname)
         return r
 
-    def ln_sf(self, target, linkname):
+    def ln_sf(self, target: str, linkname: str) -> None:
         """This command creates a symbolic link using the "ln -sf"
         command, The *-f* option removes the link ("linkname")
         if it exists already.
@@ -6438,7 +6622,7 @@ class GuestFS(object):
         r = libguestfsmod.ln_sf(self._o, target, linkname)
         return r
 
-    def lremovexattr(self, xattr, path):
+    def lremovexattr(self, xattr: str, path: str) -> None:
         """This is the same as "g.removexattr", but if "path" is a
         symbolic link, then it removes an extended attribute of
         the link itself.
@@ -6450,7 +6634,7 @@ class GuestFS(object):
         r = libguestfsmod.lremovexattr(self._o, xattr, path)
         return r
 
-    def ls(self, directory):
+    def ls(self, directory: str) -> List[str]:
         """List the files in directory (relative to the root
         directory, there is no cwd). The "." and ".." entries
         are not returned, but hidden files are shown.
@@ -6461,7 +6645,7 @@ class GuestFS(object):
         r = libguestfsmod.ls(self._o, directory)
         return r
 
-    def ls0(self, dir, filenames):
+    def ls0(self, dir: str, filenames: str) -> None:
         """This specialized command is used to get a listing of the
         filenames in the directory "dir". The list of filenames
         is written to the local file filenames (on the host).
@@ -6476,7 +6660,7 @@ class GuestFS(object):
         r = libguestfsmod.ls0(self._o, dir, filenames)
         return r
 
-    def lsetxattr(self, xattr, val, vallen, path):
+    def lsetxattr(self, xattr: str, val: str, vallen: int, path: str) -> None:
         """This is the same as "g.setxattr", but if "path" is a
         symbolic link, then it sets an extended attribute of the
         link itself.
@@ -6488,7 +6672,7 @@ class GuestFS(object):
         r = libguestfsmod.lsetxattr(self._o, xattr, val, vallen, path)
         return r
 
-    def lstat(self, path):
+    def lstat(self, path: str) -> dict:
         """Returns file information for the given "path".
 
         This is the same as "g.stat" except that if "path" is a
@@ -6515,7 +6699,7 @@ class GuestFS(object):
         r = libguestfsmod.lstat(self._o, path)
         return r
 
-    def lstatlist(self, path, names):
+    def lstatlist(self, path: str, names: List[str]) -> List[dict]:
         """This call allows you to perform the "g.lstat" operation
         on multiple files, where all files are in the directory
         "path". "names" is the list of files from this
@@ -6551,7 +6735,7 @@ class GuestFS(object):
         r = libguestfsmod.lstatlist(self._o, path, names)
         return r
 
-    def lstatns(self, path):
+    def lstatns(self, path: str) -> dict:
         """Returns file information for the given "path".
 
         This is the same as "g.statns" except that if "path" is
@@ -6567,7 +6751,7 @@ class GuestFS(object):
         r = libguestfsmod.lstatns(self._o, path)
         return r
 
-    def lstatnslist(self, path, names):
+    def lstatnslist(self, path: str, names: List[str]) -> List[dict]:
         """This call allows you to perform the "g.lstatns"
         operation on multiple files, where all files are in the
         directory "path". "names" is the list of files from this
@@ -6592,7 +6776,8 @@ class GuestFS(object):
         r = libguestfsmod.lstatnslist(self._o, path, names)
         return r
 
-    def luks_add_key(self, device, key, newkey, keyslot):
+    def luks_add_key(self, device: str, key: str, newkey: str,
+                     keyslot: int) -> None:
         """This command adds a new key on LUKS device "device".
         "key" is any existing key, and is used to access the
         device. "newkey" is the new key to add. "keyslot" is the
@@ -6609,21 +6794,32 @@ class GuestFS(object):
         r = libguestfsmod.luks_add_key(self._o, device, key, newkey, keyslot)
         return r
 
-    def luks_close(self, device):
+    def luks_close(self, device: str) -> None:
         """This closes a LUKS device that was created earlier by
         "g.luks_open" or "g.luks_open_ro". The "device"
         parameter must be the name of the LUKS mapping device
         (ie. /dev/mapper/mapname) and *not* the name of the
         underlying block device.
 
+        *This function is deprecated.* In new code, use the
+        "cryptsetup_close" call instead.
+
+        Deprecated functions will not be removed from the API,
+        but the fact that they are deprecated indicates that
+        there are problems with correct use of these functions.
+
         This function depends on the feature "luks". See also
         "g.feature-available".
         """
         self._check_not_closed()
+        import warnings
+        warnings.warn("use GuestFS.cryptsetup_close() "
+                      "instead of GuestFS.luks_close()",
+                      DeprecationWarning, stacklevel=2)
         r = libguestfsmod.luks_close(self._o, device)
         return r
 
-    def luks_format(self, device, key, keyslot):
+    def luks_format(self, device: str, key: str, keyslot: int) -> None:
         """This command erases existing data on "device" and
         formats the device as a LUKS encrypted device. "key" is
         the initial key, which is added to key slot "keyslot".
@@ -6636,7 +6832,8 @@ class GuestFS(object):
         r = libguestfsmod.luks_format(self._o, device, key, keyslot)
         return r
 
-    def luks_format_cipher(self, device, key, keyslot, cipher):
+    def luks_format_cipher(self, device: str, key: str, keyslot: int,
+                           cipher: str) -> None:
         """This command is the same as "g.luks_format" but it also
         allows you to set the "cipher" used.
 
@@ -6648,7 +6845,7 @@ class GuestFS(object):
                                              cipher)
         return r
 
-    def luks_kill_slot(self, device, key, keyslot):
+    def luks_kill_slot(self, device: str, key: str, keyslot: int) -> None:
         """This command deletes the key in key slot "keyslot" from
         the encrypted LUKS device "device". "key" must be one of
         the *other* keys.
@@ -6660,7 +6857,7 @@ class GuestFS(object):
         r = libguestfsmod.luks_kill_slot(self._o, device, key, keyslot)
         return r
 
-    def luks_open(self, device, key, mapname):
+    def luks_open(self, device: str, key: str, mapname: str) -> None:
         """This command opens a block device which has been
         encrypted according to the Linux Unified Key Setup
         (LUKS) standard.
@@ -6682,25 +6879,47 @@ class GuestFS(object):
         Use "g.list_dm_devices" to list all device mapper
         devices.
 
+        *This function is deprecated.* In new code, use the
+        "cryptsetup_open" call instead.
+
+        Deprecated functions will not be removed from the API,
+        but the fact that they are deprecated indicates that
+        there are problems with correct use of these functions.
+
         This function depends on the feature "luks". See also
         "g.feature-available".
         """
         self._check_not_closed()
+        import warnings
+        warnings.warn("use GuestFS.cryptsetup_open() "
+                      "instead of GuestFS.luks_open()",
+                      DeprecationWarning, stacklevel=2)
         r = libguestfsmod.luks_open(self._o, device, key, mapname)
         return r
 
-    def luks_open_ro(self, device, key, mapname):
+    def luks_open_ro(self, device: str, key: str, mapname: str) -> None:
         """This is the same as "g.luks_open" except that a
         read-only mapping is created.
+
+        *This function is deprecated.* In new code, use the
+        "cryptsetup_open" call instead.
+
+        Deprecated functions will not be removed from the API,
+        but the fact that they are deprecated indicates that
+        there are problems with correct use of these functions.
 
         This function depends on the feature "luks". See also
         "g.feature-available".
         """
         self._check_not_closed()
+        import warnings
+        warnings.warn("use GuestFS.cryptsetup_open() "
+                      "instead of GuestFS.luks_open_ro()",
+                      DeprecationWarning, stacklevel=2)
         r = libguestfsmod.luks_open_ro(self._o, device, key, mapname)
         return r
 
-    def luks_uuid(self, device):
+    def luks_uuid(self, device: str) -> str:
         """This returns the UUID of the LUKS device "device".
 
         This function depends on the feature "luks". See also
@@ -6710,7 +6929,7 @@ class GuestFS(object):
         r = libguestfsmod.luks_uuid(self._o, device)
         return r
 
-    def lvcreate(self, logvol, volgroup, mbytes):
+    def lvcreate(self, logvol: str, volgroup: str, mbytes: int) -> None:
         """This creates an LVM logical volume called "logvol" on
         the volume group "volgroup", with "size" megabytes.
 
@@ -6721,7 +6940,7 @@ class GuestFS(object):
         r = libguestfsmod.lvcreate(self._o, logvol, volgroup, mbytes)
         return r
 
-    def lvcreate_free(self, logvol, volgroup, percent):
+    def lvcreate_free(self, logvol: str, volgroup: str, percent: int) -> None:
         """Create an LVM logical volume called
         /dev/volgroup/logvol, using approximately "percent" % of
         the free space remaining in the volume group. Most
@@ -6735,13 +6954,14 @@ class GuestFS(object):
         r = libguestfsmod.lvcreate_free(self._o, logvol, volgroup, percent)
         return r
 
-    def lvm_canonical_lv_name(self, lvname):
+    def lvm_canonical_lv_name(self, lvname: str) -> str:
         """This converts alternative naming schemes for LVs that
         you might find to the canonical name. For example,
         /dev/mapper/VG-LV is converted to /dev/VG/LV.
 
         This command returns an error if the "lvname" parameter
-        does not refer to a logical volume.
+        does not refer to a logical volume. In this case errno
+        will be set to "EINVAL".
 
         See also "g.is_lv", "g.canonical_device_name".
         """
@@ -6749,7 +6969,7 @@ class GuestFS(object):
         r = libguestfsmod.lvm_canonical_lv_name(self._o, lvname)
         return r
 
-    def lvm_clear_filter(self):
+    def lvm_clear_filter(self) -> None:
         """This undoes the effect of "g.lvm_set_filter". LVM will
         be able to see every block device.
 
@@ -6760,7 +6980,7 @@ class GuestFS(object):
         r = libguestfsmod.lvm_clear_filter(self._o)
         return r
 
-    def lvm_remove_all(self):
+    def lvm_remove_all(self) -> None:
         """This command removes all LVM logical volumes, volume
         groups and physical volumes.
 
@@ -6771,7 +6991,7 @@ class GuestFS(object):
         r = libguestfsmod.lvm_remove_all(self._o)
         return r
 
-    def lvm_scan(self, activate):
+    def lvm_scan(self, activate: bool) -> None:
         """This scans all block devices and rebuilds the list of
         LVM physical volumes, volume groups and logical volumes.
 
@@ -6789,7 +7009,7 @@ class GuestFS(object):
         r = libguestfsmod.lvm_scan(self._o, activate)
         return r
 
-    def lvm_set_filter(self, devices):
+    def lvm_set_filter(self, devices: List[str]) -> None:
         """This sets the LVM device filter so that LVM will only be
         able to "see" the block devices in the list "devices",
         and will ignore all other attached block devices.
@@ -6822,7 +7042,7 @@ class GuestFS(object):
         r = libguestfsmod.lvm_set_filter(self._o, devices)
         return r
 
-    def lvremove(self, device):
+    def lvremove(self, device: str) -> None:
         """Remove an LVM logical volume "device", where "device" is
         the path to the LV, such as /dev/VG/LV.
 
@@ -6836,7 +7056,7 @@ class GuestFS(object):
         r = libguestfsmod.lvremove(self._o, device)
         return r
 
-    def lvrename(self, logvol, newlogvol):
+    def lvrename(self, logvol: str, newlogvol: str) -> None:
         """Rename a logical volume "logvol" with the new name
         "newlogvol".
         """
@@ -6844,7 +7064,7 @@ class GuestFS(object):
         r = libguestfsmod.lvrename(self._o, logvol, newlogvol)
         return r
 
-    def lvresize(self, device, mbytes):
+    def lvresize(self, device: str, mbytes: int) -> None:
         """This resizes (expands or shrinks) an existing LVM
         logical volume to "mbytes". When reducing, data in the
         reduced part is lost.
@@ -6856,7 +7076,7 @@ class GuestFS(object):
         r = libguestfsmod.lvresize(self._o, device, mbytes)
         return r
 
-    def lvresize_free(self, lv, percent):
+    def lvresize_free(self, lv: str, percent: int) -> None:
         """This expands an existing logical volume "lv" so that it
         fills "pc" % of the remaining free space in the volume
         group. Commonly you would call this with pc = 100 which
@@ -6870,7 +7090,7 @@ class GuestFS(object):
         r = libguestfsmod.lvresize_free(self._o, lv, percent)
         return r
 
-    def lvs(self):
+    def lvs(self) -> List[str]:
         """List all the logical volumes detected. This is the
         equivalent of the lvs(8) command.
 
@@ -6888,7 +7108,7 @@ class GuestFS(object):
         r = libguestfsmod.lvs(self._o)
         return r
 
-    def lvs_full(self):
+    def lvs_full(self) -> List[dict]:
         """List all the logical volumes detected. This is the
         equivalent of the lvs(8) command. The "full" version
         includes all fields.
@@ -6903,14 +7123,14 @@ class GuestFS(object):
         r = libguestfsmod.lvs_full(self._o)
         return r
 
-    def lvuuid(self, device):
+    def lvuuid(self, device: str) -> str:
         """This command returns the UUID of the LVM LV "device".
         """
         self._check_not_closed()
         r = libguestfsmod.lvuuid(self._o, device)
         return r
 
-    def lxattrlist(self, path, names):
+    def lxattrlist(self, path: str, names: List[str]) -> List[dict]:
         """This call allows you to get the extended attributes of
         multiple files, where all files are in the directory
         "path". "names" is the list of files from this
@@ -6943,7 +7163,7 @@ class GuestFS(object):
         r = libguestfsmod.lxattrlist(self._o, path, names)
         return r
 
-    def max_disks(self):
+    def max_disks(self) -> int:
         """Return the maximum number of disks that may be added to
         a handle (eg. by "g.add_drive_opts" and similar calls).
 
@@ -6957,8 +7177,11 @@ class GuestFS(object):
         r = libguestfsmod.max_disks(self._o)
         return r
 
-    def md_create(self, name, devices, missingbitmap=None, nrdevices=None,
-                  spare=None, chunk=None, level=None):
+    def md_create(self, name: str, devices: List[str],
+                  missingbitmap: Optional[int] = None,
+                  nrdevices: Optional[int] = None, spare: Optional[int] = None,
+                  chunk: Optional[int] = None,
+                  level: Optional[str] = None) -> None:
         """Create a Linux md (RAID) device named "name" on the
         devices in the list "devices".
 
@@ -7017,7 +7240,7 @@ class GuestFS(object):
                                     nrdevices, spare, chunk, level)
         return r
 
-    def md_detail(self, md):
+    def md_detail(self, md: str) -> Union[List[Tuple[str, str]], dict]:
         """This command exposes the output of "mdadm -DY <md>". The
         following fields are usually present in the returned
         hash. Other fields may also be present.
@@ -7051,7 +7274,7 @@ class GuestFS(object):
         r = self._maybe_convert_to_dict(r)
         return r
 
-    def md_stat(self, md):
+    def md_stat(self, md: str) -> List[dict]:
         """This call returns a list of the underlying devices which
         make up the single software RAID array device "md".
 
@@ -7090,7 +7313,7 @@ class GuestFS(object):
         r = libguestfsmod.md_stat(self._o, md)
         return r
 
-    def md_stop(self, md):
+    def md_stop(self, md: str) -> None:
         """This command deactivates the MD array named "md". The
         device is stopped, but it is not destroyed or zeroed.
 
@@ -7101,14 +7324,14 @@ class GuestFS(object):
         r = libguestfsmod.md_stop(self._o, md)
         return r
 
-    def mkdir(self, path):
+    def mkdir(self, path: str) -> None:
         """Create a directory named "path".
         """
         self._check_not_closed()
         r = libguestfsmod.mkdir(self._o, path)
         return r
 
-    def mkdir_mode(self, path, mode):
+    def mkdir_mode(self, path: str, mode: int) -> None:
         """This command creates a directory, setting the initial
         permissions of the directory to "mode".
 
@@ -7122,7 +7345,7 @@ class GuestFS(object):
         r = libguestfsmod.mkdir_mode(self._o, path, mode)
         return r
 
-    def mkdir_p(self, path):
+    def mkdir_p(self, path: str) -> None:
         """Create a directory named "path", creating any parent
         directories as necessary. This is like the "mkdir -p"
         shell command.
@@ -7131,7 +7354,7 @@ class GuestFS(object):
         r = libguestfsmod.mkdir_p(self._o, path)
         return r
 
-    def mkdtemp(self, tmpl):
+    def mkdtemp(self, tmpl: str) -> str:
         """This command creates a temporary directory. The "tmpl"
         parameter should be a full pathname for the temporary
         directory name with the final six characters being
@@ -7156,18 +7379,37 @@ class GuestFS(object):
         r = libguestfsmod.mkdtemp(self._o, tmpl)
         return r
 
-    def mke2fs(self, device, blockscount=None, blocksize=None, fragsize=None,
-               blockspergroup=None, numberofgroups=None, bytesperinode=None,
-               inodesize=None, journalsize=None, numberofinodes=None,
-               stridesize=None, stripewidth=None, maxonlineresize=None,
-               reservedblockspercentage=None, mmpupdateinterval=None,
-               journaldevice=None, label=None, lastmounteddir=None,
-               creatoros=None, fstype=None, usagetype=None, uuid=None,
-               forcecreate=None, writesbandgrouponly=None, lazyitableinit=None,
-               lazyjournalinit=None, testfs=None, discard=None, quotatype=None,
-               extent=None, filetype=None, flexbg=None, hasjournal=None,
-               journaldev=None, largefile=None, quota=None, resizeinode=None,
-               sparsesuper=None, uninitbg=None):
+    def mke2fs(self, device: str, blockscount: Optional[int] = None,
+               blocksize: Optional[int] = None, fragsize: Optional[int] = None,
+               blockspergroup: Optional[int] = None,
+               numberofgroups: Optional[int] = None,
+               bytesperinode: Optional[int] = None,
+               inodesize: Optional[int] = None,
+               journalsize: Optional[int] = None,
+               numberofinodes: Optional[int] = None,
+               stridesize: Optional[int] = None,
+               stripewidth: Optional[int] = None,
+               maxonlineresize: Optional[int] = None,
+               reservedblockspercentage: Optional[int] = None,
+               mmpupdateinterval: Optional[int] = None,
+               journaldevice: Optional[str] = None,
+               label: Optional[str] = None,
+               lastmounteddir: Optional[str] = None,
+               creatoros: Optional[str] = None, fstype: Optional[str] = None,
+               usagetype: Optional[str] = None, uuid: Optional[str] = None,
+               forcecreate: Optional[bool] = None,
+               writesbandgrouponly: Optional[bool] = None,
+               lazyitableinit: Optional[bool] = None,
+               lazyjournalinit: Optional[bool] = None,
+               testfs: Optional[bool] = None, discard: Optional[bool] = None,
+               quotatype: Optional[bool] = None, extent: Optional[bool] = None,
+               filetype: Optional[bool] = None, flexbg: Optional[bool] = None,
+               hasjournal: Optional[bool] = None,
+               journaldev: Optional[bool] = None,
+               largefile: Optional[bool] = None, quota: Optional[bool] = None,
+               resizeinode: Optional[bool] = None,
+               sparsesuper: Optional[bool] = None,
+               uninitbg: Optional[bool] = None) -> None:
         """"mke2fs" is used to create an ext2, ext3, or ext4
         filesystem on "device".
 
@@ -7192,7 +7434,8 @@ class GuestFS(object):
                                  resizeinode, sparsesuper, uninitbg)
         return r
 
-    def mke2fs_J(self, fstype, blocksize, device, journal):
+    def mke2fs_J(self, fstype: str, blocksize: int, device: str,
+                 journal: str) -> None:
         """This creates an ext2/3/4 filesystem on "device" with an
         external journal on "journal". It is equivalent to the
         command:
@@ -7216,7 +7459,8 @@ class GuestFS(object):
         r = libguestfsmod.mke2fs_J(self._o, fstype, blocksize, device, journal)
         return r
 
-    def mke2fs_JL(self, fstype, blocksize, device, label):
+    def mke2fs_JL(self, fstype: str, blocksize: int, device: str,
+                  label: str) -> None:
         """This creates an ext2/3/4 filesystem on "device" with an
         external journal on the journal labeled "label".
 
@@ -7237,7 +7481,8 @@ class GuestFS(object):
         r = libguestfsmod.mke2fs_JL(self._o, fstype, blocksize, device, label)
         return r
 
-    def mke2fs_JU(self, fstype, blocksize, device, uuid):
+    def mke2fs_JU(self, fstype: str, blocksize: int, device: str,
+                  uuid: str) -> None:
         """This creates an ext2/3/4 filesystem on "device" with an
         external journal on the journal with UUID "uuid".
 
@@ -7261,7 +7506,7 @@ class GuestFS(object):
         r = libguestfsmod.mke2fs_JU(self._o, fstype, blocksize, device, uuid)
         return r
 
-    def mke2journal(self, blocksize, device):
+    def mke2journal(self, blocksize: int, device: str) -> None:
         """This creates an ext2 external journal on "device". It is
         equivalent to the command:
 
@@ -7282,7 +7527,7 @@ class GuestFS(object):
         r = libguestfsmod.mke2journal(self._o, blocksize, device)
         return r
 
-    def mke2journal_L(self, blocksize, label, device):
+    def mke2journal_L(self, blocksize: int, label: str, device: str) -> None:
         """This creates an ext2 external journal on "device" with
         label "label".
 
@@ -7301,7 +7546,7 @@ class GuestFS(object):
         r = libguestfsmod.mke2journal_L(self._o, blocksize, label, device)
         return r
 
-    def mke2journal_U(self, blocksize, uuid, device):
+    def mke2journal_U(self, blocksize: int, uuid: str, device: str) -> None:
         """This creates an ext2 external journal on "device" with
         UUID "uuid".
 
@@ -7323,7 +7568,7 @@ class GuestFS(object):
         r = libguestfsmod.mke2journal_U(self._o, blocksize, uuid, device)
         return r
 
-    def mkfifo(self, mode, path):
+    def mkfifo(self, mode: int, path: str) -> None:
         """This call creates a FIFO (named pipe) called "path" with
         mode "mode". It is just a convenient wrapper around
         "g.mknod".
@@ -7340,8 +7585,10 @@ class GuestFS(object):
         r = libguestfsmod.mkfifo(self._o, mode, path)
         return r
 
-    def mkfs(self, fstype, device, blocksize=None, features=None, inode=None,
-             sectorsize=None, label=None):
+    def mkfs(self, fstype: str, device: str, blocksize: Optional[int] = None,
+             features: Optional[str] = None, inode: Optional[int] = None,
+             sectorsize: Optional[int] = None,
+             label: Optional[str] = None) -> None:
         """This function creates a filesystem on "device". The
         filesystem type is "fstype", for example "ext3".
 
@@ -7385,7 +7632,7 @@ class GuestFS(object):
 
     mkfs_opts = mkfs
 
-    def mkfs_b(self, fstype, blocksize, device):
+    def mkfs_b(self, fstype: str, blocksize: int, device: str) -> None:
         """This call is similar to "g.mkfs", but it allows you to
         control the block size of the resulting filesystem.
         Supported block sizes depend on the filesystem type, but
@@ -7409,9 +7656,13 @@ class GuestFS(object):
         r = libguestfsmod.mkfs_b(self._o, fstype, blocksize, device)
         return r
 
-    def mkfs_btrfs(self, devices, allocstart=None, bytecount=None,
-                   datatype=None, leafsize=None, label=None, metadata=None,
-                   nodesize=None, sectorsize=None):
+    def mkfs_btrfs(self, devices: List[str], allocstart: Optional[int] = None,
+                   bytecount: Optional[int] = None,
+                   datatype: Optional[str] = None,
+                   leafsize: Optional[int] = None, label: Optional[str] = None,
+                   metadata: Optional[str] = None,
+                   nodesize: Optional[int] = None,
+                   sectorsize: Optional[int] = None) -> None:
         """Create a btrfs filesystem, allowing all configurables to
         be set. For more information on the optional arguments,
         see mkfs.btrfs(8).
@@ -7431,7 +7682,7 @@ class GuestFS(object):
                                      nodesize, sectorsize)
         return r
 
-    def mklost_and_found(self, mountpoint):
+    def mklost_and_found(self, mountpoint: str) -> None:
         """Make the "lost+found" directory, normally in the root
         directory of an ext2/3/4 filesystem. "mountpoint" is the
         directory under which we try to create the "lost+found"
@@ -7441,7 +7692,7 @@ class GuestFS(object):
         r = libguestfsmod.mklost_and_found(self._o, mountpoint)
         return r
 
-    def mkmountpoint(self, exemptpath):
+    def mkmountpoint(self, exemptpath: str) -> None:
         """"g.mkmountpoint" and "g.rmmountpoint" are specialized
         calls that can be used to create extra mountpoints
         before mounting the first filesystem.
@@ -7490,7 +7741,8 @@ class GuestFS(object):
         r = libguestfsmod.mkmountpoint(self._o, exemptpath)
         return r
 
-    def mknod(self, mode, devmajor, devminor, path):
+    def mknod(self, mode: int, devmajor: int, devminor: int,
+              path: str) -> None:
         """This call creates block or character special devices, or
         named pipes (FIFOs).
 
@@ -7516,7 +7768,8 @@ class GuestFS(object):
         r = libguestfsmod.mknod(self._o, mode, devmajor, devminor, path)
         return r
 
-    def mknod_b(self, mode, devmajor, devminor, path):
+    def mknod_b(self, mode: int, devmajor: int, devminor: int,
+                path: str) -> None:
         """This call creates a block device node called "path" with
         mode "mode" and device major/minor "devmajor" and
         "devminor". It is just a convenient wrapper around
@@ -7534,7 +7787,8 @@ class GuestFS(object):
         r = libguestfsmod.mknod_b(self._o, mode, devmajor, devminor, path)
         return r
 
-    def mknod_c(self, mode, devmajor, devminor, path):
+    def mknod_c(self, mode: int, devmajor: int, devminor: int,
+                path: str) -> None:
         """This call creates a char device node called "path" with
         mode "mode" and device major/minor "devmajor" and
         "devminor". It is just a convenient wrapper around
@@ -7552,7 +7806,9 @@ class GuestFS(object):
         r = libguestfsmod.mknod_c(self._o, mode, devmajor, devminor, path)
         return r
 
-    def mksquashfs(self, path, filename, compress=None, excludes=None):
+    def mksquashfs(self, path: str, filename: str,
+                   compress: Optional[str] = None,
+                   excludes: Optional[List[str]] = None) -> None:
         """Create a squashfs filesystem for the specified "path".
 
         The optional "compress" flag controls compression. If
@@ -7579,7 +7835,8 @@ class GuestFS(object):
                                      excludes)
         return r
 
-    def mkswap(self, device, label=None, uuid=None):
+    def mkswap(self, device: str, label: Optional[str] = None,
+               uuid: Optional[str] = None) -> None:
         """Create a Linux swap partition on "device".
 
         The option arguments "label" and "uuid" allow you to set
@@ -7591,7 +7848,7 @@ class GuestFS(object):
 
     mkswap_opts = mkswap
 
-    def mkswap_L(self, label, device):
+    def mkswap_L(self, label: str, device: str) -> None:
         """Create a swap partition on "device" with label "label".
 
         Note that you cannot attach a swap label to a block
@@ -7613,7 +7870,7 @@ class GuestFS(object):
         r = libguestfsmod.mkswap_L(self._o, label, device)
         return r
 
-    def mkswap_U(self, uuid, device):
+    def mkswap_U(self, uuid: str, device: str) -> None:
         """Create a swap partition on "device" with UUID "uuid".
 
         *This function is deprecated.* In new code, use the
@@ -7634,7 +7891,7 @@ class GuestFS(object):
         r = libguestfsmod.mkswap_U(self._o, uuid, device)
         return r
 
-    def mkswap_file(self, path):
+    def mkswap_file(self, path: str) -> None:
         """Create a swap file.
 
         This command just writes a swap file signature to an
@@ -7645,7 +7902,7 @@ class GuestFS(object):
         r = libguestfsmod.mkswap_file(self._o, path)
         return r
 
-    def mktemp(self, tmpl, suffix=None):
+    def mktemp(self, tmpl: str, suffix: Optional[str] = None) -> str:
         """This command creates a temporary file. The "tmpl"
         parameter should be a full pathname for the temporary
         directory name with the final six characters being
@@ -7673,7 +7930,7 @@ class GuestFS(object):
         r = libguestfsmod.mktemp(self._o, tmpl, suffix)
         return r
 
-    def modprobe(self, modulename):
+    def modprobe(self, modulename: str) -> None:
         """This loads a kernel module in the appliance.
 
         This function depends on the feature "linuxmodules". See
@@ -7683,7 +7940,7 @@ class GuestFS(object):
         r = libguestfsmod.modprobe(self._o, modulename)
         return r
 
-    def mount(self, mountable, mountpoint):
+    def mount(self, mountable: str, mountpoint: str) -> None:
         """Mount a guest disk at a position in the filesystem.
         Block devices are named /dev/sda, /dev/sdb and so on, as
         they were added to the guest. If those block devices
@@ -7712,7 +7969,8 @@ class GuestFS(object):
         r = libguestfsmod.mount(self._o, mountable, mountpoint)
         return r
 
-    def mount_9p(self, mounttag, mountpoint, options=None):
+    def mount_9p(self, mounttag: str, mountpoint: str,
+                 options: Optional[str] = None) -> None:
         """Mount the virtio-9p filesystem with the tag "mounttag"
         on the directory "mountpoint".
 
@@ -7724,8 +7982,11 @@ class GuestFS(object):
         r = libguestfsmod.mount_9p(self._o, mounttag, mountpoint, options)
         return r
 
-    def mount_local(self, localmountpoint, readonly=None, options=None,
-                    cachetimeout=None, debugcalls=None):
+    def mount_local(self, localmountpoint: str,
+                    readonly: Optional[bool] = None,
+                    options: Optional[str] = None,
+                    cachetimeout: Optional[int] = None,
+                    debugcalls: Optional[bool] = None) -> None:
         """This call exports the libguestfs-accessible filesystem
         to a local mountpoint (directory) called
         "localmountpoint". Ordinary reads and writes to files
@@ -7757,7 +8018,7 @@ class GuestFS(object):
                                       options, cachetimeout, debugcalls)
         return r
 
-    def mount_local_run(self):
+    def mount_local_run(self) -> None:
         """Run the main loop which translates kernel calls to
         libguestfs calls.
 
@@ -7779,7 +8040,7 @@ class GuestFS(object):
         r = libguestfsmod.mount_local_run(self._o)
         return r
 
-    def mount_loop(self, file, mountpoint):
+    def mount_loop(self, file: str, mountpoint: str) -> None:
         """This command lets you mount file (a filesystem image in
         a file) on a mount point. It is entirely equivalent to
         the command "mount -o loop file mountpoint".
@@ -7788,7 +8049,8 @@ class GuestFS(object):
         r = libguestfsmod.mount_loop(self._o, file, mountpoint)
         return r
 
-    def mount_options(self, options, mountable, mountpoint):
+    def mount_options(self, options: str, mountable: str,
+                      mountpoint: str) -> None:
         """This is the same as the "g.mount" command, but it allows
         you to set the mount options as for the mount(8) *-o*
         flag.
@@ -7802,7 +8064,7 @@ class GuestFS(object):
                                         mountpoint)
         return r
 
-    def mount_ro(self, mountable, mountpoint):
+    def mount_ro(self, mountable: str, mountpoint: str) -> None:
         """This is the same as the "g.mount" command, but it mounts
         the filesystem with the read-only (*-o ro*) flag.
         """
@@ -7810,7 +8072,8 @@ class GuestFS(object):
         r = libguestfsmod.mount_ro(self._o, mountable, mountpoint)
         return r
 
-    def mount_vfs(self, options, vfstype, mountable, mountpoint):
+    def mount_vfs(self, options: str, vfstype: str, mountable: str,
+                  mountpoint: str) -> None:
         """This is the same as the "g.mount" command, but it allows
         you to set both the mount options and the vfstype as for
         the mount(8) *-o* and *-t* flags.
@@ -7820,7 +8083,7 @@ class GuestFS(object):
                                     mountpoint)
         return r
 
-    def mountable_device(self, mountable):
+    def mountable_device(self, mountable: str) -> str:
         """Returns the device name of a mountable. In quite a lot
         of cases, the mountable is the device name.
 
@@ -7833,7 +8096,7 @@ class GuestFS(object):
         r = libguestfsmod.mountable_device(self._o, mountable)
         return r
 
-    def mountable_subvolume(self, mountable):
+    def mountable_subvolume(self, mountable: str) -> str:
         """Returns the subvolume path of a mountable. Btrfs
         subvolumes mountables are a combination of both the
         device name and the subvolume path (see also
@@ -7848,7 +8111,7 @@ class GuestFS(object):
         r = libguestfsmod.mountable_subvolume(self._o, mountable)
         return r
 
-    def mountpoints(self):
+    def mountpoints(self) -> Union[List[Tuple[str, str]], dict]:
         """This call is similar to "g.mounts". That call returns a
         list of devices. This one returns a hash table (map) of
         device name to directory where the device is mounted.
@@ -7864,7 +8127,7 @@ class GuestFS(object):
         r = self._maybe_convert_to_dict(r)
         return r
 
-    def mounts(self):
+    def mounts(self) -> List[str]:
         """This returns the list of currently mounted filesystems.
         It returns the list of devices (eg. /dev/sda1,
         /dev/VG/LV).
@@ -7879,7 +8142,7 @@ class GuestFS(object):
         r = libguestfsmod.mounts(self._o)
         return r
 
-    def mv(self, src, dest):
+    def mv(self, src: str, dest: str) -> None:
         """This moves a file from "src" to "dest" where "dest" is
         either a destination filename or destination directory.
 
@@ -7889,7 +8152,7 @@ class GuestFS(object):
         r = libguestfsmod.mv(self._o, src, dest)
         return r
 
-    def nr_devices(self):
+    def nr_devices(self) -> int:
         """This returns the number of whole block devices that were
         added. This is the same as the number of devices that
         would be returned if you called "g.list_devices".
@@ -7901,7 +8164,7 @@ class GuestFS(object):
         r = libguestfsmod.nr_devices(self._o)
         return r
 
-    def ntfs_3g_probe(self, rw, device):
+    def ntfs_3g_probe(self, rw: bool, device: str) -> int:
         """This command runs the ntfs-3g.probe(8) command which
         probes an NTFS "device" for mountability. (Not all NTFS
         volumes can be mounted read-write, and some cannot be
@@ -7923,7 +8186,7 @@ class GuestFS(object):
         r = libguestfsmod.ntfs_3g_probe(self._o, rw, device)
         return r
 
-    def ntfscat_i(self, device, inode, filename):
+    def ntfscat_i(self, device: str, inode: int, filename: str) -> None:
         """Download a file given its inode from a NTFS filesystem
         and save it as filename on the local machine.
 
@@ -7937,7 +8200,7 @@ class GuestFS(object):
         r = libguestfsmod.ntfscat_i(self._o, device, inode, filename)
         return r
 
-    def ntfsclone_in(self, backupfile, device):
+    def ntfsclone_in(self, backupfile: str, device: str) -> None:
         """Restore the "backupfile" (from a previous call to
         "g.ntfsclone_out") to "device", overwriting any existing
         contents of this device.
@@ -7949,8 +8212,12 @@ class GuestFS(object):
         r = libguestfsmod.ntfsclone_in(self._o, backupfile, device)
         return r
 
-    def ntfsclone_out(self, device, backupfile, metadataonly=None, rescue=None,
-                      ignorefscheck=None, preservetimestamps=None, force=None):
+    def ntfsclone_out(self, device: str, backupfile: str,
+                      metadataonly: Optional[bool] = None,
+                      rescue: Optional[bool] = None,
+                      ignorefscheck: Optional[bool] = None,
+                      preservetimestamps: Optional[bool] = None,
+                      force: Optional[bool] = None) -> None:
         """Stream the NTFS filesystem "device" to the local file
         "backupfile". The format used for the backup file is a
         special format used by the ntfsclone(8) tool.
@@ -7975,7 +8242,8 @@ class GuestFS(object):
                                         preservetimestamps, force)
         return r
 
-    def ntfsfix(self, device, clearbadsectors=None):
+    def ntfsfix(self, device: str,
+                clearbadsectors: Optional[bool] = None) -> None:
         """This command repairs some fundamental NTFS
         inconsistencies, resets the NTFS journal file, and
         schedules an NTFS consistency check for the first boot
@@ -7995,7 +8263,8 @@ class GuestFS(object):
         r = libguestfsmod.ntfsfix(self._o, device, clearbadsectors)
         return r
 
-    def ntfsresize(self, device, size=None, force=None):
+    def ntfsresize(self, device: str, size: Optional[int] = None,
+                   force: Optional[bool] = None) -> None:
         """This command resizes an NTFS filesystem, expanding or
         shrinking it to the size of the underlying device.
 
@@ -8031,7 +8300,7 @@ class GuestFS(object):
 
     ntfsresize_opts = ntfsresize
 
-    def ntfsresize_size(self, device, size):
+    def ntfsresize_size(self, device: str, size: int) -> None:
         """This command is the same as "g.ntfsresize" except that
         it allows you to specify the new size (in bytes)
         explicitly.
@@ -8054,7 +8323,7 @@ class GuestFS(object):
         r = libguestfsmod.ntfsresize_size(self._o, device, size)
         return r
 
-    def parse_environment(self):
+    def parse_environment(self) -> None:
         """Parse the program’s environment and set flags in the
         handle accordingly. For example if "LIBGUESTFS_DEBUG=1"
         then the ‘verbose’ flag is set in the handle.
@@ -8071,7 +8340,7 @@ class GuestFS(object):
         r = libguestfsmod.parse_environment(self._o)
         return r
 
-    def parse_environment_list(self, environment):
+    def parse_environment_list(self, environment: List[str]) -> None:
         """Parse the list of strings in the argument "environment"
         and set flags in the handle accordingly. For example if
         "LIBGUESTFS_DEBUG=1" is a string in the list, then the
@@ -8086,7 +8355,8 @@ class GuestFS(object):
         r = libguestfsmod.parse_environment_list(self._o, environment)
         return r
 
-    def part_add(self, device, prlogex, startsect, endsect):
+    def part_add(self, device: str, prlogex: str, startsect: int,
+                 endsect: int) -> None:
         """This command adds a partition to "device". If there is
         no partition table on the device, call "g.part_init"
         first.
@@ -8109,7 +8379,7 @@ class GuestFS(object):
                                    endsect)
         return r
 
-    def part_del(self, device, partnum):
+    def part_del(self, device: str, partnum: int) -> None:
         """This command deletes the partition numbered "partnum" on
         "device".
 
@@ -8121,7 +8391,7 @@ class GuestFS(object):
         r = libguestfsmod.part_del(self._o, device, partnum)
         return r
 
-    def part_disk(self, device, parttype):
+    def part_disk(self, device: str, parttype: str) -> None:
         """This command is simply a combination of "g.part_init"
         followed by "g.part_add" to create a single primary
         partition covering the whole disk.
@@ -8134,7 +8404,7 @@ class GuestFS(object):
         r = libguestfsmod.part_disk(self._o, device, parttype)
         return r
 
-    def part_expand_gpt(self, device):
+    def part_expand_gpt(self, device: str) -> None:
         """Move backup GPT data structures to the end of the disk.
         This is useful in case of in-place image expand since
         disk space after backup GPT header is not usable. This
@@ -8149,7 +8419,7 @@ class GuestFS(object):
         r = libguestfsmod.part_expand_gpt(self._o, device)
         return r
 
-    def part_get_bootable(self, device, partnum):
+    def part_get_bootable(self, device: str, partnum: int) -> bool:
         """This command returns true if the partition "partnum" on
         "device" has the bootable flag set.
 
@@ -8159,7 +8429,7 @@ class GuestFS(object):
         r = libguestfsmod.part_get_bootable(self._o, device, partnum)
         return r
 
-    def part_get_disk_guid(self, device):
+    def part_get_disk_guid(self, device: str) -> str:
         """Return the disk identifier (GUID) of a GPT-partitioned
         "device". Behaviour is undefined for other partition
         types.
@@ -8171,7 +8441,7 @@ class GuestFS(object):
         r = libguestfsmod.part_get_disk_guid(self._o, device)
         return r
 
-    def part_get_gpt_attributes(self, device, partnum):
+    def part_get_gpt_attributes(self, device: str, partnum: int) -> int:
         """Return the attribute flags of numbered GPT partition
         "partnum". An error is returned for MBR partitions.
 
@@ -8182,7 +8452,7 @@ class GuestFS(object):
         r = libguestfsmod.part_get_gpt_attributes(self._o, device, partnum)
         return r
 
-    def part_get_gpt_guid(self, device, partnum):
+    def part_get_gpt_guid(self, device: str, partnum: int) -> str:
         """Return the GUID of numbered GPT partition "partnum".
 
         This function depends on the feature "gdisk". See also
@@ -8192,7 +8462,7 @@ class GuestFS(object):
         r = libguestfsmod.part_get_gpt_guid(self._o, device, partnum)
         return r
 
-    def part_get_gpt_type(self, device, partnum):
+    def part_get_gpt_type(self, device: str, partnum: int) -> str:
         """Return the type GUID of numbered GPT partition
         "partnum". For MBR partitions, return an appropriate
         GUID corresponding to the MBR type. Behaviour is
@@ -8205,7 +8475,7 @@ class GuestFS(object):
         r = libguestfsmod.part_get_gpt_type(self._o, device, partnum)
         return r
 
-    def part_get_mbr_id(self, device, partnum):
+    def part_get_mbr_id(self, device: str, partnum: int) -> int:
         """Returns the MBR type byte (also known as the ID byte)
         from the numbered partition "partnum".
 
@@ -8217,7 +8487,7 @@ class GuestFS(object):
         r = libguestfsmod.part_get_mbr_id(self._o, device, partnum)
         return r
 
-    def part_get_mbr_part_type(self, device, partnum):
+    def part_get_mbr_part_type(self, device: str, partnum: int) -> str:
         """This returns the partition type of an MBR partition
         numbered "partnum" on device "device".
 
@@ -8227,7 +8497,7 @@ class GuestFS(object):
         r = libguestfsmod.part_get_mbr_part_type(self._o, device, partnum)
         return r
 
-    def part_get_name(self, device, partnum):
+    def part_get_name(self, device: str, partnum: int) -> str:
         """This gets the partition name on partition numbered
         "partnum" on device "device". Note that partitions are
         numbered from 1.
@@ -8240,7 +8510,7 @@ class GuestFS(object):
         r = libguestfsmod.part_get_name(self._o, device, partnum)
         return r
 
-    def part_get_parttype(self, device):
+    def part_get_parttype(self, device: str) -> str:
         """This command examines the partition table on "device"
         and returns the partition table type (format) being
         used.
@@ -8254,7 +8524,7 @@ class GuestFS(object):
         r = libguestfsmod.part_get_parttype(self._o, device)
         return r
 
-    def part_init(self, device, parttype):
+    def part_init(self, device: str, parttype: str) -> None:
         """This creates an empty partition table on "device" of one
         of the partition types listed below. Usually "parttype"
         should be either "msdos" or "gpt" (for large disks).
@@ -8312,7 +8582,7 @@ class GuestFS(object):
         r = libguestfsmod.part_init(self._o, device, parttype)
         return r
 
-    def part_list(self, device):
+    def part_list(self, device: str) -> List[dict]:
         """This command parses the partition table on "device" and
         returns the list of partitions found.
 
@@ -8339,7 +8609,7 @@ class GuestFS(object):
         r = libguestfsmod.part_list(self._o, device)
         return r
 
-    def part_resize(self, device, partnum, endsect):
+    def part_resize(self, device: str, partnum: int, endsect: int) -> None:
         """This command resizes the partition numbered "partnum" on
         "device" by moving the end position.
 
@@ -8355,7 +8625,8 @@ class GuestFS(object):
         r = libguestfsmod.part_resize(self._o, device, partnum, endsect)
         return r
 
-    def part_set_bootable(self, device, partnum, bootable):
+    def part_set_bootable(self, device: str, partnum: int,
+                          bootable: bool) -> None:
         """This sets the bootable flag on partition numbered
         "partnum" on device "device". Note that partitions are
         numbered from 1.
@@ -8368,7 +8639,7 @@ class GuestFS(object):
         r = libguestfsmod.part_set_bootable(self._o, device, partnum, bootable)
         return r
 
-    def part_set_disk_guid(self, device, guid):
+    def part_set_disk_guid(self, device: str, guid: str) -> None:
         """Set the disk identifier (GUID) of a GPT-partitioned
         "device" to "guid". Return an error if the partition
         table of "device" isn't GPT, or if "guid" is not a valid
@@ -8381,7 +8652,7 @@ class GuestFS(object):
         r = libguestfsmod.part_set_disk_guid(self._o, device, guid)
         return r
 
-    def part_set_disk_guid_random(self, device):
+    def part_set_disk_guid_random(self, device: str) -> None:
         """Set the disk identifier (GUID) of a GPT-partitioned
         "device" to a randomly generated value. Return an error
         if the partition table of "device" isn't GPT.
@@ -8393,7 +8664,8 @@ class GuestFS(object):
         r = libguestfsmod.part_set_disk_guid_random(self._o, device)
         return r
 
-    def part_set_gpt_attributes(self, device, partnum, attributes):
+    def part_set_gpt_attributes(self, device: str, partnum: int,
+                                attributes: int) -> None:
         """Set the attribute flags of numbered GPT partition
         "partnum" to "attributes". Return an error if the
         partition table of "device" isn't GPT.
@@ -8411,7 +8683,7 @@ class GuestFS(object):
                                                   attributes)
         return r
 
-    def part_set_gpt_guid(self, device, partnum, guid):
+    def part_set_gpt_guid(self, device: str, partnum: int, guid: str) -> None:
         """Set the GUID of numbered GPT partition "partnum" to
         "guid". Return an error if the partition table of
         "device" isn't GPT, or if "guid" is not a valid GUID.
@@ -8423,7 +8695,7 @@ class GuestFS(object):
         r = libguestfsmod.part_set_gpt_guid(self._o, device, partnum, guid)
         return r
 
-    def part_set_gpt_type(self, device, partnum, guid):
+    def part_set_gpt_type(self, device: str, partnum: int, guid: str) -> None:
         """Set the type GUID of numbered GPT partition "partnum" to
         "guid". Return an error if the partition table of
         "device" isn't GPT, or if "guid" is not a valid GUID.
@@ -8439,7 +8711,7 @@ class GuestFS(object):
         r = libguestfsmod.part_set_gpt_type(self._o, device, partnum, guid)
         return r
 
-    def part_set_mbr_id(self, device, partnum, idbyte):
+    def part_set_mbr_id(self, device: str, partnum: int, idbyte: int) -> None:
         """Sets the MBR type byte (also known as the ID byte) of
         the numbered partition "partnum" to "idbyte". Note that
         the type bytes quoted in most documentation are in fact
@@ -8454,7 +8726,7 @@ class GuestFS(object):
         r = libguestfsmod.part_set_mbr_id(self._o, device, partnum, idbyte)
         return r
 
-    def part_set_name(self, device, partnum, name):
+    def part_set_name(self, device: str, partnum: int, name: str) -> None:
         """This sets the partition name on partition numbered
         "partnum" on device "device". Note that partitions are
         numbered from 1.
@@ -8467,7 +8739,7 @@ class GuestFS(object):
         r = libguestfsmod.part_set_name(self._o, device, partnum, name)
         return r
 
-    def part_to_dev(self, partition):
+    def part_to_dev(self, partition: str) -> str:
         """This function takes a partition name (eg. "/dev/sdb1")
         and removes the partition number, returning the device
         name (eg. "/dev/sdb").
@@ -8481,7 +8753,7 @@ class GuestFS(object):
         r = libguestfsmod.part_to_dev(self._o, partition)
         return r
 
-    def part_to_partnum(self, partition):
+    def part_to_partnum(self, partition: str) -> int:
         """This function takes a partition name (eg. "/dev/sdb1")
         and returns the partition number (eg. 1).
 
@@ -8494,7 +8766,7 @@ class GuestFS(object):
         r = libguestfsmod.part_to_partnum(self._o, partition)
         return r
 
-    def ping_daemon(self):
+    def ping_daemon(self) -> None:
         """This is a test probe into the guestfs daemon running
         inside the libguestfs appliance. Calling this function
         checks that the daemon responds to the ping message,
@@ -8505,7 +8777,7 @@ class GuestFS(object):
         r = libguestfsmod.ping_daemon(self._o)
         return r
 
-    def pread(self, path, count, offset):
+    def pread(self, path: str, count: int, offset: int) -> bytes:
         """This command lets you read part of a file. It reads
         "count" bytes of the file, starting at "offset", from
         file "path".
@@ -8523,7 +8795,7 @@ class GuestFS(object):
         r = libguestfsmod.pread(self._o, path, count, offset)
         return r
 
-    def pread_device(self, device, count, offset):
+    def pread_device(self, device: str, count: int, offset: int) -> bytes:
         """This command lets you read part of a block device. It
         reads "count" bytes of "device", starting at "offset".
 
@@ -8540,7 +8812,7 @@ class GuestFS(object):
         r = libguestfsmod.pread_device(self._o, device, count, offset)
         return r
 
-    def pvchange_uuid(self, device):
+    def pvchange_uuid(self, device: str) -> None:
         """Generate a new random UUID for the physical volume
         "device".
 
@@ -8551,7 +8823,7 @@ class GuestFS(object):
         r = libguestfsmod.pvchange_uuid(self._o, device)
         return r
 
-    def pvchange_uuid_all(self):
+    def pvchange_uuid_all(self) -> None:
         """Generate new random UUIDs for all physical volumes.
 
         This function depends on the feature "lvm2". See also
@@ -8561,7 +8833,7 @@ class GuestFS(object):
         r = libguestfsmod.pvchange_uuid_all(self._o)
         return r
 
-    def pvcreate(self, device):
+    def pvcreate(self, device: str) -> None:
         """This creates an LVM physical volume on the named
         "device", where "device" should usually be a partition
         name such as /dev/sda1.
@@ -8573,7 +8845,7 @@ class GuestFS(object):
         r = libguestfsmod.pvcreate(self._o, device)
         return r
 
-    def pvremove(self, device):
+    def pvremove(self, device: str) -> None:
         """This wipes a physical volume "device" so that LVM will
         no longer recognise it.
 
@@ -8588,7 +8860,7 @@ class GuestFS(object):
         r = libguestfsmod.pvremove(self._o, device)
         return r
 
-    def pvresize(self, device):
+    def pvresize(self, device: str) -> None:
         """This resizes (expands or shrinks) an existing LVM
         physical volume to match the new size of the underlying
         device.
@@ -8600,7 +8872,7 @@ class GuestFS(object):
         r = libguestfsmod.pvresize(self._o, device)
         return r
 
-    def pvresize_size(self, device, size):
+    def pvresize_size(self, device: str, size: int) -> None:
         """This command is the same as "g.pvresize" except that it
         allows you to specify the new size (in bytes)
         explicitly.
@@ -8612,7 +8884,7 @@ class GuestFS(object):
         r = libguestfsmod.pvresize_size(self._o, device, size)
         return r
 
-    def pvs(self):
+    def pvs(self) -> List[str]:
         """List all the physical volumes detected. This is the
         equivalent of the pvs(8) command.
 
@@ -8630,7 +8902,7 @@ class GuestFS(object):
         r = libguestfsmod.pvs(self._o)
         return r
 
-    def pvs_full(self):
+    def pvs_full(self) -> List[dict]:
         """List all the physical volumes detected. This is the
         equivalent of the pvs(8) command. The "full" version
         includes all fields.
@@ -8645,14 +8917,14 @@ class GuestFS(object):
         r = libguestfsmod.pvs_full(self._o)
         return r
 
-    def pvuuid(self, device):
+    def pvuuid(self, device: str) -> str:
         """This command returns the UUID of the LVM PV "device".
         """
         self._check_not_closed()
         r = libguestfsmod.pvuuid(self._o, device)
         return r
 
-    def pwrite(self, path, content, offset):
+    def pwrite(self, path: str, content: bytes, offset: int) -> int:
         """This command writes to part of a file. It writes the
         data buffer "content" to the file "path" starting at
         offset "offset".
@@ -8674,7 +8946,7 @@ class GuestFS(object):
         r = libguestfsmod.pwrite(self._o, path, content, offset)
         return r
 
-    def pwrite_device(self, device, content, offset):
+    def pwrite_device(self, device: str, content: bytes, offset: int) -> int:
         """This command writes to part of a device. It writes the
         data buffer "content" to "device" starting at offset
         "offset".
@@ -8695,7 +8967,7 @@ class GuestFS(object):
         r = libguestfsmod.pwrite_device(self._o, device, content, offset)
         return r
 
-    def read_file(self, path):
+    def read_file(self, path: str) -> bytes:
         """This calls returns the contents of the file "path" as a
         buffer.
 
@@ -8706,7 +8978,7 @@ class GuestFS(object):
         r = libguestfsmod.read_file(self._o, path)
         return r
 
-    def read_lines(self, path):
+    def read_lines(self, path: str) -> List[str]:
         """Return the contents of the file named "path".
 
         The file contents are returned as a list of lines.
@@ -8725,7 +8997,7 @@ class GuestFS(object):
         r = libguestfsmod.read_lines(self._o, path)
         return r
 
-    def readdir(self, dir):
+    def readdir(self, dir: str) -> List[dict]:
         """This returns the list of directory entries in directory
         "dir".
 
@@ -8771,14 +9043,14 @@ class GuestFS(object):
         r = libguestfsmod.readdir(self._o, dir)
         return r
 
-    def readlink(self, path):
+    def readlink(self, path: str) -> str:
         """This command reads the target of a symbolic link.
         """
         self._check_not_closed()
         r = libguestfsmod.readlink(self._o, path)
         return r
 
-    def readlinklist(self, path, names):
+    def readlinklist(self, path: str, names: List[str]) -> List[str]:
         """This call allows you to do a "readlink" operation on
         multiple files, where all files are in the directory
         "path". "names" is the list of files from this
@@ -8806,7 +9078,7 @@ class GuestFS(object):
         r = libguestfsmod.readlinklist(self._o, path, names)
         return r
 
-    def realpath(self, path):
+    def realpath(self, path: str) -> str:
         """Return the canonicalized absolute pathname of "path".
         The returned path has no ".", ".." or symbolic link path
         elements.
@@ -8815,7 +9087,7 @@ class GuestFS(object):
         r = libguestfsmod.realpath(self._o, path)
         return r
 
-    def remount(self, mountpoint, rw=None):
+    def remount(self, mountpoint: str, rw: Optional[bool] = None) -> None:
         """This call allows you to change the "rw"
         (readonly/read-write) flag on an already mounted
         filesystem at "mountpoint", converting a readonly
@@ -8829,7 +9101,7 @@ class GuestFS(object):
         r = libguestfsmod.remount(self._o, mountpoint, rw)
         return r
 
-    def remove_drive(self, label):
+    def remove_drive(self, label: str) -> None:
         """This function is conceptually the opposite of
         "g.add_drive_opts". It removes the drive that was
         previously added with label "label".
@@ -8850,7 +9122,7 @@ class GuestFS(object):
         r = libguestfsmod.remove_drive(self._o, label)
         return r
 
-    def removexattr(self, xattr, path):
+    def removexattr(self, xattr: str, path: str) -> None:
         """This call removes the extended attribute named "xattr"
         of the file "path".
 
@@ -8863,7 +9135,7 @@ class GuestFS(object):
         r = libguestfsmod.removexattr(self._o, xattr, path)
         return r
 
-    def rename(self, oldpath, newpath):
+    def rename(self, oldpath: str, newpath: str) -> None:
         """Rename a file to a new place on the same filesystem.
         This is the same as the Linux rename(2) system call. In
         most cases you are better to use "g.mv" instead.
@@ -8872,7 +9144,7 @@ class GuestFS(object):
         r = libguestfsmod.rename(self._o, oldpath, newpath)
         return r
 
-    def resize2fs(self, device):
+    def resize2fs(self, device: str) -> None:
         """This resizes an ext2, ext3 or ext4 filesystem to match
         the size of the underlying device.
 
@@ -8882,7 +9154,7 @@ class GuestFS(object):
         r = libguestfsmod.resize2fs(self._o, device)
         return r
 
-    def resize2fs_M(self, device):
+    def resize2fs_M(self, device: str) -> None:
         """This command is the same as "g.resize2fs", but the
         filesystem is resized to its minimum size. This works
         like the *-M* option to the resize2fs(8) command.
@@ -8899,7 +9171,7 @@ class GuestFS(object):
         r = libguestfsmod.resize2fs_M(self._o, device)
         return r
 
-    def resize2fs_size(self, device, size):
+    def resize2fs_size(self, device: str, size: int) -> None:
         """This command is the same as "g.resize2fs" except that it
         allows you to specify the new size (in bytes)
         explicitly.
@@ -8910,14 +9182,14 @@ class GuestFS(object):
         r = libguestfsmod.resize2fs_size(self._o, device, size)
         return r
 
-    def rm(self, path):
+    def rm(self, path: str) -> None:
         """Remove the single file "path".
         """
         self._check_not_closed()
         r = libguestfsmod.rm(self._o, path)
         return r
 
-    def rm_f(self, path):
+    def rm_f(self, path: str) -> None:
         """Remove the file "path".
 
         If the file doesn't exist, that error is ignored. (Other
@@ -8931,7 +9203,7 @@ class GuestFS(object):
         r = libguestfsmod.rm_f(self._o, path)
         return r
 
-    def rm_rf(self, path):
+    def rm_rf(self, path: str) -> None:
         """Remove the file or directory "path", recursively
         removing the contents if its a directory. This is like
         the "rm -rf" shell command.
@@ -8940,14 +9212,14 @@ class GuestFS(object):
         r = libguestfsmod.rm_rf(self._o, path)
         return r
 
-    def rmdir(self, path):
+    def rmdir(self, path: str) -> None:
         """Remove the single directory "path".
         """
         self._check_not_closed()
         r = libguestfsmod.rmdir(self._o, path)
         return r
 
-    def rmmountpoint(self, exemptpath):
+    def rmmountpoint(self, exemptpath: str) -> None:
         """This call removes a mountpoint that was previously
         created with "g.mkmountpoint". See "g.mkmountpoint" for
         full details.
@@ -8956,7 +9228,8 @@ class GuestFS(object):
         r = libguestfsmod.rmmountpoint(self._o, exemptpath)
         return r
 
-    def rsync(self, src, dest, archive=None, deletedest=None):
+    def rsync(self, src: str, dest: str, archive: Optional[bool] = None,
+              deletedest: Optional[bool] = None) -> None:
         """This call may be used to copy or synchronize two
         directories under the same libguestfs handle. This uses
         the rsync(1) program which uses a fast algorithm that
@@ -8982,7 +9255,8 @@ class GuestFS(object):
         r = libguestfsmod.rsync(self._o, src, dest, archive, deletedest)
         return r
 
-    def rsync_in(self, remote, dest, archive=None, deletedest=None):
+    def rsync_in(self, remote: str, dest: str, archive: Optional[bool] = None,
+                 deletedest: Optional[bool] = None) -> None:
         """This call may be used to copy or synchronize the
         filesystem on the host or on a remote computer with the
         filesystem within libguestfs. This uses the rsync(1)
@@ -9012,7 +9286,8 @@ class GuestFS(object):
         r = libguestfsmod.rsync_in(self._o, remote, dest, archive, deletedest)
         return r
 
-    def rsync_out(self, src, remote, archive=None, deletedest=None):
+    def rsync_out(self, src: str, remote: str, archive: Optional[bool] = None,
+                  deletedest: Optional[bool] = None) -> None:
         """This call may be used to copy or synchronize the
         filesystem within libguestfs with a filesystem on the
         host or on a remote computer. This uses the rsync(1)
@@ -9049,7 +9324,7 @@ class GuestFS(object):
         r = libguestfsmod.rsync_out(self._o, src, remote, archive, deletedest)
         return r
 
-    def scrub_device(self, device):
+    def scrub_device(self, device: str) -> None:
         """This command writes patterns over "device" to make data
         retrieval more difficult.
 
@@ -9063,7 +9338,7 @@ class GuestFS(object):
         r = libguestfsmod.scrub_device(self._o, device)
         return r
 
-    def scrub_file(self, file):
+    def scrub_file(self, file: str) -> None:
         """This command writes patterns over a file to make data
         retrieval more difficult.
 
@@ -9079,7 +9354,7 @@ class GuestFS(object):
         r = libguestfsmod.scrub_file(self._o, file)
         return r
 
-    def scrub_freespace(self, dir):
+    def scrub_freespace(self, dir: str) -> None:
         """This command creates the directory "dir" and then fills
         it with files until the filesystem is full, and scrubs
         the files as for "g.scrub_file", and deletes them. The
@@ -9096,7 +9371,8 @@ class GuestFS(object):
         r = libguestfsmod.scrub_freespace(self._o, dir)
         return r
 
-    def selinux_relabel(self, specfile, path, force=None):
+    def selinux_relabel(self, specfile: str, path: str,
+                        force: Optional[bool] = None) -> None:
         """SELinux relabel parts of the filesystem.
 
         The "specfile" parameter controls the policy spec file
@@ -9121,7 +9397,7 @@ class GuestFS(object):
         r = libguestfsmod.selinux_relabel(self._o, specfile, path, force)
         return r
 
-    def set_append(self, append):
+    def set_append(self, append: Optional[str]) -> None:
         """This function is used to add additional options to the
         libguestfs appliance kernel command line.
 
@@ -9135,7 +9411,7 @@ class GuestFS(object):
         r = libguestfsmod.set_append(self._o, append)
         return r
 
-    def set_attach_method(self, backend):
+    def set_attach_method(self, backend: str) -> None:
         """Set the method that libguestfs uses to connect to the
         backend guestfsd daemon.
 
@@ -9156,7 +9432,7 @@ class GuestFS(object):
         r = libguestfsmod.set_attach_method(self._o, backend)
         return r
 
-    def set_autosync(self, autosync):
+    def set_autosync(self, autosync: bool) -> None:
         """If "autosync" is true, this enables autosync. Libguestfs
         will make a best effort attempt to make filesystems
         consistent and synchronized when the handle is closed
@@ -9169,7 +9445,7 @@ class GuestFS(object):
         r = libguestfsmod.set_autosync(self._o, autosync)
         return r
 
-    def set_backend(self, backend):
+    def set_backend(self, backend: str) -> None:
         """Set the method that libguestfs uses to connect to the
         backend guestfsd daemon.
 
@@ -9182,7 +9458,7 @@ class GuestFS(object):
         r = libguestfsmod.set_backend(self._o, backend)
         return r
 
-    def set_backend_setting(self, name, val):
+    def set_backend_setting(self, name: str, val: str) -> None:
         """Append "name=value" to the backend settings string list.
         However if a string already exists matching "name" or
         beginning with "name=", then that setting is replaced.
@@ -9194,7 +9470,7 @@ class GuestFS(object):
         r = libguestfsmod.set_backend_setting(self._o, name, val)
         return r
 
-    def set_backend_settings(self, settings):
+    def set_backend_settings(self, settings: List[str]) -> None:
         """Set a list of zero or more settings which are passed
         through to the current backend. Each setting is a string
         which is interpreted in a backend-specific way, or
@@ -9218,7 +9494,7 @@ class GuestFS(object):
         r = libguestfsmod.set_backend_settings(self._o, settings)
         return r
 
-    def set_cachedir(self, cachedir):
+    def set_cachedir(self, cachedir: Optional[str]) -> None:
         """Set the directory used by the handle to store the
         appliance cache, when using a supermin appliance. The
         appliance is cached and shared between all handles which
@@ -9234,7 +9510,7 @@ class GuestFS(object):
         r = libguestfsmod.set_cachedir(self._o, cachedir)
         return r
 
-    def set_direct(self, direct):
+    def set_direct(self, direct: bool) -> None:
         """If the direct appliance mode flag is enabled, then stdin
         and stdout are passed directly through to the appliance
         once it is launched.
@@ -9263,7 +9539,8 @@ class GuestFS(object):
         r = libguestfsmod.set_direct(self._o, direct)
         return r
 
-    def set_e2attrs(self, file, attrs, clear=None):
+    def set_e2attrs(self, file: str, attrs: str,
+                    clear: Optional[bool] = None) -> None:
         """This sets or clears the file attributes "attrs"
         associated with the inode file.
 
@@ -9288,7 +9565,7 @@ class GuestFS(object):
         r = libguestfsmod.set_e2attrs(self._o, file, attrs, clear)
         return r
 
-    def set_e2generation(self, file, generation):
+    def set_e2generation(self, file: str, generation: int) -> None:
         """This sets the ext2 file generation of a file.
 
         See "g.get_e2generation".
@@ -9297,7 +9574,7 @@ class GuestFS(object):
         r = libguestfsmod.set_e2generation(self._o, file, generation)
         return r
 
-    def set_e2label(self, device, label):
+    def set_e2label(self, device: str, label: str) -> None:
         """This sets the ext2/3/4 filesystem label of the
         filesystem on "device" to "label". Filesystem labels are
         limited to 16 characters.
@@ -9320,7 +9597,7 @@ class GuestFS(object):
         r = libguestfsmod.set_e2label(self._o, device, label)
         return r
 
-    def set_e2uuid(self, device, uuid):
+    def set_e2uuid(self, device: str, uuid: str) -> None:
         """This sets the ext2/3/4 filesystem UUID of the filesystem
         on "device" to "uuid". The format of the UUID and
         alternatives such as "clear", "random" and "time" are
@@ -9344,7 +9621,7 @@ class GuestFS(object):
         r = libguestfsmod.set_e2uuid(self._o, device, uuid)
         return r
 
-    def set_hv(self, hv):
+    def set_hv(self, hv: str) -> None:
         """Set the hypervisor binary that we will use. The
         hypervisor depends on the backend, but is usually the
         location of the qemu/KVM hypervisor. For the uml
@@ -9370,7 +9647,7 @@ class GuestFS(object):
         r = libguestfsmod.set_hv(self._o, hv)
         return r
 
-    def set_identifier(self, identifier):
+    def set_identifier(self, identifier: str) -> None:
         """This is an informative string which the caller may
         optionally set in the handle. It is printed in various
         places, allowing the current handle to be identified in
@@ -9401,7 +9678,7 @@ class GuestFS(object):
         r = libguestfsmod.set_identifier(self._o, identifier)
         return r
 
-    def set_label(self, mountable, label):
+    def set_label(self, mountable: str, label: str) -> None:
         """Set the filesystem label on "mountable" to "label".
 
         Only some filesystem types support labels, and
@@ -9439,7 +9716,8 @@ class GuestFS(object):
         r = libguestfsmod.set_label(self._o, mountable, label)
         return r
 
-    def set_libvirt_requested_credential(self, index, cred):
+    def set_libvirt_requested_credential(self, index: int,
+                                         cred: bytes) -> None:
         """After requesting the "index"'th credential from the
         user, call this function to pass the answer back to
         libvirt.
@@ -9452,7 +9730,7 @@ class GuestFS(object):
                                                            cred)
         return r
 
-    def set_libvirt_supported_credentials(self, creds):
+    def set_libvirt_supported_credentials(self, creds: List[str]) -> None:
         """Call this function before setting an event handler for
         "GUESTFS_EVENT_LIBVIRT_AUTH", to supply the list of
         credential types that the program knows how to process.
@@ -9481,7 +9759,7 @@ class GuestFS(object):
         r = libguestfsmod.set_libvirt_supported_credentials(self._o, creds)
         return r
 
-    def set_memsize(self, memsize):
+    def set_memsize(self, memsize: int) -> None:
         """This sets the memory size in megabytes allocated to the
         hypervisor. This only has any effect if called before
         "g.launch".
@@ -9497,7 +9775,7 @@ class GuestFS(object):
         r = libguestfsmod.set_memsize(self._o, memsize)
         return r
 
-    def set_network(self, network):
+    def set_network(self, network: bool) -> None:
         """If "network" is true, then the network is enabled in the
         libguestfs appliance. The default is false.
 
@@ -9511,7 +9789,7 @@ class GuestFS(object):
         r = libguestfsmod.set_network(self._o, network)
         return r
 
-    def set_path(self, searchpath):
+    def set_path(self, searchpath: Optional[str]) -> None:
         """Set the path that libguestfs searches for kernel and
         initrd.img.
 
@@ -9524,7 +9802,7 @@ class GuestFS(object):
         r = libguestfsmod.set_path(self._o, searchpath)
         return r
 
-    def set_pgroup(self, pgroup):
+    def set_pgroup(self, pgroup: bool) -> None:
         """If "pgroup" is true, child processes are placed into
         their own process group.
 
@@ -9542,7 +9820,7 @@ class GuestFS(object):
         r = libguestfsmod.set_pgroup(self._o, pgroup)
         return r
 
-    def set_program(self, program):
+    def set_program(self, program: str) -> None:
         """Set the program name. This is an informative string
         which the main program may optionally set in the handle.
 
@@ -9554,7 +9832,7 @@ class GuestFS(object):
         r = libguestfsmod.set_program(self._o, program)
         return r
 
-    def set_qemu(self, hv):
+    def set_qemu(self, hv: Optional[str]) -> None:
         """Set the hypervisor binary (usually qemu) that we will
         use.
 
@@ -9590,7 +9868,7 @@ class GuestFS(object):
         r = libguestfsmod.set_qemu(self._o, hv)
         return r
 
-    def set_recovery_proc(self, recoveryproc):
+    def set_recovery_proc(self, recoveryproc: bool) -> None:
         """If this is called with the parameter "false" then
         "g.launch" does not create a recovery process. The
         purpose of the recovery process is to stop runaway
@@ -9611,7 +9889,7 @@ class GuestFS(object):
         r = libguestfsmod.set_recovery_proc(self._o, recoveryproc)
         return r
 
-    def set_selinux(self, selinux):
+    def set_selinux(self, selinux: bool) -> None:
         """This sets the selinux flag that is passed to the
         appliance at boot time. The default is "selinux=0"
         (disabled).
@@ -9637,7 +9915,7 @@ class GuestFS(object):
         r = libguestfsmod.set_selinux(self._o, selinux)
         return r
 
-    def set_smp(self, smp):
+    def set_smp(self, smp: int) -> None:
         """Change the number of virtual CPUs assigned to the
         appliance. The default is 1. Increasing this may improve
         performance, though often it has no effect.
@@ -9648,7 +9926,7 @@ class GuestFS(object):
         r = libguestfsmod.set_smp(self._o, smp)
         return r
 
-    def set_tmpdir(self, tmpdir):
+    def set_tmpdir(self, tmpdir: Optional[str]) -> None:
         """Set the directory used by the handle to store temporary
         files.
 
@@ -9662,7 +9940,7 @@ class GuestFS(object):
         r = libguestfsmod.set_tmpdir(self._o, tmpdir)
         return r
 
-    def set_trace(self, trace):
+    def set_trace(self, trace: bool) -> None:
         """If the command trace flag is set to 1, then libguestfs
         calls, parameters and return values are traced.
 
@@ -9681,7 +9959,7 @@ class GuestFS(object):
         r = libguestfsmod.set_trace(self._o, trace)
         return r
 
-    def set_uuid(self, device, uuid):
+    def set_uuid(self, device: str, uuid: str) -> None:
         """Set the filesystem UUID on "device" to "uuid". If this
         fails and the errno is ENOTSUP, means that there is no
         support for changing the UUID for the type of the
@@ -9695,7 +9973,7 @@ class GuestFS(object):
         r = libguestfsmod.set_uuid(self._o, device, uuid)
         return r
 
-    def set_uuid_random(self, device):
+    def set_uuid_random(self, device: str) -> None:
         """Set the filesystem UUID on "device" to a random UUID. If
         this fails and the errno is ENOTSUP, means that there is
         no support for changing the UUID for the type of the
@@ -9709,7 +9987,7 @@ class GuestFS(object):
         r = libguestfsmod.set_uuid_random(self._o, device)
         return r
 
-    def set_verbose(self, verbose):
+    def set_verbose(self, verbose: bool) -> None:
         """If "verbose" is true, this turns on verbose messages.
 
         Verbose messages are disabled unless the environment
@@ -9723,7 +10001,7 @@ class GuestFS(object):
         r = libguestfsmod.set_verbose(self._o, verbose)
         return r
 
-    def setcon(self, context):
+    def setcon(self, context: str) -> None:
         """This sets the SELinux security context of the daemon to
         the string "context".
 
@@ -9747,7 +10025,7 @@ class GuestFS(object):
         r = libguestfsmod.setcon(self._o, context)
         return r
 
-    def setxattr(self, xattr, val, vallen, path):
+    def setxattr(self, xattr: str, val: str, vallen: int, path: str) -> None:
         """This call sets the extended attribute named "xattr" of
         the file "path" to the value "val" (of length "vallen").
         The value is arbitrary 8 bit data.
@@ -9761,7 +10039,8 @@ class GuestFS(object):
         r = libguestfsmod.setxattr(self._o, xattr, val, vallen, path)
         return r
 
-    def sfdisk(self, device, cyls, heads, sectors, lines):
+    def sfdisk(self, device: str, cyls: int, heads: int, sectors: int,
+               lines: List[str]) -> None:
         """This is a direct interface to the sfdisk(8) program for
         creating partitions on block devices.
 
@@ -9802,7 +10081,7 @@ class GuestFS(object):
         r = libguestfsmod.sfdisk(self._o, device, cyls, heads, sectors, lines)
         return r
 
-    def sfdiskM(self, device, lines):
+    def sfdiskM(self, device: str, lines: List[str]) -> None:
         """This is a simplified interface to the "g.sfdisk"
         command, where partition sizes are specified in
         megabytes only (rounded to the nearest cylinder) and you
@@ -9828,7 +10107,8 @@ class GuestFS(object):
         r = libguestfsmod.sfdiskM(self._o, device, lines)
         return r
 
-    def sfdisk_N(self, device, partnum, cyls, heads, sectors, line):
+    def sfdisk_N(self, device: str, partnum: int, cyls: int, heads: int,
+                 sectors: int, line: str) -> None:
         """This runs sfdisk(8) option to modify just the single
         partition "n" (note: "n" counts from 1).
 
@@ -9853,7 +10133,7 @@ class GuestFS(object):
                                    sectors, line)
         return r
 
-    def sfdisk_disk_geometry(self, device):
+    def sfdisk_disk_geometry(self, device: str) -> str:
         """This displays the disk geometry of "device" read from
         the partition table. Especially in the case where the
         underlying block device has been resized, this can be
@@ -9867,7 +10147,7 @@ class GuestFS(object):
         r = libguestfsmod.sfdisk_disk_geometry(self._o, device)
         return r
 
-    def sfdisk_kernel_geometry(self, device):
+    def sfdisk_kernel_geometry(self, device: str) -> str:
         """This displays the kernel’s idea of the geometry of
         "device".
 
@@ -9878,7 +10158,7 @@ class GuestFS(object):
         r = libguestfsmod.sfdisk_kernel_geometry(self._o, device)
         return r
 
-    def sfdisk_l(self, device):
+    def sfdisk_l(self, device: str) -> str:
         """This displays the partition table on "device", in the
         human-readable output of the sfdisk(8) command. It is
         not intended to be parsed.
@@ -9900,7 +10180,7 @@ class GuestFS(object):
         r = libguestfsmod.sfdisk_l(self._o, device)
         return r
 
-    def sh(self, command):
+    def sh(self, command: str) -> str:
         """This call runs a command from the guest filesystem via
         the guest’s /bin/sh.
 
@@ -9918,7 +10198,7 @@ class GuestFS(object):
         r = libguestfsmod.sh(self._o, command)
         return r
 
-    def sh_lines(self, command):
+    def sh_lines(self, command: str) -> List[str]:
         """This is the same as "g.sh", but splits the result into a
         list of lines.
 
@@ -9930,7 +10210,7 @@ class GuestFS(object):
         r = libguestfsmod.sh_lines(self._o, command)
         return r
 
-    def shutdown(self):
+    def shutdown(self) -> None:
         """This is the opposite of "g.launch". It performs an
         orderly shutdown of the backend process(es). If the
         autosync flag is set (which is the default) then the
@@ -9954,14 +10234,14 @@ class GuestFS(object):
         r = libguestfsmod.shutdown(self._o)
         return r
 
-    def sleep(self, secs):
+    def sleep(self, secs: int) -> None:
         """Sleep for "secs" seconds.
         """
         self._check_not_closed()
         r = libguestfsmod.sleep(self._o, secs)
         return r
 
-    def stat(self, path):
+    def stat(self, path: str) -> dict:
         """Returns file information for the given "path".
 
         This is the same as the stat(2) system call.
@@ -9984,7 +10264,7 @@ class GuestFS(object):
         r = libguestfsmod.stat(self._o, path)
         return r
 
-    def statns(self, path):
+    def statns(self, path: str) -> dict:
         """Returns file information for the given "path".
 
         This is the same as the stat(2) system call.
@@ -9996,7 +10276,7 @@ class GuestFS(object):
         r = libguestfsmod.statns(self._o, path)
         return r
 
-    def statvfs(self, path):
+    def statvfs(self, path: str) -> dict:
         """Returns file system statistics for any mounted file
         system. "path" should be a file or directory in the
         mounted file system (typically it is the mount point
@@ -10011,7 +10291,7 @@ class GuestFS(object):
         r = libguestfsmod.statvfs(self._o, path)
         return r
 
-    def strings(self, path):
+    def strings(self, path: str) -> List[str]:
         """This runs the strings(1) command on a file and returns
         the list of printable strings found.
 
@@ -10030,7 +10310,7 @@ class GuestFS(object):
         r = libguestfsmod.strings(self._o, path)
         return r
 
-    def strings_e(self, encoding, path):
+    def strings_e(self, encoding: str, path: str) -> List[str]:
         """This is like the "g.strings" command, but allows you to
         specify the encoding of strings that are looked for in
         the source file "path".
@@ -10072,7 +10352,7 @@ class GuestFS(object):
         r = libguestfsmod.strings_e(self._o, encoding, path)
         return r
 
-    def swapoff_device(self, device):
+    def swapoff_device(self, device: str) -> None:
         """This command disables the libguestfs appliance swap
         device or partition named "device". See
         "g.swapon_device".
@@ -10081,7 +10361,7 @@ class GuestFS(object):
         r = libguestfsmod.swapoff_device(self._o, device)
         return r
 
-    def swapoff_file(self, file):
+    def swapoff_file(self, file: str) -> None:
         """This command disables the libguestfs appliance swap on
         file.
         """
@@ -10089,7 +10369,7 @@ class GuestFS(object):
         r = libguestfsmod.swapoff_file(self._o, file)
         return r
 
-    def swapoff_label(self, label):
+    def swapoff_label(self, label: str) -> None:
         """This command disables the libguestfs appliance swap on
         labeled swap partition.
         """
@@ -10097,7 +10377,7 @@ class GuestFS(object):
         r = libguestfsmod.swapoff_label(self._o, label)
         return r
 
-    def swapoff_uuid(self, uuid):
+    def swapoff_uuid(self, uuid: str) -> None:
         """This command disables the libguestfs appliance swap
         partition with the given UUID.
 
@@ -10108,7 +10388,7 @@ class GuestFS(object):
         r = libguestfsmod.swapoff_uuid(self._o, uuid)
         return r
 
-    def swapon_device(self, device):
+    def swapon_device(self, device: str) -> None:
         """This command enables the libguestfs appliance to use the
         swap device or partition named "device". The increased
         memory is made available for all commands, for example
@@ -10126,7 +10406,7 @@ class GuestFS(object):
         r = libguestfsmod.swapon_device(self._o, device)
         return r
 
-    def swapon_file(self, file):
+    def swapon_file(self, file: str) -> None:
         """This command enables swap to a file. See
         "g.swapon_device" for other notes.
         """
@@ -10134,7 +10414,7 @@ class GuestFS(object):
         r = libguestfsmod.swapon_file(self._o, file)
         return r
 
-    def swapon_label(self, label):
+    def swapon_label(self, label: str) -> None:
         """This command enables swap to a labeled swap partition.
         See "g.swapon_device" for other notes.
         """
@@ -10142,7 +10422,7 @@ class GuestFS(object):
         r = libguestfsmod.swapon_label(self._o, label)
         return r
 
-    def swapon_uuid(self, uuid):
+    def swapon_uuid(self, uuid: str) -> None:
         """This command enables swap to a swap partition with the
         given UUID. See "g.swapon_device" for other notes.
 
@@ -10153,7 +10433,7 @@ class GuestFS(object):
         r = libguestfsmod.swapon_uuid(self._o, uuid)
         return r
 
-    def sync(self):
+    def sync(self) -> None:
         """This syncs the disk, so that any writes are flushed
         through to the underlying disk image.
 
@@ -10164,7 +10444,7 @@ class GuestFS(object):
         r = libguestfsmod.sync(self._o)
         return r
 
-    def syslinux(self, device, directory=None):
+    def syslinux(self, device: str, directory: Optional[str] = None) -> None:
         """Install the SYSLINUX bootloader on "device".
 
         The device parameter must be either a whole disk
@@ -10199,7 +10479,7 @@ class GuestFS(object):
         r = libguestfsmod.syslinux(self._o, device, directory)
         return r
 
-    def tail(self, path):
+    def tail(self, path: str) -> List[str]:
         """This command returns up to the last 10 lines of a file
         as a list of strings.
 
@@ -10213,7 +10493,7 @@ class GuestFS(object):
         r = libguestfsmod.tail(self._o, path)
         return r
 
-    def tail_n(self, nrlines, path):
+    def tail_n(self, nrlines: int, path: str) -> List[str]:
         """If the parameter "nrlines" is a positive number, this
         returns the last "nrlines" lines of the file "path".
 
@@ -10234,8 +10514,10 @@ class GuestFS(object):
         r = libguestfsmod.tail_n(self._o, nrlines, path)
         return r
 
-    def tar_in(self, tarfile, directory, compress=None, xattrs=None,
-               selinux=None, acls=None):
+    def tar_in(self, tarfile: str, directory: str,
+               compress: Optional[str] = None, xattrs: Optional[bool] = None,
+               selinux: Optional[bool] = None,
+               acls: Optional[bool] = None) -> None:
         """This command uploads and unpacks local file "tarfile"
         into directory.
 
@@ -10268,8 +10550,12 @@ class GuestFS(object):
 
     tar_in_opts = tar_in
 
-    def tar_out(self, directory, tarfile, compress=None, numericowner=None,
-                excludes=None, xattrs=None, selinux=None, acls=None):
+    def tar_out(self, directory: str, tarfile: str,
+                compress: Optional[str] = None,
+                numericowner: Optional[bool] = None,
+                excludes: Optional[List[str]] = None,
+                xattrs: Optional[bool] = None, selinux: Optional[bool] = None,
+                acls: Optional[bool] = None) -> None:
         """This command packs the contents of directory and
         downloads it to local file "tarfile".
 
@@ -10311,7 +10597,7 @@ class GuestFS(object):
 
     tar_out_opts = tar_out
 
-    def tgz_in(self, tarball, directory):
+    def tgz_in(self, tarball: str, directory: str) -> None:
         """This command uploads and unpacks local file "tarball" (a
         *gzip compressed* tar file) into directory.
 
@@ -10330,7 +10616,7 @@ class GuestFS(object):
         r = libguestfsmod.tgz_in(self._o, tarball, directory)
         return r
 
-    def tgz_out(self, directory, tarball):
+    def tgz_out(self, directory: str, tarball: str) -> None:
         """This command packs the contents of directory and
         downloads it to local file "tarball".
 
@@ -10349,7 +10635,7 @@ class GuestFS(object):
         r = libguestfsmod.tgz_out(self._o, directory, tarball)
         return r
 
-    def touch(self, path):
+    def touch(self, path: str) -> None:
         """Touch acts like the touch(1) command. It can be used to
         update the timestamps on a file, or, if the file does
         not exist, to create a new zero-length file.
@@ -10362,7 +10648,7 @@ class GuestFS(object):
         r = libguestfsmod.touch(self._o, path)
         return r
 
-    def truncate(self, path):
+    def truncate(self, path: str) -> None:
         """This command truncates "path" to a zero-length file. The
         file must exist already.
         """
@@ -10370,7 +10656,7 @@ class GuestFS(object):
         r = libguestfsmod.truncate(self._o, path)
         return r
 
-    def truncate_size(self, path, size):
+    def truncate_size(self, path: str, size: int) -> None:
         """This command truncates "path" to size "size" bytes. The
         file must exist already.
 
@@ -10385,10 +10671,16 @@ class GuestFS(object):
         r = libguestfsmod.truncate_size(self._o, path, size)
         return r
 
-    def tune2fs(self, device, force=None, maxmountcount=None, mountcount=None,
-                errorbehavior=None, group=None, intervalbetweenchecks=None,
-                reservedblockspercentage=None, lastmounteddirectory=None,
-                reservedblockscount=None, user=None):
+    def tune2fs(self, device: str, force: Optional[bool] = None,
+                maxmountcount: Optional[int] = None,
+                mountcount: Optional[int] = None,
+                errorbehavior: Optional[str] = None,
+                group: Optional[int] = None,
+                intervalbetweenchecks: Optional[int] = None,
+                reservedblockspercentage: Optional[int] = None,
+                lastmounteddirectory: Optional[str] = None,
+                reservedblockscount: Optional[int] = None,
+                user: Optional[int] = None) -> None:
         """This call allows you to adjust various filesystem
         parameters of an ext2/ext3/ext4 filesystem called
         "device".
@@ -10464,7 +10756,7 @@ class GuestFS(object):
                                   user)
         return r
 
-    def tune2fs_l(self, device):
+    def tune2fs_l(self, device: str) -> Union[List[Tuple[str, str]], dict]:
         """This returns the contents of the ext2, ext3 or ext4
         filesystem superblock on "device".
 
@@ -10485,7 +10777,7 @@ class GuestFS(object):
         r = self._maybe_convert_to_dict(r)
         return r
 
-    def txz_in(self, tarball, directory):
+    def txz_in(self, tarball: str, directory: str) -> None:
         """This command uploads and unpacks local file "tarball"
         (an *xz compressed* tar file) into directory.
 
@@ -10507,7 +10799,7 @@ class GuestFS(object):
         r = libguestfsmod.txz_in(self._o, tarball, directory)
         return r
 
-    def txz_out(self, directory, tarball):
+    def txz_out(self, directory: str, tarball: str) -> None:
         """This command packs the contents of directory and
         downloads it to local file "tarball" (as an xz
         compressed tar archive).
@@ -10530,7 +10822,7 @@ class GuestFS(object):
         r = libguestfsmod.txz_out(self._o, directory, tarball)
         return r
 
-    def umask(self, mask):
+    def umask(self, mask: int) -> int:
         """This function sets the mask used for creating new files
         and device nodes to "mask & 0777".
 
@@ -10551,7 +10843,8 @@ class GuestFS(object):
         r = libguestfsmod.umask(self._o, mask)
         return r
 
-    def umount(self, pathordevice, force=None, lazyunmount=None):
+    def umount(self, pathordevice: str, force: Optional[bool] = None,
+               lazyunmount: Optional[bool] = None) -> None:
         """This unmounts the given filesystem. The filesystem may
         be specified either by its mountpoint (path) or the
         device which contains the filesystem.
@@ -10562,7 +10855,7 @@ class GuestFS(object):
 
     umount_opts = umount
 
-    def umount_all(self):
+    def umount_all(self) -> None:
         """This unmounts all mounted filesystems.
 
         Some internal mounts are not unmounted by this call.
@@ -10571,7 +10864,7 @@ class GuestFS(object):
         r = libguestfsmod.umount_all(self._o)
         return r
 
-    def umount_local(self, retry=None):
+    def umount_local(self, retry: Optional[bool] = None) -> None:
         """If libguestfs is exporting the filesystem on a local
         mountpoint, then this unmounts it.
 
@@ -10581,7 +10874,7 @@ class GuestFS(object):
         r = libguestfsmod.umount_local(self._o, retry)
         return r
 
-    def upload(self, filename, remotefilename):
+    def upload(self, filename: str, remotefilename: str) -> None:
         """Upload local file filename to remotefilename on the
         filesystem.
 
@@ -10593,7 +10886,8 @@ class GuestFS(object):
         r = libguestfsmod.upload(self._o, filename, remotefilename)
         return r
 
-    def upload_offset(self, filename, remotefilename, offset):
+    def upload_offset(self, filename: str, remotefilename: str,
+                      offset: int) -> None:
         """Upload local file filename to remotefilename on the
         filesystem.
 
@@ -10616,7 +10910,7 @@ class GuestFS(object):
                                         offset)
         return r
 
-    def user_cancel(self):
+    def user_cancel(self) -> None:
         """This function cancels the current upload or download
         operation.
 
@@ -10653,7 +10947,8 @@ class GuestFS(object):
         r = libguestfsmod.user_cancel(self._o)
         return r
 
-    def utimens(self, path, atsecs, atnsecs, mtsecs, mtnsecs):
+    def utimens(self, path: str, atsecs: int, atnsecs: int, mtsecs: int,
+                mtnsecs: int) -> None:
         """This command sets the timestamps of a file with
         nanosecond precision.
 
@@ -10676,7 +10971,7 @@ class GuestFS(object):
                                   mtnsecs)
         return r
 
-    def utsname(self):
+    def utsname(self) -> dict:
         """This returns the kernel version of the appliance, where
         this is available. This information is only useful for
         debugging. Nothing in the returned structure is defined
@@ -10689,7 +10984,7 @@ class GuestFS(object):
         r = libguestfsmod.utsname(self._o)
         return r
 
-    def version(self):
+    def version(self) -> dict:
         """Return the libguestfs version number that the program is
         linked against.
 
@@ -10729,7 +11024,7 @@ class GuestFS(object):
         r = libguestfsmod.version(self._o)
         return r
 
-    def vfs_label(self, mountable):
+    def vfs_label(self, mountable: str) -> str:
         """This returns the label of the filesystem on "mountable".
 
         If the filesystem is unlabeled, this returns the empty
@@ -10742,7 +11037,7 @@ class GuestFS(object):
         r = libguestfsmod.vfs_label(self._o, mountable)
         return r
 
-    def vfs_minimum_size(self, mountable):
+    def vfs_minimum_size(self, mountable: str) -> int:
         """Get the minimum size of filesystem in bytes. This is the
         minimum possible size for filesystem shrinking.
 
@@ -10756,7 +11051,7 @@ class GuestFS(object):
         r = libguestfsmod.vfs_minimum_size(self._o, mountable)
         return r
 
-    def vfs_type(self, mountable):
+    def vfs_type(self, mountable: str) -> str:
         """This command gets the filesystem type corresponding to
         the filesystem on "mountable".
 
@@ -10770,7 +11065,7 @@ class GuestFS(object):
         r = libguestfsmod.vfs_type(self._o, mountable)
         return r
 
-    def vfs_uuid(self, mountable):
+    def vfs_uuid(self, mountable: str) -> str:
         """This returns the filesystem UUID of the filesystem on
         "mountable".
 
@@ -10783,7 +11078,7 @@ class GuestFS(object):
         r = libguestfsmod.vfs_uuid(self._o, mountable)
         return r
 
-    def vg_activate(self, activate, volgroups):
+    def vg_activate(self, activate: bool, volgroups: List[str]) -> None:
         """This command activates or (if "activate" is false)
         deactivates all logical volumes in the listed volume
         groups "volgroups".
@@ -10802,7 +11097,7 @@ class GuestFS(object):
         r = libguestfsmod.vg_activate(self._o, activate, volgroups)
         return r
 
-    def vg_activate_all(self, activate):
+    def vg_activate_all(self, activate: bool) -> None:
         """This command activates or (if "activate" is false)
         deactivates all logical volumes in all volume groups.
 
@@ -10815,7 +11110,7 @@ class GuestFS(object):
         r = libguestfsmod.vg_activate_all(self._o, activate)
         return r
 
-    def vgchange_uuid(self, vg):
+    def vgchange_uuid(self, vg: str) -> None:
         """Generate a new random UUID for the volume group "vg".
 
         This function depends on the feature "lvm2". See also
@@ -10825,7 +11120,7 @@ class GuestFS(object):
         r = libguestfsmod.vgchange_uuid(self._o, vg)
         return r
 
-    def vgchange_uuid_all(self):
+    def vgchange_uuid_all(self) -> None:
         """Generate new random UUIDs for all volume groups.
 
         This function depends on the feature "lvm2". See also
@@ -10835,7 +11130,7 @@ class GuestFS(object):
         r = libguestfsmod.vgchange_uuid_all(self._o)
         return r
 
-    def vgcreate(self, volgroup, physvols):
+    def vgcreate(self, volgroup: str, physvols: List[str]) -> None:
         """This creates an LVM volume group called "volgroup" from
         the non-empty list of physical volumes "physvols".
 
@@ -10847,7 +11142,7 @@ class GuestFS(object):
         r = libguestfsmod.vgcreate(self._o, volgroup, physvols)
         return r
 
-    def vglvuuids(self, vgname):
+    def vglvuuids(self, vgname: str) -> List[str]:
         """Given a VG called "vgname", this returns the UUIDs of
         all the logical volumes created in this volume group.
 
@@ -10862,7 +11157,7 @@ class GuestFS(object):
         r = libguestfsmod.vglvuuids(self._o, vgname)
         return r
 
-    def vgmeta(self, vgname):
+    def vgmeta(self, vgname: str) -> bytes:
         """"vgname" is an LVM volume group. This command examines
         the volume group and returns its metadata.
 
@@ -10877,7 +11172,7 @@ class GuestFS(object):
         r = libguestfsmod.vgmeta(self._o, vgname)
         return r
 
-    def vgpvuuids(self, vgname):
+    def vgpvuuids(self, vgname: str) -> List[str]:
         """Given a VG called "vgname", this returns the UUIDs of
         all the physical volumes that this volume group resides
         on.
@@ -10893,7 +11188,7 @@ class GuestFS(object):
         r = libguestfsmod.vgpvuuids(self._o, vgname)
         return r
 
-    def vgremove(self, vgname):
+    def vgremove(self, vgname: str) -> None:
         """Remove an LVM volume group "vgname", (for example "VG").
 
         This also forcibly removes all logical volumes in the
@@ -10906,7 +11201,7 @@ class GuestFS(object):
         r = libguestfsmod.vgremove(self._o, vgname)
         return r
 
-    def vgrename(self, volgroup, newvolgroup):
+    def vgrename(self, volgroup: str, newvolgroup: str) -> None:
         """Rename a volume group "volgroup" with the new name
         "newvolgroup".
         """
@@ -10914,7 +11209,7 @@ class GuestFS(object):
         r = libguestfsmod.vgrename(self._o, volgroup, newvolgroup)
         return r
 
-    def vgs(self):
+    def vgs(self) -> List[str]:
         """List all the volumes groups detected. This is the
         equivalent of the vgs(8) command.
 
@@ -10932,7 +11227,7 @@ class GuestFS(object):
         r = libguestfsmod.vgs(self._o)
         return r
 
-    def vgs_full(self):
+    def vgs_full(self) -> List[dict]:
         """List all the volumes groups detected. This is the
         equivalent of the vgs(8) command. The "full" version
         includes all fields.
@@ -10947,7 +11242,7 @@ class GuestFS(object):
         r = libguestfsmod.vgs_full(self._o)
         return r
 
-    def vgscan(self):
+    def vgscan(self) -> None:
         """This rescans all block devices and rebuilds the list of
         LVM physical volumes, volume groups and logical volumes.
 
@@ -10966,7 +11261,7 @@ class GuestFS(object):
         r = libguestfsmod.vgscan(self._o)
         return r
 
-    def vguuid(self, vgname):
+    def vguuid(self, vgname: str) -> str:
         """This command returns the UUID of the LVM VG named
         "vgname".
         """
@@ -10974,7 +11269,7 @@ class GuestFS(object):
         r = libguestfsmod.vguuid(self._o, vgname)
         return r
 
-    def wait_ready(self):
+    def wait_ready(self) -> None:
         """This function is a no op.
 
         In versions of the API < 1.0.71 you had to call this
@@ -11001,7 +11296,7 @@ class GuestFS(object):
         r = libguestfsmod.wait_ready(self._o)
         return r
 
-    def wc_c(self, path):
+    def wc_c(self, path: str) -> int:
         """This command counts the characters in a file, using the
         "wc -c" external command.
         """
@@ -11009,7 +11304,7 @@ class GuestFS(object):
         r = libguestfsmod.wc_c(self._o, path)
         return r
 
-    def wc_l(self, path):
+    def wc_l(self, path: str) -> int:
         """This command counts the lines in a file, using the "wc
         -l" external command.
         """
@@ -11017,7 +11312,7 @@ class GuestFS(object):
         r = libguestfsmod.wc_l(self._o, path)
         return r
 
-    def wc_w(self, path):
+    def wc_w(self, path: str) -> int:
         """This command counts the words in a file, using the "wc
         -w" external command.
         """
@@ -11025,7 +11320,7 @@ class GuestFS(object):
         r = libguestfsmod.wc_w(self._o, path)
         return r
 
-    def wipefs(self, device):
+    def wipefs(self, device: str) -> None:
         """This command erases filesystem or RAID signatures from
         the specified "device" to make the filesystem invisible
         to libblkid.
@@ -11043,7 +11338,7 @@ class GuestFS(object):
         r = libguestfsmod.wipefs(self._o, device)
         return r
 
-    def write(self, path, content):
+    def write(self, path: str, content: bytes) -> None:
         """This call creates a file called "path". The content of
         the file is the string "content" (which can contain any
         8 bit data).
@@ -11054,7 +11349,7 @@ class GuestFS(object):
         r = libguestfsmod.write(self._o, path, content)
         return r
 
-    def write_append(self, path, content):
+    def write_append(self, path: str, content: bytes) -> None:
         """This call appends "content" to the end of file "path".
         If "path" does not exist, then a new file is created.
 
@@ -11064,7 +11359,7 @@ class GuestFS(object):
         r = libguestfsmod.write_append(self._o, path, content)
         return r
 
-    def write_file(self, path, content, size):
+    def write_file(self, path: str, content: str, size: int) -> None:
         """This call creates a file called "path". The contents of
         the file is the string "content" (which can contain any
         8 bit data), with length "size".
@@ -11096,8 +11391,12 @@ class GuestFS(object):
         r = libguestfsmod.write_file(self._o, path, content, size)
         return r
 
-    def xfs_admin(self, device, extunwritten=None, imgfile=None, v2log=None,
-                  projid32bit=None, lazycounter=None, label=None, uuid=None):
+    def xfs_admin(self, device: str, extunwritten: Optional[bool] = None,
+                  imgfile: Optional[bool] = None, v2log: Optional[bool] = None,
+                  projid32bit: Optional[bool] = None,
+                  lazycounter: Optional[bool] = None,
+                  label: Optional[str] = None,
+                  uuid: Optional[str] = None) -> None:
         """Change the parameters of the XFS filesystem on "device".
 
         Devices that are mounted cannot be modified.
@@ -11117,9 +11416,12 @@ class GuestFS(object):
                                     uuid)
         return r
 
-    def xfs_growfs(self, path, datasec=None, logsec=None, rtsec=None,
-                   datasize=None, logsize=None, rtsize=None, rtextsize=None,
-                   maxpct=None):
+    def xfs_growfs(self, path: str, datasec: Optional[bool] = None,
+                   logsec: Optional[bool] = None, rtsec: Optional[bool] = None,
+                   datasize: Optional[int] = None,
+                   logsize: Optional[int] = None, rtsize: Optional[int] = None,
+                   rtextsize: Optional[int] = None,
+                   maxpct: Optional[int] = None) -> None:
         """Grow the XFS filesystem mounted at "path".
 
         The returned struct contains geometry information.
@@ -11135,7 +11437,7 @@ class GuestFS(object):
                                      maxpct)
         return r
 
-    def xfs_info(self, pathordevice):
+    def xfs_info(self, pathordevice: str) -> dict:
         """"pathordevice" is a mounted XFS filesystem or a device
         containing an XFS filesystem. This command returns the
         geometry of the filesystem.
@@ -11154,10 +11456,16 @@ class GuestFS(object):
         r = libguestfsmod.xfs_info(self._o, pathordevice)
         return r
 
-    def xfs_repair(self, device, forcelogzero=None, nomodify=None,
-                   noprefetch=None, forcegeometry=None, maxmem=None,
-                   ihashsize=None, bhashsize=None, agstride=None, logdev=None,
-                   rtdev=None):
+    def xfs_repair(self, device: str, forcelogzero: Optional[bool] = None,
+                   nomodify: Optional[bool] = None,
+                   noprefetch: Optional[bool] = None,
+                   forcegeometry: Optional[bool] = None,
+                   maxmem: Optional[int] = None,
+                   ihashsize: Optional[int] = None,
+                   bhashsize: Optional[int] = None,
+                   agstride: Optional[int] = None,
+                   logdev: Optional[str] = None,
+                   rtdev: Optional[str] = None) -> int:
         """Repair corrupt or damaged XFS filesystem on "device".
 
         The filesystem is specified using the "device" argument
@@ -11185,7 +11493,7 @@ class GuestFS(object):
                                      rtdev)
         return r
 
-    def yara_destroy(self):
+    def yara_destroy(self) -> None:
         """Destroy previously loaded Yara rules in order to free
         libguestfs resources.
 
@@ -11196,7 +11504,7 @@ class GuestFS(object):
         r = libguestfsmod.yara_destroy(self._o)
         return r
 
-    def yara_load(self, filename):
+    def yara_load(self, filename: str) -> None:
         """Upload a set of Yara rules from local file filename.
 
         Yara rules allow to categorize files based on textual or
@@ -11220,7 +11528,7 @@ class GuestFS(object):
         r = libguestfsmod.yara_load(self._o, filename)
         return r
 
-    def yara_scan(self, path):
+    def yara_scan(self, path: str) -> List[dict]:
         """Scan a file with the previously loaded Yara rules.
 
         For each matching rule, a "yara_detection" structure is
@@ -11246,7 +11554,7 @@ class GuestFS(object):
         r = libguestfsmod.yara_scan(self._o, path)
         return r
 
-    def zegrep(self, regex, path):
+    def zegrep(self, regex: str, path: str) -> List[str]:
         """This calls the external "zegrep" program and returns the
         matching lines.
 
@@ -11271,7 +11579,7 @@ class GuestFS(object):
         r = libguestfsmod.zegrep(self._o, regex, path)
         return r
 
-    def zegrepi(self, regex, path):
+    def zegrepi(self, regex: str, path: str) -> List[str]:
         """This calls the external "zegrep -i" program and returns
         the matching lines.
 
@@ -11296,7 +11604,7 @@ class GuestFS(object):
         r = libguestfsmod.zegrepi(self._o, regex, path)
         return r
 
-    def zero(self, device):
+    def zero(self, device: str) -> None:
         """This command writes zeroes over the first few blocks of
         "device".
 
@@ -11316,7 +11624,7 @@ class GuestFS(object):
         r = libguestfsmod.zero(self._o, device)
         return r
 
-    def zero_device(self, device):
+    def zero_device(self, device: str) -> None:
         """This command writes zeroes over the entire "device".
         Compare with "g.zero" which just zeroes the first few
         blocks of a device.
@@ -11329,7 +11637,7 @@ class GuestFS(object):
         r = libguestfsmod.zero_device(self._o, device)
         return r
 
-    def zero_free_space(self, directory):
+    def zero_free_space(self, directory: str) -> None:
         """Zero the free space in the filesystem mounted on
         directory. The filesystem must be mounted read-write.
 
@@ -11344,7 +11652,7 @@ class GuestFS(object):
         r = libguestfsmod.zero_free_space(self._o, directory)
         return r
 
-    def zerofree(self, device):
+    def zerofree(self, device: str) -> None:
         """This runs the *zerofree* program on "device". This
         program claims to zero unused inodes and disk blocks on
         an ext2/3 filesystem, thus making it possible to
@@ -11363,7 +11671,7 @@ class GuestFS(object):
         r = libguestfsmod.zerofree(self._o, device)
         return r
 
-    def zfgrep(self, pattern, path):
+    def zfgrep(self, pattern: str, path: str) -> List[str]:
         """This calls the external "zfgrep" program and returns the
         matching lines.
 
@@ -11388,7 +11696,7 @@ class GuestFS(object):
         r = libguestfsmod.zfgrep(self._o, pattern, path)
         return r
 
-    def zfgrepi(self, pattern, path):
+    def zfgrepi(self, pattern: str, path: str) -> List[str]:
         """This calls the external "zfgrep -i" program and returns
         the matching lines.
 
@@ -11413,7 +11721,7 @@ class GuestFS(object):
         r = libguestfsmod.zfgrepi(self._o, pattern, path)
         return r
 
-    def zfile(self, meth, path):
+    def zfile(self, meth: str, path: str) -> str:
         """This command runs file(1) after first decompressing
         "path" using "meth".
 
@@ -11437,7 +11745,7 @@ class GuestFS(object):
         r = libguestfsmod.zfile(self._o, meth, path)
         return r
 
-    def zgrep(self, regex, path):
+    def zgrep(self, regex: str, path: str) -> List[str]:
         """This calls the external zgrep(1) program and returns the
         matching lines.
 
@@ -11462,7 +11770,7 @@ class GuestFS(object):
         r = libguestfsmod.zgrep(self._o, regex, path)
         return r
 
-    def zgrepi(self, regex, path):
+    def zgrepi(self, regex: str, path: str) -> List[str]:
         """This calls the external "zgrep -i" program and returns
         the matching lines.
 

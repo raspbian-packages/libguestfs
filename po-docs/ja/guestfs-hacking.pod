@@ -902,7 +902,7 @@ command, the list of objects and the C<-cclib> libraries in the correct
 order otherwise.
 
  virt_customize_LINK = \
-     $(top_srcdir)/ocaml-link.sh -cclib '-lutils -lgnu' -- ...
+     $(top_builddir)/ocaml-link.sh -cclib '-lutils -lgnu' -- ...
 
 The actual rules, which you can examine in F<customize/Makefile.am>, are a
 little bit more complicated than this because they have to handle:
@@ -1007,20 +1007,6 @@ Check C<./configure --without-libvirt> works.
 =item *
 
 Finalize F<guestfs-release-notes.pod>
-
-=item *
-
-Push and pull from Zanata.
-
-次を実行します:
-
- zanata push
-
-to push the latest POT files to Zanata.  Then run:
-
- ./zanata-pull.sh
-
-which is a wrapper to pull the latest translated F<*.po> files.
 
 =item *
 

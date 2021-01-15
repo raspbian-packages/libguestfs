@@ -1269,6 +1269,22 @@ val cpio_out : t -> ?format:string -> string -> string -> unit
     @since 1.27.9
  *)
 
+val cryptsetup_close : t -> string -> unit
+(** close an encrypted device
+
+    This function depends on the feature "luks".  See also {!feature_available}.
+
+    @since 1.43.2
+ *)
+
+val cryptsetup_open : t -> ?readonly:bool -> ?crypttype:string -> string -> string -> string -> unit
+(** open an encrypted block device
+
+    This function depends on the feature "luks".  See also {!feature_available}.
+
+    @since 1.43.2
+ *)
+
 val dd : t -> string -> string -> unit
 (** copy from source to destination using dd
 
@@ -2846,6 +2862,8 @@ val luks_close : t -> string -> unit
 
     This function depends on the feature "luks".  See also {!feature_available}.
 
+    @deprecated Use {!cryptsetup_close} instead
+
     @since 1.5.1
  *)
 
@@ -2878,6 +2896,8 @@ val luks_open : t -> string -> string -> string -> unit
 
     This function depends on the feature "luks".  See also {!feature_available}.
 
+    @deprecated Use {!cryptsetup_open} instead
+
     @since 1.5.1
  *)
 
@@ -2885,6 +2905,8 @@ val luks_open_ro : t -> string -> string -> string -> unit
 (** open a LUKS-encrypted block device read-only
 
     This function depends on the feature "luks".  See also {!feature_available}.
+
+    @deprecated Use {!cryptsetup_open} instead
 
     @since 1.5.1
  *)
@@ -5453,6 +5475,20 @@ class guestfs : ?environment:bool -> ?close_on_exit:bool -> unit -> object
 
     @since 1.27.9
    *)
+  method cryptsetup_close : string -> unit
+  (** close an encrypted device
+
+    This function depends on the feature "luks".  See also {!feature_available}.
+
+    @since 1.43.2
+   *)
+  method cryptsetup_open : ?readonly:bool -> ?crypttype:string -> string -> string -> string -> unit
+  (** open an encrypted block device
+
+    This function depends on the feature "luks".  See also {!feature_available}.
+
+    @since 1.43.2
+   *)
   method dd : string -> string -> unit
   (** copy from source to destination using dd
 
@@ -6786,6 +6822,8 @@ class guestfs : ?environment:bool -> ?close_on_exit:bool -> unit -> object
 
     This function depends on the feature "luks".  See also {!feature_available}.
 
+    @deprecated Use {!cryptsetup_close} instead
+
     @since 1.5.1
    *)
   method luks_format : string -> string -> int -> unit
@@ -6814,12 +6852,16 @@ class guestfs : ?environment:bool -> ?close_on_exit:bool -> unit -> object
 
     This function depends on the feature "luks".  See also {!feature_available}.
 
+    @deprecated Use {!cryptsetup_open} instead
+
     @since 1.5.1
    *)
   method luks_open_ro : string -> string -> string -> unit
   (** open a LUKS-encrypted block device read-only
 
     This function depends on the feature "luks".  See also {!feature_available}.
+
+    @deprecated Use {!cryptsetup_open} instead
 
     @since 1.5.1
    *)

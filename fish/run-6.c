@@ -334,6 +334,75 @@ run_cp_a (const char *cmd, size_t argc, char *argv[])
 }
 
 int
+run_cryptsetup_open (const char *cmd, size_t argc, char *argv[])
+{
+  int ret = RUN_ERROR;
+  int r;
+  const char *device;
+  char *key;
+  const char *mapname;
+  struct guestfs_cryptsetup_open_argv optargs_s = { .bitmask = 0 };
+  struct guestfs_cryptsetup_open_argv *optargs = &optargs_s;
+  size_t i = 0;
+
+  if (argc < 2 || argc > 4) {
+    ret = RUN_WRONG_ARGS;
+    goto out_noargs;
+  }
+  device = argv[i++];
+  key = read_key ("key");
+  if (keys_from_stdin)
+    input_lineno++;
+  if (key == NULL) goto out_key;
+  mapname = argv[i++];
+
+  for (; i < argc; ++i) {
+    uint64_t this_mask;
+    const char *this_arg;
+
+    if (STRPREFIX (argv[i], "readonly:")) {
+      switch (guestfs_int_is_true (&argv[i][9])) {
+        case -1:
+          fprintf (stderr,
+                   _("%s: '%s': invalid boolean value, use 'true' or 'false'\n"),
+                   getprogname (), &argv[i][9]);
+          goto out;
+        case 0:  optargs_s.readonly = 0; break;
+        default: optargs_s.readonly = 1;
+      }
+      this_mask = GUESTFS_CRYPTSETUP_OPEN_READONLY_BITMASK;
+      this_arg = "readonly";
+    }
+    else if (STRPREFIX (argv[i], "crypttype:")) {
+      optargs_s.crypttype = &argv[i][10];
+      this_mask = GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK;
+      this_arg = "crypttype";
+    }
+    else {
+      fprintf (stderr, _("%s: unknown optional argument \"%s\"\n"),
+               cmd, argv[i]);
+      goto out;
+    }
+
+    if (optargs_s.bitmask & this_mask) {
+      fprintf (stderr, _("%s: optional argument \"%s\" given more than once\n"),
+               cmd, this_arg);
+      goto out;
+    }
+    optargs_s.bitmask |= this_mask;
+  }
+
+  r = guestfs_cryptsetup_open_argv (g, device, key, mapname, optargs);
+  if (r == -1) goto out;
+  ret = 0;
+ out:
+  free (key);
+ out_key:
+ out_noargs:
+  return ret;
+}
+
+int
 run_df (const char *cmd, size_t argc, char *argv[])
 {
   int ret = RUN_ERROR;

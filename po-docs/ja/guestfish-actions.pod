@@ -1869,6 +1869,69 @@ New (SVR4) portable format with a checksum.
 
 このコマンドは 1 つまたはそれ以上のオプション引数を持つ必要があります。 L</オプション引数> を参照してください。
 
+=head2 cryptsetup-close
+
+ cryptsetup-close device
+
+This closes an encrypted device that was created earlier by
+L</cryptsetup-open>.  The C<device> parameter must be the name of the
+mapping device (ie. F</dev/mapper/mapname>)  and I<not> the name of the
+underlying block device.
+
+This command depends on the feature C<luks>.  See also
+L</feature-available>.
+
+=head2 cryptsetup-open
+
+ cryptsetup-open device mapname [readonly:true|false] [crypttype:..]
+
+This command opens a block device which has been encrypted according to the
+Linux Unified Key Setup (LUKS) standard, Windows BitLocker, or some other
+types.
+
+C<device> is the encrypted block device or partition.
+
+The caller must supply one of the keys associated with the encrypted block
+device, in the C<key> parameter.
+
+This creates a new block device called F</dev/mapper/mapname>.  Reads and
+writes to this block device are decrypted from and encrypted to the
+underlying C<device> respectively.
+
+C<mapname> cannot be C<"control"> because that name is reserved by
+device-mapper.
+
+If the optional C<crypttype> parameter is not present then libguestfs tries
+to guess the correct type (for example LUKS or BitLocker).  However you can
+override this by specifying one of the following types:
+
+=over 4
+
+=item C<luks>
+
+A Linux LUKS device.
+
+=item C<bitlk>
+
+A Windows BitLocker device.
+
+=back
+
+The optional C<readonly> flag, if set to true, creates a read-only mapping.
+
+If this block device contains LVM volume groups, then calling L</lvm-scan>
+with the C<activate> parameter C<true> will make them visible.
+
+Use L</list-dm-devices> to list all device mapper devices.
+
+This command has one or more key or passphrase parameters.  Guestfish will
+prompt for these separately.
+
+このコマンドは 1 つまたはそれ以上のオプション引数を持つ必要があります。 L</オプション引数> を参照してください。
+
+This command depends on the feature C<luks>.  See also
+L</feature-available>.
+
 =head2 dd
 
  dd src dest
@@ -5414,6 +5477,13 @@ L</luks-open-ro>.  The C<device> parameter must be the name of the LUKS
 mapping device (ie. F</dev/mapper/mapname>) and I<not> the name of the
 underlying block device.
 
+I<This function is deprecated.> In new code, use the L</cryptsetup-close>
+call instead.
+
+Deprecated functions will not be removed from the API, but the fact that
+they are deprecated indicates that there are problems with correct use of
+these functions.
+
 This command depends on the feature C<luks>.  See also
 L</feature-available>.
 
@@ -5481,6 +5551,13 @@ Use L</list-dm-devices> to list all device mapper devices.
 This command has one or more key or passphrase parameters.  Guestfish will
 prompt for these separately.
 
+I<This function is deprecated.> In new code, use the L</cryptsetup-open>
+call instead.
+
+Deprecated functions will not be removed from the API, but the fact that
+they are deprecated indicates that there are problems with correct use of
+these functions.
+
 This command depends on the feature C<luks>.  See also
 L</feature-available>.
 
@@ -5493,6 +5570,13 @@ created.
 
 This command has one or more key or passphrase parameters.  Guestfish will
 prompt for these separately.
+
+I<This function is deprecated.> In new code, use the L</cryptsetup-open>
+call instead.
+
+Deprecated functions will not be removed from the API, but the fact that
+they are deprecated indicates that there are problems with correct use of
+these functions.
 
 This command depends on the feature C<luks>.  See also
 L</feature-available>.
@@ -5537,7 +5621,7 @@ canonical name.  For example, F</dev/mapper/VG-LV> is converted to
 F</dev/VG/LV>.
 
 This command returns an error if the C<lvname> parameter does not refer to a
-logical volume.
+logical volume.  In this case errno will be set to C<EINVAL>.
 
 L</is-lv>, L</canonical-device-name> 参照。
 

@@ -611,34 +611,33 @@ L</guestfs_pvchange_uuid_all>.
 
 =head2 ЗАШИФРОВАНІ ДИСКИ
 
-Libguestfs надає вам змогу отримувати доступ до гостьових операційних систем
-Linux, де використовується повне шифрування диска відповідно до стандарту
-Linux Unified Key Setup (LUKS), що включає майже усі системи шифрування
-усього диска, які використовуються сучасними гостьовими системами Linux.
+Libguestfs allows you to access Linux guests which have been encrypted using
+whole disk encryption that conforms to the Linux Unified Key Setup (LUKS)
+standard.  This includes nearly all whole disk encryption systems used by
+modern Linux guests.  Windows BitLocker is also supported.
 
-Скористайтеся L</guestfs_vfs_type> для виявлення зашифрованих за допомогою
-LUKS блокових пристроїв (функція повертає для таких пристроїв рядок
-C<crypto_LUKS>).
+Use L</guestfs_vfs_type> to identify encrypted block devices.  For LUKS it
+returns the string C<crypto_LUKS>.  For Windows BitLocker it returns
+C<BitLocker>.
 
-Далі, відкрийте ці пристрої, викликавши L</guestfs_luks_open>. Очевидно, для
-відкриття вам знадобиться пароль!
+Then open these devices by calling L</guestfs_cryptsetup_open>.  Obviously
+you will require the passphrase!
 
-Відкриття пристрою LUKS призводить до створення пристрою-прив'язки із назвою
-F</dev/mapper/назва_прив'язки> (де C<назва_прив'язки> — рядок, який ви
-передаєте L</guestfs_luks_open>). Дані, які читаються і записуються на цей
-пристрій-прив'язку, розшифровуються і шифруються на базовий блоковий
-пристрій, відповідно.
+Opening an encrypted device creates a new device mapper device called
+F</dev/mapper/mapname> (where C<mapname> is the string you supply to
+L</guestfs_cryptsetup_open>).  Reads and writes to this mapper device are
+decrypted from and encrypted to the underlying block device respectively.
 
 Групи томів LVM на пристрої можна зробити видимими викликом
 L</guestfs_vgscan>, за яким слід викликати
 L</guestfs_vg_activate_all>. Після цього логічні томи можна змонтувати у
 звичний спосіб.
 
-Скористайтеся зворотною процедурою для закриття пристрою LUKS. Демонтуйте
-усі логічні томи на ньому, деактивуйте групи томів викликом
-C<guestfs_vg_activate (g, 0, ["/dev/VG"])>. Далі, закрийте
-пристрій-прив'язку викликом L</guestfs_luks_close> для пристрою
-F</dev/mapper/назва_прив'язки> (а I<не> для базового блокового пристрою).
+Use the reverse process to close an encrypted device.  Unmount any logical
+volumes on it, deactivate the volume groups by calling C<guestfs_vg_activate
+(g, 0, ["/dev/VG"])>.  Then close the mapper device by calling
+L</guestfs_cryptsetup_close> on the F</dev/mapper/mapname> device (I<not>
+the underlying encrypted block device).
 
 =head2 ЛОКАЛЬНЕ МОНТУВАННЯ
 

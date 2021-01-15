@@ -157,7 +157,8 @@ L</guestfs_setxattr>
 
 =item B<luks>
 
-The following functions: L</guestfs_luks_add_key> L</guestfs_luks_close>
+The following functions: L</guestfs_cryptsetup_close>
+L</guestfs_cryptsetup_open> L</guestfs_luks_add_key> L</guestfs_luks_close>
 L</guestfs_luks_format> L</guestfs_luks_format_cipher>
 L</guestfs_luks_kill_slot> L</guestfs_luks_open> L</guestfs_luks_open_ro>
 L</guestfs_luks_uuid>

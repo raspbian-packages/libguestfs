@@ -2088,6 +2088,34 @@ namespace Guestfs
     }
 
     [DllImport ("libguestfs.so.0")]
+    static extern int guestfs_cryptsetup_close (IntPtr h, [In] string device);
+
+    /// <summary>
+    /// close an encrypted device
+    /// </summary>
+    public void cryptsetup_close (string device)
+    {
+      int r;
+      r = guestfs_cryptsetup_close (_handle, device);
+      if (r == -1)
+        throw new Error (guestfs_last_error (_handle));
+    }
+
+    [DllImport ("libguestfs.so.0")]
+    static extern int guestfs_cryptsetup_open_argv (IntPtr h, [In] string device, [In] string key, [In] string mapname, void *);
+
+    /// <summary>
+    /// open an encrypted block device
+    /// </summary>
+    public void cryptsetup_open (string device, string key, string mapname)
+    {
+      int r;
+      r = guestfs_cryptsetup_open_argv (_handle, device, key, mapname, NULL);
+      if (r == -1)
+        throw new Error (guestfs_last_error (_handle));
+    }
+
+    [DllImport ("libguestfs.so.0")]
     static extern int guestfs_dd (IntPtr h, [In] string src, [In] string dest);
 
     /// <summary>

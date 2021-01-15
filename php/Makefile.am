@@ -38,7 +38,7 @@ php_DATA = guestfs_php.ini
 # and we need to add the library to EXTRA_LDFLAGS.
 all: extension/config.h
 	$(MAKE) -C extension \
-	  EXTRA_INCLUDES="-I$(abs_srcdir)/../common/utils -I$(abs_srcdir)/../lib" \
+	  EXTRA_INCLUDES="-I$(abs_srcdir)/../common/utils -I$(abs_srcdir)/../lib -I$(abs_srcdir)/../include" \
 	  EXTRA_LDFLAGS="-L$(abs_builddir)/../lib/.libs -lguestfs" \
 	  EXTRA_CFLAGS="-DGUESTFS_PRIVATE=1" \
 	  all

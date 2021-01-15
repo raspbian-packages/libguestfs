@@ -983,6 +983,22 @@ JNIEXPORT void JNICALL Java_com_redhat_et_libguestfs_GuestFS__1cpio_1out
 
 /*
  * Class:     com_redhat_et_libguestfs_GuestFS
+ * Method:    _cryptsetup_close
+ * Signature: (JLjava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_com_redhat_et_libguestfs_GuestFS__1cryptsetup_1close
+  (JNIEnv *, jobject, jlong, jstring);
+
+/*
+ * Class:     com_redhat_et_libguestfs_GuestFS
+ * Method:    _cryptsetup_open
+ * Signature: (JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;JZLjava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_com_redhat_et_libguestfs_GuestFS__1cryptsetup_1open
+  (JNIEnv *, jobject, jlong, jstring, jstring, jstring, jlong, jboolean, jstring);
+
+/*
+ * Class:     com_redhat_et_libguestfs_GuestFS
  * Method:    _dd
  * Signature: (JLjava/lang/String;Ljava/lang/String;)V
  */

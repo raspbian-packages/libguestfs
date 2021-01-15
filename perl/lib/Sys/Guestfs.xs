@@ -2473,6 +2473,55 @@ PREINIT:
         croak ("%s", guestfs_last_error (g));
 
 void
+cryptsetup_close (g, device)
+      guestfs_h *g;
+      char *device;
+PREINIT:
+      int r;
+ PPCODE:
+      r = guestfs_cryptsetup_close (g, device);
+      if (r == -1)
+        croak ("%s", guestfs_last_error (g));
+
+void
+cryptsetup_open (g, device, key, mapname, ...)
+      guestfs_h *g;
+      char *device;
+      char *key;
+      char *mapname;
+PREINIT:
+      int r;
+      struct guestfs_cryptsetup_open_argv optargs_s = { .bitmask = 0 };
+      struct guestfs_cryptsetup_open_argv *optargs = &optargs_s;
+      size_t items_i;
+ PPCODE:
+      if (((items - 4) & 1) != 0)
+        croak ("expecting an even number of extra parameters");
+      for (items_i = 4; items_i < items; items_i += 2) {
+        uint64_t this_mask;
+        const char *this_arg;
+
+        this_arg = SvPV_nolen (ST (items_i));
+        if (STREQ (this_arg, "readonly")) {
+          optargs_s.readonly = SvIV (ST (items_i+1));
+          this_mask = GUESTFS_CRYPTSETUP_OPEN_READONLY_BITMASK;
+        }
+        else if (STREQ (this_arg, "crypttype")) {
+          optargs_s.crypttype = SvPV_nolen (ST (items_i+1));
+          this_mask = GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK;
+        }
+        else croak ("unknown optional argument '%s'", this_arg);
+        if (optargs_s.bitmask & this_mask)
+          croak ("optional argument '%s' given more than once",
+                 this_arg);
+        optargs_s.bitmask |= this_mask;
+      }
+
+      r = guestfs_cryptsetup_open_argv (g, device, key, mapname, optargs);
+      if (r == -1)
+        croak ("%s", guestfs_last_error (g));
+
+void
 dd (g, src, dest)
       guestfs_h *g;
       char *src;
@@ -7041,6 +7090,8 @@ luks_close (g, device)
 PREINIT:
       int r;
  PPCODE:
+      Perl_ck_warner (aTHX_ packWARN(WARN_DEPRECATED),
+        "Sys::Guestfs::luks_close is deprecated; use Sys::Guestfs::cryptsetup_close instead");
       r = guestfs_luks_close (g, device);
       if (r == -1)
         croak ("%s", guestfs_last_error (g));
@@ -7094,6 +7145,8 @@ luks_open (g, device, key, mapname)
 PREINIT:
       int r;
  PPCODE:
+      Perl_ck_warner (aTHX_ packWARN(WARN_DEPRECATED),
+        "Sys::Guestfs::luks_open is deprecated; use Sys::Guestfs::cryptsetup_open instead");
       r = guestfs_luks_open (g, device, key, mapname);
       if (r == -1)
         croak ("%s", guestfs_last_error (g));
@@ -7107,6 +7160,8 @@ luks_open_ro (g, device, key, mapname)
 PREINIT:
       int r;
  PPCODE:
+      Perl_ck_warner (aTHX_ packWARN(WARN_DEPRECATED),
+        "Sys::Guestfs::luks_open_ro is deprecated; use Sys::Guestfs::cryptsetup_open instead");
       r = guestfs_luks_open_ro (g, device, key, mapname);
       if (r == -1)
         croak ("%s", guestfs_last_error (g));

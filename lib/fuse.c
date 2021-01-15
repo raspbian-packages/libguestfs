@@ -330,8 +330,9 @@ mount_local_access (const char *path, int mask)
 
   fuse = fuse_get_context ();
 
-  /* Root user should be able to access everything, so only bother
-   * with these fine-grained tests for non-root.  (RHBZ#1106548).
+  /* Root user should be able to read and write everything, so only
+   * bother with these fine-grained tests for non-root.
+   * (RHBZ#1106548).
    */
   if (fuse->uid != 0) {
     if (mask & R_OK)
@@ -344,12 +345,16 @@ mount_local_access (const char *path, int mask)
         (  fuse->uid == statbuf.st_uid ? statbuf.st_mode & S_IWUSR
            : fuse->gid == statbuf.st_gid ? statbuf.st_mode & S_IWGRP
            : statbuf.st_mode & S_IWOTH);
-    if (mask & X_OK)
-      ok = ok &&
-        (  fuse->uid == statbuf.st_uid ? statbuf.st_mode & S_IXUSR
-           : fuse->gid == statbuf.st_gid ? statbuf.st_mode & S_IXGRP
-           : statbuf.st_mode & S_IXOTH);
   }
+  /* We still want the -x test because otherwise root is unable to
+   * test if a file is executable.
+   * https://stackoverflow.com/questions/64273334/test-x-in-mounted-filesystem
+   */
+  if (mask & X_OK)
+    ok = ok &&
+      (  fuse->uid == statbuf.st_uid ? statbuf.st_mode & S_IXUSR
+         : fuse->gid == statbuf.st_gid ? statbuf.st_mode & S_IXGRP
+         : statbuf.st_mode & S_IXOTH);
 
   debug (g, "%s: "
          "testing access mask%s%s%s%s: "
@@ -1291,7 +1296,7 @@ gen_remove_if_expired (void *x, void *data)
     struct gen_remove_data *d = data;
 
     if (p->timeout < d->now)
-      d->freer (hash_delete (d->ht, x));
+      d->freer (hash_remove (d->ht, x));
   }
 
   return 1;
@@ -1326,7 +1331,7 @@ gen_replace (guestfs_h *g, Hash_table *ht,
 {
   struct entry_common *old_entry;
 
-  old_entry = hash_delete (ht, new_entry);
+  old_entry = hash_remove (ht, new_entry);
   freer (old_entry);
 
   old_entry = hash_insert (ht, new_entry);
@@ -1493,7 +1498,7 @@ gen_remove (Hash_table *ht, const char *pathname, Hash_data_freer freer)
   const struct entry_common key = { .pathname = (char *) pathname };
   struct entry_common *entry;
 
-  entry = hash_delete (ht, &key);
+  entry = hash_remove (ht, &key);
 
   freer (entry);
 }

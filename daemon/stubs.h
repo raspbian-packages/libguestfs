@@ -122,6 +122,8 @@ extern void cp_stub (XDR *xdr_in);
 extern void cp_a_stub (XDR *xdr_in);
 extern void cp_r_stub (XDR *xdr_in);
 extern void cpio_out_stub (XDR *xdr_in);
+extern void cryptsetup_close_stub (XDR *xdr_in);
+extern void cryptsetup_open_stub (XDR *xdr_in);
 extern void dd_stub (XDR *xdr_in);
 extern void debug_stub (XDR *xdr_in);
 extern void debug_upload_stub (XDR *xdr_in);

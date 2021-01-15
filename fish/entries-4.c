@@ -932,7 +932,7 @@ struct command_entry lvm_canonical_lv_name_cmd_entry = {
           "    /dev/VG/LV.\n"
           "\n"
           "    This command returns an error if the \"lvname\" parameter does not refer\n"
-          "    to a logical volume.\n"
+          "    to a logical volume. In this case errno will be set to \"EINVAL\".\n"
           "\n"
           "    See also \"is_lv\", \"canonical_device_name\".\n"
           "\n"

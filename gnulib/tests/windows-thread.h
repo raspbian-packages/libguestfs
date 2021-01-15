@@ -1,5 +1,5 @@
 /* Creating and controlling threads (native Windows implementation).
-   Copyright (C) 2005-2020 Free Software Foundation, Inc.
+   Copyright (C) 2005-2021 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ extern int glwthread_thread_create (glwthread_thread_t *threadp,
 extern int glwthread_thread_join (glwthread_thread_t thread, void **retvalp);
 extern int glwthread_thread_detach (glwthread_thread_t thread);
 extern glwthread_thread_t glwthread_thread_self (void);
-extern int glwthread_thread_exit (void *retval);
+extern _Noreturn void glwthread_thread_exit (void *retval);
 
 #ifdef __cplusplus
 }

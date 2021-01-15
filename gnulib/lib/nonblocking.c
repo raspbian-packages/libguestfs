@@ -1,5 +1,5 @@
 /* Non-blocking I/O for pipe or socket descriptors.
-   Copyright (C) 2011-2020 Free Software Foundation, Inc.
+   Copyright (C) 2011-2021 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -37,6 +37,10 @@
 # else
 #  include <io.h>
 # endif
+
+/* Don't assume that UNICODE is not defined.  */
+# undef GetNamedPipeHandleState
+# define GetNamedPipeHandleState GetNamedPipeHandleStateA
 
 int
 get_nonblocking_flag (int desc)

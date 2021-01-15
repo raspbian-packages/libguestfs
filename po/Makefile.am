@@ -23,32 +23,22 @@ MSGID_BUGS_ADDRESS = https://bugzilla.redhat.com/enter_bug.cgi?component=libgues
 
 # Languages.
 # Don't use LINGUAS (uppercase) as Gentoo defines it (RHBZ#804464).
-linguas     := cs de en_GB es eu fr gu hi ja kn ml mr nl or pa pl ru ta te tg uk zh_CN
+linguas     := $(shell cat $(srcdir)/LINGUAS)
 
-POTFILES    := $(shell $(SED) 's,^,$(top_srcdir)/,' $(srcdir)/POTFILES | xargs stat -c %n 2>/dev/null)
-POTFILES_PL := $(shell $(SED) 's,^,$(top_srcdir)/,' $(srcdir)/POTFILES-pl | xargs stat -c %n 2>/dev/null)
-POTFILES_ML := $(shell $(SED) 's,^,$(top_srcdir)/,' $(srcdir)/POTFILES-ml | xargs stat -c %n 2>/dev/null)
+POTFILES    := $(shell $(SED) 's,^,$(top_srcdir)/,' $(srcdir)/POTFILES)
+POTFILES_PL := $(shell $(SED) 's,^,$(top_srcdir)/,' $(srcdir)/POTFILES-pl)
+POTFILES_ML := $(shell $(SED) 's,^,$(top_srcdir)/,' $(srcdir)/POTFILES-ml)
 POFILES     := $(linguas:%=%.po)
 GMOFILES    := $(linguas:%=%.gmo)
 
 EXTRA_DIST = \
+	LINGUAS \
 	POTFILES POTFILES-pl POTFILES-ml \
 	$(DOMAIN).pot \
 	$(POFILES) \
 	$(GMOFILES)
 
 if HAVE_GNU_GETTEXT
-
-dist-hook:
-	$(MAKE) update-po
-	cp *.po *.gmo $(distdir)/
-
-update-po:
-	$(MAKE) $(DOMAIN).pot
-	$(MAKE) $(POFILES)
-	$(MAKE) update-gmo
-
-update-gmo: Makefile $(GMOFILES)
 
 XGETTEXT_ARGS = \
 	--default-domain=$(DOMAIN) \
@@ -63,7 +53,8 @@ XGETTEXT_ARGS = \
 	--copyright-holder='$(COPYRIGHT_HOLDER)' \
 	--package-name="$(PACKAGE_NAME)" \
 	--package-version="$(PACKAGE_VERSION)" \
-	--msgid-bugs-address="$(MSGID_BUGS_ADDRESS)"
+	--msgid-bugs-address="$(MSGID_BUGS_ADDRESS)" \
+	--directory=$(top_srcdir)
 
 # For explanation, see
 # http://mingw-users.1079350.n2.nabble.com/Getting-rid-of-xgettext-s-quot-CHARSET-quot-warning-td5620533.html
@@ -74,21 +65,20 @@ $(DOMAIN).pot: Makefile POTFILES $(POTFILES) POTFILES-pl $(POTFILES_PL) POTFILES
 	rm -f $@-t
 	touch $@-t
 if HAVE_OCAML_GETTEXT
-	$(OCAML_GETTEXT) --action extract --extract-pot $@-t $(POTFILES_ML)
+	cd $(top_srcdir) && $(OCAML_GETTEXT) --action extract --extract-pot $(abs_srcdir)/$@-t $(shell cat $(abs_srcdir)/POTFILES-ml)
 	 \
 	$(FIX_CHARSET) $@-t
 endif
-	$(XGETTEXT) -j -o $@-t $(XGETTEXT_ARGS) $(POTFILES)
+	$(XGETTEXT) -j -o $@-t $(XGETTEXT_ARGS) \
+	  --files-from=$(abs_srcdir)/POTFILES
 	$(FIX_CHARSET) $@-t
-	$(XGETTEXT) -j -o $@-t $(XGETTEXT_ARGS) --language=Perl $(POTFILES_PL)
+	$(XGETTEXT) -j -o $@-t $(XGETTEXT_ARGS) --language=Perl \
+	  --files-from=$(abs_srcdir)/POTFILES-pl
 	mv $@-t $@
-
-%.po: $(DOMAIN).pot
-	cd $(srcdir) && $(MSGMERGE) -N --update $@ $(DOMAIN).pot
 
 .po.gmo:
 	rm -f $@ $@-t
-	$(MSGFMT) -c -o $@-t $(srcdir)/$<
+	$(MSGFMT) -c -o $@-t $<
 	mv $@-t $@
 
 # Install.
@@ -104,10 +94,5 @@ install-data-hook: $(GMOFILES)
 	done
 
 .PRECIOUS: $(DOMAIN).pot $(POFILES)
-
-else
-
-# If no GNU gettext, 'make update-po' is a dummy rule.
-update-po:
 
 endif

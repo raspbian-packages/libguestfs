@@ -1,6 +1,6 @@
 /* The writer part of a test program for non-blocking communication.
 
-   Copyright (C) 2011-2020 Free Software Foundation, Inc.
+   Copyright (C) 2011-2021 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -79,7 +79,7 @@ main_writer_loop (int test, size_t data_block_size, int fd,
         usleep (1000000);
 
         dbgfprintf (stderr, "%s:1: >> write (%lu)\n", PROG_ROLE,
-                    (unsigned long) 2 * data_block_size);
+                    (unsigned long) (2 * data_block_size));
         START_TIMING
         ret = write (fd, data, 2 * data_block_size);
         saved_errno = errno;

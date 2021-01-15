@@ -37,7 +37,6 @@
 PyObject *
 guestfs_int_py_acl_get_file (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -50,13 +49,9 @@ guestfs_int_py_acl_get_file (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_acl_get_file (g, path, acltype);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -77,7 +72,6 @@ guestfs_int_py_acl_get_file (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_aug_close (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -88,13 +82,9 @@ guestfs_int_py_aug_close (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_aug_close (g);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -114,7 +104,6 @@ guestfs_int_py_aug_close (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_aug_defnode (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -128,13 +117,9 @@ guestfs_int_py_aug_defnode (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_aug_defnode (g, name, expr, val);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -155,7 +140,6 @@ guestfs_int_py_aug_defnode (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_aug_get (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -167,13 +151,9 @@ guestfs_int_py_aug_get (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_aug_get (g, augpath);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -194,7 +174,6 @@ guestfs_int_py_aug_get (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_aug_save (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -205,13 +184,9 @@ guestfs_int_py_aug_save (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_aug_save (g);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -231,7 +206,6 @@ guestfs_int_py_aug_save (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_aug_setm (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -245,13 +219,9 @@ guestfs_int_py_aug_setm (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_aug_setm (g, base, sub, val);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -270,7 +240,6 @@ guestfs_int_py_aug_setm (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_available (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -285,13 +254,9 @@ guestfs_int_py_available (PyObject *self, PyObject *args)
   groups = guestfs_int_py_get_string_list (py_groups);
   if (!groups) goto out;
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_available (g, groups);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -312,7 +277,6 @@ guestfs_int_py_available (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_blkdiscard (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -324,13 +288,9 @@ guestfs_int_py_blkdiscard (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_blkdiscard (g, device);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -350,7 +310,6 @@ guestfs_int_py_blkdiscard (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_blockdev_getsz (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -362,13 +321,9 @@ guestfs_int_py_blockdev_getsz (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_blockdev_getsz (g, device);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -387,7 +342,6 @@ guestfs_int_py_blockdev_getsz (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_blockdev_setro (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -399,13 +353,9 @@ guestfs_int_py_blockdev_setro (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_blockdev_setro (g, device);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -425,7 +375,6 @@ guestfs_int_py_blockdev_setro (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_btrfs_balance_status (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -437,13 +386,9 @@ guestfs_int_py_btrfs_balance_status (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_btrfs_balance_status (g, path);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -464,7 +409,6 @@ guestfs_int_py_btrfs_balance_status (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_btrfs_device_delete (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -480,13 +424,9 @@ guestfs_int_py_btrfs_device_delete (PyObject *self, PyObject *args)
   devices = guestfs_int_py_get_string_list (py_devices);
   if (!devices) goto out;
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_btrfs_device_delete (g, devices, fs);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -507,7 +447,6 @@ guestfs_int_py_btrfs_device_delete (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_btrfs_filesystem_defragment (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -539,13 +478,9 @@ guestfs_int_py_btrfs_filesystem_defragment (PyObject *self, PyObject *args)
   }
 #endif
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_btrfs_filesystem_defragment_argv (g, path, optargs);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -565,7 +500,6 @@ guestfs_int_py_btrfs_filesystem_defragment (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_btrfs_filesystem_resize (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -590,13 +524,9 @@ guestfs_int_py_btrfs_filesystem_resize (PyObject *self, PyObject *args)
   }
 #endif
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_btrfs_filesystem_resize_argv (g, mountpoint, optargs);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -616,7 +546,6 @@ guestfs_int_py_btrfs_filesystem_resize (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_btrfs_filesystem_sync (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -628,13 +557,9 @@ guestfs_int_py_btrfs_filesystem_sync (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_btrfs_filesystem_sync (g, fs);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -654,7 +579,6 @@ guestfs_int_py_btrfs_filesystem_sync (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_btrfs_image (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -683,13 +607,9 @@ guestfs_int_py_btrfs_image (PyObject *self, PyObject *args)
   }
 #endif
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_btrfs_image_argv (g, source, image, optargs);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -710,7 +630,6 @@ guestfs_int_py_btrfs_image (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_btrfs_qgroup_destroy (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -723,13 +642,9 @@ guestfs_int_py_btrfs_qgroup_destroy (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_btrfs_qgroup_destroy (g, qgroupid, subvolume);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -749,7 +664,6 @@ guestfs_int_py_btrfs_qgroup_destroy (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_btrfs_subvolume_delete (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -761,13 +675,9 @@ guestfs_int_py_btrfs_subvolume_delete (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_btrfs_subvolume_delete (g, subvolume);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -787,7 +697,6 @@ guestfs_int_py_btrfs_subvolume_delete (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_btrfs_subvolume_list (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -799,13 +708,9 @@ guestfs_int_py_btrfs_subvolume_list (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_btrfs_subvolume_list (g, fs);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -826,7 +731,6 @@ guestfs_int_py_btrfs_subvolume_list (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_btrfstune_enable_skinny_metadata_extent_refs (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -838,13 +742,9 @@ guestfs_int_py_btrfstune_enable_skinny_metadata_extent_refs (PyObject *self, PyO
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_btrfstune_enable_skinny_metadata_extent_refs (g, device);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -864,7 +764,6 @@ guestfs_int_py_btrfstune_enable_skinny_metadata_extent_refs (PyObject *self, PyO
 PyObject *
 guestfs_int_py_cap_get_file (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -876,13 +775,9 @@ guestfs_int_py_cap_get_file (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_cap_get_file (g, path);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -903,7 +798,6 @@ guestfs_int_py_cap_get_file (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_checksum (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -916,13 +810,9 @@ guestfs_int_py_checksum (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_checksum (g, csumtype, path);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -943,7 +833,6 @@ guestfs_int_py_checksum (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_chmod (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -956,13 +845,9 @@ guestfs_int_py_chmod (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_chmod (g, mode, path);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -982,7 +867,6 @@ guestfs_int_py_chmod (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_copy_out (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -995,13 +879,9 @@ guestfs_int_py_copy_out (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_copy_out (g, remotepath, localdir);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -1021,7 +901,6 @@ guestfs_int_py_copy_out (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_disk_create (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -1076,13 +955,9 @@ guestfs_int_py_disk_create (PyObject *self, PyObject *args)
   }
 #endif
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_disk_create_argv (g, filename, format, size, optargs);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -1102,7 +977,6 @@ guestfs_int_py_disk_create (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_dmesg (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -1113,13 +987,9 @@ guestfs_int_py_dmesg (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_dmesg (g);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -1140,7 +1010,6 @@ guestfs_int_py_dmesg (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_download_blocks (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -1168,13 +1037,9 @@ guestfs_int_py_download_blocks (PyObject *self, PyObject *args)
   }
 #endif
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_download_blocks_argv (g, device, start, stop, filename, optargs);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -1194,7 +1059,6 @@ guestfs_int_py_download_blocks (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_du (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -1206,13 +1070,9 @@ guestfs_int_py_du (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_du (g, path);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -1231,7 +1091,6 @@ guestfs_int_py_du (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_e2fsck_f (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -1243,13 +1102,9 @@ guestfs_int_py_e2fsck_f (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_e2fsck_f (g, device);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -1269,7 +1124,6 @@ guestfs_int_py_e2fsck_f (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_echo_daemon (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -1284,13 +1138,9 @@ guestfs_int_py_echo_daemon (PyObject *self, PyObject *args)
   words = guestfs_int_py_get_string_list (py_words);
   if (!words) goto out;
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_echo_daemon (g, words);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -1312,7 +1162,6 @@ guestfs_int_py_echo_daemon (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_equal (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -1325,13 +1174,9 @@ guestfs_int_py_equal (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_equal (g, file1, file2);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -1350,7 +1195,6 @@ guestfs_int_py_equal (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_fgrepi (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -1363,13 +1207,9 @@ guestfs_int_py_fgrepi (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_fgrepi (g, pattern, path);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -1453,7 +1293,6 @@ guestfs_int_py_get_backend_settings (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_get_e2label (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -1465,13 +1304,9 @@ guestfs_int_py_get_e2label (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_get_e2label (g, device);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -1552,7 +1387,6 @@ guestfs_int_py_get_tmpdir (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_getcon (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -1563,13 +1397,9 @@ guestfs_int_py_getcon (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_getcon (g);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -1590,7 +1420,6 @@ guestfs_int_py_getcon (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_getxattr (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -1604,24 +1433,16 @@ guestfs_int_py_getxattr (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_getxattr (g, path, name, &size);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
     goto out;
   }
 
-#if PY_MAJOR_VERSION >= 3
   py_r = PyBytes_FromStringAndSize (r, size);
-#else
-  py_r = PyString_FromStringAndSize (r, size);
-#endif
   free (r);
   if (py_r == NULL) goto out;
 
@@ -1635,7 +1456,6 @@ guestfs_int_py_getxattr (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_hivex_close (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -1646,13 +1466,9 @@ guestfs_int_py_hivex_close (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_hivex_close (g);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -1672,7 +1488,6 @@ guestfs_int_py_hivex_close (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_hivex_open (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -1721,13 +1536,9 @@ guestfs_int_py_hivex_open (PyObject *self, PyObject *args)
   }
 #endif
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_hivex_open_argv (g, filename, optargs);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -1747,7 +1558,6 @@ guestfs_int_py_hivex_open (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_hivex_value_utf8 (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -1759,13 +1569,9 @@ guestfs_int_py_hivex_value_utf8 (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_hivex_value_utf8 (g, valueh);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -1786,7 +1592,6 @@ guestfs_int_py_hivex_value_utf8 (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_inotify_add_watch (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -1799,13 +1604,9 @@ guestfs_int_py_inotify_add_watch (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_inotify_add_watch (g, path, mask);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -1824,7 +1625,6 @@ guestfs_int_py_inotify_add_watch (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_inotify_init (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -1836,13 +1636,9 @@ guestfs_int_py_inotify_init (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_inotify_init (g, maxevents);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -1862,7 +1658,6 @@ guestfs_int_py_inotify_init (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_inspect_get_type (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -1874,13 +1669,9 @@ guestfs_int_py_inspect_get_type (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_inspect_get_type (g, root);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -1901,7 +1692,6 @@ guestfs_int_py_inspect_get_type (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_inspect_is_live (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -1913,13 +1703,9 @@ guestfs_int_py_inspect_is_live (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_inspect_is_live (g, root);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -1938,7 +1724,6 @@ guestfs_int_py_inspect_is_live (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_internal_exit (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -1949,13 +1734,9 @@ guestfs_int_py_internal_exit (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_internal_exit (g);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -2048,7 +1829,6 @@ guestfs_int_py_internal_test_rconststringerr (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_is_dir (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -2073,13 +1853,9 @@ guestfs_int_py_is_dir (PyObject *self, PyObject *args)
   }
 #endif
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_is_dir_opts_argv (g, path, optargs);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -2098,7 +1874,6 @@ guestfs_int_py_is_dir (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_is_file (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -2123,13 +1898,9 @@ guestfs_int_py_is_file (PyObject *self, PyObject *args)
   }
 #endif
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_is_file_opts_argv (g, path, optargs);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -2148,7 +1919,6 @@ guestfs_int_py_is_file (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_is_whole_device (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -2160,13 +1930,9 @@ guestfs_int_py_is_whole_device (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_is_whole_device (g, device);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -2185,7 +1951,6 @@ guestfs_int_py_is_whole_device (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_is_zero_device (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -2197,13 +1962,9 @@ guestfs_int_py_is_zero_device (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_is_zero_device (g, device);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -2222,7 +1983,6 @@ guestfs_int_py_is_zero_device (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_journal_get_realtime_usec (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -2233,13 +1993,9 @@ guestfs_int_py_journal_get_realtime_usec (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_journal_get_realtime_usec (g);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -2258,7 +2014,6 @@ guestfs_int_py_journal_get_realtime_usec (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_journal_set_data_threshold (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -2270,13 +2025,9 @@ guestfs_int_py_journal_set_data_threshold (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_journal_set_data_threshold (g, threshold);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -2296,7 +2047,6 @@ guestfs_int_py_journal_set_data_threshold (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_launch (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -2307,13 +2057,9 @@ guestfs_int_py_launch (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_launch (g);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -2333,7 +2079,6 @@ guestfs_int_py_launch (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_ldmtool_remove_all (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -2344,13 +2089,9 @@ guestfs_int_py_ldmtool_remove_all (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_ldmtool_remove_all (g);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -2370,7 +2111,6 @@ guestfs_int_py_ldmtool_remove_all (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_ldmtool_volume_hint (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -2383,13 +2123,9 @@ guestfs_int_py_ldmtool_volume_hint (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_ldmtool_volume_hint (g, diskgroup, volume);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -2410,7 +2146,6 @@ guestfs_int_py_ldmtool_volume_hint (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_ldmtool_volume_type (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -2423,13 +2158,9 @@ guestfs_int_py_ldmtool_volume_type (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_ldmtool_volume_type (g, diskgroup, volume);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -2450,7 +2181,6 @@ guestfs_int_py_ldmtool_volume_type (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_list_devices (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -2461,13 +2191,9 @@ guestfs_int_py_list_devices (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_list_devices (g);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -2488,7 +2214,6 @@ guestfs_int_py_list_devices (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_list_filesystems (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -2499,13 +2224,9 @@ guestfs_int_py_list_filesystems (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_list_filesystems (g);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -2526,7 +2247,6 @@ guestfs_int_py_list_filesystems (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_ls (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -2538,13 +2258,9 @@ guestfs_int_py_ls (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_ls (g, directory);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -2565,7 +2281,6 @@ guestfs_int_py_ls (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_ls0 (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -2578,13 +2293,9 @@ guestfs_int_py_ls0 (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_ls0 (g, dir, filenames);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -2604,7 +2315,6 @@ guestfs_int_py_ls0 (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_lstatns (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -2616,13 +2326,9 @@ guestfs_int_py_lstatns (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_lstatns (g, path);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -2643,7 +2349,6 @@ guestfs_int_py_lstatns (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_luks_uuid (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -2655,13 +2360,9 @@ guestfs_int_py_luks_uuid (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_luks_uuid (g, device);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -2682,7 +2383,6 @@ guestfs_int_py_luks_uuid (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_lxattrlist (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -2698,13 +2398,9 @@ guestfs_int_py_lxattrlist (PyObject *self, PyObject *args)
   names = guestfs_int_py_get_string_list (py_names);
   if (!names) goto out;
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_lxattrlist (g, path, names);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -2726,7 +2422,6 @@ guestfs_int_py_lxattrlist (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_mkdir_mode (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -2739,13 +2434,9 @@ guestfs_int_py_mkdir_mode (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_mkdir_mode (g, path, mode);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -2765,7 +2456,6 @@ guestfs_int_py_mkdir_mode (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_mkdir_p (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -2777,13 +2467,9 @@ guestfs_int_py_mkdir_p (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_mkdir_p (g, path);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -2803,7 +2489,6 @@ guestfs_int_py_mkdir_p (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_mke2fs (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -3117,13 +2802,9 @@ guestfs_int_py_mke2fs (PyObject *self, PyObject *args)
   }
 #endif
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_mke2fs_argv (g, device, optargs);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -3143,7 +2824,6 @@ guestfs_int_py_mke2fs (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_mke2fs_JL (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -3158,13 +2838,9 @@ guestfs_int_py_mke2fs_JL (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_mke2fs_JL (g, fstype, blocksize, device, label);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -3184,7 +2860,6 @@ guestfs_int_py_mke2fs_JL (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_mke2fs_JU (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -3199,13 +2874,9 @@ guestfs_int_py_mke2fs_JU (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_mke2fs_JU (g, fstype, blocksize, device, uuid);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -3225,7 +2896,6 @@ guestfs_int_py_mke2fs_JU (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_mke2journal (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -3238,13 +2908,9 @@ guestfs_int_py_mke2journal (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_mke2journal (g, blocksize, device);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -3264,7 +2930,6 @@ guestfs_int_py_mke2journal (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_mknod_b (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -3279,13 +2944,9 @@ guestfs_int_py_mknod_b (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_mknod_b (g, mode, devmajor, devminor, path);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -3305,7 +2966,6 @@ guestfs_int_py_mknod_b (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_mount_local (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -3353,13 +3013,9 @@ guestfs_int_py_mount_local (PyObject *self, PyObject *args)
   }
 #endif
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_mount_local_argv (g, localmountpoint, optargs);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -3379,7 +3035,6 @@ guestfs_int_py_mount_local (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_ntfsresize_size (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -3392,13 +3047,9 @@ guestfs_int_py_ntfsresize_size (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_ntfsresize_size (g, device, size);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -3418,7 +3069,6 @@ guestfs_int_py_ntfsresize_size (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_part_del (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -3431,13 +3081,9 @@ guestfs_int_py_part_del (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_part_del (g, device, partnum);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -3457,7 +3103,6 @@ guestfs_int_py_part_del (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_part_get_gpt_type (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -3470,13 +3115,9 @@ guestfs_int_py_part_get_gpt_type (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_part_get_gpt_type (g, device, partnum);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -3497,7 +3138,6 @@ guestfs_int_py_part_get_gpt_type (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_ping_daemon (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -3508,13 +3148,9 @@ guestfs_int_py_ping_daemon (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_ping_daemon (g);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -3565,7 +3201,6 @@ guestfs_int_py_remove_drive (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_rm (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -3577,13 +3212,9 @@ guestfs_int_py_rm (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_rm (g, path);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -3603,7 +3234,6 @@ guestfs_int_py_rm (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_rmdir (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -3615,13 +3245,9 @@ guestfs_int_py_rmdir (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_rmdir (g, path);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -3641,7 +3267,6 @@ guestfs_int_py_rmdir (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_rsync (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -3675,13 +3300,9 @@ guestfs_int_py_rsync (PyObject *self, PyObject *args)
   }
 #endif
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_rsync_argv (g, src, dest, optargs);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -3829,7 +3450,6 @@ guestfs_int_py_set_recovery_proc (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_set_uuid (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -3842,13 +3462,9 @@ guestfs_int_py_set_uuid (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_set_uuid (g, device, uuid);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -3868,7 +3484,6 @@ guestfs_int_py_set_uuid (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_setcon (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -3880,13 +3495,9 @@ guestfs_int_py_setcon (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_setcon (g, context);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -3906,7 +3517,6 @@ guestfs_int_py_setcon (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_statvfs (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -3918,13 +3528,9 @@ guestfs_int_py_statvfs (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_statvfs (g, path);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -3945,7 +3551,6 @@ guestfs_int_py_statvfs (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_strings (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -3957,13 +3562,9 @@ guestfs_int_py_strings (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_strings (g, path);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -3984,7 +3585,6 @@ guestfs_int_py_strings (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_swapoff_label (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -3996,13 +3596,9 @@ guestfs_int_py_swapoff_label (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_swapoff_label (g, label);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -4022,7 +3618,6 @@ guestfs_int_py_swapoff_label (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_swapoff_uuid (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -4034,13 +3629,9 @@ guestfs_int_py_swapoff_uuid (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_swapoff_uuid (g, uuid);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -4060,7 +3651,6 @@ guestfs_int_py_swapoff_uuid (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_tar_in (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -4109,13 +3699,9 @@ guestfs_int_py_tar_in (PyObject *self, PyObject *args)
   }
 #endif
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_tar_in_opts_argv (g, tarfile, directory, optargs);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -4135,7 +3721,6 @@ guestfs_int_py_tar_in (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_truncate (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -4147,13 +3732,9 @@ guestfs_int_py_truncate (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_truncate (g, path);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -4173,7 +3754,6 @@ guestfs_int_py_truncate (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_tune2fs (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -4268,13 +3848,9 @@ guestfs_int_py_tune2fs (PyObject *self, PyObject *args)
   }
 #endif
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_tune2fs_argv (g, device, optargs);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -4294,7 +3870,6 @@ guestfs_int_py_tune2fs (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_upload (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -4307,13 +3882,9 @@ guestfs_int_py_upload (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_upload (g, filename, remotefilename);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -4333,7 +3904,6 @@ guestfs_int_py_upload (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_utimens (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -4349,13 +3919,9 @@ guestfs_int_py_utimens (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_utimens (g, path, atsecs, atnsecs, mtsecs, mtnsecs);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -4406,7 +3972,6 @@ guestfs_int_py_version (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_vfs_minimum_size (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -4418,13 +3983,9 @@ guestfs_int_py_vfs_minimum_size (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_vfs_minimum_size (g, mountable);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -4443,7 +4004,6 @@ guestfs_int_py_vfs_minimum_size (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_vfs_uuid (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -4455,13 +4015,9 @@ guestfs_int_py_vfs_uuid (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_vfs_uuid (g, mountable);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -4482,7 +4038,6 @@ guestfs_int_py_vfs_uuid (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_vgs (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -4493,13 +4048,9 @@ guestfs_int_py_vgs (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_vgs (g);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -4520,7 +4071,6 @@ guestfs_int_py_vgs (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_write_file (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -4534,13 +4084,9 @@ guestfs_int_py_write_file (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_write_file (g, path, content, size);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -4560,7 +4106,6 @@ guestfs_int_py_write_file (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_zero (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -4572,13 +4117,9 @@ guestfs_int_py_zero (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_zero (g, device);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -4598,7 +4139,6 @@ guestfs_int_py_zero (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_zerofree (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -4610,13 +4150,9 @@ guestfs_int_py_zerofree (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_zerofree (g, device);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == -1) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
@@ -4636,7 +4172,6 @@ guestfs_int_py_zerofree (PyObject *self, PyObject *args)
 PyObject *
 guestfs_int_py_zgrepi (PyObject *self, PyObject *args)
 {
-  PyThreadState *py_save = NULL;
   PyObject *py_g;
   guestfs_h *g;
   PyObject *py_r = NULL;
@@ -4649,13 +4184,9 @@ guestfs_int_py_zgrepi (PyObject *self, PyObject *args)
     goto out;
   g = get_handle (py_g);
 
-  if (PyEval_ThreadsInitialized ())
-    py_save = PyEval_SaveThread ();
-
+  Py_BEGIN_ALLOW_THREADS
   r = guestfs_zgrepi (g, regex, path);
-
-  if (PyEval_ThreadsInitialized ())
-    PyEval_RestoreThread (py_save);
+  Py_END_ALLOW_THREADS
 
   if (r == NULL) {
     PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));

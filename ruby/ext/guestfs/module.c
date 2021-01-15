@@ -327,6 +327,10 @@ Init__guestfs (void)
                     guestfs_int_ruby_cp_r, 2);
   rb_define_method (c_guestfs, "cpio_out",
                     guestfs_int_ruby_cpio_out, -1);
+  rb_define_method (c_guestfs, "cryptsetup_close",
+                    guestfs_int_ruby_cryptsetup_close, 1);
+  rb_define_method (c_guestfs, "cryptsetup_open",
+                    guestfs_int_ruby_cryptsetup_open, -1);
   rb_define_method (c_guestfs, "dd",
                     guestfs_int_ruby_dd, 2);
   rb_define_method (c_guestfs, "debug",

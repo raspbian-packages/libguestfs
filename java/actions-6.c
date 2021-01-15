@@ -311,6 +311,43 @@ Java_com_redhat_et_libguestfs_GuestFS__1cp_1a  (JNIEnv *env, jobject obj, jlong 
 }
 
 
+JNIEXPORT void JNICALL
+Java_com_redhat_et_libguestfs_GuestFS__1cryptsetup_1open  (JNIEnv *env, jobject obj, jlong jg, jstring jdevice, jstring jkey, jstring jmapname, jlong joptargs_bitmask, jboolean jreadonly, jstring jcrypttype)
+{
+  guestfs_h *g = (guestfs_h *) (long) jg;
+  int r;
+  const char *device;
+  const char *key;
+  const char *mapname;
+  struct guestfs_cryptsetup_open_argv optargs_s;
+  const struct guestfs_cryptsetup_open_argv *optargs = &optargs_s;
+
+  device = (*env)->GetStringUTFChars (env, jdevice, NULL);
+  key = (*env)->GetStringUTFChars (env, jkey, NULL);
+  mapname = (*env)->GetStringUTFChars (env, jmapname, NULL);
+
+  optargs_s.readonly = jreadonly;
+  optargs_s.crypttype = (*env)->GetStringUTFChars (env, jcrypttype, NULL);
+  optargs_s.bitmask = joptargs_bitmask;
+
+  r = guestfs_cryptsetup_open_argv (g, device, key, mapname, optargs);
+
+  (*env)->ReleaseStringUTFChars (env, jdevice, device);
+  (*env)->ReleaseStringUTFChars (env, jkey, key);
+  (*env)->ReleaseStringUTFChars (env, jmapname, mapname);
+  (*env)->ReleaseStringUTFChars (env, jcrypttype, optargs_s.crypttype);
+
+  if (r == -1) {
+    throw_exception (env, guestfs_last_error (g));
+    goto ret_error;
+  }
+  return;
+
+ ret_error:
+  return;
+}
+
+
 JNIEXPORT jstring JNICALL
 Java_com_redhat_et_libguestfs_GuestFS__1df  (JNIEnv *env, jobject obj, jlong jg)
 {

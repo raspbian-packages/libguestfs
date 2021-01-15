@@ -64,13 +64,30 @@ C<NULL> означає, що параметр C<-cpu> взагалі не вик
 Перевірка того, що змінна середовища $TERM має коректне значення, до того,
 як її буде передано до базової системи.
 
+=head4 Function C<lib/appliance-kcmdline.c:get_root_uuid_with_file>
+
+ static char *
+ get_root_uuid_with_file (guestfs_h *g, const char *appliance)
+
+Given a disk image containing an extX filesystem, return the UUID.  The
+L<file(1)> command does the hard work.
+
+=head4 Function C<lib/appliance-kcmdline.c:run_qemu_img_dd>
+
+ static int
+ run_qemu_img_dd (guestfs_h *g, const char *in_file, char *out_file)
+
+Read the first 256k bytes of the in_file with L<qemu-img(1)> command and
+write them into the out_file. That may be useful to get UUID of the QCOW2
+disk image with further L<file(1)> command.  The function returns zero if
+successful, otherwise -1.
+
 =head4 Function C<lib/appliance-kcmdline.c:get_root_uuid>
 
  static char *
  get_root_uuid (guestfs_h *g, const char *appliance)
 
-Given a disk image containing an extX filesystem, return the UUID.  The
-L<file(1)> command does the hard work.
+Get the UUID from the appliance disk image.
 
 =head4 Функція C<lib/appliance-kcmdline.c:guestfs_int_appliance_command_line>
 
@@ -130,7 +147,7 @@ C<*code> ініціалізується значенням шляху до пр�
 коду UEFI. C<*vars> ініціалізується значенням шляху до копії файла vars UEFI
 (який автоматично спорожняється під час виходу).
 
-In case a UEFI firmare is available, either C<*firmware> is set to a
+In case a UEFI firmware is available, either C<*firmware> is set to a
 non-C<NULL> value, or C<*code> and C<*vars> are.
 
 C<*code> and C<*vars> should be freed by the caller, and C<*firmware>
@@ -2331,18 +2348,16 @@ F<~/.libguestfs-tools.rc> або F</etc/libguestfs-tools.conf>.
  static void
  make_mapname (const char *device, char *mapname, size_t len)
 
-Створення назви карти LUKS на основі назви розділу, наприклад C<"/dev/vda2"
-=E<gt> "luksvda2">
+Make a LUKS map name from the partition name, eg. C<"/dev/vda2" =E<gt>
+"cryptvda2">
 
 =head4 Функція C<common/options/decrypt.c:inspect_do_decrypt>
 
  void
  inspect_do_decrypt (guestfs_h *g, struct key_store *ks)
 
-Проста реалізація розшифрування: пошук усіх розділів C<crypto_LUKS> та їхнє
-розшифровування, далі повторне сканування віртуальних груп. Це працює лише
-для повного шифрування дисків у Fedora. Триває робота із забезпечення
-працездатності цієї функції для інших схем шифрування.
+Simple implementation of decryption: look for any encrypted partitions and
+decrypt them, then rescan for VGs.
 
 =head3 Файл F<common/options/display-options.c>
 
@@ -3850,6 +3865,16 @@ stringsbuf.
 C<argv> у C<struct stringsbuf> дорівнюватиме C<NULL>, якщо стануться
 помилки.
 
+=head4 Function C<daemon/utils.c:filter_list>
+
+ char **
+ filter_list (bool (*p) (const char *str), char **strs)
+
+Filter a list of strings.  Returns a newly allocated list of only the
+strings where C<p (str) == true>.
+
+B<Note> it does not copy the strings, be careful not to double-free them.
+
 =head4 Функція C<daemon/utils.c:trim>
 
  void
@@ -3949,6 +3974,22 @@ C<function> — функція, яка викликала цю допоміжн�
 Read whole file into dynamically allocated array.  If there is an error,
 DON'T call reply_with_perror, just return NULL.  Returns a C<\0>-terminated
 string.  C<size_r> can be specified to get the size of the returned data.
+
+=head3 File F<daemon/xattr.c>
+
+=head4 Function C<daemon/xattr.c:split_attr_names>
+
+ static char **
+ split_attr_names (char *buf, size_t len)
+
+L<listxattr(2)> returns the string C<"foo\0bar\0baz"> of length C<len>.
+(The last string in the list is \0-terminated but the \0 is not included in
+C<len>).
+
+This function splits it into a regular list of strings.
+
+B<Note> that the returned list contains pointers to the original strings in
+C<buf> so be careful that you do not double-free them.
 
 =head2 Підкаталог F<fish>
 

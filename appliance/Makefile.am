@@ -91,6 +91,7 @@ if HAVE_PACMAN
 QUERY_FILES_CMD := xargs pacman -Qo | sed -r 's/.* is owned by ([^ ]+) .*/\1/'
 endif
 
+# Automatically generate library dependency list
 guestfsd.deps: ../daemon/guestfsd
 	/sbin/ldconfig -p > ld.so.cache.txt
 	objdump -p $^ |\

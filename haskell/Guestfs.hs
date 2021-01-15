@@ -115,6 +115,7 @@ module Guestfs (
   cp,
   cp_a,
   cp_r,
+  cryptsetup_close,
   dd,
   debug,
   debug_drives,
@@ -1660,6 +1661,18 @@ foreign import ccall unsafe "guestfs.h guestfs_cp_r" c_cp_r
 cp_r :: GuestfsH -> String -> String -> IO ()
 cp_r h src dest = do
   r <- withCString src $ \src -> withCString dest $ \dest -> withForeignPtr h (\p -> c_cp_r p src dest)
+  if (r == -1)
+    then do
+      err <- last_error h
+      fail err
+    else return ()
+
+foreign import ccall unsafe "guestfs.h guestfs_cryptsetup_close" c_cryptsetup_close
+  :: GuestfsP -> CString -> IO CInt
+
+cryptsetup_close :: GuestfsH -> String -> IO ()
+cryptsetup_close h device = do
+  r <- withCString device $ \device -> withForeignPtr h (\p -> c_cryptsetup_close p device)
   if (r == -1)
     then do
       err <- last_error h

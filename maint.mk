@@ -2,7 +2,7 @@
 # This Makefile fragment tries to be general-purpose enough to be
 # used by many projects via the gnulib maintainer-makefile module.
 
-## Copyright (C) 2001-2020 Free Software Foundation, Inc.
+## Copyright (C) 2001-2021 Free Software Foundation, Inc.
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -163,7 +163,7 @@ ifneq ($(_gl-Makefile),)
 _cfg_mk := $(wildcard $(srcdir)/cfg.mk)
 
 # Collect the names of rules starting with 'sc_'.
-syntax-check-rules := $(sort $(shell $(SED) -n \
+syntax-check-rules := $(sort $(shell env LANG=C $(SED) -n \
    's/^\(sc_[a-zA-Z0-9_-]*\):.*/\1/p' $(srcdir)/$(ME) $(_cfg_mk)))
 .PHONY: $(syntax-check-rules)
 
@@ -442,7 +442,7 @@ sc_prohibit_gnu_make_extensions:
 	    $(SED) -ne '/Makefile/{s/\.in$$//;p;}' |			\
 	    while read m; do						\
 	      $(MAKE) -qp -f $$m .DUMMY-TARGET 2>/dev/null |		\
-	        $(AWK) -v file=$$m -e '$($@_awk_)' || exit 1;		\
+		$(AWK) -v file=$$m -e '$($@_awk_)' || exit 1;		\
 	    done;							\
 	fi
 
@@ -915,7 +915,7 @@ sc_prohibit_always-defined_macros:
 		dummy /dev/null						\
 	    && { printf '$(ME): define the above'			\
 			' via some gnulib .h file\n' 1>&2;		\
-	         exit 1; }						\
+		 exit 1; }						\
 	    || :;							\
 	fi
 # ==================================================================

@@ -265,6 +265,8 @@ static zend_function_entry guestfs_php_functions[] = {
   PHP_FE (guestfs_cp_a, NULL)
   PHP_FE (guestfs_cp_r, NULL)
   PHP_FE (guestfs_cpio_out, NULL)
+  PHP_FE (guestfs_cryptsetup_close, NULL)
+  PHP_FE (guestfs_cryptsetup_open, NULL)
   PHP_FE (guestfs_dd, NULL)
   PHP_FE (guestfs_debug, NULL)
   PHP_FE (guestfs_debug_drives, NULL)
@@ -5450,6 +5452,100 @@ PHP_FUNCTION (guestfs_cpio_out)
 
   int r;
   r = guestfs_cpio_out_argv (g, directory, cpiofile, optargs);
+
+  if (r == -1) {
+    RETURN_FALSE;
+  }
+
+  RETURN_TRUE;
+}
+
+PHP_FUNCTION (guestfs_cryptsetup_close)
+{
+  zval *z_g;
+  guestfs_h *g;
+  char *device;
+  guestfs_string_length device_size;
+
+  if (zend_parse_parameters (ZEND_NUM_ARGS() TSRMLS_CC, "rs",
+        &z_g, &device, &device_size) == FAILURE) {
+    RETURN_FALSE;
+  }
+
+  GUESTFS_ZEND_FETCH_RESOURCE (g, guestfs_h *, z_g,
+                               PHP_GUESTFS_HANDLE_RES_NAME, res_guestfs_h);
+  if (g == NULL) {
+    RETURN_FALSE;
+  }
+
+  if (strlen (device) != device_size) {
+    fprintf (stderr, "libguestfs: cryptsetup_close: parameter 'device' contains embedded ASCII NUL.\n");
+    RETURN_FALSE;
+  }
+
+  int r;
+  r = guestfs_cryptsetup_close (g, device);
+
+  if (r == -1) {
+    RETURN_FALSE;
+  }
+
+  RETURN_TRUE;
+}
+
+PHP_FUNCTION (guestfs_cryptsetup_open)
+{
+  zval *z_g;
+  guestfs_h *g;
+  char *device;
+  guestfs_string_length device_size;
+  char *key;
+  guestfs_string_length key_size;
+  char *mapname;
+  guestfs_string_length mapname_size;
+  struct guestfs_cryptsetup_open_argv optargs_s = { .bitmask = 0 };
+  struct guestfs_cryptsetup_open_argv *optargs = &optargs_s;
+  zend_bool optargs_t_readonly = -1;
+  char *optargs_t_crypttype = NULL;
+  guestfs_string_length optargs_t_crypttype_size = -1;
+
+  if (zend_parse_parameters (ZEND_NUM_ARGS() TSRMLS_CC, "rsss|bs",
+        &z_g, &device, &device_size, &key, &key_size, &mapname, &mapname_size, &optargs_t_readonly, &optargs_t_crypttype, &optargs_t_crypttype_size) == FAILURE) {
+    RETURN_FALSE;
+  }
+
+  GUESTFS_ZEND_FETCH_RESOURCE (g, guestfs_h *, z_g,
+                               PHP_GUESTFS_HANDLE_RES_NAME, res_guestfs_h);
+  if (g == NULL) {
+    RETURN_FALSE;
+  }
+
+  if (strlen (device) != device_size) {
+    fprintf (stderr, "libguestfs: cryptsetup_open: parameter 'device' contains embedded ASCII NUL.\n");
+    RETURN_FALSE;
+  }
+
+  if (strlen (key) != key_size) {
+    fprintf (stderr, "libguestfs: cryptsetup_open: parameter 'key' contains embedded ASCII NUL.\n");
+    RETURN_FALSE;
+  }
+
+  if (strlen (mapname) != mapname_size) {
+    fprintf (stderr, "libguestfs: cryptsetup_open: parameter 'mapname' contains embedded ASCII NUL.\n");
+    RETURN_FALSE;
+  }
+
+  if (optargs_t_readonly != (zend_bool)-1) {
+    optargs_s.readonly = optargs_t_readonly;
+    optargs_s.bitmask |= GUESTFS_CRYPTSETUP_OPEN_READONLY_BITMASK;
+  }
+  if (optargs_t_crypttype != NULL) {
+    optargs_s.crypttype = optargs_t_crypttype;
+    optargs_s.bitmask |= GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK;
+  }
+
+  int r;
+  r = guestfs_cryptsetup_open_argv (g, device, key, mapname, optargs);
 
   if (r == -1) {
     RETURN_FALSE;

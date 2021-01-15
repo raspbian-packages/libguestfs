@@ -39,6 +39,7 @@ generator_built = \
 	blkid.mli \
 	btrfs.mli \
 	callbacks.ml \
+	cryptsetup.mli \
 	devsparts.mli \
 	file.mli \
 	filearch.mli \
@@ -49,6 +50,7 @@ generator_built = \
 	link.mli \
 	listfs.mli \
 	lvm.mli \
+	lvm_dm.mli \
 	md.mli \
 	mount.mli \
 	optgroups.ml \
@@ -270,6 +272,7 @@ SOURCES_MLI = \
 	btrfs.mli \
 	callbacks.mli \
 	chroot.mli \
+	cryptsetup.mli \
 	daemon.mli \
 	daemon_config.mli \
 	devsparts.mli \
@@ -288,6 +291,7 @@ SOURCES_MLI = \
 	link.mli \
 	listfs.mli \
 	lvm.mli \
+	lvm_dm.mli \
 	lvm_utils.mli \
 	md.mli \
 	mount.mli \
@@ -311,6 +315,7 @@ SOURCES_ML = \
 	chroot.ml \
 	blkid.ml \
 	btrfs.ml \
+	cryptsetup.ml \
 	devsparts.ml \
 	file.ml \
 	filearch.ml \
@@ -319,6 +324,7 @@ SOURCES_ML = \
 	link.ml \
 	lvm.ml \
 	lvm_utils.ml \
+	lvm_dm.ml \
 	findfs.ml \
 	md.ml \
 	mount.ml \

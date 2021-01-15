@@ -950,7 +950,7 @@ ocamlopt працювати разом», оскільки самі програ
 належному порядку.
 
  virt_customize_LINK = \
-     $(top_srcdir)/ocaml-link.sh -cclib '-lutils -lgnu' -- ...
+     $(top_builddir)/ocaml-link.sh -cclib '-lutils -lgnu' -- ...
 
 The actual rules, which you can examine in F<customize/Makefile.am>, are a
 little bit more complicated than this because they have to handle:
@@ -1056,21 +1056,6 @@ L<guestfs(3)/НУМЕРАЦІЯ ВЕРСІЙ LIBGUESTFS>.
 =item *
 
 Внесіть завершальні зміни до F<guestfs-release-notes.pod>
-
-=item *
-
-Надіслати і отримати дані з Zanata.
-
-Віддайте команду:
-
- zanata push
-
-щоб надіслати найсвіжіші файли POT на Zanata. Потім віддайте команду:
-
- ./zanata-pull.sh
-
-яка є обгорткою для команд отримання найсвіжіших перекладених файлів
-F<*.po>.
 
 =item *
 

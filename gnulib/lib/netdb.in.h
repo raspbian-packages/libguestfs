@@ -1,5 +1,5 @@
 /* Provide a netdb.h header file for systems lacking it (read: MinGW).
-   Copyright (C) 2008-2020 Free Software Foundation, Inc.
+   Copyright (C) 2008-2021 Free Software Foundation, Inc.
    Written by Simon Josefsson.
 
    This program is free software; you can redistribute it and/or modify
@@ -231,7 +231,9 @@ _GL_FUNCDECL_SYS (gai_strerror, const char *, (int ecode));
 #  endif
 _GL_CXXALIAS_SYS (gai_strerror, const char *, (int ecode));
 # endif
+# if __GLIBC__ >= 2
 _GL_CXXALIASWARN (gai_strerror);
+# endif
 
 # if !@HAVE_DECL_GETNAMEINFO@
 /* Convert socket address to printable node and service names.

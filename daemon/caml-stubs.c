@@ -315,6 +315,74 @@ do_case_sensitive_path (const char *path)
   CAMLreturnT (char *, ret); /* caller frees */
 }
 
+/* Wrapper for OCaml function ‘Cryptsetup.cryptsetup_close’. */
+int
+do_cryptsetup_close (const char *device)
+{
+  static const value *cb = NULL;
+  CAMLparam0 ();
+  CAMLlocal2 (v, retv);
+  CAMLlocalN (args, 1);
+
+  if (cb == NULL)
+    cb = caml_named_value ("Cryptsetup.cryptsetup_close");
+
+  args[0] = caml_copy_string (device);
+  retv = caml_callbackN_exn (*cb, 1, args);
+
+  if (Is_exception_result (retv)) {
+    retv = Extract_exception (retv);
+    guestfs_int_daemon_exn_to_reply_with_error ("cryptsetup_close", retv);
+    CAMLreturnT (int, -1);
+  }
+
+  CAMLreturnT (int, 0);
+}
+
+/* Wrapper for OCaml function ‘Cryptsetup.cryptsetup_open’. */
+int
+do_cryptsetup_open (const char *device,
+                    const char *key,
+                    const char *mapname,
+                    int readonly,
+                    const char *crypttype)
+{
+  static const value *cb = NULL;
+  CAMLparam0 ();
+  CAMLlocal2 (v, retv);
+  CAMLlocalN (args, 5);
+
+  if (cb == NULL)
+    cb = caml_named_value ("Cryptsetup.cryptsetup_open");
+
+  if ((optargs_bitmask & GUESTFS_CRYPTSETUP_OPEN_READONLY_BITMASK) == 0)
+    args[0] = Val_int (0); /* None */
+  else {
+    v = Val_bool (readonly);
+    args[0] = caml_alloc (1, 0);
+    Store_field (args[0], 0, v);
+  }
+  if ((optargs_bitmask & GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK) == 0)
+    args[1] = Val_int (0); /* None */
+  else {
+    v = caml_copy_string (crypttype);
+    args[1] = caml_alloc (1, 0);
+    Store_field (args[1], 0, v);
+  }
+  args[2] = caml_copy_string (device);
+  args[3] = caml_copy_string (key);
+  args[4] = caml_copy_string (mapname);
+  retv = caml_callbackN_exn (*cb, 5, args);
+
+  if (Is_exception_result (retv)) {
+    retv = Extract_exception (retv);
+    guestfs_int_daemon_exn_to_reply_with_error ("cryptsetup_open", retv);
+    CAMLreturnT (int, -1);
+  }
+
+  CAMLreturnT (int, 0);
+}
+
 /* Wrapper for OCaml function ‘File.file’. */
 char *
 do_file (const char *path)
@@ -1195,6 +1263,31 @@ do_list_devices (void)
   CAMLreturnT (char **, ret); /* caller frees */
 }
 
+/* Wrapper for OCaml function ‘Lvm_dm.list_dm_devices’. */
+char **
+do_list_dm_devices (void)
+{
+  static const value *cb = NULL;
+  CAMLparam0 ();
+  CAMLlocal2 (v, retv);
+  CAMLlocalN (args, 1);
+
+  if (cb == NULL)
+    cb = caml_named_value ("Lvm_dm.list_dm_devices");
+
+  args[0] = Val_unit;
+  retv = caml_callbackN_exn (*cb, 1, args);
+
+  if (Is_exception_result (retv)) {
+    retv = Extract_exception (retv);
+    guestfs_int_daemon_exn_to_reply_with_error ("list_dm_devices", retv);
+    CAMLreturnT (void *, NULL);
+  }
+
+  char **ret = guestfs_int_daemon_return_string_list (retv);
+  CAMLreturnT (char **, ret); /* caller frees */
+}
+
 /* Wrapper for OCaml function ‘Listfs.list_filesystems’. */
 char **
 do_list_filesystems (void)
@@ -1319,6 +1412,86 @@ do_list_partitions (void)
 
   char **ret = guestfs_int_daemon_return_string_list (retv);
   CAMLreturnT (char **, ret); /* caller frees */
+}
+
+/* Wrapper for OCaml function ‘Cryptsetup.luks_close’. */
+int
+do_luks_close (const char *device)
+{
+  static const value *cb = NULL;
+  CAMLparam0 ();
+  CAMLlocal2 (v, retv);
+  CAMLlocalN (args, 1);
+
+  if (cb == NULL)
+    cb = caml_named_value ("Cryptsetup.luks_close");
+
+  args[0] = caml_copy_string (device);
+  retv = caml_callbackN_exn (*cb, 1, args);
+
+  if (Is_exception_result (retv)) {
+    retv = Extract_exception (retv);
+    guestfs_int_daemon_exn_to_reply_with_error ("luks_close", retv);
+    CAMLreturnT (int, -1);
+  }
+
+  CAMLreturnT (int, 0);
+}
+
+/* Wrapper for OCaml function ‘Cryptsetup.luks_open’. */
+int
+do_luks_open (const char *device,
+              const char *key,
+              const char *mapname)
+{
+  static const value *cb = NULL;
+  CAMLparam0 ();
+  CAMLlocal2 (v, retv);
+  CAMLlocalN (args, 3);
+
+  if (cb == NULL)
+    cb = caml_named_value ("Cryptsetup.luks_open");
+
+  args[0] = caml_copy_string (device);
+  args[1] = caml_copy_string (key);
+  args[2] = caml_copy_string (mapname);
+  retv = caml_callbackN_exn (*cb, 3, args);
+
+  if (Is_exception_result (retv)) {
+    retv = Extract_exception (retv);
+    guestfs_int_daemon_exn_to_reply_with_error ("luks_open", retv);
+    CAMLreturnT (int, -1);
+  }
+
+  CAMLreturnT (int, 0);
+}
+
+/* Wrapper for OCaml function ‘Cryptsetup.luks_open_ro’. */
+int
+do_luks_open_ro (const char *device,
+                 const char *key,
+                 const char *mapname)
+{
+  static const value *cb = NULL;
+  CAMLparam0 ();
+  CAMLlocal2 (v, retv);
+  CAMLlocalN (args, 3);
+
+  if (cb == NULL)
+    cb = caml_named_value ("Cryptsetup.luks_open_ro");
+
+  args[0] = caml_copy_string (device);
+  args[1] = caml_copy_string (key);
+  args[2] = caml_copy_string (mapname);
+  retv = caml_callbackN_exn (*cb, 3, args);
+
+  if (Is_exception_result (retv)) {
+    retv = Extract_exception (retv);
+    guestfs_int_daemon_exn_to_reply_with_error ("luks_open_ro", retv);
+    CAMLreturnT (int, -1);
+  }
+
+  CAMLreturnT (int, 0);
 }
 
 /* Wrapper for OCaml function ‘Lvm.lvs’. */

@@ -1,6 +1,7 @@
 /00gnulib.m4
 /absolute-header.m4
 /accept4.m4
+/access.m4
 /alloca.m4
 /arpa_inet_h.m4
 /asm-underscore.m4
@@ -13,14 +14,15 @@
 /closedir.m4
 /close.m4
 /codeset.m4
+/creat.m4
 /ctype.m4
 /dirent_h.m4
 /dirfd.m4
-/dirname.m4
 /double-slash-root.m4
 /d-type.m4
 /dup2.m4
 /dup.m4
+/eaccess.m4
 /eealloc.m4
 /environ.m4
 /errno_h.m4
@@ -35,6 +37,7 @@
 /fcntl-o.m4
 /fdopen.m4
 /filenamecat.m4
+/findprog-in.m4
 /flexmember.m4
 /float_h.m4
 /fnmatch_h.m4
@@ -54,6 +57,7 @@
 /getopt.m4
 /getpagesize.m4
 /getprogname.m4
+/getrandom.m4
 /gettime.m4
 /gettimeofday.m4
 /glob_h.m4
@@ -71,7 +75,6 @@
 /inttostr.m4
 /inttypes_h.m4
 /inttypes.m4
-/inttypes-pri.m4
 /ioctl.m4
 /isblank.m4
 /langinfo_h.m4
@@ -86,7 +89,6 @@
 /localename.m4
 /locale-tr.m4
 /locale-zh.m4
-/localtime-buffer.m4
 /lock.m4
 /lseek.m4
 /lstat.m4
@@ -127,6 +129,7 @@
 /open-slash.m4
 /pathmax.m4
 /perror.m4
+/pid_t.m4
 /pipe2.m4
 /pipe.m4
 /posix_spawn.m4
@@ -182,6 +185,7 @@
 /stdint.m4
 /stdio_h.m4
 /stdlib_h.m4
+/stpcpy.m4
 /strchrnul.m4
 /strdup.m4
 /strerror.m4
@@ -195,6 +199,7 @@
 /symlinkat.m4
 /symlink.m4
 /sys_ioctl_h.m4
+/sys_random_h.m4
 /sys_select_h.m4
 /sys_socket_h.m4
 /sys_stat_h.m4
@@ -235,6 +240,8 @@
 /wctomb.m4
 /wctype_h.m4
 /wint_t.m4
+/wmemchr.m4
+/wmempcpy.m4
 /write.m4
 /xalloc.m4
 /xsize.m4

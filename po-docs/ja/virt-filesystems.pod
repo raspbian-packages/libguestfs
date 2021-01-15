@@ -188,10 +188,7 @@ auto-detection for F<another.img>.
 
 I<--long> モードでは、読みやすい形式で容量を表示します。
 
-=item B<--keys-from-stdin>
-
-Read key or passphrase parameters from stdin.  The default is to try to read
-passphrases from the user by opening F</dev/tty>.
+__INCLUDE:keys-from-stdin-option.pod__
 
 =item B<-l>
 

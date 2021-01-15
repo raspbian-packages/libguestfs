@@ -8,10 +8,10 @@ Subject: Generate tarballs for supermin appliance using reproducible
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/appliance/Makefile.am b/appliance/Makefile.am
-index bad5d9d..0c15893 100644
+index a213e12..7c3f78f 100644
 --- a/appliance/Makefile.am
 +++ b/appliance/Makefile.am
-@@ -90,7 +90,7 @@ supermin.d/daemon.tar.gz: ../daemon/guestfsd
+@@ -113,7 +113,7 @@ supermin.d/daemon.tar.gz: ../daemon/guestfsd
  	rm -rf tmp-d
  	mkdir -p tmp-d$(DAEMON_SUPERMIN_DIR) tmp-d/etc
  	ln ../daemon/guestfsd tmp-d$(DAEMON_SUPERMIN_DIR)/guestfsd
@@ -20,7 +20,7 @@ index bad5d9d..0c15893 100644
  	rm -r tmp-d
  	mv $@-t $@
  
-@@ -111,7 +111,7 @@ supermin.d/hostfiles: hostfiles.in Makefile
+@@ -134,7 +134,7 @@ supermin.d/hostfiles: hostfiles.in Makefile
  
  supermin.d/init.tar.gz: init
  	rm -f $@ $@-t
@@ -29,7 +29,7 @@ index bad5d9d..0c15893 100644
  	mv $@-t $@
  
  # We should put this file in /lib/udev/rules.d, but put it in /etc so
-@@ -121,7 +121,7 @@ supermin.d/udev-rules.tar.gz: 99-guestfs-serial.rules
+@@ -144,7 +144,7 @@ supermin.d/udev-rules.tar.gz: 99-guestfs-serial.rules
  	rm -rf tmp-u
  	mkdir -p tmp-u/etc/udev/rules.d
  	for f in $^; do ln $$f tmp-u/etc/udev/rules.d/$$(basename $$f); done

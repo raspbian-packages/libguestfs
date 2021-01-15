@@ -190,34 +190,34 @@ func return_hashtable (argv **C.char) map[string]string {
 /* XXX Events/callbacks not yet implemented. */
 
 type Application struct {
-    app_name string
-    app_display_name string
-    app_epoch int32
-    app_version string
-    app_release string
-    app_install_path string
-    app_trans_path string
-    app_publisher string
-    app_url string
-    app_source_package string
-    app_summary string
-    app_description string
+    App_name string
+    App_display_name string
+    App_epoch int32
+    App_version string
+    App_release string
+    App_install_path string
+    App_trans_path string
+    App_publisher string
+    App_url string
+    App_source_package string
+    App_summary string
+    App_description string
 }
 
 func return_Application (c *C.struct_guestfs_application) *Application {
     r := Application{}
-    r.app_name = C.GoString (c.app_name)
-    r.app_display_name = C.GoString (c.app_display_name)
-    r.app_epoch = int32 (c.app_epoch)
-    r.app_version = C.GoString (c.app_version)
-    r.app_release = C.GoString (c.app_release)
-    r.app_install_path = C.GoString (c.app_install_path)
-    r.app_trans_path = C.GoString (c.app_trans_path)
-    r.app_publisher = C.GoString (c.app_publisher)
-    r.app_url = C.GoString (c.app_url)
-    r.app_source_package = C.GoString (c.app_source_package)
-    r.app_summary = C.GoString (c.app_summary)
-    r.app_description = C.GoString (c.app_description)
+    r.App_name = C.GoString (c.app_name)
+    r.App_display_name = C.GoString (c.app_display_name)
+    r.App_epoch = int32 (c.app_epoch)
+    r.App_version = C.GoString (c.app_version)
+    r.App_release = C.GoString (c.app_release)
+    r.App_install_path = C.GoString (c.app_install_path)
+    r.App_trans_path = C.GoString (c.app_trans_path)
+    r.App_publisher = C.GoString (c.app_publisher)
+    r.App_url = C.GoString (c.app_url)
+    r.App_source_package = C.GoString (c.app_source_package)
+    r.App_summary = C.GoString (c.app_summary)
+    r.App_description = C.GoString (c.app_description)
     return &r
 }
 
@@ -233,44 +233,44 @@ func return_Application_list (c *C.struct_guestfs_application_list) *[]Applicati
 }
 
 type Application2 struct {
-    app2_name string
-    app2_display_name string
-    app2_epoch int32
-    app2_version string
-    app2_release string
-    app2_arch string
-    app2_install_path string
-    app2_trans_path string
-    app2_publisher string
-    app2_url string
-    app2_source_package string
-    app2_summary string
-    app2_description string
-    app2_spare1 string
-    app2_spare2 string
-    app2_spare3 string
-    app2_spare4 string
+    App2_name string
+    App2_display_name string
+    App2_epoch int32
+    App2_version string
+    App2_release string
+    App2_arch string
+    App2_install_path string
+    App2_trans_path string
+    App2_publisher string
+    App2_url string
+    App2_source_package string
+    App2_summary string
+    App2_description string
+    App2_spare1 string
+    App2_spare2 string
+    App2_spare3 string
+    App2_spare4 string
 }
 
 func return_Application2 (c *C.struct_guestfs_application2) *Application2 {
     r := Application2{}
-    r.app2_name = C.GoString (c.app2_name)
-    r.app2_display_name = C.GoString (c.app2_display_name)
-    r.app2_epoch = int32 (c.app2_epoch)
-    r.app2_version = C.GoString (c.app2_version)
-    r.app2_release = C.GoString (c.app2_release)
-    r.app2_arch = C.GoString (c.app2_arch)
-    r.app2_install_path = C.GoString (c.app2_install_path)
-    r.app2_trans_path = C.GoString (c.app2_trans_path)
-    r.app2_publisher = C.GoString (c.app2_publisher)
-    r.app2_url = C.GoString (c.app2_url)
-    r.app2_source_package = C.GoString (c.app2_source_package)
-    r.app2_summary = C.GoString (c.app2_summary)
-    r.app2_description = C.GoString (c.app2_description)
-    r.app2_spare1 = C.GoString (c.app2_spare1)
-    r.app2_spare2 = C.GoString (c.app2_spare2)
-    r.app2_spare3 = C.GoString (c.app2_spare3)
-    r.app2_spare4 = C.GoString (c.app2_spare4)
+    r.App2_name = C.GoString (c.app2_name)
+    r.App2_display_name = C.GoString (c.app2_display_name)
+    r.App2_epoch = int32 (c.app2_epoch)
+    r.App2_version = C.GoString (c.app2_version)
+    r.App2_release = C.GoString (c.app2_release)
+    r.App2_arch = C.GoString (c.app2_arch)
+    r.App2_install_path = C.GoString (c.app2_install_path)
+    r.App2_trans_path = C.GoString (c.app2_trans_path)
+    r.App2_publisher = C.GoString (c.app2_publisher)
+    r.App2_url = C.GoString (c.app2_url)
+    r.App2_source_package = C.GoString (c.app2_source_package)
+    r.App2_summary = C.GoString (c.app2_summary)
+    r.App2_description = C.GoString (c.app2_description)
+    r.App2_spare1 = C.GoString (c.app2_spare1)
+    r.App2_spare2 = C.GoString (c.app2_spare2)
+    r.App2_spare3 = C.GoString (c.app2_spare3)
+    r.App2_spare4 = C.GoString (c.app2_spare4)
     return &r
 }
 
@@ -286,20 +286,20 @@ func return_Application2_list (c *C.struct_guestfs_application2_list) *[]Applica
 }
 
 type BTRFSBalance struct {
-    btrfsbalance_status string
-    btrfsbalance_total uint64
-    btrfsbalance_balanced uint64
-    btrfsbalance_considered uint64
-    btrfsbalance_left uint64
+    Btrfsbalance_status string
+    Btrfsbalance_total uint64
+    Btrfsbalance_balanced uint64
+    Btrfsbalance_considered uint64
+    Btrfsbalance_left uint64
 }
 
 func return_BTRFSBalance (c *C.struct_guestfs_btrfsbalance) *BTRFSBalance {
     r := BTRFSBalance{}
-    r.btrfsbalance_status = C.GoString (c.btrfsbalance_status)
-    r.btrfsbalance_total = uint64 (c.btrfsbalance_total)
-    r.btrfsbalance_balanced = uint64 (c.btrfsbalance_balanced)
-    r.btrfsbalance_considered = uint64 (c.btrfsbalance_considered)
-    r.btrfsbalance_left = uint64 (c.btrfsbalance_left)
+    r.Btrfsbalance_status = C.GoString (c.btrfsbalance_status)
+    r.Btrfsbalance_total = uint64 (c.btrfsbalance_total)
+    r.Btrfsbalance_balanced = uint64 (c.btrfsbalance_balanced)
+    r.Btrfsbalance_considered = uint64 (c.btrfsbalance_considered)
+    r.Btrfsbalance_left = uint64 (c.btrfsbalance_left)
     return &r
 }
 
@@ -315,16 +315,16 @@ func return_BTRFSBalance_list (c *C.struct_guestfs_btrfsbalance_list) *[]BTRFSBa
 }
 
 type BTRFSQgroup struct {
-    btrfsqgroup_id string
-    btrfsqgroup_rfer uint64
-    btrfsqgroup_excl uint64
+    Btrfsqgroup_id string
+    Btrfsqgroup_rfer uint64
+    Btrfsqgroup_excl uint64
 }
 
 func return_BTRFSQgroup (c *C.struct_guestfs_btrfsqgroup) *BTRFSQgroup {
     r := BTRFSQgroup{}
-    r.btrfsqgroup_id = C.GoString (c.btrfsqgroup_id)
-    r.btrfsqgroup_rfer = uint64 (c.btrfsqgroup_rfer)
-    r.btrfsqgroup_excl = uint64 (c.btrfsqgroup_excl)
+    r.Btrfsqgroup_id = C.GoString (c.btrfsqgroup_id)
+    r.Btrfsqgroup_rfer = uint64 (c.btrfsqgroup_rfer)
+    r.Btrfsqgroup_excl = uint64 (c.btrfsqgroup_excl)
     return &r
 }
 
@@ -340,40 +340,40 @@ func return_BTRFSQgroup_list (c *C.struct_guestfs_btrfsqgroup_list) *[]BTRFSQgro
 }
 
 type BTRFSScrub struct {
-    btrfsscrub_data_extents_scrubbed uint64
-    btrfsscrub_tree_extents_scrubbed uint64
-    btrfsscrub_data_bytes_scrubbed uint64
-    btrfsscrub_tree_bytes_scrubbed uint64
-    btrfsscrub_read_errors uint64
-    btrfsscrub_csum_errors uint64
-    btrfsscrub_verify_errors uint64
-    btrfsscrub_no_csum uint64
-    btrfsscrub_csum_discards uint64
-    btrfsscrub_super_errors uint64
-    btrfsscrub_malloc_errors uint64
-    btrfsscrub_uncorrectable_errors uint64
-    btrfsscrub_unverified_errors uint64
-    btrfsscrub_corrected_errors uint64
-    btrfsscrub_last_physical uint64
+    Btrfsscrub_data_extents_scrubbed uint64
+    Btrfsscrub_tree_extents_scrubbed uint64
+    Btrfsscrub_data_bytes_scrubbed uint64
+    Btrfsscrub_tree_bytes_scrubbed uint64
+    Btrfsscrub_read_errors uint64
+    Btrfsscrub_csum_errors uint64
+    Btrfsscrub_verify_errors uint64
+    Btrfsscrub_no_csum uint64
+    Btrfsscrub_csum_discards uint64
+    Btrfsscrub_super_errors uint64
+    Btrfsscrub_malloc_errors uint64
+    Btrfsscrub_uncorrectable_errors uint64
+    Btrfsscrub_unverified_errors uint64
+    Btrfsscrub_corrected_errors uint64
+    Btrfsscrub_last_physical uint64
 }
 
 func return_BTRFSScrub (c *C.struct_guestfs_btrfsscrub) *BTRFSScrub {
     r := BTRFSScrub{}
-    r.btrfsscrub_data_extents_scrubbed = uint64 (c.btrfsscrub_data_extents_scrubbed)
-    r.btrfsscrub_tree_extents_scrubbed = uint64 (c.btrfsscrub_tree_extents_scrubbed)
-    r.btrfsscrub_data_bytes_scrubbed = uint64 (c.btrfsscrub_data_bytes_scrubbed)
-    r.btrfsscrub_tree_bytes_scrubbed = uint64 (c.btrfsscrub_tree_bytes_scrubbed)
-    r.btrfsscrub_read_errors = uint64 (c.btrfsscrub_read_errors)
-    r.btrfsscrub_csum_errors = uint64 (c.btrfsscrub_csum_errors)
-    r.btrfsscrub_verify_errors = uint64 (c.btrfsscrub_verify_errors)
-    r.btrfsscrub_no_csum = uint64 (c.btrfsscrub_no_csum)
-    r.btrfsscrub_csum_discards = uint64 (c.btrfsscrub_csum_discards)
-    r.btrfsscrub_super_errors = uint64 (c.btrfsscrub_super_errors)
-    r.btrfsscrub_malloc_errors = uint64 (c.btrfsscrub_malloc_errors)
-    r.btrfsscrub_uncorrectable_errors = uint64 (c.btrfsscrub_uncorrectable_errors)
-    r.btrfsscrub_unverified_errors = uint64 (c.btrfsscrub_unverified_errors)
-    r.btrfsscrub_corrected_errors = uint64 (c.btrfsscrub_corrected_errors)
-    r.btrfsscrub_last_physical = uint64 (c.btrfsscrub_last_physical)
+    r.Btrfsscrub_data_extents_scrubbed = uint64 (c.btrfsscrub_data_extents_scrubbed)
+    r.Btrfsscrub_tree_extents_scrubbed = uint64 (c.btrfsscrub_tree_extents_scrubbed)
+    r.Btrfsscrub_data_bytes_scrubbed = uint64 (c.btrfsscrub_data_bytes_scrubbed)
+    r.Btrfsscrub_tree_bytes_scrubbed = uint64 (c.btrfsscrub_tree_bytes_scrubbed)
+    r.Btrfsscrub_read_errors = uint64 (c.btrfsscrub_read_errors)
+    r.Btrfsscrub_csum_errors = uint64 (c.btrfsscrub_csum_errors)
+    r.Btrfsscrub_verify_errors = uint64 (c.btrfsscrub_verify_errors)
+    r.Btrfsscrub_no_csum = uint64 (c.btrfsscrub_no_csum)
+    r.Btrfsscrub_csum_discards = uint64 (c.btrfsscrub_csum_discards)
+    r.Btrfsscrub_super_errors = uint64 (c.btrfsscrub_super_errors)
+    r.Btrfsscrub_malloc_errors = uint64 (c.btrfsscrub_malloc_errors)
+    r.Btrfsscrub_uncorrectable_errors = uint64 (c.btrfsscrub_uncorrectable_errors)
+    r.Btrfsscrub_unverified_errors = uint64 (c.btrfsscrub_unverified_errors)
+    r.Btrfsscrub_corrected_errors = uint64 (c.btrfsscrub_corrected_errors)
+    r.Btrfsscrub_last_physical = uint64 (c.btrfsscrub_last_physical)
     return &r
 }
 
@@ -389,16 +389,16 @@ func return_BTRFSScrub_list (c *C.struct_guestfs_btrfsscrub_list) *[]BTRFSScrub 
 }
 
 type BTRFSSubvolume struct {
-    btrfssubvolume_id uint64
-    btrfssubvolume_top_level_id uint64
-    btrfssubvolume_path string
+    Btrfssubvolume_id uint64
+    Btrfssubvolume_top_level_id uint64
+    Btrfssubvolume_path string
 }
 
 func return_BTRFSSubvolume (c *C.struct_guestfs_btrfssubvolume) *BTRFSSubvolume {
     r := BTRFSSubvolume{}
-    r.btrfssubvolume_id = uint64 (c.btrfssubvolume_id)
-    r.btrfssubvolume_top_level_id = uint64 (c.btrfssubvolume_top_level_id)
-    r.btrfssubvolume_path = C.GoString (c.btrfssubvolume_path)
+    r.Btrfssubvolume_id = uint64 (c.btrfssubvolume_id)
+    r.Btrfssubvolume_top_level_id = uint64 (c.btrfssubvolume_top_level_id)
+    r.Btrfssubvolume_path = C.GoString (c.btrfssubvolume_path)
     return &r
 }
 
@@ -414,16 +414,16 @@ func return_BTRFSSubvolume_list (c *C.struct_guestfs_btrfssubvolume_list) *[]BTR
 }
 
 type Dirent struct {
-    ino int64
-    ftyp byte
-    name string
+    Ino int64
+    Ftyp byte
+    Name string
 }
 
 func return_Dirent (c *C.struct_guestfs_dirent) *Dirent {
     r := Dirent{}
-    r.ino = int64 (c.ino)
-    r.ftyp = byte (c.ftyp)
-    r.name = C.GoString (c.name)
+    r.Ino = int64 (c.ino)
+    r.Ftyp = byte (c.ftyp)
+    r.Name = C.GoString (c.name)
     return &r
 }
 
@@ -439,12 +439,12 @@ func return_Dirent_list (c *C.struct_guestfs_dirent_list) *[]Dirent {
 }
 
 type HivexNode struct {
-    hivex_node_h int64
+    Hivex_node_h int64
 }
 
 func return_HivexNode (c *C.struct_guestfs_hivex_node) *HivexNode {
     r := HivexNode{}
-    r.hivex_node_h = int64 (c.hivex_node_h)
+    r.Hivex_node_h = int64 (c.hivex_node_h)
     return &r
 }
 
@@ -460,12 +460,12 @@ func return_HivexNode_list (c *C.struct_guestfs_hivex_node_list) *[]HivexNode {
 }
 
 type HivexValue struct {
-    hivex_value_h int64
+    Hivex_value_h int64
 }
 
 func return_HivexValue (c *C.struct_guestfs_hivex_value) *HivexValue {
     r := HivexValue{}
-    r.hivex_value_h = int64 (c.hivex_value_h)
+    r.Hivex_value_h = int64 (c.hivex_value_h)
     return &r
 }
 
@@ -481,18 +481,18 @@ func return_HivexValue_list (c *C.struct_guestfs_hivex_value_list) *[]HivexValue
 }
 
 type INotifyEvent struct {
-    in_wd int64
-    in_mask uint32
-    in_cookie uint32
-    in_name string
+    In_wd int64
+    In_mask uint32
+    In_cookie uint32
+    In_name string
 }
 
 func return_INotifyEvent (c *C.struct_guestfs_inotify_event) *INotifyEvent {
     r := INotifyEvent{}
-    r.in_wd = int64 (c.in_wd)
-    r.in_mask = uint32 (c.in_mask)
-    r.in_cookie = uint32 (c.in_cookie)
-    r.in_name = C.GoString (c.in_name)
+    r.In_wd = int64 (c.in_wd)
+    r.In_mask = uint32 (c.in_mask)
+    r.In_cookie = uint32 (c.in_cookie)
+    r.In_name = C.GoString (c.in_name)
     return &r
 }
 
@@ -508,14 +508,14 @@ func return_INotifyEvent_list (c *C.struct_guestfs_inotify_event_list) *[]INotif
 }
 
 type IntBool struct {
-    i int32
-    b int32
+    I int32
+    B int32
 }
 
 func return_IntBool (c *C.struct_guestfs_int_bool) *IntBool {
     r := IntBool{}
-    r.i = int32 (c.i)
-    r.b = int32 (c.b)
+    r.I = int32 (c.i)
+    r.B = int32 (c.b)
     return &r
 }
 
@@ -531,44 +531,44 @@ func return_IntBool_list (c *C.struct_guestfs_int_bool_list) *[]IntBool {
 }
 
 type ISOInfo struct {
-    iso_system_id string
-    iso_volume_id string
-    iso_volume_space_size uint32
-    iso_volume_set_size uint32
-    iso_volume_sequence_number uint32
-    iso_logical_block_size uint32
-    iso_volume_set_id string
-    iso_publisher_id string
-    iso_data_preparer_id string
-    iso_application_id string
-    iso_copyright_file_id string
-    iso_abstract_file_id string
-    iso_bibliographic_file_id string
-    iso_volume_creation_t int64
-    iso_volume_modification_t int64
-    iso_volume_expiration_t int64
-    iso_volume_effective_t int64
+    Iso_system_id string
+    Iso_volume_id string
+    Iso_volume_space_size uint32
+    Iso_volume_set_size uint32
+    Iso_volume_sequence_number uint32
+    Iso_logical_block_size uint32
+    Iso_volume_set_id string
+    Iso_publisher_id string
+    Iso_data_preparer_id string
+    Iso_application_id string
+    Iso_copyright_file_id string
+    Iso_abstract_file_id string
+    Iso_bibliographic_file_id string
+    Iso_volume_creation_t int64
+    Iso_volume_modification_t int64
+    Iso_volume_expiration_t int64
+    Iso_volume_effective_t int64
 }
 
 func return_ISOInfo (c *C.struct_guestfs_isoinfo) *ISOInfo {
     r := ISOInfo{}
-    r.iso_system_id = C.GoString (c.iso_system_id)
-    r.iso_volume_id = C.GoString (c.iso_volume_id)
-    r.iso_volume_space_size = uint32 (c.iso_volume_space_size)
-    r.iso_volume_set_size = uint32 (c.iso_volume_set_size)
-    r.iso_volume_sequence_number = uint32 (c.iso_volume_sequence_number)
-    r.iso_logical_block_size = uint32 (c.iso_logical_block_size)
-    r.iso_volume_set_id = C.GoString (c.iso_volume_set_id)
-    r.iso_publisher_id = C.GoString (c.iso_publisher_id)
-    r.iso_data_preparer_id = C.GoString (c.iso_data_preparer_id)
-    r.iso_application_id = C.GoString (c.iso_application_id)
-    r.iso_copyright_file_id = C.GoString (c.iso_copyright_file_id)
-    r.iso_abstract_file_id = C.GoString (c.iso_abstract_file_id)
-    r.iso_bibliographic_file_id = C.GoString (c.iso_bibliographic_file_id)
-    r.iso_volume_creation_t = int64 (c.iso_volume_creation_t)
-    r.iso_volume_modification_t = int64 (c.iso_volume_modification_t)
-    r.iso_volume_expiration_t = int64 (c.iso_volume_expiration_t)
-    r.iso_volume_effective_t = int64 (c.iso_volume_effective_t)
+    r.Iso_system_id = C.GoString (c.iso_system_id)
+    r.Iso_volume_id = C.GoString (c.iso_volume_id)
+    r.Iso_volume_space_size = uint32 (c.iso_volume_space_size)
+    r.Iso_volume_set_size = uint32 (c.iso_volume_set_size)
+    r.Iso_volume_sequence_number = uint32 (c.iso_volume_sequence_number)
+    r.Iso_logical_block_size = uint32 (c.iso_logical_block_size)
+    r.Iso_volume_set_id = C.GoString (c.iso_volume_set_id)
+    r.Iso_publisher_id = C.GoString (c.iso_publisher_id)
+    r.Iso_data_preparer_id = C.GoString (c.iso_data_preparer_id)
+    r.Iso_application_id = C.GoString (c.iso_application_id)
+    r.Iso_copyright_file_id = C.GoString (c.iso_copyright_file_id)
+    r.Iso_abstract_file_id = C.GoString (c.iso_abstract_file_id)
+    r.Iso_bibliographic_file_id = C.GoString (c.iso_bibliographic_file_id)
+    r.Iso_volume_creation_t = int64 (c.iso_volume_creation_t)
+    r.Iso_volume_modification_t = int64 (c.iso_volume_modification_t)
+    r.Iso_volume_expiration_t = int64 (c.iso_volume_expiration_t)
+    r.Iso_volume_effective_t = int64 (c.iso_volume_effective_t)
     return &r
 }
 
@@ -584,43 +584,43 @@ func return_ISOInfo_list (c *C.struct_guestfs_isoinfo_list) *[]ISOInfo {
 }
 
 type LV struct {
-    lv_name string
-    lv_uuid [32]byte
-    lv_attr string
-    lv_major int64
-    lv_minor int64
-    lv_kernel_major int64
-    lv_kernel_minor int64
-    lv_size uint64
-    seg_count int64
-    origin string
-    snap_percent float32
-    copy_percent float32
-    move_pv string
-    lv_tags string
-    mirror_log string
-    modules string
+    Lv_name string
+    Lv_uuid [32]byte
+    Lv_attr string
+    Lv_major int64
+    Lv_minor int64
+    Lv_kernel_major int64
+    Lv_kernel_minor int64
+    Lv_size uint64
+    Seg_count int64
+    Origin string
+    Snap_percent float32
+    Copy_percent float32
+    Move_pv string
+    Lv_tags string
+    Mirror_log string
+    Modules string
 }
 
 func return_LV (c *C.struct_guestfs_lvm_lv) *LV {
     r := LV{}
-    r.lv_name = C.GoString (c.lv_name)
-    // XXX doesn't work XXX r.lv_uuid = C.GoBytes (c.lv_uuid, len (c.lv_uuid))
-    r.lv_uuid = [32]byte{}
-    r.lv_attr = C.GoString (c.lv_attr)
-    r.lv_major = int64 (c.lv_major)
-    r.lv_minor = int64 (c.lv_minor)
-    r.lv_kernel_major = int64 (c.lv_kernel_major)
-    r.lv_kernel_minor = int64 (c.lv_kernel_minor)
-    r.lv_size = uint64 (c.lv_size)
-    r.seg_count = int64 (c.seg_count)
-    r.origin = C.GoString (c.origin)
-    r.snap_percent = float32 (c.snap_percent)
-    r.copy_percent = float32 (c.copy_percent)
-    r.move_pv = C.GoString (c.move_pv)
-    r.lv_tags = C.GoString (c.lv_tags)
-    r.mirror_log = C.GoString (c.mirror_log)
-    r.modules = C.GoString (c.modules)
+    r.Lv_name = C.GoString (c.lv_name)
+    // XXX doesn't work XXX r.Lv_uuid = C.GoBytes (c.lv_uuid, len (c.lv_uuid))
+    r.Lv_uuid = [32]byte{}
+    r.Lv_attr = C.GoString (c.lv_attr)
+    r.Lv_major = int64 (c.lv_major)
+    r.Lv_minor = int64 (c.lv_minor)
+    r.Lv_kernel_major = int64 (c.lv_kernel_major)
+    r.Lv_kernel_minor = int64 (c.lv_kernel_minor)
+    r.Lv_size = uint64 (c.lv_size)
+    r.Seg_count = int64 (c.seg_count)
+    r.Origin = C.GoString (c.origin)
+    r.Snap_percent = float32 (c.snap_percent)
+    r.Copy_percent = float32 (c.copy_percent)
+    r.Move_pv = C.GoString (c.move_pv)
+    r.Lv_tags = C.GoString (c.lv_tags)
+    r.Mirror_log = C.GoString (c.mirror_log)
+    r.Modules = C.GoString (c.modules)
     return &r
 }
 
@@ -636,39 +636,39 @@ func return_LV_list (c *C.struct_guestfs_lvm_lv_list) *[]LV {
 }
 
 type PV struct {
-    pv_name string
-    pv_uuid [32]byte
-    pv_fmt string
-    pv_size uint64
-    dev_size uint64
-    pv_free uint64
-    pv_used uint64
-    pv_attr string
-    pv_pe_count int64
-    pv_pe_alloc_count int64
-    pv_tags string
-    pe_start uint64
-    pv_mda_count int64
-    pv_mda_free uint64
+    Pv_name string
+    Pv_uuid [32]byte
+    Pv_fmt string
+    Pv_size uint64
+    Dev_size uint64
+    Pv_free uint64
+    Pv_used uint64
+    Pv_attr string
+    Pv_pe_count int64
+    Pv_pe_alloc_count int64
+    Pv_tags string
+    Pe_start uint64
+    Pv_mda_count int64
+    Pv_mda_free uint64
 }
 
 func return_PV (c *C.struct_guestfs_lvm_pv) *PV {
     r := PV{}
-    r.pv_name = C.GoString (c.pv_name)
-    // XXX doesn't work XXX r.pv_uuid = C.GoBytes (c.pv_uuid, len (c.pv_uuid))
-    r.pv_uuid = [32]byte{}
-    r.pv_fmt = C.GoString (c.pv_fmt)
-    r.pv_size = uint64 (c.pv_size)
-    r.dev_size = uint64 (c.dev_size)
-    r.pv_free = uint64 (c.pv_free)
-    r.pv_used = uint64 (c.pv_used)
-    r.pv_attr = C.GoString (c.pv_attr)
-    r.pv_pe_count = int64 (c.pv_pe_count)
-    r.pv_pe_alloc_count = int64 (c.pv_pe_alloc_count)
-    r.pv_tags = C.GoString (c.pv_tags)
-    r.pe_start = uint64 (c.pe_start)
-    r.pv_mda_count = int64 (c.pv_mda_count)
-    r.pv_mda_free = uint64 (c.pv_mda_free)
+    r.Pv_name = C.GoString (c.pv_name)
+    // XXX doesn't work XXX r.Pv_uuid = C.GoBytes (c.pv_uuid, len (c.pv_uuid))
+    r.Pv_uuid = [32]byte{}
+    r.Pv_fmt = C.GoString (c.pv_fmt)
+    r.Pv_size = uint64 (c.pv_size)
+    r.Dev_size = uint64 (c.dev_size)
+    r.Pv_free = uint64 (c.pv_free)
+    r.Pv_used = uint64 (c.pv_used)
+    r.Pv_attr = C.GoString (c.pv_attr)
+    r.Pv_pe_count = int64 (c.pv_pe_count)
+    r.Pv_pe_alloc_count = int64 (c.pv_pe_alloc_count)
+    r.Pv_tags = C.GoString (c.pv_tags)
+    r.Pe_start = uint64 (c.pe_start)
+    r.Pv_mda_count = int64 (c.pv_mda_count)
+    r.Pv_mda_free = uint64 (c.pv_mda_free)
     return &r
 }
 
@@ -684,49 +684,49 @@ func return_PV_list (c *C.struct_guestfs_lvm_pv_list) *[]PV {
 }
 
 type VG struct {
-    vg_name string
-    vg_uuid [32]byte
-    vg_fmt string
-    vg_attr string
-    vg_size uint64
-    vg_free uint64
-    vg_sysid string
-    vg_extent_size uint64
-    vg_extent_count int64
-    vg_free_count int64
-    max_lv int64
-    max_pv int64
-    pv_count int64
-    lv_count int64
-    snap_count int64
-    vg_seqno int64
-    vg_tags string
-    vg_mda_count int64
-    vg_mda_free uint64
+    Vg_name string
+    Vg_uuid [32]byte
+    Vg_fmt string
+    Vg_attr string
+    Vg_size uint64
+    Vg_free uint64
+    Vg_sysid string
+    Vg_extent_size uint64
+    Vg_extent_count int64
+    Vg_free_count int64
+    Max_lv int64
+    Max_pv int64
+    Pv_count int64
+    Lv_count int64
+    Snap_count int64
+    Vg_seqno int64
+    Vg_tags string
+    Vg_mda_count int64
+    Vg_mda_free uint64
 }
 
 func return_VG (c *C.struct_guestfs_lvm_vg) *VG {
     r := VG{}
-    r.vg_name = C.GoString (c.vg_name)
-    // XXX doesn't work XXX r.vg_uuid = C.GoBytes (c.vg_uuid, len (c.vg_uuid))
-    r.vg_uuid = [32]byte{}
-    r.vg_fmt = C.GoString (c.vg_fmt)
-    r.vg_attr = C.GoString (c.vg_attr)
-    r.vg_size = uint64 (c.vg_size)
-    r.vg_free = uint64 (c.vg_free)
-    r.vg_sysid = C.GoString (c.vg_sysid)
-    r.vg_extent_size = uint64 (c.vg_extent_size)
-    r.vg_extent_count = int64 (c.vg_extent_count)
-    r.vg_free_count = int64 (c.vg_free_count)
-    r.max_lv = int64 (c.max_lv)
-    r.max_pv = int64 (c.max_pv)
-    r.pv_count = int64 (c.pv_count)
-    r.lv_count = int64 (c.lv_count)
-    r.snap_count = int64 (c.snap_count)
-    r.vg_seqno = int64 (c.vg_seqno)
-    r.vg_tags = C.GoString (c.vg_tags)
-    r.vg_mda_count = int64 (c.vg_mda_count)
-    r.vg_mda_free = uint64 (c.vg_mda_free)
+    r.Vg_name = C.GoString (c.vg_name)
+    // XXX doesn't work XXX r.Vg_uuid = C.GoBytes (c.vg_uuid, len (c.vg_uuid))
+    r.Vg_uuid = [32]byte{}
+    r.Vg_fmt = C.GoString (c.vg_fmt)
+    r.Vg_attr = C.GoString (c.vg_attr)
+    r.Vg_size = uint64 (c.vg_size)
+    r.Vg_free = uint64 (c.vg_free)
+    r.Vg_sysid = C.GoString (c.vg_sysid)
+    r.Vg_extent_size = uint64 (c.vg_extent_size)
+    r.Vg_extent_count = int64 (c.vg_extent_count)
+    r.Vg_free_count = int64 (c.vg_free_count)
+    r.Max_lv = int64 (c.max_lv)
+    r.Max_pv = int64 (c.max_pv)
+    r.Pv_count = int64 (c.pv_count)
+    r.Lv_count = int64 (c.lv_count)
+    r.Snap_count = int64 (c.snap_count)
+    r.Vg_seqno = int64 (c.vg_seqno)
+    r.Vg_tags = C.GoString (c.vg_tags)
+    r.Vg_mda_count = int64 (c.vg_mda_count)
+    r.Vg_mda_free = uint64 (c.vg_mda_free)
     return &r
 }
 
@@ -742,16 +742,16 @@ func return_VG_list (c *C.struct_guestfs_lvm_vg_list) *[]VG {
 }
 
 type MDStat struct {
-    mdstat_device string
-    mdstat_index int32
-    mdstat_flags string
+    Mdstat_device string
+    Mdstat_index int32
+    Mdstat_flags string
 }
 
 func return_MDStat (c *C.struct_guestfs_mdstat) *MDStat {
     r := MDStat{}
-    r.mdstat_device = C.GoString (c.mdstat_device)
-    r.mdstat_index = int32 (c.mdstat_index)
-    r.mdstat_flags = C.GoString (c.mdstat_flags)
+    r.Mdstat_device = C.GoString (c.mdstat_device)
+    r.Mdstat_index = int32 (c.mdstat_index)
+    r.Mdstat_flags = C.GoString (c.mdstat_flags)
     return &r
 }
 
@@ -767,18 +767,18 @@ func return_MDStat_list (c *C.struct_guestfs_mdstat_list) *[]MDStat {
 }
 
 type Partition struct {
-    part_num int32
-    part_start uint64
-    part_end uint64
-    part_size uint64
+    Part_num int32
+    Part_start uint64
+    Part_end uint64
+    Part_size uint64
 }
 
 func return_Partition (c *C.struct_guestfs_partition) *Partition {
     r := Partition{}
-    r.part_num = int32 (c.part_num)
-    r.part_start = uint64 (c.part_start)
-    r.part_end = uint64 (c.part_end)
-    r.part_size = uint64 (c.part_size)
+    r.Part_num = int32 (c.part_num)
+    r.Part_start = uint64 (c.part_start)
+    r.Part_end = uint64 (c.part_end)
+    r.Part_size = uint64 (c.part_size)
     return &r
 }
 
@@ -794,36 +794,36 @@ func return_Partition_list (c *C.struct_guestfs_partition_list) *[]Partition {
 }
 
 type Stat struct {
-    dev int64
-    ino int64
-    mode int64
-    nlink int64
-    uid int64
-    gid int64
-    rdev int64
-    size int64
-    blksize int64
-    blocks int64
-    atime int64
-    mtime int64
-    ctime int64
+    Dev int64
+    Ino int64
+    Mode int64
+    Nlink int64
+    Uid int64
+    Gid int64
+    Rdev int64
+    Size int64
+    Blksize int64
+    Blocks int64
+    Atime int64
+    Mtime int64
+    Ctime int64
 }
 
 func return_Stat (c *C.struct_guestfs_stat) *Stat {
     r := Stat{}
-    r.dev = int64 (c.dev)
-    r.ino = int64 (c.ino)
-    r.mode = int64 (c.mode)
-    r.nlink = int64 (c.nlink)
-    r.uid = int64 (c.uid)
-    r.gid = int64 (c.gid)
-    r.rdev = int64 (c.rdev)
-    r.size = int64 (c.size)
-    r.blksize = int64 (c.blksize)
-    r.blocks = int64 (c.blocks)
-    r.atime = int64 (c.atime)
-    r.mtime = int64 (c.mtime)
-    r.ctime = int64 (c.ctime)
+    r.Dev = int64 (c.dev)
+    r.Ino = int64 (c.ino)
+    r.Mode = int64 (c.mode)
+    r.Nlink = int64 (c.nlink)
+    r.Uid = int64 (c.uid)
+    r.Gid = int64 (c.gid)
+    r.Rdev = int64 (c.rdev)
+    r.Size = int64 (c.size)
+    r.Blksize = int64 (c.blksize)
+    r.Blocks = int64 (c.blocks)
+    r.Atime = int64 (c.atime)
+    r.Mtime = int64 (c.mtime)
+    r.Ctime = int64 (c.ctime)
     return &r
 }
 
@@ -839,54 +839,54 @@ func return_Stat_list (c *C.struct_guestfs_stat_list) *[]Stat {
 }
 
 type StatNS struct {
-    st_dev int64
-    st_ino int64
-    st_mode int64
-    st_nlink int64
-    st_uid int64
-    st_gid int64
-    st_rdev int64
-    st_size int64
-    st_blksize int64
-    st_blocks int64
-    st_atime_sec int64
-    st_atime_nsec int64
-    st_mtime_sec int64
-    st_mtime_nsec int64
-    st_ctime_sec int64
-    st_ctime_nsec int64
-    st_spare1 int64
-    st_spare2 int64
-    st_spare3 int64
-    st_spare4 int64
-    st_spare5 int64
-    st_spare6 int64
+    St_dev int64
+    St_ino int64
+    St_mode int64
+    St_nlink int64
+    St_uid int64
+    St_gid int64
+    St_rdev int64
+    St_size int64
+    St_blksize int64
+    St_blocks int64
+    St_atime_sec int64
+    St_atime_nsec int64
+    St_mtime_sec int64
+    St_mtime_nsec int64
+    St_ctime_sec int64
+    St_ctime_nsec int64
+    St_spare1 int64
+    St_spare2 int64
+    St_spare3 int64
+    St_spare4 int64
+    St_spare5 int64
+    St_spare6 int64
 }
 
 func return_StatNS (c *C.struct_guestfs_statns) *StatNS {
     r := StatNS{}
-    r.st_dev = int64 (c.st_dev)
-    r.st_ino = int64 (c.st_ino)
-    r.st_mode = int64 (c.st_mode)
-    r.st_nlink = int64 (c.st_nlink)
-    r.st_uid = int64 (c.st_uid)
-    r.st_gid = int64 (c.st_gid)
-    r.st_rdev = int64 (c.st_rdev)
-    r.st_size = int64 (c.st_size)
-    r.st_blksize = int64 (c.st_blksize)
-    r.st_blocks = int64 (c.st_blocks)
-    r.st_atime_sec = int64 (c.st_atime_sec)
-    r.st_atime_nsec = int64 (c.st_atime_nsec)
-    r.st_mtime_sec = int64 (c.st_mtime_sec)
-    r.st_mtime_nsec = int64 (c.st_mtime_nsec)
-    r.st_ctime_sec = int64 (c.st_ctime_sec)
-    r.st_ctime_nsec = int64 (c.st_ctime_nsec)
-    r.st_spare1 = int64 (c.st_spare1)
-    r.st_spare2 = int64 (c.st_spare2)
-    r.st_spare3 = int64 (c.st_spare3)
-    r.st_spare4 = int64 (c.st_spare4)
-    r.st_spare5 = int64 (c.st_spare5)
-    r.st_spare6 = int64 (c.st_spare6)
+    r.St_dev = int64 (c.st_dev)
+    r.St_ino = int64 (c.st_ino)
+    r.St_mode = int64 (c.st_mode)
+    r.St_nlink = int64 (c.st_nlink)
+    r.St_uid = int64 (c.st_uid)
+    r.St_gid = int64 (c.st_gid)
+    r.St_rdev = int64 (c.st_rdev)
+    r.St_size = int64 (c.st_size)
+    r.St_blksize = int64 (c.st_blksize)
+    r.St_blocks = int64 (c.st_blocks)
+    r.St_atime_sec = int64 (c.st_atime_sec)
+    r.St_atime_nsec = int64 (c.st_atime_nsec)
+    r.St_mtime_sec = int64 (c.st_mtime_sec)
+    r.St_mtime_nsec = int64 (c.st_mtime_nsec)
+    r.St_ctime_sec = int64 (c.st_ctime_sec)
+    r.St_ctime_nsec = int64 (c.st_ctime_nsec)
+    r.St_spare1 = int64 (c.st_spare1)
+    r.St_spare2 = int64 (c.st_spare2)
+    r.St_spare3 = int64 (c.st_spare3)
+    r.St_spare4 = int64 (c.st_spare4)
+    r.St_spare5 = int64 (c.st_spare5)
+    r.St_spare6 = int64 (c.st_spare6)
     return &r
 }
 
@@ -902,32 +902,32 @@ func return_StatNS_list (c *C.struct_guestfs_statns_list) *[]StatNS {
 }
 
 type StatVFS struct {
-    bsize int64
-    frsize int64
-    blocks int64
-    bfree int64
-    bavail int64
-    files int64
-    ffree int64
-    favail int64
-    fsid int64
-    flag int64
-    namemax int64
+    Bsize int64
+    Frsize int64
+    Blocks int64
+    Bfree int64
+    Bavail int64
+    Files int64
+    Ffree int64
+    Favail int64
+    Fsid int64
+    Flag int64
+    Namemax int64
 }
 
 func return_StatVFS (c *C.struct_guestfs_statvfs) *StatVFS {
     r := StatVFS{}
-    r.bsize = int64 (c.bsize)
-    r.frsize = int64 (c.frsize)
-    r.blocks = int64 (c.blocks)
-    r.bfree = int64 (c.bfree)
-    r.bavail = int64 (c.bavail)
-    r.files = int64 (c.files)
-    r.ffree = int64 (c.ffree)
-    r.favail = int64 (c.favail)
-    r.fsid = int64 (c.fsid)
-    r.flag = int64 (c.flag)
-    r.namemax = int64 (c.namemax)
+    r.Bsize = int64 (c.bsize)
+    r.Frsize = int64 (c.frsize)
+    r.Blocks = int64 (c.blocks)
+    r.Bfree = int64 (c.bfree)
+    r.Bavail = int64 (c.bavail)
+    r.Files = int64 (c.files)
+    r.Ffree = int64 (c.ffree)
+    r.Favail = int64 (c.favail)
+    r.Fsid = int64 (c.fsid)
+    r.Flag = int64 (c.flag)
+    r.Namemax = int64 (c.namemax)
     return &r
 }
 
@@ -943,42 +943,42 @@ func return_StatVFS_list (c *C.struct_guestfs_statvfs_list) *[]StatVFS {
 }
 
 type TSKDirent struct {
-    tsk_inode uint64
-    tsk_type byte
-    tsk_size int64
-    tsk_name string
-    tsk_flags uint32
-    tsk_atime_sec int64
-    tsk_atime_nsec int64
-    tsk_mtime_sec int64
-    tsk_mtime_nsec int64
-    tsk_ctime_sec int64
-    tsk_ctime_nsec int64
-    tsk_crtime_sec int64
-    tsk_crtime_nsec int64
-    tsk_nlink int64
-    tsk_link string
-    tsk_spare1 int64
+    Tsk_inode uint64
+    Tsk_type byte
+    Tsk_size int64
+    Tsk_name string
+    Tsk_flags uint32
+    Tsk_atime_sec int64
+    Tsk_atime_nsec int64
+    Tsk_mtime_sec int64
+    Tsk_mtime_nsec int64
+    Tsk_ctime_sec int64
+    Tsk_ctime_nsec int64
+    Tsk_crtime_sec int64
+    Tsk_crtime_nsec int64
+    Tsk_nlink int64
+    Tsk_link string
+    Tsk_spare1 int64
 }
 
 func return_TSKDirent (c *C.struct_guestfs_tsk_dirent) *TSKDirent {
     r := TSKDirent{}
-    r.tsk_inode = uint64 (c.tsk_inode)
-    r.tsk_type = byte (c.tsk_type)
-    r.tsk_size = int64 (c.tsk_size)
-    r.tsk_name = C.GoString (c.tsk_name)
-    r.tsk_flags = uint32 (c.tsk_flags)
-    r.tsk_atime_sec = int64 (c.tsk_atime_sec)
-    r.tsk_atime_nsec = int64 (c.tsk_atime_nsec)
-    r.tsk_mtime_sec = int64 (c.tsk_mtime_sec)
-    r.tsk_mtime_nsec = int64 (c.tsk_mtime_nsec)
-    r.tsk_ctime_sec = int64 (c.tsk_ctime_sec)
-    r.tsk_ctime_nsec = int64 (c.tsk_ctime_nsec)
-    r.tsk_crtime_sec = int64 (c.tsk_crtime_sec)
-    r.tsk_crtime_nsec = int64 (c.tsk_crtime_nsec)
-    r.tsk_nlink = int64 (c.tsk_nlink)
-    r.tsk_link = C.GoString (c.tsk_link)
-    r.tsk_spare1 = int64 (c.tsk_spare1)
+    r.Tsk_inode = uint64 (c.tsk_inode)
+    r.Tsk_type = byte (c.tsk_type)
+    r.Tsk_size = int64 (c.tsk_size)
+    r.Tsk_name = C.GoString (c.tsk_name)
+    r.Tsk_flags = uint32 (c.tsk_flags)
+    r.Tsk_atime_sec = int64 (c.tsk_atime_sec)
+    r.Tsk_atime_nsec = int64 (c.tsk_atime_nsec)
+    r.Tsk_mtime_sec = int64 (c.tsk_mtime_sec)
+    r.Tsk_mtime_nsec = int64 (c.tsk_mtime_nsec)
+    r.Tsk_ctime_sec = int64 (c.tsk_ctime_sec)
+    r.Tsk_ctime_nsec = int64 (c.tsk_ctime_nsec)
+    r.Tsk_crtime_sec = int64 (c.tsk_crtime_sec)
+    r.Tsk_crtime_nsec = int64 (c.tsk_crtime_nsec)
+    r.Tsk_nlink = int64 (c.tsk_nlink)
+    r.Tsk_link = C.GoString (c.tsk_link)
+    r.Tsk_spare1 = int64 (c.tsk_spare1)
     return &r
 }
 
@@ -994,18 +994,18 @@ func return_TSKDirent_list (c *C.struct_guestfs_tsk_dirent_list) *[]TSKDirent {
 }
 
 type UTSName struct {
-    uts_sysname string
-    uts_release string
-    uts_version string
-    uts_machine string
+    Uts_sysname string
+    Uts_release string
+    Uts_version string
+    Uts_machine string
 }
 
 func return_UTSName (c *C.struct_guestfs_utsname) *UTSName {
     r := UTSName{}
-    r.uts_sysname = C.GoString (c.uts_sysname)
-    r.uts_release = C.GoString (c.uts_release)
-    r.uts_version = C.GoString (c.uts_version)
-    r.uts_machine = C.GoString (c.uts_machine)
+    r.Uts_sysname = C.GoString (c.uts_sysname)
+    r.Uts_release = C.GoString (c.uts_release)
+    r.Uts_version = C.GoString (c.uts_version)
+    r.Uts_machine = C.GoString (c.uts_machine)
     return &r
 }
 
@@ -1021,18 +1021,18 @@ func return_UTSName_list (c *C.struct_guestfs_utsname_list) *[]UTSName {
 }
 
 type Version struct {
-    major int64
-    minor int64
-    release int64
-    extra string
+    Major int64
+    Minor int64
+    Release int64
+    Extra string
 }
 
 func return_Version (c *C.struct_guestfs_version) *Version {
     r := Version{}
-    r.major = int64 (c.major)
-    r.minor = int64 (c.minor)
-    r.release = int64 (c.release)
-    r.extra = C.GoString (c.extra)
+    r.Major = int64 (c.major)
+    r.Minor = int64 (c.minor)
+    r.Release = int64 (c.release)
+    r.Extra = C.GoString (c.extra)
     return &r
 }
 
@@ -1048,14 +1048,14 @@ func return_Version_list (c *C.struct_guestfs_version_list) *[]Version {
 }
 
 type XAttr struct {
-    attrname string
-    attrval []byte
+    Attrname string
+    Attrval []byte
 }
 
 func return_XAttr (c *C.struct_guestfs_xattr) *XAttr {
     r := XAttr{}
-    r.attrname = C.GoString (c.attrname)
-    r.attrval = C.GoBytes (unsafe.Pointer (c.attrval), C.int (c.attrval_len))
+    r.Attrname = C.GoString (c.attrname)
+    r.Attrval = C.GoBytes (unsafe.Pointer (c.attrval), C.int (c.attrval_len))
     return &r
 }
 
@@ -1071,60 +1071,60 @@ func return_XAttr_list (c *C.struct_guestfs_xattr_list) *[]XAttr {
 }
 
 type XFSInfo struct {
-    xfs_mntpoint string
-    xfs_inodesize uint32
-    xfs_agcount uint32
-    xfs_agsize uint32
-    xfs_sectsize uint32
-    xfs_attr uint32
-    xfs_blocksize uint32
-    xfs_datablocks uint64
-    xfs_imaxpct uint32
-    xfs_sunit uint32
-    xfs_swidth uint32
-    xfs_dirversion uint32
-    xfs_dirblocksize uint32
-    xfs_cimode uint32
-    xfs_logname string
-    xfs_logblocksize uint32
-    xfs_logblocks uint32
-    xfs_logversion uint32
-    xfs_logsectsize uint32
-    xfs_logsunit uint32
-    xfs_lazycount uint32
-    xfs_rtname string
-    xfs_rtextsize uint32
-    xfs_rtblocks uint64
-    xfs_rtextents uint64
+    Xfs_mntpoint string
+    Xfs_inodesize uint32
+    Xfs_agcount uint32
+    Xfs_agsize uint32
+    Xfs_sectsize uint32
+    Xfs_attr uint32
+    Xfs_blocksize uint32
+    Xfs_datablocks uint64
+    Xfs_imaxpct uint32
+    Xfs_sunit uint32
+    Xfs_swidth uint32
+    Xfs_dirversion uint32
+    Xfs_dirblocksize uint32
+    Xfs_cimode uint32
+    Xfs_logname string
+    Xfs_logblocksize uint32
+    Xfs_logblocks uint32
+    Xfs_logversion uint32
+    Xfs_logsectsize uint32
+    Xfs_logsunit uint32
+    Xfs_lazycount uint32
+    Xfs_rtname string
+    Xfs_rtextsize uint32
+    Xfs_rtblocks uint64
+    Xfs_rtextents uint64
 }
 
 func return_XFSInfo (c *C.struct_guestfs_xfsinfo) *XFSInfo {
     r := XFSInfo{}
-    r.xfs_mntpoint = C.GoString (c.xfs_mntpoint)
-    r.xfs_inodesize = uint32 (c.xfs_inodesize)
-    r.xfs_agcount = uint32 (c.xfs_agcount)
-    r.xfs_agsize = uint32 (c.xfs_agsize)
-    r.xfs_sectsize = uint32 (c.xfs_sectsize)
-    r.xfs_attr = uint32 (c.xfs_attr)
-    r.xfs_blocksize = uint32 (c.xfs_blocksize)
-    r.xfs_datablocks = uint64 (c.xfs_datablocks)
-    r.xfs_imaxpct = uint32 (c.xfs_imaxpct)
-    r.xfs_sunit = uint32 (c.xfs_sunit)
-    r.xfs_swidth = uint32 (c.xfs_swidth)
-    r.xfs_dirversion = uint32 (c.xfs_dirversion)
-    r.xfs_dirblocksize = uint32 (c.xfs_dirblocksize)
-    r.xfs_cimode = uint32 (c.xfs_cimode)
-    r.xfs_logname = C.GoString (c.xfs_logname)
-    r.xfs_logblocksize = uint32 (c.xfs_logblocksize)
-    r.xfs_logblocks = uint32 (c.xfs_logblocks)
-    r.xfs_logversion = uint32 (c.xfs_logversion)
-    r.xfs_logsectsize = uint32 (c.xfs_logsectsize)
-    r.xfs_logsunit = uint32 (c.xfs_logsunit)
-    r.xfs_lazycount = uint32 (c.xfs_lazycount)
-    r.xfs_rtname = C.GoString (c.xfs_rtname)
-    r.xfs_rtextsize = uint32 (c.xfs_rtextsize)
-    r.xfs_rtblocks = uint64 (c.xfs_rtblocks)
-    r.xfs_rtextents = uint64 (c.xfs_rtextents)
+    r.Xfs_mntpoint = C.GoString (c.xfs_mntpoint)
+    r.Xfs_inodesize = uint32 (c.xfs_inodesize)
+    r.Xfs_agcount = uint32 (c.xfs_agcount)
+    r.Xfs_agsize = uint32 (c.xfs_agsize)
+    r.Xfs_sectsize = uint32 (c.xfs_sectsize)
+    r.Xfs_attr = uint32 (c.xfs_attr)
+    r.Xfs_blocksize = uint32 (c.xfs_blocksize)
+    r.Xfs_datablocks = uint64 (c.xfs_datablocks)
+    r.Xfs_imaxpct = uint32 (c.xfs_imaxpct)
+    r.Xfs_sunit = uint32 (c.xfs_sunit)
+    r.Xfs_swidth = uint32 (c.xfs_swidth)
+    r.Xfs_dirversion = uint32 (c.xfs_dirversion)
+    r.Xfs_dirblocksize = uint32 (c.xfs_dirblocksize)
+    r.Xfs_cimode = uint32 (c.xfs_cimode)
+    r.Xfs_logname = C.GoString (c.xfs_logname)
+    r.Xfs_logblocksize = uint32 (c.xfs_logblocksize)
+    r.Xfs_logblocks = uint32 (c.xfs_logblocks)
+    r.Xfs_logversion = uint32 (c.xfs_logversion)
+    r.Xfs_logsectsize = uint32 (c.xfs_logsectsize)
+    r.Xfs_logsunit = uint32 (c.xfs_logsunit)
+    r.Xfs_lazycount = uint32 (c.xfs_lazycount)
+    r.Xfs_rtname = C.GoString (c.xfs_rtname)
+    r.Xfs_rtextsize = uint32 (c.xfs_rtextsize)
+    r.Xfs_rtblocks = uint64 (c.xfs_rtblocks)
+    r.Xfs_rtextents = uint64 (c.xfs_rtextents)
     return &r
 }
 
@@ -1140,14 +1140,14 @@ func return_XFSInfo_list (c *C.struct_guestfs_xfsinfo_list) *[]XFSInfo {
 }
 
 type YaraDetection struct {
-    yara_name string
-    yara_rule string
+    Yara_name string
+    Yara_rule string
 }
 
 func return_YaraDetection (c *C.struct_guestfs_yara_detection) *YaraDetection {
     r := YaraDetection{}
-    r.yara_name = C.GoString (c.yara_name)
-    r.yara_rule = C.GoString (c.yara_rule)
+    r.Yara_name = C.GoString (c.yara_name)
+    r.Yara_rule = C.GoString (c.yara_rule)
     return &r
 }
 
@@ -3909,6 +3909,68 @@ func (g *Guestfs) Cpio_out (directory string, cpiofile string, optargs *OptargsC
 
     if r == -1 {
         return get_error_from_handle (g, "cpio_out")
+    }
+    return nil
+}
+
+/* cryptsetup_close : close an encrypted device */
+func (g *Guestfs) Cryptsetup_close (device string) error {
+    if g.g == nil {
+        return closed_handle_error ("cryptsetup_close")
+    }
+
+    c_device := C.CString (device)
+    defer C.free (unsafe.Pointer (c_device))
+
+    r := C.guestfs_cryptsetup_close (g.g, c_device)
+
+    if r == -1 {
+        return get_error_from_handle (g, "cryptsetup_close")
+    }
+    return nil
+}
+
+/* Struct carrying optional arguments for Cryptsetup_open */
+type OptargsCryptsetup_open struct {
+    /* Readonly field is ignored unless Readonly_is_set == true */
+    Readonly_is_set bool
+    Readonly bool
+    /* Crypttype field is ignored unless Crypttype_is_set == true */
+    Crypttype_is_set bool
+    Crypttype string
+}
+
+/* cryptsetup_open : open an encrypted block device */
+func (g *Guestfs) Cryptsetup_open (device string, key string, mapname string, optargs *OptargsCryptsetup_open) error {
+    if g.g == nil {
+        return closed_handle_error ("cryptsetup_open")
+    }
+
+    c_device := C.CString (device)
+    defer C.free (unsafe.Pointer (c_device))
+
+    c_key := C.CString (key)
+    defer C.free (unsafe.Pointer (c_key))
+
+    c_mapname := C.CString (mapname)
+    defer C.free (unsafe.Pointer (c_mapname))
+    c_optargs := C.struct_guestfs_cryptsetup_open_argv{}
+    if optargs != nil {
+        if optargs.Readonly_is_set {
+            c_optargs.bitmask |= C.GUESTFS_CRYPTSETUP_OPEN_READONLY_BITMASK
+            if optargs.Readonly { c_optargs.readonly = 1 } else { c_optargs.readonly = 0}
+        }
+        if optargs.Crypttype_is_set {
+            c_optargs.bitmask |= C.GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK
+            c_optargs.crypttype = C.CString (optargs.Crypttype)
+            defer C.free (unsafe.Pointer (c_optargs.crypttype))
+        }
+    }
+
+    r := C.guestfs_cryptsetup_open_argv (g.g, c_device, c_key, c_mapname, &c_optargs)
+
+    if r == -1 {
+        return get_error_from_handle (g, "cryptsetup_open")
     }
     return nil
 }

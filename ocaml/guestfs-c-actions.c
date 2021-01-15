@@ -5600,6 +5600,103 @@ guestfs_int_ocaml_cpio_out (value gv, value formatv, value directoryv, value cpi
 }
 
 /* Automatically generated wrapper for function
+ * val cryptsetup_close : t -> string -> unit
+ */
+
+/* Emit prototype to appease gcc's -Wmissing-prototypes. */
+value guestfs_int_ocaml_cryptsetup_close (value gv, value devicev);
+
+value
+guestfs_int_ocaml_cryptsetup_close (value gv, value devicev)
+{
+  CAMLparam2 (gv, devicev);
+  CAMLlocal1 (rv);
+
+  guestfs_h *g = Guestfs_val (gv);
+  if (g == NULL)
+    guestfs_int_ocaml_raise_closed ("cryptsetup_close");
+
+  char *device;
+  device = strdup (String_val (devicev));
+  if (device == NULL) caml_raise_out_of_memory ();
+  int r;
+
+  caml_enter_blocking_section ();
+  r = guestfs_cryptsetup_close (g, device);
+  caml_leave_blocking_section ();
+  free (device);
+  if (r == -1)
+    guestfs_int_ocaml_raise_error (g, "cryptsetup_close");
+
+  rv = Val_unit;
+  CAMLreturn (rv);
+}
+
+/* Automatically generated wrapper for function
+ * val cryptsetup_open : t -> ?readonly:bool -> ?crypttype:string -> string -> string -> string -> unit
+ */
+
+/* Emit prototype to appease gcc's -Wmissing-prototypes. */
+value guestfs_int_ocaml_cryptsetup_open (value gv, value readonlyv, value crypttypev, value devicev, value keyv, value mapnamev);
+
+value
+guestfs_int_ocaml_cryptsetup_open (value gv, value readonlyv, value crypttypev, value devicev, value keyv, value mapnamev)
+{
+  CAMLparam5 (gv, readonlyv, crypttypev, devicev, keyv);
+  CAMLxparam1 (mapnamev);
+  CAMLlocal1 (rv);
+
+  guestfs_h *g = Guestfs_val (gv);
+  if (g == NULL)
+    guestfs_int_ocaml_raise_closed ("cryptsetup_open");
+
+  char *device;
+  device = strdup (String_val (devicev));
+  if (device == NULL) caml_raise_out_of_memory ();
+  char *key;
+  key = strdup (String_val (keyv));
+  if (key == NULL) caml_raise_out_of_memory ();
+  char *mapname;
+  mapname = strdup (String_val (mapnamev));
+  if (mapname == NULL) caml_raise_out_of_memory ();
+  struct guestfs_cryptsetup_open_argv optargs_s = { .bitmask = 0 };
+  struct guestfs_cryptsetup_open_argv *optargs = &optargs_s;
+  if (readonlyv != Val_int (0)) {
+    optargs_s.bitmask |= GUESTFS_CRYPTSETUP_OPEN_READONLY_BITMASK;
+    optargs_s.readonly = Bool_val (Field (readonlyv, 0));
+  }
+  if (crypttypev != Val_int (0)) {
+    optargs_s.bitmask |= GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK;
+    optargs_s.crypttype = strdup (String_val (Field (crypttypev, 0)));
+    if (optargs_s.crypttype == NULL) caml_raise_out_of_memory ();
+  }
+  int r;
+
+  caml_enter_blocking_section ();
+  r = guestfs_cryptsetup_open_argv (g, device, key, mapname, optargs);
+  caml_leave_blocking_section ();
+  free (device);
+  free (key);
+  free (mapname);
+  if (crypttypev != Val_int (0))
+    free ((char *) optargs_s.crypttype);
+  if (r == -1)
+    guestfs_int_ocaml_raise_error (g, "cryptsetup_open");
+
+  rv = Val_unit;
+  CAMLreturn (rv);
+}
+
+/* Emit prototype to appease gcc's -Wmissing-prototypes. */
+value guestfs_int_ocaml_cryptsetup_open_byte (value *argv, int argn);
+
+value
+guestfs_int_ocaml_cryptsetup_open_byte (value *argv, int argn ATTRIBUTE_UNUSED)
+{
+  return guestfs_int_ocaml_cryptsetup_open (argv[0], argv[1], argv[2], argv[3], argv[4], argv[5]);
+}
+
+/* Automatically generated wrapper for function
  * val dd : t -> string -> string -> unit
  */
 

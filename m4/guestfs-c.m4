@@ -92,7 +92,7 @@ dnl Now some warnings we want to enable and/or customize ...
 
 dnl Warn about large stack frames.  This does not include alloca and
 dnl variable length arrays.  Coverity warns about 10000 byte frames.
-gl_WARN_ADD([-Wframe-larger-than=5000])
+gl_WARN_ADD([-Wframe-larger-than=6000])
 
 dnl Warn about large stack frames, including estimates for alloca
 dnl and variable length arrays.
@@ -211,3 +211,10 @@ AC_ARG_ENABLE([gnulib-tests],
         [ENABLE_GNULIB_TESTS=yes])
 AM_CONDITIONAL([ENABLE_GNULIB_TESTS],[test "x$ENABLE_GNULIB_TESTS" = "xyes"])
 AC_MSG_RESULT([$ENABLE_GNULIB_TESTS])
+
+dnl Define this so that include/guestfs.h is included
+dnl instead of the possibly installed <guestfs.h>.  This is
+dnl only needed when compiling libguestfs itself.  It is
+dnl expanded in common/ submodule.  For other packages like
+dnl virt-v2v which also use common/ it is empty.
+AC_SUBST([INCLUDE_DIRECTORY], [-I\$\(top_srcdir\)/include])

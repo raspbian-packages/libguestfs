@@ -381,6 +381,12 @@ Libguestfs було додано до Gentoo 2012-07, автори —  Andreis 
 
  emerge libguestfs
 
+=item Mageia
+
+Libguestfs was added to Mageia in 2013-08. Do:
+
+ urpmi libguestfs
+
 =item SuSE
 
 Libguestfs було додано до сховищ пакунків SuSE у 2012 році, супровідник —

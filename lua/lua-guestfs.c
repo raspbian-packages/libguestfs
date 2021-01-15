@@ -3418,6 +3418,66 @@ guestfs_int_lua_cpio_out (lua_State *L)
 }
 
 static int
+guestfs_int_lua_cryptsetup_close (lua_State *L)
+{
+  int r;
+  struct userdata *u = get_handle (L, 1);
+  guestfs_h *g = u->g;
+  const char *device;
+
+  if (g == NULL)
+    return luaL_error (L, "Guestfs.%s: handle is closed",
+                       "cryptsetup_close");
+
+  device = luaL_checkstring (L, 2);
+
+  r = guestfs_cryptsetup_close (g, device);
+  if (r == -1)
+    return last_error (L, g);
+
+  return 0;
+}
+
+static int
+guestfs_int_lua_cryptsetup_open (lua_State *L)
+{
+  int r;
+  struct userdata *u = get_handle (L, 1);
+  guestfs_h *g = u->g;
+  const char *device;
+  const char *key;
+  const char *mapname;
+  struct guestfs_cryptsetup_open_argv optargs_s = { .bitmask = 0 };
+  struct guestfs_cryptsetup_open_argv *optargs = &optargs_s;
+
+  if (g == NULL)
+    return luaL_error (L, "Guestfs.%s: handle is closed",
+                       "cryptsetup_open");
+
+  device = luaL_checkstring (L, 2);
+  key = luaL_checkstring (L, 3);
+  mapname = luaL_checkstring (L, 4);
+
+  /* Check for optional arguments, encoded in a table. */
+  if (lua_type (L, 5) == LUA_TTABLE) {
+    OPTARG_IF_SET (5, "readonly",
+      optargs_s.bitmask |= GUESTFS_CRYPTSETUP_OPEN_READONLY_BITMASK;
+      optargs_s.readonly = lua_toboolean (L, -1);
+    );
+    OPTARG_IF_SET (5, "crypttype",
+      optargs_s.bitmask |= GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK;
+      optargs_s.crypttype = luaL_checkstring (L, -1);
+    );
+  }
+
+  r = guestfs_cryptsetup_open_argv (g, device, key, mapname, optargs);
+  if (r == -1)
+    return last_error (L, g);
+
+  return 0;
+}
+
+static int
 guestfs_int_lua_dd (lua_State *L)
 {
   int r;
@@ -17329,6 +17389,8 @@ static luaL_Reg methods[] = {
   { "cp_a", guestfs_int_lua_cp_a },
   { "cp_r", guestfs_int_lua_cp_r },
   { "cpio_out", guestfs_int_lua_cpio_out },
+  { "cryptsetup_close", guestfs_int_lua_cryptsetup_close },
+  { "cryptsetup_open", guestfs_int_lua_cryptsetup_open },
   { "dd", guestfs_int_lua_dd },
   { "debug", guestfs_int_lua_debug },
   { "debug_drives", guestfs_int_lua_debug_drives },

@@ -1,6 +1,6 @@
 /* Test for nonblocking read and write.
 
-   Copyright (C) 2011-2020 Free Software Foundation, Inc.
+   Copyright (C) 2011-2021 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ init_data (size_t data_block_size)
 #if ENABLE_DEBUGGING
 # include <stdarg.h>
 static int dbgfprintf (FILE *fp, const char *format, ...)
-                      _GL_ATTRIBUTE_FORMAT_PRINTF (2, 3);
+                      _GL_ATTRIBUTE_FORMAT_PRINTF_STANDARD (2, 3);
 static int
 dbgfprintf (FILE *fp, const char *format, ...)
 {

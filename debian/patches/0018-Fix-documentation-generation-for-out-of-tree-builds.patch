@@ -42,10 +42,10 @@ Subject: Fix documentation generation for out-of-tree builds
  36 files changed, 89 insertions(+), 89 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 596b926..877c20a 100644
+index 3df1b6a..a966046 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -371,7 +371,7 @@ installcheck-local: installcheck.sh
+@@ -370,7 +370,7 @@ installcheck-local: installcheck.sh
  # It should be noinst_MANS but that doesn't work.
  noinst_DATA += podwrapper.1
  podwrapper.1: podwrapper.pl
@@ -55,10 +55,10 @@ index 596b926..877c20a 100644
  	  --man $@-t \
  	  --license GPLv2+ \
 diff --git a/align/Makefile.am b/align/Makefile.am
-index 6ff4aa3..458806e 100644
+index a3a5d67..b6fb18d 100644
 --- a/align/Makefile.am
 +++ b/align/Makefile.am
-@@ -63,7 +63,7 @@ noinst_DATA = $(top_builddir)/website/virt-alignment-scan.1.html
+@@ -64,7 +64,7 @@ noinst_DATA = $(top_builddir)/website/virt-alignment-scan.1.html
  virt-alignment-scan.1 $(top_builddir)/website/virt-alignment-scan.1.html: stamp-virt-alignment-scan.pod
  
  stamp-virt-alignment-scan.pod: virt-alignment-scan.pod
@@ -68,10 +68,10 @@ index 6ff4aa3..458806e 100644
  	  --html $(top_builddir)/website/virt-alignment-scan.1.html \
  	  --path $(top_srcdir)/common/options \
 diff --git a/appliance/Makefile.am b/appliance/Makefile.am
-index b0533a7..8403afe 100644
+index 7204c95..ceecf7a 100644
 --- a/appliance/Makefile.am
 +++ b/appliance/Makefile.am
-@@ -142,7 +142,7 @@ man_MANS = libguestfs-make-fixed-appliance.1
+@@ -165,7 +165,7 @@ man_MANS = libguestfs-make-fixed-appliance.1
  libguestfs-make-fixed-appliance.1 $(top_builddir)/website/libguestfs-make-fixed-appliance.1.html: stamp-libguestfs-make-fixed-appliance.pod
  
  stamp-libguestfs-make-fixed-appliance.pod: libguestfs-make-fixed-appliance.pod
@@ -81,10 +81,10 @@ index b0533a7..8403afe 100644
  	  --html $(top_builddir)/website/libguestfs-make-fixed-appliance.1.html \
  	  --license GPLv2+ \
 diff --git a/builder/Makefile.am b/builder/Makefile.am
-index a41eb75..eec9610 100644
+index 5add6f8..33669fc 100644
 --- a/builder/Makefile.am
 +++ b/builder/Makefile.am
-@@ -264,7 +264,7 @@ noinst_DATA += $(top_builddir)/website/virt-builder.1.html
+@@ -265,7 +265,7 @@ noinst_DATA += $(top_builddir)/website/virt-builder.1.html
  virt-builder.1 $(top_builddir)/website/virt-builder.1.html: stamp-virt-builder.pod
  
  stamp-virt-builder.pod: virt-builder.pod $(top_srcdir)/common/mlcustomize/customize-synopsis.pod $(top_srcdir)/common/mlcustomize/customize-options.pod
@@ -93,7 +93,7 @@ index a41eb75..eec9610 100644
  	  --man virt-builder.1 \
  	  --html $(top_builddir)/website/virt-builder.1.html \
  	  --insert $(top_srcdir)/common/mlcustomize/customize-synopsis.pod:__CUSTOMIZE_SYNOPSIS__ \
-@@ -280,7 +280,7 @@ noinst_DATA += $(top_builddir)/website/virt-builder-repository.1.html
+@@ -281,7 +281,7 @@ noinst_DATA += $(top_builddir)/website/virt-builder-repository.1.html
  virt-builder-repository.1 $(top_builddir)/website/virt-builder-repository.1.html: stamp-virt-builder-repository.pod
  
  stamp-virt-builder-repository.pod: virt-builder-repository.pod
@@ -102,7 +102,7 @@ index a41eb75..eec9610 100644
  	  --man virt-builder-repository.1 \
  	  --html $(top_builddir)/website/virt-builder-repository.1.html \
  	  --license GPLv2+ \
-@@ -463,7 +463,7 @@ noinst_DATA += $(top_builddir)/website/virt-index-validate.1.html
+@@ -465,7 +465,7 @@ noinst_DATA += $(top_builddir)/website/virt-index-validate.1.html
  virt-index-validate.1 $(top_builddir)/website/virt-index-validate.1.html: stamp-virt-index-validate.pod
  
  stamp-virt-index-validate.pod: virt-index-validate.pod
@@ -112,10 +112,10 @@ index a41eb75..eec9610 100644
  	  --html $(top_builddir)/website/virt-index-validate.1.html \
  	  --license GPLv2+ \
 diff --git a/cat/Makefile.am b/cat/Makefile.am
-index bdc4f11..af2c6a2 100644
+index f6253fb..310756b 100644
 --- a/cat/Makefile.am
 +++ b/cat/Makefile.am
-@@ -185,7 +185,7 @@ noinst_DATA = \
+@@ -190,7 +190,7 @@ noinst_DATA = \
  virt-cat.1 $(top_builddir)/website/virt-cat.1.html: stamp-virt-cat.pod
  
  stamp-virt-cat.pod: virt-cat.pod
@@ -124,7 +124,7 @@ index bdc4f11..af2c6a2 100644
  	  --man virt-cat.1 \
  	  --html $(top_builddir)/website/virt-cat.1.html \
  	  --path $(top_srcdir)/common/options \
-@@ -197,7 +197,7 @@ stamp-virt-cat.pod: virt-cat.pod
+@@ -202,7 +202,7 @@ stamp-virt-cat.pod: virt-cat.pod
  virt-filesystems.1 $(top_builddir)/website/virt-filesystems.1.html: stamp-virt-filesystems.pod
  
  stamp-virt-filesystems.pod: virt-filesystems.pod
@@ -133,7 +133,7 @@ index bdc4f11..af2c6a2 100644
  	  --man virt-filesystems.1 \
  	  --html $(top_builddir)/website/virt-filesystems.1.html \
  	  --path $(top_srcdir)/common/options \
-@@ -209,7 +209,7 @@ stamp-virt-filesystems.pod: virt-filesystems.pod
+@@ -214,7 +214,7 @@ stamp-virt-filesystems.pod: virt-filesystems.pod
  virt-log.1 $(top_builddir)/website/virt-log.1.html: stamp-virt-log.pod
  
  stamp-virt-log.pod: virt-log.pod
@@ -142,7 +142,7 @@ index bdc4f11..af2c6a2 100644
  	  --man virt-log.1 \
  	  --html $(top_builddir)/website/virt-log.1.html \
  	  --path $(top_srcdir)/common/options \
-@@ -221,7 +221,7 @@ stamp-virt-log.pod: virt-log.pod
+@@ -226,7 +226,7 @@ stamp-virt-log.pod: virt-log.pod
  virt-ls.1 $(top_builddir)/website/virt-ls.1.html: stamp-virt-ls.pod
  
  stamp-virt-ls.pod: virt-ls.pod
@@ -151,7 +151,7 @@ index bdc4f11..af2c6a2 100644
  	  --man virt-ls.1 \
  	  --html $(top_builddir)/website/virt-ls.1.html \
  	  --path $(top_srcdir)/common/options \
-@@ -233,7 +233,7 @@ stamp-virt-ls.pod: virt-ls.pod
+@@ -238,7 +238,7 @@ stamp-virt-ls.pod: virt-ls.pod
  virt-tail.1 $(top_builddir)/website/virt-tail.1.html: stamp-virt-tail.pod
  
  stamp-virt-tail.pod: virt-tail.pod
@@ -161,10 +161,10 @@ index bdc4f11..af2c6a2 100644
  	  --html $(top_builddir)/website/virt-tail.1.html \
  	  --path $(top_srcdir)/common/options \
 diff --git a/customize/Makefile.am b/customize/Makefile.am
-index 6e5d540..26d1bbd 100644
+index c926687..f9f9f13 100644
 --- a/customize/Makefile.am
 +++ b/customize/Makefile.am
-@@ -199,8 +199,8 @@ noinst_DATA += $(top_builddir)/website/virt-customize.1.html
+@@ -200,8 +200,8 @@ noinst_DATA += $(top_builddir)/website/virt-customize.1.html
  
  virt-customize.1 $(top_builddir)/website/virt-customize.1.html: stamp-virt-customize.pod
  
@@ -176,10 +176,10 @@ index 6e5d540..26d1bbd 100644
  	  --html $(top_builddir)/website/virt-customize.1.html \
  	  --path $(top_srcdir)/common/options \
 diff --git a/daemon/Makefile.am b/daemon/Makefile.am
-index 98280c9..bd5b00f 100644
+index fb5b9ff..8125585 100644
 --- a/daemon/Makefile.am
 +++ b/daemon/Makefile.am
-@@ -459,7 +459,7 @@ noinst_DATA += $(top_builddir)/website/guestfsd.8.html
+@@ -465,7 +465,7 @@ noinst_DATA += $(top_builddir)/website/guestfsd.8.html
  guestfsd.8 $(top_builddir)/website/guestfsd.8.html: stamp-guestfsd.pod
  
  stamp-guestfsd.pod: guestfsd.pod
@@ -189,10 +189,10 @@ index 98280c9..bd5b00f 100644
  	  --man guestfsd.8 \
  	  --html $(top_builddir)/website/guestfsd.8.html \
 diff --git a/df/Makefile.am b/df/Makefile.am
-index 78dccda..034123e 100644
+index 4fc3e2e..582d272 100644
 --- a/df/Makefile.am
 +++ b/df/Makefile.am
-@@ -67,7 +67,7 @@ noinst_DATA = $(top_builddir)/website/virt-df.1.html
+@@ -68,7 +68,7 @@ noinst_DATA = $(top_builddir)/website/virt-df.1.html
  virt-df.1 $(top_builddir)/website/virt-df.1.html: stamp-virt-df.pod
  
  stamp-virt-df.pod: virt-df.pod
@@ -215,10 +215,10 @@ index ce742f7..a207c58 100644
  	  --html $(top_builddir)/website/virt-dib.1.html \
  	  --license GPLv2+ \
 diff --git a/diff/Makefile.am b/diff/Makefile.am
-index 2c82303..206eac6 100644
+index 60434fb..edfbd0c 100644
 --- a/diff/Makefile.am
 +++ b/diff/Makefile.am
-@@ -61,7 +61,7 @@ noinst_DATA = \
+@@ -62,7 +62,7 @@ noinst_DATA = \
  virt-diff.1 $(top_builddir)/website/virt-diff.1.html: stamp-virt-diff.pod
  
  stamp-virt-diff.pod: virt-diff.pod
@@ -228,10 +228,10 @@ index 2c82303..206eac6 100644
  	  --html $(top_builddir)/website/virt-diff.1.html \
  	  --path $(top_srcdir)/common/options \
 diff --git a/docs/Makefile.am b/docs/Makefile.am
-index d21057d..50db253 100644
+index 75a2e718..ea9e976 100644
 --- a/docs/Makefile.am
 +++ b/docs/Makefile.am
-@@ -118,7 +118,7 @@ noinst_DATA = \
+@@ -121,7 +121,7 @@ noinst_DATA = \
  guestfs-building.1 $(top_builddir)/website/guestfs-building.1.html: stamp-guestfs-building.pod
  
  stamp-guestfs-building.pod: guestfs-building.pod
@@ -240,7 +240,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-building.1 \
  	  --html $(top_builddir)/website/guestfs-building.1.html \
-@@ -129,7 +129,7 @@ stamp-guestfs-building.pod: guestfs-building.pod
+@@ -132,7 +132,7 @@ stamp-guestfs-building.pod: guestfs-building.pod
  guestfs-faq.1 $(top_builddir)/website/guestfs-faq.1.html: stamp-guestfs-faq.pod
  
  stamp-guestfs-faq.pod: guestfs-faq.pod
@@ -249,7 +249,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-faq.1 \
  	  --html $(top_builddir)/website/guestfs-faq.1.html \
-@@ -140,7 +140,7 @@ stamp-guestfs-faq.pod: guestfs-faq.pod
+@@ -143,7 +143,7 @@ stamp-guestfs-faq.pod: guestfs-faq.pod
  guestfs-hacking.1 $(top_builddir)/website/guestfs-hacking.1.html: stamp-guestfs-hacking.pod
  
  stamp-guestfs-hacking.pod: guestfs-hacking.pod internal-documentation.pod
@@ -258,7 +258,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-hacking.1 \
  	  --html $(top_builddir)/website/guestfs-hacking.1.html \
-@@ -162,7 +162,7 @@ internal-documentation.pod: $(source_files:%=$(top_srcdir)/%) $(srcdir)/make-int
+@@ -165,7 +165,7 @@ internal-documentation.pod: $(source_files:%=$(top_srcdir)/%) $(srcdir)/make-int
  guestfs-internals.1 $(top_builddir)/website/guestfs-internals.1.html: stamp-guestfs-internals.pod
  
  stamp-guestfs-internals.pod: guestfs-internals.pod
@@ -267,7 +267,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-internals.1 \
  	  --html $(top_builddir)/website/guestfs-internals.1.html \
-@@ -173,7 +173,7 @@ stamp-guestfs-internals.pod: guestfs-internals.pod
+@@ -176,7 +176,7 @@ stamp-guestfs-internals.pod: guestfs-internals.pod
  guestfs-performance.1 $(top_builddir)/website/guestfs-performance.1.html: stamp-guestfs-performance.pod
  
  stamp-guestfs-performance.pod: guestfs-performance.pod
@@ -276,7 +276,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-performance.1 \
  	  --html $(top_builddir)/website/guestfs-performance.1.html \
-@@ -184,7 +184,7 @@ stamp-guestfs-performance.pod: guestfs-performance.pod
+@@ -187,7 +187,7 @@ stamp-guestfs-performance.pod: guestfs-performance.pod
  guestfs-recipes.1 $(top_builddir)/website/guestfs-recipes.1.html: stamp-guestfs-recipes.pod
  
  stamp-guestfs-recipes.pod: guestfs-recipes.pod
@@ -285,7 +285,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-recipes.1 \
  	  --html $(top_builddir)/website/guestfs-recipes.1.html \
-@@ -195,7 +195,7 @@ stamp-guestfs-recipes.pod: guestfs-recipes.pod
+@@ -209,7 +209,7 @@ stamp-guestfs-release-notes-1.44.pod: guestfs-release-notes-1.44.pod
  guestfs-release-notes-1.42.1 guestfs-release-notes-1.42.txt $(top_builddir)/website/guestfs-release-notes-1.42.1.html: stamp-guestfs-release-notes-1.42.pod
  
  stamp-guestfs-release-notes-1.42.pod: guestfs-release-notes-1.42.pod
@@ -294,7 +294,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-release-notes-1.42.1 \
  	  --html $(top_builddir)/website/guestfs-release-notes-1.42.1.html \
-@@ -206,7 +206,7 @@ stamp-guestfs-release-notes-1.42.pod: guestfs-release-notes-1.42.pod
+@@ -220,7 +220,7 @@ stamp-guestfs-release-notes-1.42.pod: guestfs-release-notes-1.42.pod
  guestfs-release-notes-1.40.1 guestfs-release-notes-1.40.txt $(top_builddir)/website/guestfs-release-notes-1.40.1.html: stamp-guestfs-release-notes-1.40.pod
  
  stamp-guestfs-release-notes-1.40.pod: guestfs-release-notes-1.40.pod
@@ -303,7 +303,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-release-notes-1.40.1 \
  	  --html $(top_builddir)/website/guestfs-release-notes-1.40.1.html \
-@@ -217,7 +217,7 @@ stamp-guestfs-release-notes-1.40.pod: guestfs-release-notes-1.40.pod
+@@ -231,7 +231,7 @@ stamp-guestfs-release-notes-1.40.pod: guestfs-release-notes-1.40.pod
  guestfs-release-notes-1.38.1 guestfs-release-notes-1.38.txt $(top_builddir)/website/guestfs-release-notes-1.38.1.html: stamp-guestfs-release-notes-1.38.pod
  
  stamp-guestfs-release-notes-1.38.pod: guestfs-release-notes-1.38.pod
@@ -312,7 +312,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-release-notes-1.38.1 \
  	  --html $(top_builddir)/website/guestfs-release-notes-1.38.1.html \
-@@ -228,7 +228,7 @@ stamp-guestfs-release-notes-1.38.pod: guestfs-release-notes-1.38.pod
+@@ -242,7 +242,7 @@ stamp-guestfs-release-notes-1.38.pod: guestfs-release-notes-1.38.pod
  guestfs-release-notes-1.36.1 guestfs-release-notes-1.36.txt $(top_builddir)/website/guestfs-release-notes-1.36.1.html: stamp-guestfs-release-notes-1.36.pod
  
  stamp-guestfs-release-notes-1.36.pod: guestfs-release-notes-1.36.pod
@@ -321,7 +321,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-release-notes-1.36.1 \
  	  --html $(top_builddir)/website/guestfs-release-notes-1.36.1.html \
-@@ -239,7 +239,7 @@ stamp-guestfs-release-notes-1.36.pod: guestfs-release-notes-1.36.pod
+@@ -253,7 +253,7 @@ stamp-guestfs-release-notes-1.36.pod: guestfs-release-notes-1.36.pod
  guestfs-release-notes-1.34.1 guestfs-release-notes-1.34.txt $(top_builddir)/website/guestfs-release-notes-1.34.1.html: stamp-guestfs-release-notes-1.34.pod
  
  stamp-guestfs-release-notes-1.34.pod: guestfs-release-notes-1.34.pod
@@ -330,7 +330,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-release-notes-1.34.1 \
  	  --html $(top_builddir)/website/guestfs-release-notes-1.34.1.html \
-@@ -250,7 +250,7 @@ stamp-guestfs-release-notes-1.34.pod: guestfs-release-notes-1.34.pod
+@@ -264,7 +264,7 @@ stamp-guestfs-release-notes-1.34.pod: guestfs-release-notes-1.34.pod
  guestfs-release-notes-1.32.1 guestfs-release-notes-1.32.txt $(top_builddir)/website/guestfs-release-notes-1.32.1.html: stamp-guestfs-release-notes-1.32.pod
  
  stamp-guestfs-release-notes-1.32.pod: guestfs-release-notes-1.32.pod
@@ -339,7 +339,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-release-notes-1.32.1 \
  	  --html $(top_builddir)/website/guestfs-release-notes-1.32.1.html \
-@@ -261,7 +261,7 @@ stamp-guestfs-release-notes-1.32.pod: guestfs-release-notes-1.32.pod
+@@ -275,7 +275,7 @@ stamp-guestfs-release-notes-1.32.pod: guestfs-release-notes-1.32.pod
  guestfs-release-notes-1.30.1 guestfs-release-notes-1.30.txt $(top_builddir)/website/guestfs-release-notes-1.30.1.html: stamp-guestfs-release-notes-1.30.pod
  
  stamp-guestfs-release-notes-1.30.pod: guestfs-release-notes-1.30.pod
@@ -348,7 +348,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-release-notes-1.30.1 \
  	  --html $(top_builddir)/website/guestfs-release-notes-1.30.1.html \
-@@ -272,7 +272,7 @@ stamp-guestfs-release-notes-1.30.pod: guestfs-release-notes-1.30.pod
+@@ -286,7 +286,7 @@ stamp-guestfs-release-notes-1.30.pod: guestfs-release-notes-1.30.pod
  guestfs-release-notes-1.28.1 guestfs-release-notes-1.28.txt $(top_builddir)/website/guestfs-release-notes-1.28.1.html: stamp-guestfs-release-notes-1.28.pod
  
  stamp-guestfs-release-notes-1.28.pod: guestfs-release-notes-1.28.pod
@@ -357,7 +357,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-release-notes-1.28.1 \
  	  --html $(top_builddir)/website/guestfs-release-notes-1.28.1.html \
-@@ -283,7 +283,7 @@ stamp-guestfs-release-notes-1.28.pod: guestfs-release-notes-1.28.pod
+@@ -297,7 +297,7 @@ stamp-guestfs-release-notes-1.28.pod: guestfs-release-notes-1.28.pod
  guestfs-release-notes-1.26.1 guestfs-release-notes-1.26.txt $(top_builddir)/website/guestfs-release-notes-1.26.1.html: stamp-guestfs-release-notes-1.26.pod
  
  stamp-guestfs-release-notes-1.26.pod: guestfs-release-notes-1.26.pod
@@ -366,7 +366,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-release-notes-1.26.1 \
  	  --html $(top_builddir)/website/guestfs-release-notes-1.26.1.html \
-@@ -294,7 +294,7 @@ stamp-guestfs-release-notes-1.26.pod: guestfs-release-notes-1.26.pod
+@@ -308,7 +308,7 @@ stamp-guestfs-release-notes-1.26.pod: guestfs-release-notes-1.26.pod
  guestfs-release-notes-1.24.1 guestfs-release-notes-1.24.txt $(top_builddir)/website/guestfs-release-notes-1.24.1.html: stamp-guestfs-release-notes-1.24.pod
  
  stamp-guestfs-release-notes-1.24.pod: guestfs-release-notes-1.24.pod
@@ -375,7 +375,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-release-notes-1.24.1 \
  	  --html $(top_builddir)/website/guestfs-release-notes-1.24.1.html \
-@@ -305,7 +305,7 @@ stamp-guestfs-release-notes-1.24.pod: guestfs-release-notes-1.24.pod
+@@ -319,7 +319,7 @@ stamp-guestfs-release-notes-1.24.pod: guestfs-release-notes-1.24.pod
  guestfs-release-notes-1.22.1 guestfs-release-notes-1.22.txt $(top_builddir)/website/guestfs-release-notes-1.22.1.html: stamp-guestfs-release-notes-1.22.pod
  
  stamp-guestfs-release-notes-1.22.pod: guestfs-release-notes-1.22.pod
@@ -384,7 +384,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-release-notes-1.22.1 \
  	  --html $(top_builddir)/website/guestfs-release-notes-1.22.1.html \
-@@ -316,7 +316,7 @@ stamp-guestfs-release-notes-1.22.pod: guestfs-release-notes-1.22.pod
+@@ -330,7 +330,7 @@ stamp-guestfs-release-notes-1.22.pod: guestfs-release-notes-1.22.pod
  guestfs-release-notes-1.20.1 guestfs-release-notes-1.20.txt $(top_builddir)/website/guestfs-release-notes-1.20.1.html: stamp-guestfs-release-notes-1.20.pod
  
  stamp-guestfs-release-notes-1.20.pod: guestfs-release-notes-1.20.pod
@@ -393,7 +393,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-release-notes-1.20.1 \
  	  --html $(top_builddir)/website/guestfs-release-notes-1.20.1.html \
-@@ -327,7 +327,7 @@ stamp-guestfs-release-notes-1.20.pod: guestfs-release-notes-1.20.pod
+@@ -341,7 +341,7 @@ stamp-guestfs-release-notes-1.20.pod: guestfs-release-notes-1.20.pod
  guestfs-release-notes-1.18.1 guestfs-release-notes-1.18.txt $(top_builddir)/website/guestfs-release-notes-1.18.1.html: stamp-guestfs-release-notes-1.18.pod
  
  stamp-guestfs-release-notes-1.18.pod: guestfs-release-notes-1.18.pod
@@ -402,7 +402,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-release-notes-1.18.1 \
  	  --html $(top_builddir)/website/guestfs-release-notes-1.18.1.html \
-@@ -338,7 +338,7 @@ stamp-guestfs-release-notes-1.18.pod: guestfs-release-notes-1.18.pod
+@@ -352,7 +352,7 @@ stamp-guestfs-release-notes-1.18.pod: guestfs-release-notes-1.18.pod
  guestfs-release-notes-1.16.1 guestfs-release-notes-1.16.txt $(top_builddir)/website/guestfs-release-notes-1.16.1.html: stamp-guestfs-release-notes-1.16.pod
  
  stamp-guestfs-release-notes-1.16.pod: guestfs-release-notes-1.16.pod
@@ -411,7 +411,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-release-notes-1.16.1 \
  	  --html $(top_builddir)/website/guestfs-release-notes-1.16.1.html \
-@@ -349,7 +349,7 @@ stamp-guestfs-release-notes-1.16.pod: guestfs-release-notes-1.16.pod
+@@ -363,7 +363,7 @@ stamp-guestfs-release-notes-1.16.pod: guestfs-release-notes-1.16.pod
  guestfs-release-notes-1.14.1 guestfs-release-notes-1.14.txt $(top_builddir)/website/guestfs-release-notes-1.14.1.html: stamp-guestfs-release-notes-1.14.pod
  
  stamp-guestfs-release-notes-1.14.pod: guestfs-release-notes-1.14.pod
@@ -420,7 +420,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-release-notes-1.14.1 \
  	  --html $(top_builddir)/website/guestfs-release-notes-1.14.1.html \
-@@ -360,7 +360,7 @@ stamp-guestfs-release-notes-1.14.pod: guestfs-release-notes-1.14.pod
+@@ -374,7 +374,7 @@ stamp-guestfs-release-notes-1.14.pod: guestfs-release-notes-1.14.pod
  guestfs-release-notes-1.12.1 guestfs-release-notes-1.12.txt $(top_builddir)/website/guestfs-release-notes-1.12.1.html: stamp-guestfs-release-notes-1.12.pod
  
  stamp-guestfs-release-notes-1.12.pod: guestfs-release-notes-1.12.pod
@@ -429,7 +429,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-release-notes-1.12.1 \
  	  --html $(top_builddir)/website/guestfs-release-notes-1.12.1.html \
-@@ -371,7 +371,7 @@ stamp-guestfs-release-notes-1.12.pod: guestfs-release-notes-1.12.pod
+@@ -385,7 +385,7 @@ stamp-guestfs-release-notes-1.12.pod: guestfs-release-notes-1.12.pod
  guestfs-release-notes-1.10.1 guestfs-release-notes-1.10.txt $(top_builddir)/website/guestfs-release-notes-1.10.1.html: stamp-guestfs-release-notes-1.10.pod
  
  stamp-guestfs-release-notes-1.10.pod: guestfs-release-notes-1.10.pod
@@ -438,7 +438,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-release-notes-1.10.1 \
  	  --html $(top_builddir)/website/guestfs-release-notes-1.10.1.html \
-@@ -382,7 +382,7 @@ stamp-guestfs-release-notes-1.10.pod: guestfs-release-notes-1.10.pod
+@@ -396,7 +396,7 @@ stamp-guestfs-release-notes-1.10.pod: guestfs-release-notes-1.10.pod
  guestfs-release-notes-1.8.1 guestfs-release-notes-1.8.txt $(top_builddir)/website/guestfs-release-notes-1.8.1.html: stamp-guestfs-release-notes-1.8.pod
  
  stamp-guestfs-release-notes-1.8.pod: guestfs-release-notes-1.8.pod
@@ -447,7 +447,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-release-notes-1.8.1 \
  	  --html $(top_builddir)/website/guestfs-release-notes-1.8.1.html \
-@@ -393,7 +393,7 @@ stamp-guestfs-release-notes-1.8.pod: guestfs-release-notes-1.8.pod
+@@ -407,7 +407,7 @@ stamp-guestfs-release-notes-1.8.pod: guestfs-release-notes-1.8.pod
  guestfs-release-notes-1.6.1 guestfs-release-notes-1.6.txt $(top_builddir)/website/guestfs-release-notes-1.6.1.html: stamp-guestfs-release-notes-1.6.pod
  
  stamp-guestfs-release-notes-1.6.pod: guestfs-release-notes-1.6.pod
@@ -456,7 +456,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-release-notes-1.6.1 \
  	  --html $(top_builddir)/website/guestfs-release-notes-1.6.1.html \
-@@ -404,7 +404,7 @@ stamp-guestfs-release-notes-1.6.pod: guestfs-release-notes-1.6.pod
+@@ -418,7 +418,7 @@ stamp-guestfs-release-notes-1.6.pod: guestfs-release-notes-1.6.pod
  guestfs-release-notes-1.4.1 guestfs-release-notes-1.4.txt $(top_builddir)/website/guestfs-release-notes-1.4.1.html: stamp-guestfs-release-notes-1.4.pod
  
  stamp-guestfs-release-notes-1.4.pod: guestfs-release-notes-1.4.pod
@@ -465,7 +465,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-release-notes-1.4.1 \
  	  --html $(top_builddir)/website/guestfs-release-notes-1.4.1.html \
-@@ -415,7 +415,7 @@ stamp-guestfs-release-notes-1.4.pod: guestfs-release-notes-1.4.pod
+@@ -429,7 +429,7 @@ stamp-guestfs-release-notes-1.4.pod: guestfs-release-notes-1.4.pod
  guestfs-release-notes-historical.1 guestfs-release-notes-historical.txt $(top_builddir)/website/guestfs-release-notes-historical.1.html: stamp-guestfs-release-notes-historical.pod
  
  stamp-guestfs-release-notes-historical.pod: guestfs-release-notes-historical.pod
@@ -474,7 +474,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-release-notes-historical.1 \
  	  --html $(top_builddir)/website/guestfs-release-notes-historical.1.html \
-@@ -426,7 +426,7 @@ stamp-guestfs-release-notes-historical.pod: guestfs-release-notes-historical.pod
+@@ -440,7 +440,7 @@ stamp-guestfs-release-notes-historical.pod: guestfs-release-notes-historical.pod
  guestfs-security.1 $(top_builddir)/website/guestfs-security.1.html: stamp-guestfs-security.pod
  
  stamp-guestfs-security.pod: guestfs-security.pod
@@ -483,7 +483,7 @@ index d21057d..50db253 100644
  	  --section 1 \
  	  --man guestfs-security.1 \
  	  --html $(top_builddir)/website/guestfs-security.1.html \
-@@ -437,7 +437,7 @@ stamp-guestfs-security.pod: guestfs-security.pod
+@@ -451,7 +451,7 @@ stamp-guestfs-security.pod: guestfs-security.pod
  guestfs-testing.1 $(top_builddir)/website/guestfs-testing.1.html: stamp-guestfs-testing.pod
  
  stamp-guestfs-testing.pod: guestfs-testing.pod
@@ -493,10 +493,10 @@ index d21057d..50db253 100644
  	  --man guestfs-testing.1 \
  	  --html $(top_builddir)/website/guestfs-testing.1.html \
 diff --git a/edit/Makefile.am b/edit/Makefile.am
-index 9036006..a852808 100644
+index 3da5d27..aef99de 100644
 --- a/edit/Makefile.am
 +++ b/edit/Makefile.am
-@@ -59,7 +59,7 @@ noinst_DATA = $(top_builddir)/website/virt-edit.1.html
+@@ -60,7 +60,7 @@ noinst_DATA = $(top_builddir)/website/virt-edit.1.html
  virt-edit.1 $(top_builddir)/website/virt-edit.1.html: stamp-virt-edit.pod
  
  stamp-virt-edit.pod: virt-edit.pod
@@ -519,7 +519,7 @@ index da7fc43..2e9d1cc 100644
  	  --man guestfs-erlang.3 \
  	  --html $(top_builddir)/website/guestfs-erlang.3.html \
 diff --git a/examples/Makefile.am b/examples/Makefile.am
-index 6db9d13..ddbac76 100644
+index 3212840..3bc2ab3 100644
 --- a/examples/Makefile.am
 +++ b/examples/Makefile.am
 @@ -133,7 +133,7 @@ noinst_DATA = $(top_builddir)/website/guestfs-examples.3.html
@@ -532,10 +532,10 @@ index 6db9d13..ddbac76 100644
  	  --man guestfs-examples.3 \
  	  --html $(top_builddir)/website/guestfs-examples.3.html \
 diff --git a/fish/Makefile.am b/fish/Makefile.am
-index b714554..593724d 100644
+index d418c9a..685de69 100644
 --- a/fish/Makefile.am
 +++ b/fish/Makefile.am
-@@ -198,7 +198,7 @@ noinst_DATA = \
+@@ -200,7 +200,7 @@ noinst_DATA = \
  guestfish.1 $(top_builddir)/website/guestfish.1.html: stamp-guestfish.pod
  
  stamp-guestfish.pod: guestfish.pod guestfish-actions.pod guestfish-commands.pod guestfish-prepopts.pod
@@ -544,7 +544,7 @@ index b714554..593724d 100644
  	  --man guestfish.1 \
  	  --html $(top_builddir)/website/guestfish.1.html \
  	  --path $(srcdir) --path $(top_srcdir)/common/options \
-@@ -210,7 +210,7 @@ stamp-guestfish.pod: guestfish.pod guestfish-actions.pod guestfish-commands.pod
+@@ -212,7 +212,7 @@ stamp-guestfish.pod: guestfish.pod guestfish-actions.pod guestfish-commands.pod
  libguestfs-tools.conf.5 $(top_builddir)/website/libguestfs-tools.conf.5.html: stamp-libguestfs-tools.conf.pod
  
  stamp-libguestfs-tools.conf.pod: libguestfs-tools.conf.pod
@@ -553,7 +553,7 @@ index b714554..593724d 100644
  	  --section 5 \
  	  --man libguestfs-tools.conf.5 \
  	  --html $(top_builddir)/website/libguestfs-tools.conf.5.html \
-@@ -221,7 +221,7 @@ stamp-libguestfs-tools.conf.pod: libguestfs-tools.conf.pod
+@@ -223,7 +223,7 @@ stamp-libguestfs-tools.conf.pod: libguestfs-tools.conf.pod
  virt-copy-in.1 $(top_builddir)/website/virt-copy-in.1.html: stamp-virt-copy-in.pod
  
  stamp-virt-copy-in.pod: virt-copy-in.pod
@@ -562,7 +562,7 @@ index b714554..593724d 100644
  	  --man virt-copy-in.1 \
  	  --html $(top_builddir)/website/virt-copy-in.1.html \
  	  --license GPLv2+ \
-@@ -232,7 +232,7 @@ stamp-virt-copy-in.pod: virt-copy-in.pod
+@@ -234,7 +234,7 @@ stamp-virt-copy-in.pod: virt-copy-in.pod
  virt-copy-out.1 $(top_builddir)/website/virt-copy-out.1.html: stamp-virt-copy-out.pod
  
  stamp-virt-copy-out.pod: virt-copy-out.pod
@@ -571,7 +571,7 @@ index b714554..593724d 100644
  	  --man virt-copy-out.1 \
  	  --html $(top_builddir)/website/virt-copy-out.1.html \
  	  --license GPLv2+ \
-@@ -243,7 +243,7 @@ stamp-virt-copy-out.pod: virt-copy-out.pod
+@@ -245,7 +245,7 @@ stamp-virt-copy-out.pod: virt-copy-out.pod
  virt-tar-in.1 $(top_builddir)/website/virt-tar-in.1.html: stamp-virt-tar-in.pod
  
  stamp-virt-tar-in.pod: virt-tar-in.pod
@@ -580,7 +580,7 @@ index b714554..593724d 100644
  	  --man virt-tar-in.1 \
  	  --html $(top_builddir)/website/virt-tar-in.1.html \
  	  --license GPLv2+ \
-@@ -254,7 +254,7 @@ stamp-virt-tar-in.pod: virt-tar-in.pod
+@@ -256,7 +256,7 @@ stamp-virt-tar-in.pod: virt-tar-in.pod
  virt-tar-out.1 $(top_builddir)/website/virt-tar-out.1.html: stamp-virt-tar-out.pod
  
  stamp-virt-tar-out.pod: virt-tar-out.pod
@@ -590,10 +590,10 @@ index b714554..593724d 100644
  	  --html $(top_builddir)/website/virt-tar-out.1.html \
  	  --license GPLv2+ \
 diff --git a/format/Makefile.am b/format/Makefile.am
-index 01a04dd..4d24fe2 100644
+index 783f029..4f85ea8 100644
 --- a/format/Makefile.am
 +++ b/format/Makefile.am
-@@ -57,7 +57,7 @@ noinst_DATA = $(top_builddir)/website/virt-format.1.html
+@@ -58,7 +58,7 @@ noinst_DATA = $(top_builddir)/website/virt-format.1.html
  virt-format.1 $(top_builddir)/website/virt-format.1.html: stamp-virt-format.pod
  
  stamp-virt-format.pod: virt-format.pod
@@ -603,10 +603,10 @@ index 01a04dd..4d24fe2 100644
  	  --html $(top_builddir)/website/virt-format.1.html \
  	  --path $(top_srcdir)/common/options \
 diff --git a/fuse/Makefile.am b/fuse/Makefile.am
-index 35f5b44..d09dd2c 100644
+index 940eeff..b9626d3 100644
 --- a/fuse/Makefile.am
 +++ b/fuse/Makefile.am
-@@ -98,7 +98,7 @@ noinst_DATA = \
+@@ -100,7 +100,7 @@ noinst_DATA = \
  guestmount.1 $(top_builddir)/website/guestmount.1.html: stamp-guestmount.pod
  
  stamp-guestmount.pod: guestmount.pod
@@ -615,7 +615,7 @@ index 35f5b44..d09dd2c 100644
  	  --man guestmount.1 \
  	  --html $(top_builddir)/website/guestmount.1.html \
  	  --path $(top_srcdir)/common/options \
-@@ -110,7 +110,7 @@ stamp-guestmount.pod: guestmount.pod
+@@ -112,7 +112,7 @@ stamp-guestmount.pod: guestmount.pod
  guestunmount.1 $(top_builddir)/website/guestunmount.1.html: stamp-guestunmount.pod
  
  stamp-guestunmount.pod: guestunmount.pod
@@ -638,10 +638,10 @@ index bfc1195..2d7d7df 100644
  	  --html $(top_builddir)/website/virt-get-kernel.1.html \
  	  --path $(top_srcdir)/common/options \
 diff --git a/gobject/Makefile.am b/gobject/Makefile.am
-index c32cc8e..8fed946 100644
+index e4de150..8bd1c05 100644
 --- a/gobject/Makefile.am
 +++ b/gobject/Makefile.am
-@@ -132,7 +132,7 @@ noinst_DATA = $(top_builddir)/website/guestfs-gobject.3.html
+@@ -134,7 +134,7 @@ noinst_DATA = $(top_builddir)/website/guestfs-gobject.3.html
  guestfs-gobject.3 $(top_builddir)/website/guestfs-gobject.3.html: stamp-guestfs-gobject.pod
  
  stamp-guestfs-gobject.pod: guestfs-gobject.pod
@@ -664,10 +664,10 @@ index 88bab10..53493e4 100644
  	  --man guestfs-golang.3 \
  	  --html $(top_builddir)/website/guestfs-golang.3.html \
 diff --git a/inspector/Makefile.am b/inspector/Makefile.am
-index 162aae2..a8cd5a6 100644
+index 45aeea2..6b03337 100644
 --- a/inspector/Makefile.am
 +++ b/inspector/Makefile.am
-@@ -79,7 +79,7 @@ noinst_DATA = $(top_builddir)/website/virt-inspector.1.html
+@@ -80,7 +80,7 @@ noinst_DATA = $(top_builddir)/website/virt-inspector.1.html
  virt-inspector.1 $(top_builddir)/website/virt-inspector.1.html: stamp-virt-inspector.pod
  
  stamp-virt-inspector.pod: virt-inspector.pod
@@ -690,10 +690,10 @@ index c6767e6..00b35bc 100644
  	  --man guestfs-java.3 \
  	  --html $(top_builddir)/website/guestfs-java.3.html \
 diff --git a/lib/Makefile.am b/lib/Makefile.am
-index e5df96f..d90bebd 100644
+index f9cc53d..6b941f6 100644
 --- a/lib/Makefile.am
 +++ b/lib/Makefile.am
-@@ -237,7 +237,7 @@ stamp-guestfs.pod: guestfs.pod \
+@@ -236,7 +236,7 @@ stamp-guestfs.pod: guestfs.pod \
  		guestfs-actions.pod \
  		guestfs-availability.pod \
  		guestfs-structs.pod
@@ -716,10 +716,10 @@ index 239f92c..e5169a7 100644
  	  --man guestfs-lua.3 \
  	  --html $(top_builddir)/website/guestfs-lua.3.html \
 diff --git a/make-fs/Makefile.am b/make-fs/Makefile.am
-index 263c222..983ccdc 100644
+index 614586f..e94001a 100644
 --- a/make-fs/Makefile.am
 +++ b/make-fs/Makefile.am
-@@ -59,7 +59,7 @@ noinst_DATA = \
+@@ -60,7 +60,7 @@ noinst_DATA = \
  virt-make-fs.1 $(top_builddir)/website/virt-make-fs.1.html: stamp-virt-make-fs.pod
  
  stamp-virt-make-fs.pod: virt-make-fs.pod
@@ -755,7 +755,7 @@ index 7b4c29d..47ff06f 100644
  	  --man guestfs-perl.3 \
  	  --html $(top_builddir)/website/guestfs-perl.3.html \
 diff --git a/po-docs/language.mk b/po-docs/language.mk
-index 108cf8c..08ddc78 100644
+index 88d7d34..ad9e3b8 100644
 --- a/po-docs/language.mk
 +++ b/po-docs/language.mk
 @@ -112,7 +112,7 @@ EXTRA_DIST = \
@@ -770,7 +770,7 @@ index 108cf8c..08ddc78 100644
 @@ -127,14 +127,14 @@ guestfs.3: guestfs.pod guestfs-actions.pod guestfs-availability.pod guestfs-stru
  # out all the %.1 pattern rules below.
  
- guestfish.1: guestfish.pod guestfish-actions.pod guestfish-commands.pod guestfish-prepopts.pod
+ guestfish.1: guestfish.pod guestfish-actions.pod guestfish-commands.pod guestfish-prepopts.pod blocksize-option.pod key-option.pod keys-from-stdin-option.pod
 -	$(PODWRAPPER) \
 +	$(PODWRAPPER) --path $(srcdir) \
  	  --no-strict-checks \
@@ -857,10 +857,10 @@ index fc23b91..198ec6d 100644
  	  --man guestfs-python.3 \
  	  --html $(top_builddir)/website/guestfs-python.3.html \
 diff --git a/rescue/Makefile.am b/rescue/Makefile.am
-index 01d1c6c..264c5fd 100644
+index 297978f..8d26d87 100644
 --- a/rescue/Makefile.am
 +++ b/rescue/Makefile.am
-@@ -63,7 +63,7 @@ noinst_DATA = $(top_builddir)/website/virt-rescue.1.html
+@@ -64,7 +64,7 @@ noinst_DATA = $(top_builddir)/website/virt-rescue.1.html
  virt-rescue.1 $(top_builddir)/website/virt-rescue.1.html: stamp-virt-rescue.pod
  
  stamp-virt-rescue.pod: virt-rescue.pod
@@ -909,10 +909,10 @@ index fa964e8..3d1b2e7 100644
  	  --html $(top_builddir)/website/virt-sparsify.1.html \
  	  --path $(top_srcdir)/common/options \
 diff --git a/sysprep/Makefile.am b/sysprep/Makefile.am
-index 451a347..29535c3 100644
+index 69bb928..bdf66ad 100644
 --- a/sysprep/Makefile.am
 +++ b/sysprep/Makefile.am
-@@ -188,7 +188,7 @@ noinst_DATA = $(top_builddir)/website/virt-sysprep.1.html
+@@ -190,7 +190,7 @@ noinst_DATA = $(top_builddir)/website/virt-sysprep.1.html
  virt-sysprep.1 $(top_builddir)/website/virt-sysprep.1.html: stamp-virt-sysprep.pod
  
  stamp-virt-sysprep.pod: virt-sysprep.pod sysprep-extra-options.pod sysprep-operations.pod
@@ -922,10 +922,10 @@ index 451a347..29535c3 100644
            --insert sysprep-extra-options.pod:__EXTRA_OPTIONS__ \
            --insert sysprep-operations.pod:__OPERATIONS__ \
 diff --git a/test-tool/Makefile.am b/test-tool/Makefile.am
-index 95d3c7b..774eef2 100644
+index 8b7107f..88fa52d 100644
 --- a/test-tool/Makefile.am
 +++ b/test-tool/Makefile.am
-@@ -50,7 +50,7 @@ libguestfs_test_tool_LDADD = \
+@@ -51,7 +51,7 @@ libguestfs_test_tool_LDADD = \
  libguestfs-test-tool.1 $(top_builddir)/website/libguestfs-test-tool.1.html: stamp-libguestfs-test-tool.pod
  
  stamp-libguestfs-test-tool.pod: libguestfs-test-tool.pod

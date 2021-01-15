@@ -212,6 +212,57 @@ struct command_entry cp_a_cmd_entry = {
   .run = run_cp_a
 };
 
+struct command_entry cryptsetup_open_cmd_entry = {
+  .name = "cryptsetup-open",
+  .help = "NAME\n"
+          "    cryptsetup-open - open an encrypted block device\n"
+          "\n"
+          "SYNOPSIS\n"
+          "     cryptsetup-open device mapname [readonly:true|false] [crypttype:..]\n"
+          "\n"
+          "DESCRIPTION\n"
+          "    This command opens a block device which has been encrypted according to\n"
+          "    the Linux Unified Key Setup (LUKS) standard, Windows BitLocker, or some\n"
+          "    other types.\n"
+          "\n"
+          "    \"device\" is the encrypted block device or partition.\n"
+          "\n"
+          "    The caller must supply one of the keys associated with the encrypted\n"
+          "    block device, in the \"key\" parameter.\n"
+          "\n"
+          "    This creates a new block device called /dev/mapper/mapname. Reads and\n"
+          "    writes to this block device are decrypted from and encrypted to the\n"
+          "    underlying \"device\" respectively.\n"
+          "\n"
+          "    \"mapname\" cannot be \"control\" because that name is reserved by\n"
+          "    device-mapper.\n"
+          "\n"
+          "    If the optional \"crypttype\" parameter is not present then libguestfs\n"
+          "    tries to guess the correct type (for example LUKS or BitLocker). However\n"
+          "    you can override this by specifying one of the following types:\n"
+          "\n"
+          "    \"luks\"\n"
+          "        A Linux LUKS device.\n"
+          "\n"
+          "    \"bitlk\"\n"
+          "        A Windows BitLocker device.\n"
+          "\n"
+          "    The optional \"readonly\" flag, if set to true, creates a read-only\n"
+          "    mapping.\n"
+          "\n"
+          "    If this block device contains LVM volume groups, then calling \"lvm_scan\"\n"
+          "    with the \"activate\" parameter \"true\" will make them visible.\n"
+          "\n"
+          "    Use \"list_dm_devices\" to list all device mapper devices.\n"
+          "\n"
+          "    This command has one or more key or passphrase parameters. Guestfish\n"
+          "    will prompt for these separately.\n"
+          "\n"
+          "",
+  .synopsis = "cryptsetup-open device mapname [readonly:true|false] [crypttype:..]",
+  .run = run_cryptsetup_open
+};
+
 struct command_entry df_cmd_entry = {
   .name = "df",
   .help = "NAME\n"

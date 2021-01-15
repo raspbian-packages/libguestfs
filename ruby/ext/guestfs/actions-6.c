@@ -394,6 +394,106 @@ guestfs_int_ruby_cp_a (VALUE gv, VALUE srcv, VALUE destv)
 
 /*
  * call-seq:
+ *   g.cryptsetup_open(device, key, mapname, {optargs...}) -> nil
+ *
+ * open an encrypted block device
+ *
+ * This command opens a block device which has been
+ * encrypted according to the Linux Unified Key Setup
+ * (LUKS) standard, Windows BitLocker, or some other types.
+ * 
+ * "device" is the encrypted block device or partition.
+ * 
+ * The caller must supply one of the keys associated with
+ * the encrypted block device, in the "key" parameter.
+ * 
+ * This creates a new block device called
+ * /dev/mapper/mapname. Reads and writes to this block
+ * device are decrypted from and encrypted to the
+ * underlying "device" respectively.
+ * 
+ * "mapname" cannot be "control" because that name is
+ * reserved by device-mapper.
+ * 
+ * If the optional "crypttype" parameter is not present
+ * then libguestfs tries to guess the correct type (for
+ * example LUKS or BitLocker). However you can override
+ * this by specifying one of the following types:
+ * 
+ * "luks"
+ * A Linux LUKS device.
+ * 
+ * "bitlk"
+ * A Windows BitLocker device.
+ * 
+ * The optional "readonly" flag, if set to true, creates a
+ * read-only mapping.
+ * 
+ * If this block device contains LVM volume groups, then
+ * calling "g.lvm_scan" with the "activate" parameter
+ * "true" will make them visible.
+ * 
+ * Use "g.list_dm_devices" to list all device mapper
+ * devices.
+ * 
+ * Optional arguments are supplied in the final hash
+ * parameter, which is a hash of the argument name to its
+ * value. Pass an empty {} for no optional arguments.
+ *
+ *
+ * [Since] Added in version 1.43.2.
+ *
+ * [Feature] This function depends on the feature +luks+.  See also {#feature_available}[rdoc-ref:feature_available].
+ *
+ * [C API] For the C API documentation for this function, see
+ *         {guestfs_cryptsetup_open}[http://libguestfs.org/guestfs.3.html#guestfs_cryptsetup_open].
+ */
+VALUE
+guestfs_int_ruby_cryptsetup_open (int argc, VALUE *argv, VALUE gv)
+{
+  guestfs_h *g;
+  Data_Get_Struct (gv, guestfs_h, g);
+  if (!g)
+    rb_raise (rb_eArgError, "%s: used handle after closing it", "cryptsetup_open");
+
+  if (argc < 3 || argc > 4)
+    rb_raise (rb_eArgError, "expecting 3 or 4 arguments");
+
+  volatile VALUE devicev = argv[0];
+  volatile VALUE keyv = argv[1];
+  volatile VALUE mapnamev = argv[2];
+  volatile VALUE optargsv = argc > 3 ? argv[3] : rb_hash_new ();
+
+  const char *device = StringValueCStr (devicev);
+  const char *key = StringValueCStr (keyv);
+  const char *mapname = StringValueCStr (mapnamev);
+
+  Check_Type (optargsv, T_HASH);
+  struct guestfs_cryptsetup_open_argv optargs_s = { .bitmask = 0 };
+  struct guestfs_cryptsetup_open_argv *optargs = &optargs_s;
+  volatile VALUE v;
+  v = rb_hash_lookup (optargsv, ID2SYM (rb_intern ("readonly")));
+  if (v != Qnil) {
+    optargs_s.readonly = RTEST (v);
+    optargs_s.bitmask |= GUESTFS_CRYPTSETUP_OPEN_READONLY_BITMASK;
+  }
+  v = rb_hash_lookup (optargsv, ID2SYM (rb_intern ("crypttype")));
+  if (v != Qnil) {
+    optargs_s.crypttype = StringValueCStr (v);
+    optargs_s.bitmask |= GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK;
+  }
+
+  int r;
+
+  r = guestfs_cryptsetup_open_argv (g, device, key, mapname, optargs);
+  if (r == -1)
+    rb_raise (e_Error, "%s", guestfs_last_error (g));
+
+  return Qnil;
+}
+
+/*
+ * call-seq:
  *   g.df() -> string
  *
  * report file system disk space usage

@@ -26,6 +26,8 @@ let init_callbacks () =
   Callback.register "Btrfs.btrfs_subvolume_get_default" Btrfs.btrfs_subvolume_get_default;
   Callback.register "Btrfs.btrfs_subvolume_list" Btrfs.btrfs_subvolume_list;
   Callback.register "Realpath.case_sensitive_path" Realpath.case_sensitive_path;
+  Callback.register "Cryptsetup.cryptsetup_close" Cryptsetup.cryptsetup_close;
+  Callback.register "Cryptsetup.cryptsetup_open" Cryptsetup.cryptsetup_open;
   Callback.register "File.file" File.file;
   Callback.register "Filearch.file_architecture" Filearch.file_architecture;
   Callback.register "Findfs.findfs_label" Findfs.findfs_label;
@@ -58,11 +60,15 @@ let init_callbacks () =
   Callback.register "Is.is_symlink" Is.is_symlink;
   Callback.register "Devsparts.is_whole_device" Devsparts.is_whole_device;
   Callback.register "Devsparts.list_devices" Devsparts.list_devices;
+  Callback.register "Lvm_dm.list_dm_devices" Lvm_dm.list_dm_devices;
   Callback.register "Listfs.list_filesystems" Listfs.list_filesystems;
   Callback.register "Ldm.list_ldm_partitions" Ldm.list_ldm_partitions;
   Callback.register "Ldm.list_ldm_volumes" Ldm.list_ldm_volumes;
   Callback.register "Md.list_md_devices" Md.list_md_devices;
   Callback.register "Devsparts.list_partitions" Devsparts.list_partitions;
+  Callback.register "Cryptsetup.luks_close" Cryptsetup.luks_close;
+  Callback.register "Cryptsetup.luks_open" Cryptsetup.luks_open;
+  Callback.register "Cryptsetup.luks_open_ro" Cryptsetup.luks_open_ro;
   Callback.register "Lvm.lvs" Lvm.lvs;
   Callback.register "Md.md_detail" Md.md_detail;
   Callback.register "Mount.mount" Mount.mount;

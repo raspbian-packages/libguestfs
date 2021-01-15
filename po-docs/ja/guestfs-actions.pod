@@ -3334,6 +3334,117 @@ This is the "argv variant" of L</guestfs_cpio_out>.
 
 L</CALLS WITH OPTIONAL ARGUMENTS> 参照。
 
+=head2 guestfs_cryptsetup_close
+
+ int
+ guestfs_cryptsetup_close (guestfs_h *g,
+                           const char *device);
+
+This closes an encrypted device that was created earlier by
+C<guestfs_cryptsetup_open>.  The C<device> parameter must be the name of the
+mapping device (ie. F</dev/mapper/mapname>)  and I<not> the name of the
+underlying block device.
+
+この関数は、成功のとき 0 を、エラーのとき -1 を返します。
+
+This function depends on the feature C<luks>.  See also
+L</guestfs_feature_available>.
+
+(Added in 1.43.2)
+
+=head2 guestfs_cryptsetup_open
+
+ int
+ guestfs_cryptsetup_open (guestfs_h *g,
+                          const char *device,
+                          const char *key,
+                          const char *mapname,
+                          ...);
+
+You may supply a list of optional arguments to this call.  Use zero or more
+of the following pairs of parameters, and terminate the list with C<-1> on
+its own.  See L</CALLS WITH OPTIONAL ARGUMENTS>.
+
+ GUESTFS_CRYPTSETUP_OPEN_READONLY, int readonly,
+ GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE, const char *crypttype,
+
+This command opens a block device which has been encrypted according to the
+Linux Unified Key Setup (LUKS) standard, Windows BitLocker, or some other
+types.
+
+C<device> is the encrypted block device or partition.
+
+The caller must supply one of the keys associated with the encrypted block
+device, in the C<key> parameter.
+
+This creates a new block device called F</dev/mapper/mapname>.  Reads and
+writes to this block device are decrypted from and encrypted to the
+underlying C<device> respectively.
+
+C<mapname> cannot be C<"control"> because that name is reserved by
+device-mapper.
+
+If the optional C<crypttype> parameter is not present then libguestfs tries
+to guess the correct type (for example LUKS or BitLocker).  However you can
+override this by specifying one of the following types:
+
+=over 4
+
+=item C<luks>
+
+A Linux LUKS device.
+
+=item C<bitlk>
+
+A Windows BitLocker device.
+
+=back
+
+The optional C<readonly> flag, if set to true, creates a read-only mapping.
+
+If this block device contains LVM volume groups, then calling
+C<guestfs_lvm_scan> with the C<activate> parameter C<true> will make them
+visible.
+
+すべてのデバイスマッパーデバイスを一覧表示するには C<guestfs_list_dm_devices> を使用します。
+
+この関数は、成功のとき 0 を、エラーのとき -1 を返します。
+
+This function takes a key or passphrase parameter which could contain
+sensitive material.  Read the section L</KEYS AND PASSPHRASES> for more
+information.
+
+This function depends on the feature C<luks>.  See also
+L</guestfs_feature_available>.
+
+(Added in 1.43.2)
+
+=head2 guestfs_cryptsetup_open_va
+
+ int
+ guestfs_cryptsetup_open_va (guestfs_h *g,
+                             const char *device,
+                             const char *key,
+                             const char *mapname,
+                             va_list args);
+
+This is the "va_list variant" of L</guestfs_cryptsetup_open>.
+
+L</CALLS WITH OPTIONAL ARGUMENTS> 参照。
+
+=head2 guestfs_cryptsetup_open_argv
+
+ int
+ guestfs_cryptsetup_open_argv (guestfs_h *g,
+                               const char *device,
+                               const char *key,
+                               const char *mapname,
+                               const struct guestfs_cryptsetup_open_argv *optargs);
+
+This is the "argv variant" of L</guestfs_cryptsetup_open>.
+
+L</CALLS WITH OPTIONAL ARGUMENTS> 参照。
+
 =head2 guestfs_dd
 
  int
@@ -8821,6 +8932,13 @@ L</guestfs_feature_available>.
  guestfs_luks_close (guestfs_h *g,
                      const char *device);
 
+I<This function is deprecated.> In new code, use the
+L</guestfs_cryptsetup_close> call instead.
+
+Deprecated functions will not be removed from the API, but the fact that
+they are deprecated indicates that there are problems with correct use of
+these functions.
+
 This closes a LUKS device that was created earlier by C<guestfs_luks_open>
 or C<guestfs_luks_open_ro>.  The C<device> parameter must be the name of the
 LUKS mapping device (ie. F</dev/mapper/mapname>) and I<not> the name of the
@@ -8909,6 +9027,13 @@ L</guestfs_feature_available>.
                     const char *key,
                     const char *mapname);
 
+I<This function is deprecated.> In new code, use the
+L</guestfs_cryptsetup_open> call instead.
+
+Deprecated functions will not be removed from the API, but the fact that
+they are deprecated indicates that there are problems with correct use of
+these functions.
+
 This command opens a block device which has been encrypted according to the
 Linux Unified Key Setup (LUKS) standard.
 
@@ -8945,6 +9070,13 @@ L</guestfs_feature_available>.
                        const char *device,
                        const char *key,
                        const char *mapname);
+
+I<This function is deprecated.> In new code, use the
+L</guestfs_cryptsetup_open> call instead.
+
+Deprecated functions will not be removed from the API, but the fact that
+they are deprecated indicates that there are problems with correct use of
+these functions.
 
 これは、読み込み専用のマッピングが作成されることを除き、C<guestfs_luks_open> と同じです。
 
@@ -9023,7 +9155,7 @@ canonical name.  For example, F</dev/mapper/VG-LV> is converted to
 F</dev/VG/LV>.
 
 This command returns an error if the C<lvname> parameter does not refer to a
-logical volume.
+logical volume.  In this case errno will be set to C<EINVAL>.
 
 C<guestfs_is_lv>, C<guestfs_canonical_device_name> も参照してください。
 

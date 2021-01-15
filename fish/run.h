@@ -139,6 +139,8 @@ extern int run_cp (const char *cmd, size_t argc, char *argv[]);
 extern int run_cp_a (const char *cmd, size_t argc, char *argv[]);
 extern int run_cp_r (const char *cmd, size_t argc, char *argv[]);
 extern int run_cpio_out (const char *cmd, size_t argc, char *argv[]);
+extern int run_cryptsetup_close (const char *cmd, size_t argc, char *argv[]);
+extern int run_cryptsetup_open (const char *cmd, size_t argc, char *argv[]);
 extern int run_dd (const char *cmd, size_t argc, char *argv[]);
 extern int run_debug (const char *cmd, size_t argc, char *argv[]);
 extern int run_debug_drives (const char *cmd, size_t argc, char *argv[]);

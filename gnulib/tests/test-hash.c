@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2020 Free Software Foundation, Inc.
+ * Copyright (C) 2009-2021 Free Software Foundation, Inc.
  * Written by Jim Meyering
  *
  * This program is free software: you can redistribute it and/or modify
@@ -132,10 +132,10 @@ main (int argc, char **argv)
         ASSERT (hash_get_entries (ht, buf, 5) == 3);
         ASSERT (STREQ (buf[0], "a") || STREQ (buf[0], "b") || STREQ (buf[0], "c"));
       }
-      ASSERT (hash_delete (ht, "a"));
-      ASSERT (hash_delete (ht, "a") == NULL);
-      ASSERT (hash_delete (ht, "b"));
-      ASSERT (hash_delete (ht, "c"));
+      ASSERT (hash_remove (ht, "a"));
+      ASSERT (hash_remove (ht, "a") == NULL);
+      ASSERT (hash_remove (ht, "b"));
+      ASSERT (hash_remove (ht, "c"));
 
       ASSERT (hash_rehash (ht, 47));
       ASSERT (hash_rehash (ht, 467));
@@ -246,7 +246,7 @@ main (int argc, char **argv)
                         /* empty */
                       }
                     ASSERT (p);
-                    v = hash_delete (ht, p);
+                    v = hash_remove (ht, p);
                     ASSERT (v);
                     free (v);
                   }

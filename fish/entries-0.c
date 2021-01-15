@@ -372,6 +372,25 @@ struct command_entry cp_cmd_entry = {
   .run = run_cp
 };
 
+struct command_entry cryptsetup_close_cmd_entry = {
+  .name = "cryptsetup-close",
+  .help = "NAME\n"
+          "    cryptsetup-close - close an encrypted device\n"
+          "\n"
+          "SYNOPSIS\n"
+          "     cryptsetup-close device\n"
+          "\n"
+          "DESCRIPTION\n"
+          "    This closes an encrypted device that was created earlier by\n"
+          "    \"cryptsetup_open\". The \"device\" parameter must be the name of the\n"
+          "    mapping device (ie. /dev/mapper/mapname) and *not* the name of the\n"
+          "    underlying block device.\n"
+          "\n"
+          "",
+  .synopsis = "cryptsetup-close device",
+  .run = run_cryptsetup_close
+};
+
 struct command_entry df_h_cmd_entry = {
   .name = "df-h",
   .help = "NAME\n"
@@ -1355,6 +1374,13 @@ struct command_entry luks_close_cmd_entry = {
           "    \"luks_open_ro\". The \"device\" parameter must be the name of the LUKS\n"
           "    mapping device (ie. /dev/mapper/mapname) and *not* the name of the\n"
           "    underlying block device.\n"
+          "\n"
+          "    *This function is deprecated.* In new code, use the \"cryptsetup-close\"\n"
+          "    call instead.\n"
+          "\n"
+          "    Deprecated functions will not be removed from the API, but the fact that\n"
+          "    they are deprecated indicates that there are problems with correct use\n"
+          "    of these functions.\n"
           "\n"
           "",
   .synopsis = "luks-close device",

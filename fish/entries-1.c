@@ -1365,6 +1365,13 @@ struct command_entry luks_open_cmd_entry = {
           "    This command has one or more key or passphrase parameters. Guestfish\n"
           "    will prompt for these separately.\n"
           "\n"
+          "    *This function is deprecated.* In new code, use the \"cryptsetup-open\"\n"
+          "    call instead.\n"
+          "\n"
+          "    Deprecated functions will not be removed from the API, but the fact that\n"
+          "    they are deprecated indicates that there are problems with correct use\n"
+          "    of these functions.\n"
+          "\n"
           "",
   .synopsis = "luks-open device mapname",
   .run = run_luks_open
@@ -1384,6 +1391,13 @@ struct command_entry luks_open_ro_cmd_entry = {
           "\n"
           "    This command has one or more key or passphrase parameters. Guestfish\n"
           "    will prompt for these separately.\n"
+          "\n"
+          "    *This function is deprecated.* In new code, use the \"cryptsetup-open\"\n"
+          "    call instead.\n"
+          "\n"
+          "    Deprecated functions will not be removed from the API, but the fact that\n"
+          "    they are deprecated indicates that there are problems with correct use\n"
+          "    of these functions.\n"
           "\n"
           "",
   .synopsis = "luks-open-ro device mapname",

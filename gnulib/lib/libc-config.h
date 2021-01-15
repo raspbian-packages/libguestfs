@@ -1,6 +1,6 @@
 /* System definitions for code taken from the GNU C Library
 
-   Copyright 2017-2020 Free Software Foundation, Inc.
+   Copyright 2017-2021 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -89,7 +89,7 @@
 /* Undef the macros unconditionally defined by our copy of glibc
    <sys/cdefs.h>, so that they do not clash with any system-defined
    versions.  */
-#undef _SYS_CDEFS_H
+#undef _GL_CDEFS_H
 #undef __ASMNAME
 #undef __ASMNAME2
 #undef __BEGIN_DECLS
@@ -171,7 +171,7 @@
 
 /* A substitute for glibc <libc-symbols.h>, good enough for Gnulib.  */
 #define attribute_hidden
-#define libc_hidden_proto(name, ...)
+#define libc_hidden_proto(name)
 #define libc_hidden_def(name)
 #define libc_hidden_weak(name)
 #define libc_hidden_ver(local, name)
@@ -180,4 +180,5 @@
 
 /* A substitute for glibc <shlib-compat.h>, good enough for Gnulib.  */
 #define SHLIB_COMPAT(lib, introduced, obsoleted) 0
-#define versioned_symbol(lib, local, symbol, version)
+#define compat_symbol(lib, local, symbol, version) extern int dummy
+#define versioned_symbol(lib, local, symbol, version) extern int dummy

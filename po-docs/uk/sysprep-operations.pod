@@ -72,6 +72,8 @@ C</root> і C</home/*>. Отже, журнал bash користувачів, д
 
 Вилучити сертифікати CA у гостьовій системі.
 
+In case any certificate is removed, the system CA store is updated.
+
 =head2 B<crash-data> *
 
 Вилучити дані щодо аварії, створені kexec-tools.
@@ -137,9 +139,23 @@ UUID, наприклад C</etc/fstab> або завантажувач. Вмик
 
 Див. L<https://bugzilla.redhat.com/show_bug.cgi?id=991641>
 
+=head2 B<ipa-client> *
+
+Remove the IPA files.
+
+Remove all the files related to an IPA (Identity, Policy, Audit) system.
+This effectively unenrolls the guest from an IPA server without interacting
+with it.
+
+This operation does not run C<ipa-client>.
+
 =head2 B<дані-kerberos>
 
 Вилучити дані Kerberos у гостьовій системі.
+
+=head2 B<kerberos-hostkeytab> *
+
+Remove the Kerberos host keytab file in the guest.
 
 =head2 B<logfiles> *
 

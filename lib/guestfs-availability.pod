@@ -230,6 +230,8 @@ L</guestfs_setxattr>
 =item B<luks>
 
 The following functions:
+L</guestfs_cryptsetup_close>
+L</guestfs_cryptsetup_open>
 L</guestfs_luks_add_key>
 L</guestfs_luks_close>
 L</guestfs_luks_format>

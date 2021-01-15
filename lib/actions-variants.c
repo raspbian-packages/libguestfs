@@ -1231,6 +1231,65 @@ guestfs_cpio_out_va (guestfs_h *g,
 }
 
 int
+guestfs_cryptsetup_open (guestfs_h *g,
+                         const char *device,
+                         const char *key,
+                         const char *mapname,
+                         ...)
+{
+  va_list optargs;
+
+  int r;
+
+  va_start (optargs, mapname);
+  r = guestfs_cryptsetup_open_va (g, device, key, mapname, optargs);
+  va_end (optargs);
+
+  return r;
+}
+
+int
+guestfs_cryptsetup_open_va (guestfs_h *g,
+                            const char *device,
+                            const char *key,
+                            const char *mapname,
+                            va_list args)
+{
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  struct guestfs_cryptsetup_open_argv optargs_s;
+  struct guestfs_cryptsetup_open_argv *optargs = &optargs_s;
+  int i;
+  uint64_t i_mask;
+
+  optargs_s.bitmask = 0;
+
+  while ((i = va_arg (args, int)) >= 0) {
+    switch (i) {
+    case GUESTFS_CRYPTSETUP_OPEN_READONLY:
+      optargs_s.readonly = va_arg (args, int);
+      break;
+    case GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE:
+      optargs_s.crypttype = va_arg (args, const char *);
+      break;
+    default:
+      error (g, "%s: unknown option %d (this can happen if a program is compiled against a newer version of libguestfs, then dynamically linked to an older version)",
+             "cryptsetup_open", i);
+      return -1;
+    }
+
+    i_mask = UINT64_C(1) << i;
+    if (optargs_s.bitmask & i_mask) {
+      error (g, "%s: same optional argument specified more than once",
+             "cryptsetup_open");
+      return -1;
+    }
+    optargs_s.bitmask |= i_mask;
+  }
+
+  return guestfs_cryptsetup_open_argv (g, device, key, mapname, optargs);
+}
+
+int
 guestfs_disk_create (guestfs_h *g,
                      const char *filename,
                      const char *format,

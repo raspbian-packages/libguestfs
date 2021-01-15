@@ -174,13 +174,8 @@ and generate_python_structs () =
             pr "    goto err;\n";
             pr "  PyDict_SetItemString (dict, \"%s\", value);\n" name;
         | name, FBuffer ->
-            pr "#if PY_MAJOR_VERSION >= 3\n";
             pr "  value = PyBytes_FromStringAndSize (%s->%s, %s->%s_len);\n"
               typ name typ name;
-            pr "#else\n";
-            pr "  value = PyString_FromStringAndSize (%s->%s, %s->%s_len);\n"
-              typ name typ name;
-            pr "#endif\n";
             pr "  if (value == NULL)\n";
             pr "    goto err;\n";
             pr "  PyDict_SetItemString (dict, \"%s\", value);\n" name;
@@ -272,9 +267,6 @@ and generate_python_actions actions () =
       pr "PyObject *\n";
       pr "guestfs_int_py_%s (PyObject *self, PyObject *args)\n" name;
       pr "{\n";
-
-      if blocking then
-        pr "  PyThreadState *py_save = NULL;\n";
 
       pr "  PyObject *py_g;\n";
       pr "  guestfs_h *g;\n";
@@ -418,26 +410,14 @@ and generate_python_actions actions () =
         pr "\n"
       );
 
-      if blocking then (
-        (* Release Python GIL while running.  This code is from
-         * libvirt/python/typewrappers.h.  Thanks to Dan Berrange for
-         * showing us how to do this properly.
-         *)
-        pr "  if (PyEval_ThreadsInitialized ())\n";
-        pr "    py_save = PyEval_SaveThread ();\n";
-        pr "\n"
-      );
-
+      if blocking then
+        pr "  Py_BEGIN_ALLOW_THREADS\n";
       pr "  r = %s " c_function;
       generate_c_call_args ~handle:"g" style;
       pr ";\n";
+      if blocking then
+        pr "  Py_END_ALLOW_THREADS\n";
       pr "\n";
-
-      if blocking then (
-        pr "  if (PyEval_ThreadsInitialized ())\n";
-        pr "    PyEval_RestoreThread (py_save);\n";
-        pr "\n"
-      );
 
       (match errcode_of_ret ret with
        | `CannotReturnError -> ()
@@ -493,11 +473,7 @@ and generate_python_actions actions () =
            pr "  guestfs_int_free_string_list (r);\n";
            pr "  if (py_r == NULL) goto out;\n";
        | RBufferOut _ ->
-           pr "#if PY_MAJOR_VERSION >= 3\n";
            pr "  py_r = PyBytes_FromStringAndSize (r, size);\n";
-           pr "#else\n";
-           pr "  py_r = PyString_FromStringAndSize (r, size);\n";
-           pr "#endif\n";
            pr "  free (r);\n";
            pr "  if (py_r == NULL) goto out;\n";
       );
@@ -575,7 +551,6 @@ and generate_python_module () =
 
   (* Init function. *)
   pr "\
-#if PY_MAJOR_VERSION >= 3
 static struct PyModuleDef moduledef = {
   PyModuleDef_HEAD_INIT,
   \"libguestfsmod\",     /* m_name */
@@ -587,18 +562,13 @@ static struct PyModuleDef moduledef = {
   NULL,                  /* m_clear */
   NULL,                  /* m_free */
 };
-#endif
 
 static PyObject *
 moduleinit (void)
 {
   PyObject *m;
 
-#if PY_MAJOR_VERSION >= 3
   m = PyModule_Create (&moduledef);
-#else
-  m = Py_InitModule ((char *) \"libguestfsmod\", methods);
-#endif
 
   if (m != NULL)
     guestfs_int_py_extend_module (m);
@@ -606,7 +576,6 @@ moduleinit (void)
   return m; /* m might be NULL if module init failed */
 }
 
-#if PY_MAJOR_VERSION >= 3
 extern PyMODINIT_FUNC PyInit_libguestfsmod (void);
 
 PyMODINIT_FUNC
@@ -614,15 +583,6 @@ PyInit_libguestfsmod (void)
 {
   return moduleinit ();
 }
-#else
-extern void initlibguestfsmod (void);
-
-void
-initlibguestfsmod (void)
-{
-  (void) moduleinit ();
-}
-#endif
 "
 
 (* Generate Python module. *)
@@ -685,6 +645,7 @@ logvols = g.lvs()
 import os
 import sys
 import libguestfsmod
+from typing import Union, List, Tuple, Optional
 
 ";
 
@@ -802,14 +763,44 @@ class GuestFS(object):
     fun f ->
       let ret, args, optargs = f.style in
       let len_name = String.length f.name in
+      let ret_type_hint =
+        match ret with
+        | RErr -> "None"
+        | RInt _ | RInt64 _ -> "int"
+        | RBool _ -> "bool"
+        | RConstOptString _ -> "Optional[str]"
+        | RConstString _ | RString _ -> "str"
+        | RBufferOut _ -> "bytes"
+        | RStringList _ -> "List[str]"
+        | RStruct _ -> "dict"
+        | RStructList _ -> "List[dict]"
+        | RHashtable _ -> "Union[List[Tuple[str, str]], dict]" in
+      let type_hint_of_argt arg =
+        match arg with
+        | String _ -> ": str"
+        | OptString _ -> ": Optional[str]"
+        | Bool _ -> ": bool"
+        | Int _ | Int64 _ -> ": int"
+        | BufferIn _ -> ": bytes"
+        | StringList _ -> ": List[str]"
+        | Pointer _ -> ""
+      in
+      let type_hint_of_optargt optarg =
+        match optarg with
+        | OBool _ -> "bool"
+        | OInt _ | OInt64 _ -> "int"
+        | OString _ -> "str"
+        | OStringList _ -> "List[str]"
+      in
       let decl_string =
         "self" ^
-        map_join (fun arg ->sprintf ", %s" (name_of_argt arg))
+        map_join (fun arg ->sprintf ", %s%s" (name_of_argt arg) (type_hint_of_argt arg))
           args ^
-        map_join (fun optarg -> sprintf ", %s=None" (name_of_optargt optarg))
-          optargs in
+        map_join (fun optarg -> sprintf ", %s: Optional[%s] = None" (name_of_optargt optarg) (type_hint_of_optargt optarg))
+          optargs ^
+        ") -> " ^ ret_type_hint ^ ":" in
       pr "\n";
-      pr "    def %s(%s):\n"
+      pr "    def %s(%s\n"
         f.name (indent_python decl_string (9 + len_name) 78);
 
       if is_documented f then (

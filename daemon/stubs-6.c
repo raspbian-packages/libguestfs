@@ -435,6 +435,62 @@ cp_a_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
+#ifdef HAVE_ATTRIBUTE_CLEANUP
+
+#define CLEANUP_XDR_FREE_CRYPTSETUP_OPEN_ARGS \
+    __attribute__((cleanup(cleanup_xdr_free_cryptsetup_open_args)))
+
+static void
+cleanup_xdr_free_cryptsetup_open_args (struct guestfs_cryptsetup_open_args *argsp)
+{
+  xdr_free ((xdrproc_t) xdr_guestfs_cryptsetup_open_args, (char *) argsp);
+}
+
+#else /* !HAVE_ATTRIBUTE_CLEANUP */
+#define CLEANUP_XDR_FREE_CRYPTSETUP_OPEN_ARGS
+#endif /* !HAVE_ATTRIBUTE_CLEANUP */
+
+void
+cryptsetup_open_stub (XDR *xdr_in)
+{
+  int r;
+  CLEANUP_XDR_FREE_CRYPTSETUP_OPEN_ARGS struct guestfs_cryptsetup_open_args args;
+  memset (&args, 0, sizeof args);
+  CLEANUP_FREE char *device = NULL;
+  const char *key;
+  const char *mapname;
+  int readonly;
+  const char *crypttype;
+
+  /* The caller should have checked before calling this. */
+  if (! optgroup_luks_available ()) {
+    reply_with_unavailable_feature ("luks");
+    return;
+  }
+
+  if (optargs_bitmask & UINT64_C(0xfffffffffffffffc)) {
+    reply_with_error ("unknown option in optional arguments bitmask (this can happen if a program is compiled against a newer version of libguestfs, then run against an older version of the daemon)");
+    return;
+  }
+
+  if (!xdr_guestfs_cryptsetup_open_args (xdr_in, &args)) {
+    reply_with_error ("daemon failed to decode procedure arguments");
+    return;
+  }
+  RESOLVE_DEVICE (args.device, device, false);
+  key = args.key;
+  mapname = args.mapname;
+  readonly = args.readonly;
+  crypttype = args.crypttype;
+
+  r = do_cryptsetup_open (device, key, mapname, readonly, crypttype);
+  if (r == -1)
+    /* do_cryptsetup_open has already called reply_with_error */
+    return;
+
+  reply (NULL, NULL);
+}
+
 void
 df_stub (XDR *xdr_in)
 {

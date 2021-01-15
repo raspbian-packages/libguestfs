@@ -336,6 +336,12 @@ dispatch_incoming_message (XDR *xdr_in)
     case GUESTFS_PROC_CPIO_OUT:
       cpio_out_stub (xdr_in);
       break;
+    case GUESTFS_PROC_CRYPTSETUP_CLOSE:
+      cryptsetup_close_stub (xdr_in);
+      break;
+    case GUESTFS_PROC_CRYPTSETUP_OPEN:
+      cryptsetup_open_stub (xdr_in);
+      break;
     case GUESTFS_PROC_DD:
       dd_stub (xdr_in);
       break;

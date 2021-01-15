@@ -2758,6 +2758,34 @@ xdr_guestfs_cpio_out_args (XDR *xdrs, guestfs_cpio_out_args *objp)
 }
 
 bool_t
+xdr_guestfs_cryptsetup_close_args (XDR *xdrs, guestfs_cryptsetup_close_args *objp)
+{
+	register int32_t *buf;
+
+	 if (!xdr_string (xdrs, &objp->device, ~0))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_guestfs_cryptsetup_open_args (XDR *xdrs, guestfs_cryptsetup_open_args *objp)
+{
+	register int32_t *buf;
+
+	 if (!xdr_string (xdrs, &objp->device, ~0))
+		 return FALSE;
+	 if (!xdr_string (xdrs, &objp->key, ~0))
+		 return FALSE;
+	 if (!xdr_string (xdrs, &objp->mapname, ~0))
+		 return FALSE;
+	 if (!xdr_bool (xdrs, &objp->readonly))
+		 return FALSE;
+	 if (!xdr_string (xdrs, &objp->crypttype, ~0))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
 xdr_guestfs_dd_args (XDR *xdrs, guestfs_dd_args *objp)
 {
 	register int32_t *buf;

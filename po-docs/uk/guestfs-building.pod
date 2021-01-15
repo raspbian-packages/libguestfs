@@ -318,11 +318,10 @@ L<virt-rescue(1)>.
 
 Необов'язкове. Використовується для збирання і тестування прив'язок Perl.
 
-=item Python E<ge> 2.7
+=item Python E<ge> 3.6
 
-Необов'язковий. Використовується для збирання прив'язок до Python. Опис
-збирання прив'язок для Python 2 або Python 3 наведено у розділі L</ЗБИРАННЯ
-ПРИВ'ЯЗОК ДО PYTHON 2 І PYTHON 3> нижче.
+Optional.  Used to build the Python bindings.  S<Python 2> support was
+removed in S<libguestfs 1.42.1>.
 
 =item Python C<unittest>
 
@@ -369,11 +368,12 @@ Optional.  Used to build the Vala bindings.
 
 Необов’язкове. Використовується для збирання прив’язок до LUA.
 
-=item Erlang
+=item Erlang E<ge> 23
 
-=item erl_interface
+=item ei
 
-Необов’язкове. Використовується для збирання прив’язок до Erlang.
+Optional.  Used to build the Erlang bindings.  Note that Erlang E<le> 22
+will not work unless you use libguestfs E<le> 1.42.
 
 =item golang E<ge> 1.1.1
 
@@ -539,9 +539,7 @@ F<autogen.sh>, яка міститиме локальні зміни у нала
 обробить його вміст. У цьому файлі можуть міститися усі потрібні змінні
 середовища, наприклад змінні для пропускання тестів:
 
- # Використовувати інший інтерпретатор python.
- export PYTHON=python3
- # Пропустити цю перевірку, вона не працює.
+ # Skip this test, it is broken.
  export SKIP_TEST_BTRFS_FSCK=1
 
 Зауважте, що F<localenv> включається до Makefile верхнього рівня (стає
@@ -697,11 +695,9 @@ Fedora (див. L</ЗБИРАННЯ ПАКУНКА ДЛЯ FEDORA> нижче, щ
 
 =item B<PYTHON>
 
-Цією змінною середовища можна скористатися для того, щоб вказати виконуваний
-файл python (наприклад, C<python3>). Під час запуску C<./configure> програма
-виконує визначення версії цього виконуваного файла Python, розташування
-бібліотек Python тощо. Див. L</ЗБИРАННЯ ПРИВ'ЯЗОК ДО PYTHON 2 І PYTHON 3>
-нижче.
+This environment variable may be set to point to a python binary
+(eg. C<python3>).  When C<./configure> runs, it inspects this python binary
+to find the version of Python, the location of Python libraries and so on.
 
 =item B<SUPERMIN>
 
@@ -770,24 +766,6 @@ L<http://libguestfs.org/download/binaries/appliance>
 
 і запускайте програми libguestfs та засоби віртуалізації у звичайний спосіб,
 наприклад, за допомогою скрипту F<./run> (див. вище).
-
-=head1 ЗБИРАННЯ ПРИВ’ЯЗОК ДО PYTHON 2 І PYTHON 3
-
-Скрипт F<./configure> визначає поточну встановлену версію Python на основі
-даних будь-якої програми, яка називається C<python> і зберігається у одному
-з каталогів, описаних у змінній C<$PATH>. Libguestfs збиратиме, відповідно,
-прив'язки до Python 2 або до Python 3.
-
-Ви можете перевизначити цю поведінку, якщо вкажете альтернативний
-виконуваний файл Python. Приклад:
-
- PYTHON=/usr/bin/python3 ./configure
-
-Щоб зібрати одночасно прив'язки до Python 2 і Python 3, вам доведеться
-збирати libguestfs двічі. Під час другого збирання ви можете вимкнути усі
-інші прив'язки та інструменти і зібрати лише прив'язки до Python. Із повним
-прикладом того, як це зробити, можна ознайомитися за допомогою файла spec з
-Fedora (див. нижче).
 
 =head1 ЗБИРАННЯ ПАКУНКА ДЛЯ FEDORA
 

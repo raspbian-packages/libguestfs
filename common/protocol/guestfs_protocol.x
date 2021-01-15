@@ -997,6 +997,18 @@ struct guestfs_cpio_out_args {
   string format<>;
 };
 
+struct guestfs_cryptsetup_close_args {
+  string device<>;
+};
+
+struct guestfs_cryptsetup_open_args {
+  string device<>;
+  string key<>;
+  string mapname<>;
+  bool readonly;
+  string crypttype<>;
+};
+
 struct guestfs_dd_args {
   string src<>;
   string dest<>;
@@ -3576,6 +3588,8 @@ enum guestfs_procedure {
   GUESTFS_PROC_CP_A = 88,
   GUESTFS_PROC_CP_R = 401,
   GUESTFS_PROC_CPIO_OUT = 419,
+  GUESTFS_PROC_CRYPTSETUP_CLOSE = 509,
+  GUESTFS_PROC_CRYPTSETUP_OPEN = 508,
   GUESTFS_PROC_DD = 217,
   GUESTFS_PROC_DEBUG = 76,
   GUESTFS_PROC_DEBUG_UPLOAD = 241,
@@ -3972,7 +3986,7 @@ enum guestfs_procedure {
   GUESTFS_PROC_ZGREPI = 160
 };
 
-const GUESTFS_MAX_PROC_NR = 507;
+const GUESTFS_MAX_PROC_NR = 509;
 
 /* The remote procedure call protocol. */
 

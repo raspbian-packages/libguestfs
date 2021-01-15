@@ -181,9 +181,9 @@ export GOLANG="@GOLANG@"
 prepend GOPATH "$b/golang"
 export GOPATH
 if [ -z "$CGO_CFLAGS" ]; then
-    CGO_CFLAGS="-I$s/lib"
+    CGO_CFLAGS="-I$s/include"
 else
-    CGO_CFLAGS="$CGO_CFLAGS -I$s/lib"
+    CGO_CFLAGS="$CGO_CFLAGS -I$s/include"
 fi
 export CGO_CFLAGS
 if [ -z "$CGO_CFLAGS_ALLOW" ]; then
@@ -222,6 +222,13 @@ export G_DEBUG=gc-friendly
 # read problems when using glibc.
 random_val="$(@AWK@ 'BEGIN{srand(); print 1+int(255*rand())}' < /dev/null)"
 export MALLOC_PERTURB_=$random_val
+
+# Allow dependent packages like virt-v2v to be compiled against
+# local libguestfs.
+prepend PKG_CONFIG_PATH "$b/lib/local"
+export PKG_CONFIG_PATH
+prepend OCAMLPATH "$b/ocaml"
+export OCAMLPATH
 
 # Do we have libtool?  If we have it then we can use it to make
 # running valgrind simpler.  However don't depend on it.

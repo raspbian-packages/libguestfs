@@ -1471,6 +1471,153 @@ guestfs_cp_a (guestfs_h *g,
   return ret_v;
 }
 
+GUESTFS_DLL_PUBLIC int
+guestfs_cryptsetup_open_argv (guestfs_h *g,
+                              const char *device,
+                              const char *key,
+                              const char *mapname,
+                              const struct guestfs_cryptsetup_open_argv *optargs)
+{
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  struct guestfs_cryptsetup_open_argv optargs_null;
+  if (!optargs) {
+    optargs_null.bitmask = 0;
+    optargs = &optargs_null;
+  }
+
+  struct guestfs_cryptsetup_open_args args;
+  guestfs_message_header hdr;
+  guestfs_message_error err;
+  int serial;
+  int r;
+  int trace_flag = g->trace;
+  struct trace_buffer trace_buffer;
+  int ret_v;
+  const uint64_t progress_hint = 0;
+
+  guestfs_int_call_callbacks_message (g, GUESTFS_EVENT_ENTER,
+                                      "cryptsetup_open", 15);
+  if (device == NULL) {
+    error (g, "%s: %s: parameter cannot be NULL",
+           "cryptsetup_open", "device");
+    return -1;
+  }
+  if (key == NULL) {
+    error (g, "%s: %s: parameter cannot be NULL",
+           "cryptsetup_open", "key");
+    return -1;
+  }
+  if (mapname == NULL) {
+    error (g, "%s: %s: parameter cannot be NULL",
+           "cryptsetup_open", "mapname");
+    return -1;
+  }
+  if ((optargs->bitmask & GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK) &&
+      optargs->crypttype == NULL) {
+    error (g, "%s: %s: optional parameter cannot be NULL",
+           "cryptsetup_open", "crypttype");
+    return -1;
+  }
+
+  if (optargs->bitmask & UINT64_C(0xfffffffffffffffc)) {
+    error (g, "%s: unknown option in guestfs_%s_argv->bitmask (this can happen if a program is compiled against a newer version of libguestfs, then dynamically linked to an older version)",
+           "cryptsetup_open", "cryptsetup_open");
+    return -1;
+  }
+
+  if (trace_flag) {
+    guestfs_int_trace_open (&trace_buffer);
+    fprintf (trace_buffer.fp, "%s", "cryptsetup_open");
+    fprintf (trace_buffer.fp, " \"%s\"", device);
+    fprintf (trace_buffer.fp, " \"***\"");
+    fprintf (trace_buffer.fp, " \"%s\"", mapname);
+    if (optargs->bitmask & GUESTFS_CRYPTSETUP_OPEN_READONLY_BITMASK) {
+      fprintf (trace_buffer.fp, " \"%s:%s\"", "readonly", optargs->readonly ? "true" : "false");
+    }
+    if (optargs->bitmask & GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK) {
+      fprintf (trace_buffer.fp, " \"%s:%s\"", "crypttype", optargs->crypttype);
+    }
+    guestfs_int_trace_send_line (g, &trace_buffer);
+  }
+
+  if (guestfs_int_check_appliance_up (g, "cryptsetup_open") == -1) {
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "cryptsetup_open", "-1");
+    return -1;
+  }
+
+  args.device = (char *) device;
+  args.key = (char *) key;
+  args.mapname = (char *) mapname;
+  if (optargs->bitmask & GUESTFS_CRYPTSETUP_OPEN_READONLY_BITMASK) {
+    args.readonly = optargs->readonly;
+  } else {
+    args.readonly = 0;
+  }
+  if (optargs->bitmask & GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK) {
+    args.crypttype = (char *) optargs->crypttype;
+  } else {
+    args.crypttype = (char *) "";
+  }
+  serial = guestfs_int_send (g, GUESTFS_PROC_CRYPTSETUP_OPEN,
+                             progress_hint, optargs->bitmask,
+                             (xdrproc_t) xdr_guestfs_cryptsetup_open_args, (char *) &args);
+  if (serial == -1) {
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "cryptsetup_open", "-1");
+    return -1;
+  }
+
+  memset (&hdr, 0, sizeof hdr);
+  memset (&err, 0, sizeof err);
+
+  r = guestfs_int_recv (g, "cryptsetup_open", &hdr, &err,
+        NULL, NULL);
+  if (r == -1) {
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "cryptsetup_open", "-1");
+    return -1;
+  }
+
+  if (guestfs_int_check_reply_header (g, &hdr, GUESTFS_PROC_CRYPTSETUP_OPEN, serial) == -1) {
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "cryptsetup_open", "-1");
+    return -1;
+  }
+
+  if (hdr.status == GUESTFS_STATUS_ERROR) {
+    int errnum = 0;
+
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "cryptsetup_open", "-1");
+    if (err.errno_string[0] != '\0')
+      errnum = guestfs_int_string_to_errno (err.errno_string);
+    if (errnum <= 0)
+      error (g, "%s: %s", "cryptsetup_open", err.error_message);
+    else
+      guestfs_int_error_errno (g, errnum, "%s: %s", "cryptsetup_open",
+                               err.error_message);
+    free (err.error_message);
+    free (err.errno_string);
+    return -1;
+  }
+
+  ret_v = 0;
+  if (trace_flag) {
+    guestfs_int_trace_open (&trace_buffer);
+    fprintf (trace_buffer.fp, "%s = ", "cryptsetup_open");
+    fprintf (trace_buffer.fp, "%d", ret_v);
+    guestfs_int_trace_send_line (g, &trace_buffer);
+  }
+
+  return ret_v;
+}
+
 GUESTFS_DLL_PUBLIC char *
 guestfs_df (guestfs_h *g)
 {

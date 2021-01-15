@@ -1,5 +1,5 @@
 /* Creating and controlling threads.
-   Copyright (C) 2005-2020 Free Software Foundation, Inc.
+   Copyright (C) 2005-2021 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -232,12 +232,12 @@ extern const gl_thread_t gl_null_thread;
 extern const gl_thread_t gl_null_thread;
 # else
 #  define gl_thread_self() \
-     (pthread_in_use () ? pthread_self () : (pthread_t) NULL)
+     (pthread_in_use () ? pthread_self () : (pthread_t) 0)
 #  define gl_thread_self_pointer() \
      (pthread_in_use () ? (void *) pthread_self () : NULL)
 # endif
 # define gl_thread_exit(RETVAL) \
-    (pthread_in_use () ? pthread_exit (RETVAL) : 0)
+    (void) (pthread_in_use () ? (pthread_exit (RETVAL), 0) : 0)
 
 # if HAVE_PTHREAD_ATFORK
 #  define glthread_atfork(PREPARE_FUNC, PARENT_FUNC, CHILD_FUNC) \
@@ -301,7 +301,7 @@ typedef int gl_thread_t;
 # define gl_thread_self() 0
 # define gl_thread_self_pointer() \
     ((void *) gl_thread_self ())
-# define gl_thread_exit(RETVAL) 0
+# define gl_thread_exit(RETVAL) (void)0
 # define glthread_atfork(PREPARE_FUNC, PARENT_FUNC, CHILD_FUNC) 0
 
 #endif

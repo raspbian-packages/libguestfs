@@ -4715,6 +4715,122 @@ public class GuestFS {
 
   /**
    * <p>
+   * close an encrypted device
+   * </p><p>
+   * This closes an encrypted device that was created earlier
+   * by "g.cryptsetup_open". The "device" parameter must be
+   * the name of the mapping device (ie. /dev/mapper/mapname)
+   * and *not* the name of the underlying block device.
+   * </p><p>
+   * This function depends on the feature "luks".  See also {@link #feature_available}.
+   * </p>
+   * @since 1.43.2
+   * @throws LibGuestFSException If there is a libguestfs error.
+   */
+  public void cryptsetup_close (String device)
+    throws LibGuestFSException
+  {
+    if (g == 0)
+      throw new LibGuestFSException ("cryptsetup_close: handle is closed");
+
+    _cryptsetup_close (g, device);
+  }
+
+  private native void _cryptsetup_close (long g, String device)
+    throws LibGuestFSException;
+
+  /**
+   * <p>
+   * open an encrypted block device
+   * </p><p>
+   * This command opens a block device which has been
+   * encrypted according to the Linux Unified Key Setup
+   * (LUKS) standard, Windows BitLocker, or some other types.
+   * </p><p>
+   * "device" is the encrypted block device or partition.
+   * </p><p>
+   * The caller must supply one of the keys associated with
+   * the encrypted block device, in the "key" parameter.
+   * </p><p>
+   * This creates a new block device called
+   * /dev/mapper/mapname. Reads and writes to this block
+   * device are decrypted from and encrypted to the
+   * underlying "device" respectively.
+   * </p><p>
+   * "mapname" cannot be "control" because that name is
+   * reserved by device-mapper.
+   * </p><p>
+   * If the optional "crypttype" parameter is not present
+   * then libguestfs tries to guess the correct type (for
+   * example LUKS or BitLocker). However you can override
+   * this by specifying one of the following types:
+   * </p><p>
+   * "luks"
+   * A Linux LUKS device.
+   * </p><p>
+   * "bitlk"
+   * A Windows BitLocker device.
+   * </p><p>
+   * The optional "readonly" flag, if set to true, creates a
+   * read-only mapping.
+   * </p><p>
+   * If this block device contains LVM volume groups, then
+   * calling "g.lvm_scan" with the "activate" parameter
+   * "true" will make them visible.
+   * </p><p>
+   * Use "g.list_dm_devices" to list all device mapper
+   * devices.
+   * </p><p>
+   * Optional arguments are supplied in the final
+   * Map&lt;String,Object&gt; parameter, which is a hash of the
+   * argument name to its value (cast to Object). Pass an
+   * empty Map or null for no optional arguments.
+   * </p><p>
+   * This function depends on the feature "luks".  See also {@link #feature_available}.
+   * </p>
+   * @since 1.43.2
+   * @throws LibGuestFSException If there is a libguestfs error.
+   */
+  public void cryptsetup_open (String device, String key, String mapname, Map<String, Object> optargs)
+    throws LibGuestFSException
+  {
+    if (g == 0)
+      throw new LibGuestFSException ("cryptsetup_open: handle is closed");
+
+    /* Unpack optional args. */
+    Object _optobj;
+    long _optargs_bitmask = 0;
+    boolean readonly = false;
+    _optobj = null;
+    if (optargs != null)
+      _optobj = optargs.get ("readonly");
+    if (_optobj != null) {
+      readonly = ((Boolean) _optobj).booleanValue();
+      _optargs_bitmask |= 1L;
+    }
+    String crypttype = "";
+    _optobj = null;
+    if (optargs != null)
+      _optobj = optargs.get ("crypttype");
+    if (_optobj != null) {
+      crypttype = ((String) _optobj);
+      _optargs_bitmask |= 2L;
+    }
+
+    _cryptsetup_open (g, device, key, mapname, _optargs_bitmask, readonly, crypttype);
+  }
+
+  public void cryptsetup_open (String device, String key, String mapname)
+    throws LibGuestFSException
+  {
+    cryptsetup_open (device, key, mapname, null);
+  }
+
+  private native void _cryptsetup_open (long g, String device, String key, String mapname, long _optargs_bitmask, boolean readonly, String crypttype)
+    throws LibGuestFSException;
+
+  /**
+   * <p>
    * copy from source to destination using dd
    * </p><p>
    * This command copies from one source device or file "src"
@@ -12725,9 +12841,10 @@ public class GuestFS {
    * This function depends on the feature "luks".  See also {@link #feature_available}.
    * </p>
    * @since 1.5.1
+   * @deprecated In new code, use {@link #cryptsetup_close} instead
    * @throws LibGuestFSException If there is a libguestfs error.
    */
-  public void luks_close (String device)
+  @Deprecated public void luks_close (String device)
     throws LibGuestFSException
   {
     if (g == 0)
@@ -12842,9 +12959,10 @@ public class GuestFS {
    * This function depends on the feature "luks".  See also {@link #feature_available}.
    * </p>
    * @since 1.5.1
+   * @deprecated In new code, use {@link #cryptsetup_open} instead
    * @throws LibGuestFSException If there is a libguestfs error.
    */
-  public void luks_open (String device, String key, String mapname)
+  @Deprecated public void luks_open (String device, String key, String mapname)
     throws LibGuestFSException
   {
     if (g == 0)
@@ -12866,9 +12984,10 @@ public class GuestFS {
    * This function depends on the feature "luks".  See also {@link #feature_available}.
    * </p>
    * @since 1.5.1
+   * @deprecated In new code, use {@link #cryptsetup_open} instead
    * @throws LibGuestFSException If there is a libguestfs error.
    */
-  public void luks_open_ro (String device, String key, String mapname)
+  @Deprecated public void luks_open_ro (String device, String key, String mapname)
     throws LibGuestFSException
   {
     if (g == 0)
@@ -12963,7 +13082,8 @@ public class GuestFS {
    * /dev/mapper/VG-LV is converted to /dev/VG/LV.
    * </p><p>
    * This command returns an error if the "lvname" parameter
-   * does not refer to a logical volume.
+   * does not refer to a logical volume. In this case errno
+   * will be set to "EINVAL".
    * </p><p>
    * See also "g.is_lv", "g.canonical_device_name".
    * </p>

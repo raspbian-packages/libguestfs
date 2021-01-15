@@ -33,81 +33,82 @@
 #include <string.h>
 #include <errno.h>
 
-#include <erl_interface.h>
-/* We should switch over to using
-  #include <ei.h>
-instead of erl_interface.
-*/
+#include <ei.h>
 
 #include "guestfs.h"
 #include "guestfs-utils.h"
 
 #include "actions.h"
 
-ETERM *
-run_add_cdrom (ETERM *args_tuple)
+int
+run_add_cdrom (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *filename = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *filename;
+  if (decode_string (buff, idx, &filename) != 0) return -1;
   int r;
 
   r = guestfs_add_cdrom (g, filename);
   if (r == -1)
-    return make_error ("add_cdrom");
+    return make_error (retbuff, "add_cdrom");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_add_libvirt_dom (ETERM *args_tuple)
+int
+run_add_libvirt_dom (ei_x_buff *retbuff, const char *buff, int *idx)
 {
   void * /* virDomainPtr */ dom = POINTER_NOT_IMPLEMENTED ("virDomainPtr");
 
   struct guestfs_add_libvirt_dom_argv optargs_s = { .bitmask = 0 };
   struct guestfs_add_libvirt_dom_argv *optargs = &optargs_s;
-  ETERM *optargst = ARG (1);
-  while (!ERL_IS_EMPTY_LIST (optargst)) {
-    ETERM *hd = ERL_CONS_HEAD (optargst);
-    ETERM *hd_name = ERL_TUPLE_ELEMENT (hd, 0);
-    ETERM *hd_value = ERL_TUPLE_ELEMENT (hd, 1);
+  int optargsize;
+  if (ei_decode_list_header (buff, idx, &optargsize) != 0) return -1;
+  for (int i = 0; i < optargsize; i++) {
+    int hd;
+    if (ei_decode_tuple_header (buff, idx, &hd) != 0) return -1;
+    char hd_name[MAXATOMLEN];
+    if (ei_decode_atom (buff, idx, hd_name) != 0) return -1;
 
     if (atom_equals (hd_name, "readonly")) {
       optargs_s.bitmask |= GUESTFS_ADD_LIBVIRT_DOM_READONLY_BITMASK;
-      optargs_s.readonly = get_bool (hd_value);
+      if (decode_bool (buff, idx, &optargs_s.readonly) != 0) return -1;;
     }
     else
     if (atom_equals (hd_name, "iface")) {
       optargs_s.bitmask |= GUESTFS_ADD_LIBVIRT_DOM_IFACE_BITMASK;
-      optargs_s.iface = erl_iolist_to_string (hd_value);
+      if (decode_string (buff, idx, (char **) &optargs_s.iface) != 0) return -1;
     }
     else
     if (atom_equals (hd_name, "live")) {
       optargs_s.bitmask |= GUESTFS_ADD_LIBVIRT_DOM_LIVE_BITMASK;
-      optargs_s.live = get_bool (hd_value);
+      if (decode_bool (buff, idx, &optargs_s.live) != 0) return -1;;
     }
     else
     if (atom_equals (hd_name, "readonlydisk")) {
       optargs_s.bitmask |= GUESTFS_ADD_LIBVIRT_DOM_READONLYDISK_BITMASK;
-      optargs_s.readonlydisk = erl_iolist_to_string (hd_value);
+      if (decode_string (buff, idx, (char **) &optargs_s.readonlydisk) != 0) return -1;
     }
     else
     if (atom_equals (hd_name, "cachemode")) {
       optargs_s.bitmask |= GUESTFS_ADD_LIBVIRT_DOM_CACHEMODE_BITMASK;
-      optargs_s.cachemode = erl_iolist_to_string (hd_value);
+      if (decode_string (buff, idx, (char **) &optargs_s.cachemode) != 0) return -1;
     }
     else
     if (atom_equals (hd_name, "discard")) {
       optargs_s.bitmask |= GUESTFS_ADD_LIBVIRT_DOM_DISCARD_BITMASK;
-      optargs_s.discard = erl_iolist_to_string (hd_value);
+      if (decode_string (buff, idx, (char **) &optargs_s.discard) != 0) return -1;
     }
     else
     if (atom_equals (hd_name, "copyonread")) {
       optargs_s.bitmask |= GUESTFS_ADD_LIBVIRT_DOM_COPYONREAD_BITMASK;
-      optargs_s.copyonread = get_bool (hd_value);
+      if (decode_bool (buff, idx, &optargs_s.copyonread) != 0) return -1;;
     }
     else
-      return unknown_optarg ("add_libvirt_dom", hd_name);
-    optargst = ERL_CONS_TAIL (optargst);
+      return unknown_optarg (retbuff, "add_libvirt_dom", hd_name);
   }
+  if (optargsize > 0 && buff[*idx] == ERL_NIL_EXT)
+    (*idx)++;
 
   int r;
 
@@ -121,157 +122,182 @@ run_add_libvirt_dom (ETERM *args_tuple)
   if ((optargs_s.bitmask & GUESTFS_ADD_LIBVIRT_DOM_DISCARD_BITMASK))
     free ((char *) optargs_s.discard);
   if (r == -1)
-    return make_error ("add_libvirt_dom");
+    return make_error (retbuff, "add_libvirt_dom");
 
-  return erl_mk_int (r);
+  if (ei_x_encode_long (retbuff, r) != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_aug_init (ETERM *args_tuple)
+int
+run_aug_init (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *root = erl_iolist_to_string (ARG (0));
-  int flags = get_int (ARG (1));
+  CLEANUP_FREE char *root;
+  if (decode_string (buff, idx, &root) != 0) return -1;
+  int flags;
+  if (decode_int (buff, idx, &flags) != 0) return -1;
   int r;
 
   r = guestfs_aug_init (g, root, flags);
   if (r == -1)
-    return make_error ("aug_init");
+    return make_error (retbuff, "aug_init");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_aug_insert (ETERM *args_tuple)
+int
+run_aug_insert (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *augpath = erl_iolist_to_string (ARG (0));
-  CLEANUP_FREE char *label = erl_iolist_to_string (ARG (1));
-  int before = get_bool (ARG (2));
+  CLEANUP_FREE char *augpath;
+  if (decode_string (buff, idx, &augpath) != 0) return -1;
+  CLEANUP_FREE char *label;
+  if (decode_string (buff, idx, &label) != 0) return -1;
+  int before;
+  if (decode_bool (buff, idx, &before) != 0) return -1;
   int r;
 
   r = guestfs_aug_insert (g, augpath, label, before);
   if (r == -1)
-    return make_error ("aug_insert");
+    return make_error (retbuff, "aug_insert");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_aug_load (ETERM *args_tuple)
+int
+run_aug_load (ei_x_buff *retbuff, const char *buff, int *idx)
 {
   int r;
 
   r = guestfs_aug_load (g);
   if (r == -1)
-    return make_error ("aug_load");
+    return make_error (retbuff, "aug_load");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_aug_rm (ETERM *args_tuple)
+int
+run_aug_rm (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *augpath = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *augpath;
+  if (decode_string (buff, idx, &augpath) != 0) return -1;
   int r;
 
   r = guestfs_aug_rm (g, augpath);
   if (r == -1)
-    return make_error ("aug_rm");
+    return make_error (retbuff, "aug_rm");
 
-  return erl_mk_int (r);
+  if (ei_x_encode_long (retbuff, r) != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_aug_set (ETERM *args_tuple)
+int
+run_aug_set (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *augpath = erl_iolist_to_string (ARG (0));
-  CLEANUP_FREE char *val = erl_iolist_to_string (ARG (1));
+  CLEANUP_FREE char *augpath;
+  if (decode_string (buff, idx, &augpath) != 0) return -1;
+  CLEANUP_FREE char *val;
+  if (decode_string (buff, idx, &val) != 0) return -1;
   int r;
 
   r = guestfs_aug_set (g, augpath, val);
   if (r == -1)
-    return make_error ("aug_set");
+    return make_error (retbuff, "aug_set");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_blkid (ETERM *args_tuple)
+int
+run_blkid (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *device = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
   char **r;
 
   r = guestfs_blkid (g, device);
   if (r == NULL)
-    return make_error ("blkid");
+    return make_error (retbuff, "blkid");
 
-  ETERM *rt = make_table (r);
+  if (make_table (retbuff, r) != 0) return -1;
   guestfs_int_free_string_list (r);
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_blockdev_setra (ETERM *args_tuple)
+int
+run_blockdev_setra (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *device = erl_iolist_to_string (ARG (0));
-  int sectors = get_int (ARG (1));
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
+  int sectors;
+  if (decode_int (buff, idx, &sectors) != 0) return -1;
   int r;
 
   r = guestfs_blockdev_setra (g, device, sectors);
   if (r == -1)
-    return make_error ("blockdev_setra");
+    return make_error (retbuff, "blockdev_setra");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_btrfs_scrub_start (ETERM *args_tuple)
+int
+run_btrfs_scrub_start (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *path = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *path;
+  if (decode_string (buff, idx, &path) != 0) return -1;
   int r;
 
   r = guestfs_btrfs_scrub_start (g, path);
   if (r == -1)
-    return make_error ("btrfs_scrub_start");
+    return make_error (retbuff, "btrfs_scrub_start");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_btrfs_scrub_status (ETERM *args_tuple)
+int
+run_btrfs_scrub_status (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *path = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *path;
+  if (decode_string (buff, idx, &path) != 0) return -1;
   struct guestfs_btrfsscrub *r;
 
   r = guestfs_btrfs_scrub_status (g, path);
   if (r == NULL)
-    return make_error ("btrfs_scrub_status");
+    return make_error (retbuff, "btrfs_scrub_status");
 
-  ETERM *rt = make_btrfsscrub (r);
+  if (make_btrfsscrub (retbuff, r) != 0) return -1;
   guestfs_free_btrfsscrub (r);
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_btrfs_subvolume_create (ETERM *args_tuple)
+int
+run_btrfs_subvolume_create (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *dest = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *dest;
+  if (decode_string (buff, idx, &dest) != 0) return -1;
 
   struct guestfs_btrfs_subvolume_create_opts_argv optargs_s = { .bitmask = 0 };
   struct guestfs_btrfs_subvolume_create_opts_argv *optargs = &optargs_s;
-  ETERM *optargst = ARG (1);
-  while (!ERL_IS_EMPTY_LIST (optargst)) {
-    ETERM *hd = ERL_CONS_HEAD (optargst);
-    ETERM *hd_name = ERL_TUPLE_ELEMENT (hd, 0);
-    ETERM *hd_value = ERL_TUPLE_ELEMENT (hd, 1);
+  int optargsize;
+  if (ei_decode_list_header (buff, idx, &optargsize) != 0) return -1;
+  for (int i = 0; i < optargsize; i++) {
+    int hd;
+    if (ei_decode_tuple_header (buff, idx, &hd) != 0) return -1;
+    char hd_name[MAXATOMLEN];
+    if (ei_decode_atom (buff, idx, hd_name) != 0) return -1;
 
     if (atom_equals (hd_name, "qgroupid")) {
       optargs_s.bitmask |= GUESTFS_BTRFS_SUBVOLUME_CREATE_OPTS_QGROUPID_BITMASK;
-      optargs_s.qgroupid = erl_iolist_to_string (hd_value);
+      if (decode_string (buff, idx, (char **) &optargs_s.qgroupid) != 0) return -1;
     }
     else
-      return unknown_optarg ("btrfs_subvolume_create", hd_name);
-    optargst = ERL_CONS_TAIL (optargst);
+      return unknown_optarg (retbuff, "btrfs_subvolume_create", hd_name);
   }
+  if (optargsize > 0 && buff[*idx] == ERL_NIL_EXT)
+    (*idx)++;
 
   int r;
 
@@ -279,52 +305,61 @@ run_btrfs_subvolume_create (ETERM *args_tuple)
   if ((optargs_s.bitmask & GUESTFS_BTRFS_SUBVOLUME_CREATE_OPTS_QGROUPID_BITMASK))
     free ((char *) optargs_s.qgroupid);
   if (r == -1)
-    return make_error ("btrfs_subvolume_create");
+    return make_error (retbuff, "btrfs_subvolume_create");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_btrfs_subvolume_set_default (ETERM *args_tuple)
+int
+run_btrfs_subvolume_set_default (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  int64_t id = get_int64 (ARG (0));
-  CLEANUP_FREE char *fs = erl_iolist_to_string (ARG (1));
+  int64_t id;
+  if (decode_int64 (buff, idx, &id) != 0) return -1;
+  CLEANUP_FREE char *fs;
+  if (decode_string (buff, idx, &fs) != 0) return -1;
   int r;
 
   r = guestfs_btrfs_subvolume_set_default (g, id, fs);
   if (r == -1)
-    return make_error ("btrfs_subvolume_set_default");
+    return make_error (retbuff, "btrfs_subvolume_set_default");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_btrfs_subvolume_snapshot (ETERM *args_tuple)
+int
+run_btrfs_subvolume_snapshot (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *source = erl_iolist_to_string (ARG (0));
-  CLEANUP_FREE char *dest = erl_iolist_to_string (ARG (1));
+  CLEANUP_FREE char *source;
+  if (decode_string (buff, idx, &source) != 0) return -1;
+  CLEANUP_FREE char *dest;
+  if (decode_string (buff, idx, &dest) != 0) return -1;
 
   struct guestfs_btrfs_subvolume_snapshot_opts_argv optargs_s = { .bitmask = 0 };
   struct guestfs_btrfs_subvolume_snapshot_opts_argv *optargs = &optargs_s;
-  ETERM *optargst = ARG (2);
-  while (!ERL_IS_EMPTY_LIST (optargst)) {
-    ETERM *hd = ERL_CONS_HEAD (optargst);
-    ETERM *hd_name = ERL_TUPLE_ELEMENT (hd, 0);
-    ETERM *hd_value = ERL_TUPLE_ELEMENT (hd, 1);
+  int optargsize;
+  if (ei_decode_list_header (buff, idx, &optargsize) != 0) return -1;
+  for (int i = 0; i < optargsize; i++) {
+    int hd;
+    if (ei_decode_tuple_header (buff, idx, &hd) != 0) return -1;
+    char hd_name[MAXATOMLEN];
+    if (ei_decode_atom (buff, idx, hd_name) != 0) return -1;
 
     if (atom_equals (hd_name, "ro")) {
       optargs_s.bitmask |= GUESTFS_BTRFS_SUBVOLUME_SNAPSHOT_OPTS_RO_BITMASK;
-      optargs_s.ro = get_bool (hd_value);
+      if (decode_bool (buff, idx, &optargs_s.ro) != 0) return -1;;
     }
     else
     if (atom_equals (hd_name, "qgroupid")) {
       optargs_s.bitmask |= GUESTFS_BTRFS_SUBVOLUME_SNAPSHOT_OPTS_QGROUPID_BITMASK;
-      optargs_s.qgroupid = erl_iolist_to_string (hd_value);
+      if (decode_string (buff, idx, (char **) &optargs_s.qgroupid) != 0) return -1;
     }
     else
-      return unknown_optarg ("btrfs_subvolume_snapshot", hd_name);
-    optargst = ERL_CONS_TAIL (optargst);
+      return unknown_optarg (retbuff, "btrfs_subvolume_snapshot", hd_name);
   }
+  if (optargsize > 0 && buff[*idx] == ERL_NIL_EXT)
+    (*idx)++;
 
   int r;
 
@@ -332,927 +367,1050 @@ run_btrfs_subvolume_snapshot (ETERM *args_tuple)
   if ((optargs_s.bitmask & GUESTFS_BTRFS_SUBVOLUME_SNAPSHOT_OPTS_QGROUPID_BITMASK))
     free ((char *) optargs_s.qgroupid);
   if (r == -1)
-    return make_error ("btrfs_subvolume_snapshot");
+    return make_error (retbuff, "btrfs_subvolume_snapshot");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_canonical_device_name (ETERM *args_tuple)
+int
+run_canonical_device_name (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *device = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
   char *r;
 
   r = guestfs_canonical_device_name (g, device);
   if (r == NULL)
-    return make_error ("canonical_device_name");
+    return make_error (retbuff, "canonical_device_name");
 
-  ETERM *rt = erl_mk_string (r);
+  if (ei_x_encode_string (retbuff, r) != 0) return -1;
   free (r);
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_case_sensitive_path (ETERM *args_tuple)
+int
+run_case_sensitive_path (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *path = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *path;
+  if (decode_string (buff, idx, &path) != 0) return -1;
   char *r;
 
   r = guestfs_case_sensitive_path (g, path);
   if (r == NULL)
-    return make_error ("case_sensitive_path");
+    return make_error (retbuff, "case_sensitive_path");
 
-  ETERM *rt = erl_mk_string (r);
+  if (ei_x_encode_string (retbuff, r) != 0) return -1;
   free (r);
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_copy_size (ETERM *args_tuple)
+int
+run_copy_size (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *src = erl_iolist_to_string (ARG (0));
-  CLEANUP_FREE char *dest = erl_iolist_to_string (ARG (1));
-  int64_t size = get_int64 (ARG (2));
+  CLEANUP_FREE char *src;
+  if (decode_string (buff, idx, &src) != 0) return -1;
+  CLEANUP_FREE char *dest;
+  if (decode_string (buff, idx, &dest) != 0) return -1;
+  int64_t size;
+  if (decode_int64 (buff, idx, &size) != 0) return -1;
   int r;
 
   r = guestfs_copy_size (g, src, dest, size);
   if (r == -1)
-    return make_error ("copy_size");
+    return make_error (retbuff, "copy_size");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_debug_upload (ETERM *args_tuple)
+int
+run_debug_upload (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *filename = erl_iolist_to_string (ARG (0));
-  CLEANUP_FREE char *tmpname = erl_iolist_to_string (ARG (1));
-  int mode = get_int (ARG (2));
+  CLEANUP_FREE char *filename;
+  if (decode_string (buff, idx, &filename) != 0) return -1;
+  CLEANUP_FREE char *tmpname;
+  if (decode_string (buff, idx, &tmpname) != 0) return -1;
+  int mode;
+  if (decode_int (buff, idx, &mode) != 0) return -1;
   int r;
 
   r = guestfs_debug_upload (g, filename, tmpname, mode);
   if (r == -1)
-    return make_error ("debug_upload");
+    return make_error (retbuff, "debug_upload");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_download_offset (ETERM *args_tuple)
+int
+run_download_offset (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *remotefilename = erl_iolist_to_string (ARG (0));
-  CLEANUP_FREE char *filename = erl_iolist_to_string (ARG (1));
-  int64_t offset = get_int64 (ARG (2));
-  int64_t size = get_int64 (ARG (3));
+  CLEANUP_FREE char *remotefilename;
+  if (decode_string (buff, idx, &remotefilename) != 0) return -1;
+  CLEANUP_FREE char *filename;
+  if (decode_string (buff, idx, &filename) != 0) return -1;
+  int64_t offset;
+  if (decode_int64 (buff, idx, &offset) != 0) return -1;
+  int64_t size;
+  if (decode_int64 (buff, idx, &size) != 0) return -1;
   int r;
 
   r = guestfs_download_offset (g, remotefilename, filename, offset, size);
   if (r == -1)
-    return make_error ("download_offset");
+    return make_error (retbuff, "download_offset");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_find_inode (ETERM *args_tuple)
+int
+run_find_inode (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *device = erl_iolist_to_string (ARG (0));
-  int64_t inode = get_int64 (ARG (1));
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
+  int64_t inode;
+  if (decode_int64 (buff, idx, &inode) != 0) return -1;
   struct guestfs_tsk_dirent_list *r;
 
   r = guestfs_find_inode (g, device, inode);
   if (r == NULL)
-    return make_error ("find_inode");
+    return make_error (retbuff, "find_inode");
 
-  ETERM *rt = make_tsk_dirent_list (r);
+  if (make_tsk_dirent_list (retbuff, r) != 0) return -1;
   guestfs_free_tsk_dirent_list (r);
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_findfs_uuid (ETERM *args_tuple)
+int
+run_findfs_uuid (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *uuid = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *uuid;
+  if (decode_string (buff, idx, &uuid) != 0) return -1;
   char *r;
 
   r = guestfs_findfs_uuid (g, uuid);
   if (r == NULL)
-    return make_error ("findfs_uuid");
+    return make_error (retbuff, "findfs_uuid");
 
-  ETERM *rt = erl_mk_string (r);
+  if (ei_x_encode_string (retbuff, r) != 0) return -1;
   free (r);
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_fstrim (ETERM *args_tuple)
+int
+run_fstrim (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *mountpoint = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *mountpoint;
+  if (decode_string (buff, idx, &mountpoint) != 0) return -1;
 
   struct guestfs_fstrim_argv optargs_s = { .bitmask = 0 };
   struct guestfs_fstrim_argv *optargs = &optargs_s;
-  ETERM *optargst = ARG (1);
-  while (!ERL_IS_EMPTY_LIST (optargst)) {
-    ETERM *hd = ERL_CONS_HEAD (optargst);
-    ETERM *hd_name = ERL_TUPLE_ELEMENT (hd, 0);
-    ETERM *hd_value = ERL_TUPLE_ELEMENT (hd, 1);
+  int optargsize;
+  if (ei_decode_list_header (buff, idx, &optargsize) != 0) return -1;
+  for (int i = 0; i < optargsize; i++) {
+    int hd;
+    if (ei_decode_tuple_header (buff, idx, &hd) != 0) return -1;
+    char hd_name[MAXATOMLEN];
+    if (ei_decode_atom (buff, idx, hd_name) != 0) return -1;
 
     if (atom_equals (hd_name, "offset")) {
       optargs_s.bitmask |= GUESTFS_FSTRIM_OFFSET_BITMASK;
-      optargs_s.offset = get_int64 (hd_value);
+      if (decode_int64 (buff, idx, &optargs_s.offset) != 0) return -1;
     }
     else
     if (atom_equals (hd_name, "length")) {
       optargs_s.bitmask |= GUESTFS_FSTRIM_LENGTH_BITMASK;
-      optargs_s.length = get_int64 (hd_value);
+      if (decode_int64 (buff, idx, &optargs_s.length) != 0) return -1;
     }
     else
     if (atom_equals (hd_name, "minimumfreeextent")) {
       optargs_s.bitmask |= GUESTFS_FSTRIM_MINIMUMFREEEXTENT_BITMASK;
-      optargs_s.minimumfreeextent = get_int64 (hd_value);
+      if (decode_int64 (buff, idx, &optargs_s.minimumfreeextent) != 0) return -1;
     }
     else
-      return unknown_optarg ("fstrim", hd_name);
-    optargst = ERL_CONS_TAIL (optargst);
+      return unknown_optarg (retbuff, "fstrim", hd_name);
   }
+  if (optargsize > 0 && buff[*idx] == ERL_NIL_EXT)
+    (*idx)++;
 
   int r;
 
   r = guestfs_fstrim_argv (g, mountpoint, optargs);
   if (r == -1)
-    return make_error ("fstrim");
+    return make_error (retbuff, "fstrim");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_get_autosync (ETERM *args_tuple)
+int
+run_get_autosync (ei_x_buff *retbuff, const char *buff, int *idx)
 {
   int r;
 
   r = guestfs_get_autosync (g);
   if (r == -1)
-    return make_error ("get_autosync");
+    return make_error (retbuff, "get_autosync");
 
-  return make_bool (r);
+  if (make_bool (retbuff, r) != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_get_e2uuid (ETERM *args_tuple)
+int
+run_get_e2uuid (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *device = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
   char *r;
 
   r = guestfs_get_e2uuid (g, device);
   if (r == NULL)
-    return make_error ("get_e2uuid");
+    return make_error (retbuff, "get_e2uuid");
 
-  ETERM *rt = erl_mk_string (r);
+  if (ei_x_encode_string (retbuff, r) != 0) return -1;
   free (r);
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_get_libvirt_requested_credential_challenge (ETERM *args_tuple)
+int
+run_get_libvirt_requested_credential_challenge (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  int index = get_int (ARG (0));
+  int index;
+  if (decode_int (buff, idx, &index) != 0) return -1;
   char *r;
 
   r = guestfs_get_libvirt_requested_credential_challenge (g, index);
   if (r == NULL)
-    return make_error ("get_libvirt_requested_credential_challenge");
+    return make_error (retbuff, "get_libvirt_requested_credential_challenge");
 
-  ETERM *rt = erl_mk_string (r);
+  if (ei_x_encode_string (retbuff, r) != 0) return -1;
   free (r);
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_get_pid (ETERM *args_tuple)
+int
+run_get_pid (ei_x_buff *retbuff, const char *buff, int *idx)
 {
   int r;
 
   r = guestfs_get_pid (g);
   if (r == -1)
-    return make_error ("get_pid");
+    return make_error (retbuff, "get_pid");
 
-  return erl_mk_int (r);
+  if (ei_x_encode_long (retbuff, r) != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_get_selinux (ETERM *args_tuple)
+int
+run_get_selinux (ei_x_buff *retbuff, const char *buff, int *idx)
 {
   int r;
 
   r = guestfs_get_selinux (g);
   if (r == -1)
-    return make_error ("get_selinux");
+    return make_error (retbuff, "get_selinux");
 
-  return make_bool (r);
+  if (make_bool (retbuff, r) != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_grepi (ETERM *args_tuple)
+int
+run_grepi (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *regex = erl_iolist_to_string (ARG (0));
-  CLEANUP_FREE char *path = erl_iolist_to_string (ARG (1));
+  CLEANUP_FREE char *regex;
+  if (decode_string (buff, idx, &regex) != 0) return -1;
+  CLEANUP_FREE char *path;
+  if (decode_string (buff, idx, &path) != 0) return -1;
   char **r;
 
   r = guestfs_grepi (g, regex, path);
   if (r == NULL)
-    return make_error ("grepi");
+    return make_error (retbuff, "grepi");
 
-  ETERM *rt = make_string_list (r);
+  if (make_string_list (retbuff, r) != 0) return -1;
   guestfs_int_free_string_list (r);
-
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_hexdump (ETERM *args_tuple)
+int
+run_hexdump (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *path = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *path;
+  if (decode_string (buff, idx, &path) != 0) return -1;
   char *r;
 
   r = guestfs_hexdump (g, path);
   if (r == NULL)
-    return make_error ("hexdump");
+    return make_error (retbuff, "hexdump");
 
-  ETERM *rt = erl_mk_string (r);
+  if (ei_x_encode_string (retbuff, r) != 0) return -1;
   free (r);
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_hivex_node_children (ETERM *args_tuple)
+int
+run_hivex_node_children (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  int64_t nodeh = get_int64 (ARG (0));
+  int64_t nodeh;
+  if (decode_int64 (buff, idx, &nodeh) != 0) return -1;
   struct guestfs_hivex_node_list *r;
 
   r = guestfs_hivex_node_children (g, nodeh);
   if (r == NULL)
-    return make_error ("hivex_node_children");
+    return make_error (retbuff, "hivex_node_children");
 
-  ETERM *rt = make_hivex_node_list (r);
+  if (make_hivex_node_list (retbuff, r) != 0) return -1;
   guestfs_free_hivex_node_list (r);
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_inspect_get_format (ETERM *args_tuple)
+int
+run_inspect_get_format (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *root = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *root;
+  if (decode_string (buff, idx, &root) != 0) return -1;
   char *r;
 
   r = guestfs_inspect_get_format (g, root);
   if (r == NULL)
-    return make_error ("inspect_get_format");
+    return make_error (retbuff, "inspect_get_format");
 
-  ETERM *rt = erl_mk_string (r);
+  if (ei_x_encode_string (retbuff, r) != 0) return -1;
   free (r);
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_inspect_get_hostname (ETERM *args_tuple)
+int
+run_inspect_get_hostname (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *root = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *root;
+  if (decode_string (buff, idx, &root) != 0) return -1;
   char *r;
 
   r = guestfs_inspect_get_hostname (g, root);
   if (r == NULL)
-    return make_error ("inspect_get_hostname");
+    return make_error (retbuff, "inspect_get_hostname");
 
-  ETERM *rt = erl_mk_string (r);
+  if (ei_x_encode_string (retbuff, r) != 0) return -1;
   free (r);
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_inspect_is_multipart (ETERM *args_tuple)
+int
+run_inspect_is_multipart (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *root = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *root;
+  if (decode_string (buff, idx, &root) != 0) return -1;
   int r;
 
   r = guestfs_inspect_is_multipart (g, root);
   if (r == -1)
-    return make_error ("inspect_is_multipart");
+    return make_error (retbuff, "inspect_is_multipart");
 
-  return make_bool (r);
+  if (make_bool (retbuff, r) != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_internal_test_rbool (ETERM *args_tuple)
+int
+run_internal_test_rbool (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *val = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *val;
+  if (decode_string (buff, idx, &val) != 0) return -1;
   int r;
 
   r = guestfs_internal_test_rbool (g, val);
   if (r == -1)
-    return make_error ("internal_test_rbool");
+    return make_error (retbuff, "internal_test_rbool");
 
-  return make_bool (r);
+  if (make_bool (retbuff, r) != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_internal_test_rhashtable (ETERM *args_tuple)
+int
+run_internal_test_rhashtable (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *val = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *val;
+  if (decode_string (buff, idx, &val) != 0) return -1;
   char **r;
 
   r = guestfs_internal_test_rhashtable (g, val);
   if (r == NULL)
-    return make_error ("internal_test_rhashtable");
+    return make_error (retbuff, "internal_test_rhashtable");
 
-  ETERM *rt = make_table (r);
+  if (make_table (retbuff, r) != 0) return -1;
   guestfs_int_free_string_list (r);
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_internal_test_rstringlist (ETERM *args_tuple)
+int
+run_internal_test_rstringlist (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *val = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *val;
+  if (decode_string (buff, idx, &val) != 0) return -1;
   char **r;
 
   r = guestfs_internal_test_rstringlist (g, val);
   if (r == NULL)
-    return make_error ("internal_test_rstringlist");
+    return make_error (retbuff, "internal_test_rstringlist");
 
-  ETERM *rt = make_string_list (r);
+  if (make_string_list (retbuff, r) != 0) return -1;
   guestfs_int_free_string_list (r);
-
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_internal_test_rstringlisterr (ETERM *args_tuple)
+int
+run_internal_test_rstringlisterr (ei_x_buff *retbuff, const char *buff, int *idx)
 {
   char **r;
 
   r = guestfs_internal_test_rstringlisterr (g);
   if (r == NULL)
-    return make_error ("internal_test_rstringlisterr");
+    return make_error (retbuff, "internal_test_rstringlisterr");
 
-  ETERM *rt = make_string_list (r);
+  if (make_string_list (retbuff, r) != 0) return -1;
   guestfs_int_free_string_list (r);
-
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_is_busy (ETERM *args_tuple)
+int
+run_is_busy (ei_x_buff *retbuff, const char *buff, int *idx)
 {
   int r;
 
   r = guestfs_is_busy (g);
   if (r == -1)
-    return make_error ("is_busy");
+    return make_error (retbuff, "is_busy");
 
-  return make_bool (r);
+  if (make_bool (retbuff, r) != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_is_ready (ETERM *args_tuple)
+int
+run_is_ready (ei_x_buff *retbuff, const char *buff, int *idx)
 {
   int r;
 
   r = guestfs_is_ready (g);
   if (r == -1)
-    return make_error ("is_ready");
+    return make_error (retbuff, "is_ready");
 
-  return make_bool (r);
+  if (make_bool (retbuff, r) != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_ldmtool_scan (ETERM *args_tuple)
+int
+run_ldmtool_scan (ei_x_buff *retbuff, const char *buff, int *idx)
 {
   char **r;
 
   r = guestfs_ldmtool_scan (g);
   if (r == NULL)
-    return make_error ("ldmtool_scan");
+    return make_error (retbuff, "ldmtool_scan");
 
-  ETERM *rt = make_string_list (r);
+  if (make_string_list (retbuff, r) != 0) return -1;
   guestfs_int_free_string_list (r);
-
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_lgetxattrs (ETERM *args_tuple)
+int
+run_lgetxattrs (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *path = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *path;
+  if (decode_string (buff, idx, &path) != 0) return -1;
   struct guestfs_xattr_list *r;
 
   r = guestfs_lgetxattrs (g, path);
   if (r == NULL)
-    return make_error ("lgetxattrs");
+    return make_error (retbuff, "lgetxattrs");
 
-  ETERM *rt = make_xattr_list (r);
+  if (make_xattr_list (retbuff, r) != 0) return -1;
   guestfs_free_xattr_list (r);
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_list_dm_devices (ETERM *args_tuple)
+int
+run_list_dm_devices (ei_x_buff *retbuff, const char *buff, int *idx)
 {
   char **r;
 
   r = guestfs_list_dm_devices (g);
   if (r == NULL)
-    return make_error ("list_dm_devices");
+    return make_error (retbuff, "list_dm_devices");
 
-  ETERM *rt = make_string_list (r);
+  if (make_string_list (retbuff, r) != 0) return -1;
   guestfs_int_free_string_list (r);
-
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_list_ldm_volumes (ETERM *args_tuple)
+int
+run_list_ldm_volumes (ei_x_buff *retbuff, const char *buff, int *idx)
 {
   char **r;
 
   r = guestfs_list_ldm_volumes (g);
   if (r == NULL)
-    return make_error ("list_ldm_volumes");
+    return make_error (retbuff, "list_ldm_volumes");
 
-  ETERM *rt = make_string_list (r);
+  if (make_string_list (retbuff, r) != 0) return -1;
   guestfs_int_free_string_list (r);
-
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_luks_format (ETERM *args_tuple)
+int
+run_luks_format (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *device = erl_iolist_to_string (ARG (0));
-  CLEANUP_FREE char *key = erl_iolist_to_string (ARG (1));
-  int keyslot = get_int (ARG (2));
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
+  CLEANUP_FREE char *key;
+  if (decode_string (buff, idx, &key) != 0) return -1;
+  int keyslot;
+  if (decode_int (buff, idx, &keyslot) != 0) return -1;
   int r;
 
   r = guestfs_luks_format (g, device, key, keyslot);
   if (r == -1)
-    return make_error ("luks_format");
+    return make_error (retbuff, "luks_format");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_lvm_canonical_lv_name (ETERM *args_tuple)
+int
+run_lvm_canonical_lv_name (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *lvname = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *lvname;
+  if (decode_string (buff, idx, &lvname) != 0) return -1;
   char *r;
 
   r = guestfs_lvm_canonical_lv_name (g, lvname);
   if (r == NULL)
-    return make_error ("lvm_canonical_lv_name");
+    return make_error (retbuff, "lvm_canonical_lv_name");
 
-  ETERM *rt = erl_mk_string (r);
+  if (ei_x_encode_string (retbuff, r) != 0) return -1;
   free (r);
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_lvrename (ETERM *args_tuple)
+int
+run_lvrename (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *logvol = erl_iolist_to_string (ARG (0));
-  CLEANUP_FREE char *newlogvol = erl_iolist_to_string (ARG (1));
+  CLEANUP_FREE char *logvol;
+  if (decode_string (buff, idx, &logvol) != 0) return -1;
+  CLEANUP_FREE char *newlogvol;
+  if (decode_string (buff, idx, &newlogvol) != 0) return -1;
   int r;
 
   r = guestfs_lvrename (g, logvol, newlogvol);
   if (r == -1)
-    return make_error ("lvrename");
+    return make_error (retbuff, "lvrename");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_lvresize (ETERM *args_tuple)
+int
+run_lvresize (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *device = erl_iolist_to_string (ARG (0));
-  int mbytes = get_int (ARG (1));
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
+  int mbytes;
+  if (decode_int (buff, idx, &mbytes) != 0) return -1;
   int r;
 
   r = guestfs_lvresize (g, device, mbytes);
   if (r == -1)
-    return make_error ("lvresize");
+    return make_error (retbuff, "lvresize");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_lvuuid (ETERM *args_tuple)
+int
+run_lvuuid (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *device = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
   char *r;
 
   r = guestfs_lvuuid (g, device);
   if (r == NULL)
-    return make_error ("lvuuid");
+    return make_error (retbuff, "lvuuid");
 
-  ETERM *rt = erl_mk_string (r);
+  if (ei_x_encode_string (retbuff, r) != 0) return -1;
   free (r);
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_mke2fs_J (ETERM *args_tuple)
+int
+run_mke2fs_J (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *fstype = erl_iolist_to_string (ARG (0));
-  int blocksize = get_int (ARG (1));
-  CLEANUP_FREE char *device = erl_iolist_to_string (ARG (2));
-  CLEANUP_FREE char *journal = erl_iolist_to_string (ARG (3));
+  CLEANUP_FREE char *fstype;
+  if (decode_string (buff, idx, &fstype) != 0) return -1;
+  int blocksize;
+  if (decode_int (buff, idx, &blocksize) != 0) return -1;
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
+  CLEANUP_FREE char *journal;
+  if (decode_string (buff, idx, &journal) != 0) return -1;
   int r;
 
   r = guestfs_mke2fs_J (g, fstype, blocksize, device, journal);
   if (r == -1)
-    return make_error ("mke2fs_J");
+    return make_error (retbuff, "mke2fs_J");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_mke2journal_U (ETERM *args_tuple)
+int
+run_mke2journal_U (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  int blocksize = get_int (ARG (0));
-  CLEANUP_FREE char *uuid = erl_iolist_to_string (ARG (1));
-  CLEANUP_FREE char *device = erl_iolist_to_string (ARG (2));
+  int blocksize;
+  if (decode_int (buff, idx, &blocksize) != 0) return -1;
+  CLEANUP_FREE char *uuid;
+  if (decode_string (buff, idx, &uuid) != 0) return -1;
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
   int r;
 
   r = guestfs_mke2journal_U (g, blocksize, uuid, device);
   if (r == -1)
-    return make_error ("mke2journal_U");
+    return make_error (retbuff, "mke2journal_U");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_mknod_c (ETERM *args_tuple)
+int
+run_mknod_c (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  int mode = get_int (ARG (0));
-  int devmajor = get_int (ARG (1));
-  int devminor = get_int (ARG (2));
-  CLEANUP_FREE char *path = erl_iolist_to_string (ARG (3));
+  int mode;
+  if (decode_int (buff, idx, &mode) != 0) return -1;
+  int devmajor;
+  if (decode_int (buff, idx, &devmajor) != 0) return -1;
+  int devminor;
+  if (decode_int (buff, idx, &devminor) != 0) return -1;
+  CLEANUP_FREE char *path;
+  if (decode_string (buff, idx, &path) != 0) return -1;
   int r;
 
   r = guestfs_mknod_c (g, mode, devmajor, devminor, path);
   if (r == -1)
-    return make_error ("mknod_c");
+    return make_error (retbuff, "mknod_c");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_mount_options (ETERM *args_tuple)
+int
+run_mount_options (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *options = erl_iolist_to_string (ARG (0));
-  CLEANUP_FREE char *mountable = erl_iolist_to_string (ARG (1));
-  CLEANUP_FREE char *mountpoint = erl_iolist_to_string (ARG (2));
+  CLEANUP_FREE char *options;
+  if (decode_string (buff, idx, &options) != 0) return -1;
+  CLEANUP_FREE char *mountable;
+  if (decode_string (buff, idx, &mountable) != 0) return -1;
+  CLEANUP_FREE char *mountpoint;
+  if (decode_string (buff, idx, &mountpoint) != 0) return -1;
   int r;
 
   r = guestfs_mount_options (g, options, mountable, mountpoint);
   if (r == -1)
-    return make_error ("mount_options");
+    return make_error (retbuff, "mount_options");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_ntfsfix (ETERM *args_tuple)
+int
+run_ntfsfix (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *device = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
 
   struct guestfs_ntfsfix_argv optargs_s = { .bitmask = 0 };
   struct guestfs_ntfsfix_argv *optargs = &optargs_s;
-  ETERM *optargst = ARG (1);
-  while (!ERL_IS_EMPTY_LIST (optargst)) {
-    ETERM *hd = ERL_CONS_HEAD (optargst);
-    ETERM *hd_name = ERL_TUPLE_ELEMENT (hd, 0);
-    ETERM *hd_value = ERL_TUPLE_ELEMENT (hd, 1);
+  int optargsize;
+  if (ei_decode_list_header (buff, idx, &optargsize) != 0) return -1;
+  for (int i = 0; i < optargsize; i++) {
+    int hd;
+    if (ei_decode_tuple_header (buff, idx, &hd) != 0) return -1;
+    char hd_name[MAXATOMLEN];
+    if (ei_decode_atom (buff, idx, hd_name) != 0) return -1;
 
     if (atom_equals (hd_name, "clearbadsectors")) {
       optargs_s.bitmask |= GUESTFS_NTFSFIX_CLEARBADSECTORS_BITMASK;
-      optargs_s.clearbadsectors = get_bool (hd_value);
+      if (decode_bool (buff, idx, &optargs_s.clearbadsectors) != 0) return -1;;
     }
     else
-      return unknown_optarg ("ntfsfix", hd_name);
-    optargst = ERL_CONS_TAIL (optargst);
+      return unknown_optarg (retbuff, "ntfsfix", hd_name);
   }
+  if (optargsize > 0 && buff[*idx] == ERL_NIL_EXT)
+    (*idx)++;
 
   int r;
 
   r = guestfs_ntfsfix_argv (g, device, optargs);
   if (r == -1)
-    return make_error ("ntfsfix");
+    return make_error (retbuff, "ntfsfix");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_part_add (ETERM *args_tuple)
+int
+run_part_add (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *device = erl_iolist_to_string (ARG (0));
-  CLEANUP_FREE char *prlogex = erl_iolist_to_string (ARG (1));
-  int64_t startsect = get_int64 (ARG (2));
-  int64_t endsect = get_int64 (ARG (3));
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
+  CLEANUP_FREE char *prlogex;
+  if (decode_string (buff, idx, &prlogex) != 0) return -1;
+  int64_t startsect;
+  if (decode_int64 (buff, idx, &startsect) != 0) return -1;
+  int64_t endsect;
+  if (decode_int64 (buff, idx, &endsect) != 0) return -1;
   int r;
 
   r = guestfs_part_add (g, device, prlogex, startsect, endsect);
   if (r == -1)
-    return make_error ("part_add");
+    return make_error (retbuff, "part_add");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_part_get_gpt_guid (ETERM *args_tuple)
+int
+run_part_get_gpt_guid (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *device = erl_iolist_to_string (ARG (0));
-  int partnum = get_int (ARG (1));
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
+  int partnum;
+  if (decode_int (buff, idx, &partnum) != 0) return -1;
   char *r;
 
   r = guestfs_part_get_gpt_guid (g, device, partnum);
   if (r == NULL)
-    return make_error ("part_get_gpt_guid");
+    return make_error (retbuff, "part_get_gpt_guid");
 
-  ETERM *rt = erl_mk_string (r);
+  if (ei_x_encode_string (retbuff, r) != 0) return -1;
   free (r);
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_part_get_mbr_id (ETERM *args_tuple)
+int
+run_part_get_mbr_id (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *device = erl_iolist_to_string (ARG (0));
-  int partnum = get_int (ARG (1));
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
+  int partnum;
+  if (decode_int (buff, idx, &partnum) != 0) return -1;
   int r;
 
   r = guestfs_part_get_mbr_id (g, device, partnum);
   if (r == -1)
-    return make_error ("part_get_mbr_id");
+    return make_error (retbuff, "part_get_mbr_id");
 
-  return erl_mk_int (r);
+  if (ei_x_encode_long (retbuff, r) != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_part_get_mbr_part_type (ETERM *args_tuple)
+int
+run_part_get_mbr_part_type (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *device = erl_iolist_to_string (ARG (0));
-  int partnum = get_int (ARG (1));
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
+  int partnum;
+  if (decode_int (buff, idx, &partnum) != 0) return -1;
   char *r;
 
   r = guestfs_part_get_mbr_part_type (g, device, partnum);
   if (r == NULL)
-    return make_error ("part_get_mbr_part_type");
+    return make_error (retbuff, "part_get_mbr_part_type");
 
-  ETERM *rt = erl_mk_string (r);
+  if (ei_x_encode_string (retbuff, r) != 0) return -1;
   free (r);
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_part_get_name (ETERM *args_tuple)
+int
+run_part_get_name (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *device = erl_iolist_to_string (ARG (0));
-  int partnum = get_int (ARG (1));
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
+  int partnum;
+  if (decode_int (buff, idx, &partnum) != 0) return -1;
   char *r;
 
   r = guestfs_part_get_name (g, device, partnum);
   if (r == NULL)
-    return make_error ("part_get_name");
+    return make_error (retbuff, "part_get_name");
 
-  ETERM *rt = erl_mk_string (r);
+  if (ei_x_encode_string (retbuff, r) != 0) return -1;
   free (r);
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_part_init (ETERM *args_tuple)
+int
+run_part_init (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *device = erl_iolist_to_string (ARG (0));
-  CLEANUP_FREE char *parttype = erl_iolist_to_string (ARG (1));
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
+  CLEANUP_FREE char *parttype;
+  if (decode_string (buff, idx, &parttype) != 0) return -1;
   int r;
 
   r = guestfs_part_init (g, device, parttype);
   if (r == -1)
-    return make_error ("part_init");
+    return make_error (retbuff, "part_init");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_part_to_partnum (ETERM *args_tuple)
+int
+run_part_to_partnum (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *partition = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *partition;
+  if (decode_string (buff, idx, &partition) != 0) return -1;
   int r;
 
   r = guestfs_part_to_partnum (g, partition);
   if (r == -1)
-    return make_error ("part_to_partnum");
+    return make_error (retbuff, "part_to_partnum");
 
-  return erl_mk_int (r);
+  if (ei_x_encode_long (retbuff, r) != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_pvuuid (ETERM *args_tuple)
+int
+run_pvuuid (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *device = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
   char *r;
 
   r = guestfs_pvuuid (g, device);
   if (r == NULL)
-    return make_error ("pvuuid");
+    return make_error (retbuff, "pvuuid");
 
-  ETERM *rt = erl_mk_string (r);
+  if (ei_x_encode_string (retbuff, r) != 0) return -1;
   free (r);
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_readlinklist (ETERM *args_tuple)
+int
+run_readlinklist (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *path = erl_iolist_to_string (ARG (0));
-  CLEANUP_FREE_STRING_LIST char **names = get_string_list (ARG (1));
+  CLEANUP_FREE char *path;
+  if (decode_string (buff, idx, &path) != 0) return -1;
+  CLEANUP_FREE_STRING_LIST char **names;
+  if (decode_string_list (buff, idx, &names) != 0) return -1;
   char **r;
 
   r = guestfs_readlinklist (g, path, names);
   if (r == NULL)
-    return make_error ("readlinklist");
+    return make_error (retbuff, "readlinklist");
 
-  ETERM *rt = make_string_list (r);
+  if (make_string_list (retbuff, r) != 0) return -1;
   guestfs_int_free_string_list (r);
-
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_rmmountpoint (ETERM *args_tuple)
+int
+run_rmmountpoint (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *exemptpath = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *exemptpath;
+  if (decode_string (buff, idx, &exemptpath) != 0) return -1;
   int r;
 
   r = guestfs_rmmountpoint (g, exemptpath);
   if (r == -1)
-    return make_error ("rmmountpoint");
+    return make_error (retbuff, "rmmountpoint");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_scrub_device (ETERM *args_tuple)
+int
+run_scrub_device (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *device = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
   int r;
 
   r = guestfs_scrub_device (g, device);
   if (r == -1)
-    return make_error ("scrub_device");
+    return make_error (retbuff, "scrub_device");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_set_cachedir (ETERM *args_tuple)
+int
+run_set_cachedir (ei_x_buff *retbuff, const char *buff, int *idx)
 {
   CLEANUP_FREE char *cachedir;
-  if (atom_equals (ARG (0), "undefined"))
-    cachedir = NULL;
-  else
-    cachedir = erl_iolist_to_string (ARG (0));
+  char cachedir_opt[MAXATOMLEN];
+  if (ei_decode_atom(buff, idx, cachedir_opt) == 0) {
+    if (atom_equals (cachedir_opt, "undefined"))
+      cachedir = NULL;
+    else
+      cachedir = cachedir_opt;
+  } else {
+    if (decode_string (buff, idx, &cachedir) != 0) return -1;
+  }
   int r;
 
   r = guestfs_set_cachedir (g, cachedir);
   if (r == -1)
-    return make_error ("set_cachedir");
+    return make_error (retbuff, "set_cachedir");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_set_e2attrs (ETERM *args_tuple)
+int
+run_set_e2attrs (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *file = erl_iolist_to_string (ARG (0));
-  CLEANUP_FREE char *attrs = erl_iolist_to_string (ARG (1));
+  CLEANUP_FREE char *file;
+  if (decode_string (buff, idx, &file) != 0) return -1;
+  CLEANUP_FREE char *attrs;
+  if (decode_string (buff, idx, &attrs) != 0) return -1;
 
   struct guestfs_set_e2attrs_argv optargs_s = { .bitmask = 0 };
   struct guestfs_set_e2attrs_argv *optargs = &optargs_s;
-  ETERM *optargst = ARG (2);
-  while (!ERL_IS_EMPTY_LIST (optargst)) {
-    ETERM *hd = ERL_CONS_HEAD (optargst);
-    ETERM *hd_name = ERL_TUPLE_ELEMENT (hd, 0);
-    ETERM *hd_value = ERL_TUPLE_ELEMENT (hd, 1);
+  int optargsize;
+  if (ei_decode_list_header (buff, idx, &optargsize) != 0) return -1;
+  for (int i = 0; i < optargsize; i++) {
+    int hd;
+    if (ei_decode_tuple_header (buff, idx, &hd) != 0) return -1;
+    char hd_name[MAXATOMLEN];
+    if (ei_decode_atom (buff, idx, hd_name) != 0) return -1;
 
     if (atom_equals (hd_name, "clear")) {
       optargs_s.bitmask |= GUESTFS_SET_E2ATTRS_CLEAR_BITMASK;
-      optargs_s.clear = get_bool (hd_value);
+      if (decode_bool (buff, idx, &optargs_s.clear) != 0) return -1;;
     }
     else
-      return unknown_optarg ("set_e2attrs", hd_name);
-    optargst = ERL_CONS_TAIL (optargst);
+      return unknown_optarg (retbuff, "set_e2attrs", hd_name);
   }
+  if (optargsize > 0 && buff[*idx] == ERL_NIL_EXT)
+    (*idx)++;
 
   int r;
 
   r = guestfs_set_e2attrs_argv (g, file, attrs, optargs);
   if (r == -1)
-    return make_error ("set_e2attrs");
+    return make_error (retbuff, "set_e2attrs");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_set_e2label (ETERM *args_tuple)
+int
+run_set_e2label (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *device = erl_iolist_to_string (ARG (0));
-  CLEANUP_FREE char *label = erl_iolist_to_string (ARG (1));
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
+  CLEANUP_FREE char *label;
+  if (decode_string (buff, idx, &label) != 0) return -1;
   int r;
 
   r = guestfs_set_e2label (g, device, label);
   if (r == -1)
-    return make_error ("set_e2label");
+    return make_error (retbuff, "set_e2label");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_sh_lines (ETERM *args_tuple)
+int
+run_sh_lines (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *command = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *command;
+  if (decode_string (buff, idx, &command) != 0) return -1;
   char **r;
 
   r = guestfs_sh_lines (g, command);
   if (r == NULL)
-    return make_error ("sh_lines");
+    return make_error (retbuff, "sh_lines");
 
-  ETERM *rt = make_string_list (r);
+  if (make_string_list (retbuff, r) != 0) return -1;
   guestfs_int_free_string_list (r);
-
-  return rt;
+  return 0;
 }
 
-ETERM *
-run_shutdown (ETERM *args_tuple)
+int
+run_shutdown (ei_x_buff *retbuff, const char *buff, int *idx)
 {
   int r;
 
   r = guestfs_shutdown (g);
   if (r == -1)
-    return make_error ("shutdown");
+    return make_error (retbuff, "shutdown");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_swapon_file (ETERM *args_tuple)
+int
+run_swapon_file (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *file = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *file;
+  if (decode_string (buff, idx, &file) != 0) return -1;
   int r;
 
   r = guestfs_swapon_file (g, file);
   if (r == -1)
-    return make_error ("swapon_file");
+    return make_error (retbuff, "swapon_file");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_tgz_out (ETERM *args_tuple)
+int
+run_tgz_out (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *directory = erl_iolist_to_string (ARG (0));
-  CLEANUP_FREE char *tarball = erl_iolist_to_string (ARG (1));
+  CLEANUP_FREE char *directory;
+  if (decode_string (buff, idx, &directory) != 0) return -1;
+  CLEANUP_FREE char *tarball;
+  if (decode_string (buff, idx, &tarball) != 0) return -1;
   int r;
 
   r = guestfs_tgz_out (g, directory, tarball);
   if (r == -1)
-    return make_error ("tgz_out");
+    return make_error (retbuff, "tgz_out");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_umask (ETERM *args_tuple)
+int
+run_umask (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  int mask = get_int (ARG (0));
+  int mask;
+  if (decode_int (buff, idx, &mask) != 0) return -1;
   int r;
 
   r = guestfs_umask (g, mask);
   if (r == -1)
-    return make_error ("umask");
+    return make_error (retbuff, "umask");
 
-  return erl_mk_int (r);
+  if (ei_x_encode_long (retbuff, r) != 0) return -1;
+  return 0;
 }
 
-ETERM *
-run_wipefs (ETERM *args_tuple)
+int
+run_wipefs (ei_x_buff *retbuff, const char *buff, int *idx)
 {
-  CLEANUP_FREE char *device = erl_iolist_to_string (ARG (0));
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
   int r;
 
   r = guestfs_wipefs (g, device);
   if (r == -1)
-    return make_error ("wipefs");
+    return make_error (retbuff, "wipefs");
 
-  return erl_mk_atom ("ok");
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
 }

@@ -1,5 +1,5 @@
 /* Emergency actions in case of a fatal signal.
-   Copyright (C) 2003-2004, 2009-2020 Free Software Foundation, Inc.
+   Copyright (C) 2003-2004, 2009-2021 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2003.
 
    This program is free software: you can redistribute it and/or modify
@@ -15,6 +15,11 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
+
+#ifndef _FATAL_SIGNAL_H
+#define _FATAL_SIGNAL_H
+
+#include <signal.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -77,7 +82,13 @@ extern void unblock_fatal_signals (void);
    Fills signals[0..count-1] and returns count.  */
 extern unsigned int get_fatal_signals (int signals[64]);
 
+/* Return the list of signals that block_fatal_signals/unblock_fatal_signals
+   would block or unblock.  */
+extern const sigset_t * get_fatal_signal_set (void);
+
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* _FATAL_SIGNAL_H */

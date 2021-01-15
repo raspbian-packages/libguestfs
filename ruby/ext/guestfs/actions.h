@@ -182,6 +182,8 @@ extern VALUE guestfs_int_ruby_cp (VALUE gv, VALUE srcv, VALUE destv);
 extern VALUE guestfs_int_ruby_cp_a (VALUE gv, VALUE srcv, VALUE destv);
 extern VALUE guestfs_int_ruby_cp_r (VALUE gv, VALUE srcv, VALUE destv);
 extern VALUE guestfs_int_ruby_cpio_out (int argc, VALUE *argv, VALUE gv);
+extern VALUE guestfs_int_ruby_cryptsetup_close (VALUE gv, VALUE devicev);
+extern VALUE guestfs_int_ruby_cryptsetup_open (int argc, VALUE *argv, VALUE gv);
 extern VALUE guestfs_int_ruby_dd (VALUE gv, VALUE srcv, VALUE destv);
 extern VALUE guestfs_int_ruby_debug (VALUE gv, VALUE subcmdv, VALUE extraargsv);
 extern VALUE guestfs_int_ruby_debug_drives (VALUE gv);

@@ -38,6 +38,7 @@ Makefile.in
 /align/stamp-virt-alignment-scan.pod
 /align/virt-alignment-scan
 /align/virt-alignment-scan.1
+/appliance/guestfsd.deps
 /appliance/libguestfs-make-fixed-appliance
 /appliance/libguestfs-make-fixed-appliance.1
 /appliance/make.sh
@@ -147,6 +148,7 @@ Makefile.in
 /daemon/btrfs.mli
 /daemon/callbacks.ml
 /daemon/caml-stubs.c
+/daemon/cryptsetup.mli
 /daemon/daemon_config.ml
 /daemon/daemon_utils_tests
 /daemon/devsparts.mli
@@ -163,6 +165,7 @@ Makefile.in
 /daemon/link.mli
 /daemon/listfs.mli
 /daemon/lvm.mli
+/daemon/lvm_dm.mli
 /daemon/lvm-tokenization.c
 /daemon/md.mli
 /daemon/mount.mli
@@ -308,6 +311,7 @@ Makefile.in
 /haskell/Guestfs030Config
 /haskell/Guestfs050LVCreate
 /haskell/Guestfs.hs
+/include/guestfs.h
 /inspector/actual-*.xml
 /inspector/stamp-virt-inspector.pod
 /inspector/virt-inspector
@@ -329,7 +333,6 @@ Makefile.in
 /lib/guestfs.3
 /lib/guestfs-actions.pod
 /lib/guestfs-availability.pod
-/lib/guestfs.h
 /lib/guestfs-internal-actions.h
 /lib/guestfs-structs.pod
 /lib/libguestfs.3
@@ -337,6 +340,7 @@ Makefile.in
 /lib/libguestfs.syms
 /lib/.libs/libguestfs.so
 /lib/libvirt-is-version
+/lib/local/libguestfs.pc
 /lib/stamp-guestfs.pod
 /lib/structs-compare.c
 /lib/structs-copy.c
@@ -378,6 +382,7 @@ Makefile.in
 /ocaml/examples/guestfs-ocaml.3
 /ocaml/examples/inspect_vm
 /ocaml/examples/stamp-guestfs-ocaml.pod
+/ocaml/guestfs
 /ocaml/guestfs-c-actions.c
 /ocaml/guestfs-c-errnos.c
 /ocaml/guestfs.ml
@@ -442,7 +447,6 @@ Makefile.in
 /po-docs/*/*.3
 /po-docs/*/*.5
 /po-docs/*/*.8
-/po-docs/po4a.conf
 /po-docs/*/*.pod
 /podwrapper.1
 /podwrapper.pl

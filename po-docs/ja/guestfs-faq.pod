@@ -347,6 +347,12 @@ libguestfs が Andreis Vinogradovs (libguestfs) および Maxim Koltsov (おも�
 
  emerge libguestfs
 
+=item Mageia
+
+Libguestfs was added to Mageia in 2013-08. Do:
+
+ urpmi libguestfs
+
 =item SuSE
 
 libguestfs が Olaf Hering により 2012 年に SuSE に追加されました。

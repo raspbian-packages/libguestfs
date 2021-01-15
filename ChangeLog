@@ -1,4 +1,1016 @@
-commit 3c05e43dd82bb1a5665e753197d011c3da7a5a60
+commit 8cf46e4886c0ce2c1c19d8ea09d14621a956be6d
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Tue Jan 5 19:23:40 2021 +0000
+
+    docs: Add release notes for libguestfs 1.44.
+    
+    This is quite a small release.
+
+commit 675b336f63bdf26bccc073e8f7d09ddc8fb365c6
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Tue Jan 5 15:35:47 2021 +0000
+
+    gnulib: Update to latest.
+
+commit 8ec4f256f2cbb48373eb70101fa3701340f1739f
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Tue Jan 5 14:22:51 2021 +0000
+
+    Version 1.43.4.
+
+commit a9975a5a9b864e2dd62e8b463f67d9754b08a91f
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Tue Jan 5 10:32:20 2021 +0000
+
+    common: Update to latest.
+
+commit 26f5cdaab3e8a0dc185ff222c9bba46b686993c9
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Tue Jan 5 10:31:08 2021 +0000
+
+    rescue: Don't call exit(3) from a signal handler.
+    
+    Found by GCC 11 analyzer.
+
+commit 4bbbf03b8bc266ed2b63c461cd0945250bb134fe
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Tue Jan 5 10:13:27 2021 +0000
+
+    Ignore completely bogus GCC 11 warnings.
+    
+    Various varieties of this:
+    
+               |   45 |   tempfile = strdup ("/tmp/luksXXXXXX");
+               |      |              ~~~~~~~~~~~~~~~~~~~~~~~~~~
+               |      |              |
+               |      |              (19) this call could return NULL
+               |   46 |   if (!tempfile) {
+               |      |      ~
+               |      |      |
+               |      |      (20) following 'false' branch (when 'tempfile' is non-NULL)...
+               |......
+               |   51 |   fd = mkstemp (tempfile);
+               |      |   ~~   ~~~~~~~~~~~~~~~~~~
+               |      |   |    |
+               |      |   |    (22) argument 1 ('tempfile') from (19) could be NULL where non-null expected
+               |      |   (21) ...to here
+
+commit 07585189cf2fbe0184b4d60ce9440b10f575d4a2
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Tue Jan 5 10:09:21 2021 +0000
+
+    lib: Ignore a bunch of bogus GCC 11 warnings.
+    
+    -Werror=analyzer-file-leak doesn't follow CLEANUP_FCLOSE properly.
+    
+    yara.c:64:24: error: leak of FILE '<unknown>' [CWE-775] [-Werror=analyzer-file-leak]
+       64 |   CLEANUP_FCLOSE FILE *fp = NULL;
+          |                        ^~
+
+commit 6d0ab14b56743679638ead0829ff3131749ac59b
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Thu Oct 13 12:47:43 2016 +0100
+
+    tar-in: Add workaround because tar doesn't restore capabilities (RHBZ#1384241).
+    
+    Current GNU tar does not restore all extended attributes.  In
+    particular only user.* capabilities are restored (although all
+    are saved in the tarball).
+    
+    To restore capabilities, SELinux security attributes, and other things
+    we need to use --xattrs-include=*
+    
+    For further information on the tar bug, see:
+    https://bugzilla.redhat.com/show_bug.cgi?id=771927
+
+commit b2e457767d3b6f9399e58d86a534092e8e0012a8
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Tue Dec 1 16:47:32 2020 +0000
+
+    Version 1.43.3.
+
+commit 8a4275c5686de6e156b449581c9c91199447e2d3
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Tue Dec 1 15:39:53 2020 +0000
+
+    tests/charsets/test-charset-fidelity.c: Asserts to avoid bogus CWE-690.
+    
+    The new GCC static analyzer has trouble understanding when some
+    strings are non-NULL.  Adding asserts helps avoid warnings.
+
+commit 6573ae6ee453932359d68f0c509e39213e980e1b
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Tue Dec 1 13:15:49 2020 +0000
+
+    Update gnulib to latest.
+
+commit 3d2c38d5ab9034fa541377c6fb32a14f978e083f
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Tue Dec 1 14:13:12 2020 +0000
+
+    m4: Define INCLUDE_DIRECTORY for libguestfs only.
+
+commit a624016baaf6a23d1a6e3cc432698c881804af54
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Tue Dec 1 12:39:47 2020 +0000
+
+    common: Update to latest submodule.
+
+commit d2611b62e990c06a46903acecbfb96b0474604a0
+Author: Thierry Vignaud <thierry.vignaud@gmail.com>
+Date:   Tue Nov 24 03:29:39 2020 +0100
+
+    include rpm for Mageia
+    
+    This fixes:
+    "-supermin: ext2fs_namei: parent directory not found:
+    /var/lib/rpm: File not found by ext2_lookup"
+    
+    This because chkconfig contains /var/lib/rpm/alternatives on Mageia
+
+commit 32021c72fe0bbdc0c467931df7797cb76bcec0e6
+Author: Thierry Vignaud <thierry.vignaud@gmail.com>
+Date:   Tue Nov 24 00:00:09 2020 +0100
+
+    Include exfatprogs
+    
+    It's the new upstream name of exfat-utils.
+    As eg found on Mageia.
+
+commit d63c8041d5cadf915f8c1cbe1e0e57417b318180
+Author: Thierry Vignaud <thierry.vignaud@gmail.com>
+Date:   Mon Nov 23 23:59:05 2020 +0100
+
+    fix detecing db_* tool on Mageia
+
+commit e62ccfca4adbc5dd8661a572d45085cdef84f69b
+Author: Thierry Vignaud <thierry.vignaud@gmail.com>
+Date:   Mon Nov 23 23:57:02 2020 +0100
+
+    explain how to install on Mageia
+
+commit 999fca8731a14b1cfbfef560ca7acc72ce997375
+Author: Thierry Vignaud <thierry.vignaud@gmail.com>
+Date:   Thu Nov 12 11:26:24 2020 +0100
+
+    appliance: Add ntfs-3g-system-compression for Mageia
+    
+    This package in Mageia enables optional support for Windows 10
+    "CompactOS" (file-level compression), read-only, which is sufficient
+    for inspecting Windows guests and doing certain types of modifications
+    to them.  Virt-v2v appears to work, but it may be that anything that
+    involves modifying a compressed file might not work.
+    
+    See commit e6764a5415b198a9e563473fd9b41077b9e71970
+
+commit 3f5d080d02faf8a1c239f3c4df36b017ce232cf2
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Mon Nov 2 10:12:20 2020 +0000
+
+    builder: templates: Add Fedora 33
+
+commit fe52d9fd0cb454edbad2eef305022ff6bc963d54
+Author: Dmitry Tantsur <dtantsur@protonmail.com>
+Date:   Wed Oct 28 11:15:20 2020 +0100
+
+    rust: fix a typo in the crates.io link
+
+commit 0896dea3382293cc21b92c9b94d3f6b0083e1aad
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Thu Oct 22 14:50:58 2020 +0100
+
+    gnulib: Replace hash_delete with hash_remove.
+    
+    Renamed in gnulib with the old function deprecated.
+
+commit e49be556303655a0a4fa1a5259a5b667d333cfda
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Thu Oct 22 14:50:33 2020 +0100
+
+    m4/.gitignore: Update.
+    
+    Fixes: commit cfcd3385ccf3da3d8b2a9c1c0ece28f6e691344d
+
+commit cfcd3385ccf3da3d8b2a9c1c0ece28f6e691344d
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Thu Oct 22 14:05:35 2020 +0100
+
+    Update gnulib to master.
+
+commit 133a49167778195f0cf043a1d380c60956aa46b1
+Author: Hilko Bengen <bengen@hilluzination.de>
+Date:   Sat Oct 17 19:38:34 2020 +0200
+
+    Use guestfsd binary to auto-generate library dependencies for appliance
+    
+    The ELF NEEDED are used to determine guestfsd's library dependencies
+    with help from the dynamic linker and the package manager.
+    
+    This was prompted by Debian bug #972241 which was caused by a
+    libtirpc package renaming in Debian/unstable because the SONAME had
+    been changed.
+
+commit 3f4a529ab753bea43a9cef7f8aaed48a2be23e30
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Mon Oct 12 15:05:07 2020 +0100
+
+    fuse: Don't override access(X_OK) if user is root.
+    
+    Bug originally reported here by trysis:
+    https://stackoverflow.com/questions/64273334/test-x-in-mounted-filesystem
+    
+    If the user is root then we override normally access controls in FUSE,
+    see https://bugzilla.redhat.com/show_bug.cgi?id=1106548.
+    
+    However this causes test -x to mark all files as executable.  We
+    shouldn't let root execute any file, only ones which have the 'x' bit
+    set.  Therefore this narrows the fix in bug 1106548 so it only applies
+    to read and write bits.
+    
+    To test this I created a disk with guestfish which had an executable
+    and a non-executable file:
+    
+      $ guestfish -N fs -m /dev/sda1
+      ><fs> touch /file1
+      ><fs> touch /file2
+      ><fs> chmod 0755 /file1
+      ><fs> ll /
+      total 24
+      drwxr-xr-x  3 root root  4096 Oct 12 14:04 .
+      drwxr-xr-x 19 root root  4096 Oct 12 14:04 ..
+      -rwxr-xr-x  1 root root     0 Oct 12 14:04 file1
+      -rw-r--r--  1 root root     0 Oct 12 14:04 file2
+      drwx------  2 root root 16384 Oct 12 14:04 lost+found
+    
+    I then mounted and tested it as non-root:
+    
+      $ guestmount -a test1.img -m /dev/sda1 /tmp/mnt -v -x
+      $ ls -l /tmp/mnt
+      total 16
+      -rwxr-xr-x. 1 root root     0 Oct 12 15:04 file1
+      -rw-r--r--. 1 root root     0 Oct 12 15:04 file2
+      drwx------. 2 root root 16384 Oct 12 15:04 lost+found
+      $ test -x /tmp/mnt/file1; echo $?
+      0
+      $ test -x /tmp/mnt/file2; echo $?
+      1
+    
+    and as root:
+    
+      $ sudo guestmount -a test1.img -m /dev/sda1 /tmp/mnt -v -x
+      $ test -x /tmp/mnt/file1; echo $?
+      0
+      $ test -x /tmp/mnt/file2; echo $?
+      0
+    
+    In the debug output for non-root we can see the difference:
+    
+      libguestfs: /file1: testing access mask X_OK: caller UID:GID = 1000:1000, file UID:GID = 0:0, file mode = 100755, result = OK
+      libguestfs: /file2: testing access mask X_OK: caller UID:GID = 1000:1000, file UID:GID = 0:0, file mode = 100644, result = EACCESS
+    
+    and for root:
+    
+      libguestfs: /file1: testing access mask X_OK: caller UID:GID = 0:0, file UID:GID = 0:0, file mode = 100755, result = OK
+      libguestfs: /file2: testing access mask X_OK: caller UID:GID = 0:0, file UID:GID = 0:0, file mode = 100644, result = OK
+    
+    After this commit the root output changes to this (ie. same decision
+    as non-root):
+    
+      libguestfs: /file1: testing access mask X_OK: caller UID:GID = 0:0, file UID:GID = 0:0, file mode = 100755, result = OK
+      libguestfs: /file2: testing access mask X_OK: caller UID:GID = 0:0, file UID:GID = 0:0, file mode = 100644, result = EACCESS
+
+commit 4663112d89e2131ac24a010d53d8125623b45efb
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Mon Mar 30 15:38:46 2020 +0100
+
+    lib/canonical-name.c: Hide errors from underlying API call.
+    
+    When guestfs_lvm_canonical_lv_name was called with a /dev/dm* or
+    /dev/mapper* name which was not an LV then a noisy error would be
+    printed.  This would typically have happened with encrypted disks, and
+    now happens very noticably when inspecting Windows BitLocker-
+    encrypted guests.
+    
+    This commit hides this error in all cases, although it is still logged
+    to debug.  See comment and the thread below for detailed rationale.
+    
+    https://www.redhat.com/archives/libguestfs/2020-October/thread.html#00055
+
+commit 5631106a73bbfd20849aafcdab1f50d5aec7d013
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Thu Sep 17 12:54:06 2020 +0100
+
+    daemon: lvm_canonical_lv_name: Return EINVAL if called with non-LV.
+    
+    Previously callers were unable to distinguish a regular error (like an
+    I/O error) from the case where you call this API on something which is
+    valid but not a logical volume.  Set errno to a known value in this
+    case.
+
+commit 86577ee3883836c1c4fff258c05261bd3858e22b
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Mon Mar 30 15:09:58 2020 +0100
+
+    daemon: Search device-mapper devices for list-filesystems API.
+    
+    In case any bare filesystems were decrypted using cryptsetup-open,
+    they would appear as /dev/mapper/name devices.  Since list-filesystems
+    did not consider those when searching for filesystems, the unencrypted
+    filesystems would not be returned.
+    
+    Note that previously this worked for LUKS because the common case
+    (eg. for Fedora) was that whole devices were encrypted and thoes
+    devices contained LVs, so luks-open + vgactivate would activate the
+    LVs which would then be found by list-filesystems.  For Windows
+    BitLocker, the common case seems to be that each separate NTFS
+    filesystem is contained in a separate BitLocker wrapper.
+
+commit 79f3d451a8a23f8a5d52a8dda8cb4eb5e17ed2e5
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Mon Mar 30 15:17:54 2020 +0100
+
+    daemon: Reimplement list_dm_devices API in OCaml.
+    
+    Simple refactoring.  The only annoying point is requiring an extra
+    module because of OCaml module dependency restrictions.
+
+commit 41cbc8933069ad7bdf58a0680a7018b7ef891642
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Mon Mar 30 14:38:27 2020 +0100
+
+    daemon: Ignore BitLocker disks in list-filesystems API.
+
+commit 6e870a8e436d3f184b27ce0a974c33b9ce71b06b
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Mon Mar 30 15:08:52 2020 +0100
+
+    daemon: Rewrite list-filesystems implementation imperatively.
+    
+    Simple refactoring to make the code clearer, should have no other
+    effect.
+
+commit c8e0b453891ca4fb8ba44376cd54c091fdfe34e7
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Mon Mar 30 12:10:07 2020 +0100
+
+    fish: Update documentation to refer to cryptsetup-open/close and BitLocker.
+
+commit c456ea033276166ffae3f73729cbcbc72ee5ccd0
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Mon Sep 7 10:26:22 2020 +0100
+
+    New APIs: cryptsetup-open and cryptsetup-close.
+    
+    This commit deprecates luks-open/luks-open-ro/luks-close for the more
+    generic sounding names cryptsetup-open/cryptsetup-close, which also
+    correspond directly to the cryptsetup commands.
+    
+    The optional cryptsetup-open readonly flag is used to replace the
+    functionality of luks-open-ro.
+    
+    The optional cryptsetup-open crypttype parameter can be used to select
+    the type (corresponding to cryptsetup open --type), which allows us to
+    open BitLocker-encrypted disks with no extra effort.  As a convenience
+    the crypttype parameter may be omitted, and libguestfs will use a
+    heuristic (based on vfs-type output) to try to determine the correct
+    type to use.
+    
+    The deprecated functions and the new functions are all (re-)written in
+    OCaml.
+    
+    There is no new test here, unfortunately.  It would be nice to test
+    Windows BitLocker support in this new API, however the Linux tools do
+    not support creating BitLocker disks, and while it is possible to
+    create one under Windows, the smallest compressed disk I could create
+    is 37M because of a mixture of the minimum support size for BitLocker
+    disks and the fact that encrypted parts of NTFS cannot be compressed.
+    
+    Also synchronise with common module.
+
+commit bfd0886765fef19a8c7313402f882b543a7dfb6d
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Tue Oct 6 15:25:32 2020 +0100
+
+    golang: Fix path to include/guestfs.h.
+    
+    Thanks: Martin Kletzander
+    Fixes: commit 75abec1f706e555cd6c9915be03c732b56a94596
+
+commit dbfab7d3b283181ec6ef685fff0862cdd4da76c0
+Author: Pino Toscano <ptoscano@redhat.com>
+Date:   Tue Sep 22 18:12:05 2020 +0200
+
+    build: fix includedir in uninstalled libguestfs.pc
+    
+    Update includedir with the new directory that contains guestfs.h.
+    
+    Updates commit 75abec1f706e555cd6c9915be03c732b56a94596.
+
+commit b89f37754001257ed5637857e22a4fda9912af08
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Mon Sep 21 18:56:18 2020 +0100
+
+    Version 1.43.2.
+
+commit 75abec1f706e555cd6c9915be03c732b56a94596
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Mon Sep 21 14:11:14 2020 +0100
+
+    include: Move lib/guestfs.h to include/guestfs.h
+    
+    This brings libguestfs into line with other projects which have a
+    separate include/ directory for the public header.
+    
+    It's also the case that <guestfs.h> has never particularly belonged in
+    the lib/ subdirectory.  Some tools add -Ilib/ but they only need
+    <guestfs.h> and not any other headers from that directory, and
+    separating out the public header allows us to clean those up.  This is
+    certainly the case for examples, and some language bindings and some
+    tests.
+    
+    In future I'm hopeful we can use this as the basis to tease out other
+    dependencies, as a prelude to separating them out from the repo.
+
+commit 3743cc89f6d0222b42e13ff955fbf088711d1664
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Mon Sep 21 10:56:29 2020 +0100
+
+    golang: Capitalize fields in structs so they are publicly accessible.
+    
+    See: https://github.com/libguestfs/libguestfs/issues/53
+
+commit fce82fe55a2b64a1a7e494858aa272d608e5e54e
+Author: Yuri Chornoivan <yurchor@ukr.net>
+Date:   Mon Aug 24 17:50:20 2020 +0300
+
+    Fix minor typos
+
+commit 14ff95c511977eb140a8d1061c560b9d804cb52e
+Author: Pino Toscano <ptoscano@redhat.com>
+Date:   Thu Aug 13 12:16:05 2020 +0200
+
+    po-docs: turn language list into LINGUAS file
+    
+    Use a LINGUAS file with the list of available translations instead of
+    defining them in a make variable. This way Weblate will be able to
+    update the list using an available addon, and we do not need to list
+    those not built.
+    
+    Accordingly, rename the variable with built languages to
+    'linguas_translated'.
+
+commit bd3fb6535106847edbe340f9413ad43d4be03005
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Sun Aug 16 10:57:50 2020 +0100
+
+    fish: Fix parsing of exportnames in NBD URIs.
+    
+    https://github.com/NetworkBlockDevice/nbd/blob/master/doc/uri.md#nbd-uri-export-name
+
+commit b96c8f51464336b6ed2eec58e550ab1d52c1bc4b
+Author: Weblate <noreply@weblate.org>
+Date:   Wed Aug 12 11:46:43 2020 +0200
+
+    Update translation files
+    
+    Updated by "Update PO files to match POT (msgmerge)" hook in Weblate.
+    
+    Translation: libguestfs/libguestfs-docs-master
+    Translate-URL: https://translate.fedoraproject.org/projects/libguestfs/libguestfs-docs-master/
+
+commit 48b0799297353232d631383d84b96ceca271987b
+Author: Weblate <noreply@weblate.org>
+Date:   Tue Aug 11 20:29:11 2020 +0200
+
+    Update translation files
+    
+    Updated by "Update PO files to match POT (msgmerge)" hook in Weblate.
+    
+    Translation: libguestfs/libguestfs-master
+    Translate-URL: https://translate.fedoraproject.org/projects/libguestfs/libguestfs-master/
+
+commit 9a986ed60a4e33e731295a34c6cf0442b851f82b
+Author: Pino Toscano <ptoscano@redhat.com>
+Date:   Wed Aug 12 15:41:18 2020 +0200
+
+    Remove references to Zanata
+    
+    We migrated to Weblate, and Zanata is being decommissioned.
+
+commit 049d83f6e445e3b6e9c731eeebdb341367ab2d99
+Author: Pino Toscano <ptoscano@redhat.com>
+Date:   Wed Aug 12 15:37:43 2020 +0200
+
+    po/po-docs: update catalog templates
+    
+    Regenerate the catalog templates according to the updated extraction
+    rules (mostly fixed paths).
+
+commit d3b43bb47a585b26c3aa1b3f333d8c053d59655d
+Author: Pino Toscano <ptoscano@redhat.com>
+Date:   Wed Aug 12 15:22:17 2020 +0200
+
+    po-docs: fix references to sources
+    
+    Start the message extraction from the toplevel source directory, so the
+    file references are relative to that, instead of relative to this
+    po-docs subdirectory.
+    
+    Also update/regenerate podfiles accordingly.
+
+commit a16f67e404c9719556a0819602a768b5eec0b248
+Author: Pino Toscano <ptoscano@redhat.com>
+Date:   Wed Aug 12 14:54:25 2020 +0200
+
+    po: fix references to OCaml sources
+    
+    Start the message extraction from the toplevel source directory, so the
+    file references are relative to that, instead of relative to this po
+    subdirectory.
+
+commit bd896d68c06d7f66303bd77daa666367b0de5f3a
+Author: Pino Toscano <ptoscano@redhat.com>
+Date:   Wed Aug 12 14:29:22 2020 +0200
+
+    po-docs: split pot and po handling
+    
+    With the Weblate adoption, we let it update the po files from the
+    catalog template. The po4a behaviour of extracting the template,
+    merging the existing translations, and creating the translated PODs at
+    once is problematic. Hence, split the extraction and the translated POD
+    generation in two.
+    
+    Use po4a-gettextize to extract the catalog template only, not doing it
+    anymore automatically at each build. There is no more need for a
+    po4a.conf file.
+    
+    Use po4a-translate to create translated PODs from the po files, keeping
+    the fixup of the generated files (to avoid spurious =encoding, etc).
+    Add a silent rule to hide the po4a-translate command lines by default.
+    
+    These changes also allow us to get rid of the POD existance checks with
+    associated error message pointing to the update-po rule. Now each
+    translated POD file is generated because of make dependency, and it
+    depends only on its po file.
+    
+    Signed-off-by: Pino Toscano <ptoscano@redhat.com>
+
+commit 3095825350f1dc89da98cd3cd943b23d42ae87d6
+Author: Pino Toscano <ptoscano@redhat.com>
+Date:   Wed Aug 12 14:00:22 2020 +0200
+
+    podfiles: add missing documentation
+
+commit 5be4970b1f281f13a2a06f5cbf3149cd08d19390
+Author: Pino Toscano <ptoscano@redhat.com>
+Date:   Wed Aug 12 13:58:32 2020 +0200
+
+    po-docs: add missing dependencies for guestfish.1
+    
+    The guestfish man page uses also additional POD snippets, so list them
+    as dependencies to make sure they are up-to-date.
+    
+    This does not change the behaviour at the moment, however it will matter
+    when each traslated POD file will be generated on its own.
+
+commit 0dc0f87f209c9bd0bd81388dc1fdcf9757bf179b
+Author: Pino Toscano <ptoscano@redhat.com>
+Date:   Wed Aug 12 12:51:09 2020 +0200
+
+    po: remove rules for pot/po update
+    
+    Weblate will handle the update of the po files from the translation
+    catalog, so avoid stomping on its feet by doing the same.
+    
+    The translation catalog will be regenerated manually periodically.
+
+commit eb7ba4b1d28fbc6adea9a77a9fd9590f41aaf7aa
+Author: Pino Toscano <ptoscano@redhat.com>
+Date:   Wed Aug 12 12:12:32 2020 +0200
+
+    po: turn language list into LINGUAS file
+    
+    Use a LINGUAS file with the list of available translations instead of
+    defining them in a make variable. This way Weblate will be able to
+    update the list using an available addon.
+    
+    Signed-off-by: Pino Toscano <ptoscano@redhat.com>
+
+commit 3cad943a85c473f766aded8cc8299ed6e3e850cb
+Author: Andrey Shinkevich <andrey.shinkevich@virtuozzo.com>
+Date:   Thu Aug 13 07:48:52 2020 +0300
+
+    appliance: extract UUID from QCOW2 disk image
+    
+    For the appliance of the QCOW2 format, the function get_root_uuid()
+    fails to get the UUID of the disk image.
+    In this case, let us read the first 256k bytes of the disk image  with
+    the 'qemu-img dd' command. Then pass the read block to the 'file'
+    command.
+    
+    Suggested-by: Denis V. Lunev <den@openvz.org>
+    Signed-off-by: Andrey Shinkevich <andrey.shinkevich@virtuozzo.com>
+
+commit 2469b4b790d81154f650f33b49f56c155504a8e2
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Sat Aug 1 07:33:45 2020 +0100
+
+    rescue: Initialize roots.
+    
+    Even though it seems clear from the code that roots cannot be used
+    uninitialized, GCC 10.1 cannot seem to work it out (possibly an LTO
+    bug).  Easiest way out here is to just initialize it.
+    
+    rescue.c:396:37: error: 'roots' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+      396 |     CLEANUP_FREE_STRING_LIST char **roots;
+          |                                     ^
+
+commit 0b8ef5a98dc10bb279eb65a8e7b11db2a2ddb3ae
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Sat Aug 1 07:27:17 2020 +0100
+
+    daemon/debug.c: Use __builtin_trap to cause segfault.
+    
+    I couldn't get GCC 10.1 to ignore this warning any longer, possibly
+    because I am using LTO.  In any case dereferencing a pointer is
+    undefined behaviour, so let's use GCC's __builtin_trap() function
+    instead (also supported by clang).
+    
+    debug.c: In function 'debug_segv':
+    debug.c:1002:8: error: null pointer dereference [-Werror=null-dereference]
+     1002 |   *ptr = 1;
+          |        ^
+
+commit 599f2f7bd9d08c062831b2aa6bb0035ba67175dc
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Sat Aug 1 07:09:52 2020 +0100
+
+    m4: Increase warning limit for frame-larger-than.
+    
+    Generated code in virt-builder causes the error below.  Since we
+    cannot control what is generated by bison, increase the limit.
+    
+      CCLD     virt-index-validate
+    index-parse.c: In function 'yyparse':
+    index-parse.c:1857:1: error: the frame size of 5152 bytes is larger than 5000 bytes [-Werror=frame-larger-than=]
+     1857 | }
+          | ^
+    lto1: all warnings being treated as errors
+    lto-wrapper: fatal error: gcc returned 1 exit status
+
+commit 5b29fba5b20cf788ab98c871f6fe9496c741b3dd
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Thu Jul 30 13:53:16 2020 +0100
+
+    docs: Move shared POD for --keys-from-stdin to common code.
+    
+    No functional change.
+
+commit eb78e990ac5277a4282293f8787af871a1420b61
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Thu Jul 30 13:57:45 2020 +0100
+
+    daemon, lib: Replace deprecated security_context_t with char *.
+    
+    This gives deprecation warnings.  It always was simply a char *, and
+    the recommendation upstream is to replace uses with char *:
+    
+    https://github.com/SELinuxProject/selinux/commit/9eb9c9327563014ad6a807814e7975424642d5b9
+
+commit 224f373043302845122bf701ffc6e3416e0168fa
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Tue Jun 30 17:34:47 2020 +0100
+
+    lib: Increase default memsize to 1280 (RHBZ#1837765).
+    
+    Argon2 is the default LUKS Password-Based Key Derivation Function
+    (PBKDF) for some new guests such as RHEL 8.2 and Fedora.  It is
+    designed to be "memory hard", meaning that by design it requires large
+    amounts of memory, making it expensive to brute-force.  Unfortunately
+    the default for guests which had more than a few GB of RAM at install
+    time is to require about 1 GB of RAM to decrypt the block device,
+    which is considerably larger than the default available in the
+    libguestfs appliance.
+    
+    To make it possible to open these encrypted disks we need to make the
+    appliance larger.  This could be done as a one-off, and the current
+    workaround is simply to set LIBGUESTFS_MEMSIZE=2048 or a similar
+    amount.  However since we don't know in advance whether we could be
+    dealing with an encrypted disk, partition, etc. or what PBKDF it uses,
+    the only way to deal with this in all circumstances is to increase the
+    default memsize.  This commit increases it quite a lot (768 -> 1280)
+    which is unfortunate.
+    
+    Note as there is some confusion on this point: Since libguestfs does
+    not attempt to decrypt disks in parallel, you only need ~ 1GB in
+    total, not per encrypted disk.
+    
+    For a reproducer, see:
+    https://bugzilla.redhat.com/show_bug.cgi?id=1837765#c14
+
+commit c5eec6c17b55812d1bcba853999421711ee441eb
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Mon Jul 6 20:37:51 2020 +0100
+
+    docs: Increase minimum version of Python to 3.6.
+    
+    3.5 is needed to support type hints.
+    
+    Debian oldstable has 3.5 (oldoldstable needed 3.4).
+
+commit 66a5913462a84399bd9790b736814620371a80f8
+Author: Sam Eiderman <sameid@google.com>
+Date:   Mon Jul 6 19:50:19 2020 +0300
+
+    python: Add type hints
+    
+    Since support for python2 is dropped we can use the new python3 syntax
+    for type hints.
+    
+    Signed-off-by: Sam Eiderman <sameid@google.com>
+
+commit dfe9fe8de8fc7bafb6b93c43314fe6c9a1d9ef77
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Mon Jul 6 11:52:15 2020 +0100
+
+    Version 1.43.1.
+
+commit 75def0ef1822ed088529dc73b90c77caf592fdb4
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Mon Jul 6 12:13:07 2020 +0100
+
+    python: Remove deprecated use of PyEval_ThreadsInitialized.
+    
+    The correct/modern way to do this is:
+    
+    https://docs.python.org/3/c-api/init.html#releasing-the-gil-from-extension-code
+    
+    PyEval_ThreadsInitialized was deprecated in 3.9 and will be removed
+    completely in 3.11, so we shouldn't use that function.
+
+commit 403d17a876d6e57e3f8c6551931aca030d0d9b96
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Mon Jul 6 12:02:01 2020 +0100
+
+    python: Drop support for Python 2.
+    
+    Python 2 reached end of life on 2020-01-01:
+    https://python3statement.org/
+    https://pythonclock.org/
+    
+    The minimum version required is now Python 3.4 (since that is the
+    version in Debian oldoldstable), but 3.6 is the minimum version that
+    I actually test.
+
+commit 38e2ad1fbc39bcdd9c3b0b7a0e0b6610a7066860
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Mon Jul 6 12:14:37 2020 +0100
+
+    builder: Update index file.
+    
+    Fixes: commit 4837698d83a7f542d315a6a0088bf1310c9f33f9.
+
+commit 4837698d83a7f542d315a6a0088bf1310c9f33f9
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Tue Jun 16 12:51:09 2020 +0100
+
+    builder: templates: Add CentOS 8.2 and RHEL 8.2.
+
+commit 6670dc0fbf318768636f5246cfe9fa4b9f3188a9
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Thu Jun 4 15:22:38 2020 +0100
+
+    builder: templates: Add centos-7.8, fedora-32, rhel-7.8.
+    
+    Ubuntu 20.04 could not be built because their installer has changed in
+    a way which is not compatible with the current build script.  This
+    needs some work to fix.
+
+commit 987734fcca101cf782264756f7883cf48430a91b
+Author: Sergei Golovan <sgolovan@gmail.com>
+Date:   Mon Jun 1 22:22:45 2020 +0300
+
+    erlang: Port to libei for Erlang 23
+    
+    Replace the use of liberl_interface, which is removed in Erlang 23,
+    by libei. The implementation uses the ei_decode_iodata() function
+    which has been introduces only for Erlang 23, so it doesnt work with
+    earlier Erlang versions.
+
+commit faa5d8507f552e05435312f16d9e50f613a13615
+Author: Pino Toscano <ptoscano@redhat.com>
+Date:   Thu May 7 14:02:30 2020 +0200
+
+    sysprep: add Kerberos keytab file removal
+    
+    This new operation removes the Kerberos /etc/krb5.keytab file from the
+    guest.
+    
+    Thanks to Christian Heimes and François Cami for the hints.
+    
+    Related to RHBZ#1789592.
+
+commit 0a53e2c7fc4fe2aa69052134230db0804849b470
+Author: Pino Toscano <ptoscano@redhat.com>
+Date:   Thu May 7 13:53:21 2020 +0200
+
+    sysprep: add IPA offline unenrollment (RHBZ#1789592)
+    
+    This new operation unenrolls the guest from a IPA server offline, by
+    removing the configuration files and certificates.
+    
+    Thanks to Christian Heimes and François Cami for the hints.
+
+commit b9065fa7adc93123c53f4827e11dad6b210b7d4b
+Author: Pino Toscano <ptoscano@redhat.com>
+Date:   Mon May 4 12:15:43 2020 +0200
+
+    sysprep: ca-certificates: request system CA store update
+    
+    In case any certificate is removed from the guest, regenerate the system
+    CA store.
+
+commit bb7fc6d0a1ed670d16a92d2afd9ff2f876edc595
+Author: Pino Toscano <ptoscano@redhat.com>
+Date:   Mon May 4 12:05:18 2020 +0200
+
+    sysprep: add a update_system_ca_store side effect
+    
+    Add a simple side effect to make operation flag that a regeneration of
+    the system CA store is needed. In case it is flagged, regenerate the
+    system CA store directly, or using a firstboot script in case of
+    incompatible architectures.
+    
+    This change is almost a no-op, since no operation requires the
+    regeneration of the system CA store yet.
+
+commit b25e3495f522378f59d201526d7d2d02c2bf6f3f
+Author: Pino Toscano <ptoscano@redhat.com>
+Date:   Mon May 4 11:55:41 2020 +0200
+
+    customize: port do_run to run_in_guest_command
+    
+    Make use of the new helper function in Tools_utils to run commands in
+    the guest.
+
+commit 94ff24b8800ebc79f19bd686ec2dda393906c454
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Wed May 6 12:31:56 2020 +0100
+
+    appliance: Set default guestfs appliance path to $libdir/guestfs.
+    
+    For unclear reasons this broke recently, although the breakage is only
+    reproducible in Fedora Koji.  It appears to be caused by the
+    calculation of the internal autoconf variable $acl_libdirstem
+    changing.  In the reproducer system:
+    
+    checking for the common suffixes of directories in the library search path... lib,lib,lib64
+    
+    On my local system:
+    
+    checking for the common suffixes of directories in the library search path... lib64,lib64
+    
+    My local system would be the correct one.  The actual code that
+    calculates this does some crazy stuff with ‘gcc -print-search-dirs’
+    which would hint that this output has changed in some way that subtly
+    breaks the generated configure script.  However even with match GCC
+    versions on my local system I could still not reproduce the issue.
+    
+    None of this matters, as the easiest fix here is simply to stop using
+    internal autoconf variables at all.  I also added some AC_MSG_*
+    statements so we can more easily see what's going on in the configure
+    output.
+    
+    Fixes commit 0f79400c7f3d69e1a5d67f7f56c9bd7e3584aae9.
+
+commit 26324d54457d49bec19c1a3ba454a415d467d3e8
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Tue May 5 22:23:49 2020 +0100
+
+    builder: templates: Add Ubuntu 20.04 code name (focal).
+
+commit a6ed62b0a692b2a952c124581d7e58204bca6efa
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Thu Apr 30 12:32:08 2020 +0100
+
+    builder: Fix all download.devel links.
+    
+    All broken in early 2020 for no discernible reason.
+
+commit ef2761eaa0138ff358e3744875ccc23088070527
+Author: Geoff Toole <toolybird@tuta.io>
+Date:   Sun Apr 19 13:42:30 2020 +1000
+
+    build: Fix linking of OCaml components when srcdir != builddir
+    
+    ocaml-link.sh is a generated file, so run it from the build directory.
+    Remove it from EXTRA_DIST and also adjust docs/guestfs-hacking.pod
+    accordingly.
+
+commit c2c11382bbeb4500f3388a31ffd08cfc18b0de40
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Thu Mar 12 14:40:05 2020 +0000
+
+    daemon: xattr: Filter out user.WofCompressedData from xattrs (RHBZ#1811539).
+    
+    See comment in code for justification.
+    
+    Thanks: Yongkui Guo for finding the bug.
+
+commit af8ed266a282bb20882a9ffb611bd64243d19218
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Thu Mar 12 13:59:05 2020 +0000
+
+    daemon: Add filter_list utility function.
+    
+    For filtering lists of strings based on a predicate.
+
+commit 5c175fe73264bbf1d3ef79bb066dfb6aff902ad1
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Thu Mar 12 13:57:06 2020 +0000
+
+    daemon: xattr: Refactor code which splits attr names from the kernel.
+    
+    The kernel returns xattr names in a slightly peculiar format.  We
+    parsed this format several times in the code.  Refactor this parsing
+    so we only do it in one place.
+
+commit 088b6d1c80e4bd9347c6350927e1d0ad347ba18f
+Author: Pino Toscano <ptoscano@redhat.com>
+Date:   Thu Mar 12 13:52:17 2020 +0100
+
+    get-kernel: fallback to uncompressed vmlinux kernels
+    
+    In case the Linux guest has no compressed linux kernel (vmlinuz),
+    fallback to uncompressed ones (vmlinux).
+    
+    Reported by: Laurent Vivier.
+
+commit 7265f08ce99e592a63a9470afad2da95167a800c
+Author: Pino Toscano <ptoscano@redhat.com>
+Date:   Wed Mar 11 13:19:31 2020 +0100
+
+    lib: remove extra @LIBS@ from pkg-config file
+    
+    At the moment it is empty, so probably it does not exist. Remove it to
+    avoid adding spurious content to the pkg-config file in case that
+    variable will get a value in the future.
+
+commit bf61bf7355d3876cdf49c3c837349e74844886a8
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Tue Mar 10 15:02:30 2020 +0000
+
+    build: Allow OCaml programs using libguestfs to be compiled against build dir.
+    
+    You have to use:
+      ../libguestfs/run ./configure
+      ../libguestfs/run make
+    
+    Use of the second ../libguestfs/run against make is unfortunate but I
+    believe it's unavoidable due to the way that ocamlfind works.
+
+commit e33b3c83a02c1d7e82018105166e451373e8c218
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Tue Mar 10 14:36:56 2020 +0000
+
+    build: Allow C programs using libguestfs to be compiled against build dir.
+    
+    We use a similar trick to libvirt to allow external C programs that
+    use libguestfs to be compiled against the built (but not installed)
+    libguestfs with:
+    
+      ../libguestfs/run ./configure
+      make
+    
+    What actually happens is we have a second pkg-config file
+    (lib/local/libguestfs.pc) which points to the locally built
+    libguestfs.  The ./run script sets up PKG_CONFIG_PATH to point to this
+    directory.  Assuming that ./configure is using pkg-config/pkgconf and
+    not some other half-baked solution it will pick up the libguestfs.pc
+    file from here which will set CFLAGS and LIBS appropriately.
+
+commit b45b7cc08facdc28c07129bada3562c851955efe
+Author: Pino Toscano <ptoscano@redhat.com>
+Date:   Tue Mar 10 09:00:33 2020 +0100
+
+    builder: templates: add the AppStream repo
+    
+    It is generally used together with BaseOS (which contains a restricted
+    set of packages), so add it to the preconfigured repositories by
+    default.
+
+commit 31e6b187100626cae44bcb505db153088245155c
+Author: Richard W.M. Jones <rjones@redhat.com>
+Date:   Mon Mar 9 17:31:55 2020 +0000
+
+    po: Remove virt-v2v related dependency from POTFILES-ml.
+    
+    Causes this error if you compile libguestfs 1.42.0 from the tarball
+    without invoking the generator:
+    
+    make[4]: *** No rule to make target '../common/mlv2v/uefi.ml', needed by 'libguestfs.pot'.  Stop.
+
+commit da6324ea3145be494c76ac424db19d4eda914bbd
 Author: Richard W.M. Jones <rjones@redhat.com>
 Date:   Mon Mar 9 14:30:04 2020 +0000
 

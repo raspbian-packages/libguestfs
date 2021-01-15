@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2020 Free Software Foundation, Inc.
+ * Copyright (C) 2008-2021 Free Software Foundation, Inc.
  * Written by Eric Blake and Bruno Haible
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,7 +49,9 @@ main (void)
   ASSERT (MEMRCHR (input, 'a', n) == input + n - 1);
 
   ASSERT (MEMRCHR (input, 'a', 0) == NULL);
-  ASSERT (MEMRCHR (zerosize_ptr (), 'a', 0) == NULL);
+  void *page_boundary = zerosize_ptr ();
+  if (page_boundary)
+    ASSERT (MEMRCHR (page_boundary, 'a', 0) == NULL);
 
   ASSERT (MEMRCHR (input, 'b', n) == input + n - 2);
   ASSERT (MEMRCHR (input, 'c', n) == input + n - 3);

@@ -23,10 +23,10 @@ index 2b4aed8..3b2d146 100644
  -include .depend
  
 diff --git a/daemon/Makefile.am b/daemon/Makefile.am
-index 53c75b8..0256434 100644
+index 3a1d6ea..fb5b9ff 100644
 --- a/daemon/Makefile.am
 +++ b/daemon/Makefile.am
-@@ -380,7 +380,7 @@ camldaemon.o: $(OBJECTS)
+@@ -386,7 +386,7 @@ camldaemon.o: $(OBJECTS)
  	    $(OBJECTS)
  
  # OCaml dependencies.
@@ -49,10 +49,10 @@ index a8fed02..c700dde 100755
            -e 's,\(^\| \)./,\1,g' \
      >> $output-t
 diff --git a/subdir-rules.mk b/subdir-rules.mk
-index 8532fb2..94367f2 100644
+index 40941a9..9e5f860 100644
 --- a/subdir-rules.mk
 +++ b/subdir-rules.mk
-@@ -83,9 +83,13 @@ guestfs_am_v_jar_0 = @echo "  JAR     " $@;
+@@ -86,9 +86,13 @@ guestfs_am_v_po4a_translate_0 = @echo "  PO4A-T  " $@;
  	$(guestfs_am_v_ocamlcmi)$(OCAMLFIND) ocamlc $(OCAMLFLAGS) $(OCAMLPACKAGES) -c $< -o $@
  %.cmo: %.ml
  	$(guestfs_am_v_ocamlc)$(OCAMLFIND) ocamlc $(OCAMLFLAGS) $(OCAMLPACKAGES) -c $< -o $@

@@ -1,5 +1,5 @@
 /* Creating and controlling threads (native Windows implementation).
-   Copyright (C) 2005-2020 Free Software Foundation, Inc.
+   Copyright (C) 2005-2021 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -232,7 +232,7 @@ glwthread_thread_detach (glwthread_thread_t thread)
   return 0;
 }
 
-int
+void
 glwthread_thread_exit (void *retval)
 {
   glwthread_thread_t thread = glwthread_thread_self ();

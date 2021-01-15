@@ -71,6 +71,8 @@ history removed.
 
 仮想マシンにおいて CA 証明書を削除します。
 
+In case any certificate is removed, the system CA store is updated.
+
 =head2 B<crash-data> *
 
 kexec-tools により生成されたクラッシュデータを削除します。
@@ -134,9 +136,23 @@ than not to make your guest unbootable.
 
 参照: L<https://bugzilla.redhat.com/show_bug.cgi?id=991641>
 
+=head2 B<ipa-client> *
+
+Remove the IPA files.
+
+Remove all the files related to an IPA (Identity, Policy, Audit) system.
+This effectively unenrolls the guest from an IPA server without interacting
+with it.
+
+This operation does not run C<ipa-client>.
+
 =head2 B<kerberos-data>
 
 仮想マシンにおいて Kerberos のデータを削除します。
+
+=head2 B<kerberos-hostkeytab> *
+
+Remove the Kerberos host keytab file in the guest.
 
 =head2 B<logfiles> *
 

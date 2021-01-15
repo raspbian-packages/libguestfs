@@ -1,5 +1,5 @@
 /* Test of exact or abbreviated match search.
-   Copyright (C) 1990, 1998-1999, 2001-2020 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1998-1999, 2001-2021 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ static const enum backup_type backup_vals[] =
   numbered_backups, numbered_backups, numbered_backups
 };
 
-ARGMATCH_DEFINE_GROUP(backup, enum backup_type);
+ARGMATCH_DEFINE_GROUP(backup, enum backup_type)
 
 static const argmatch_backup_doc argmatch_backup_docs[] =
 {
@@ -109,7 +109,8 @@ main (int argc, char *argv[])
     ASSERT (argmatch_backup_choice (Input) == Output);                  \
     if (0 <= Output)                                                    \
       {                                                                 \
-        enum backup_type val = argmatch_backup_args[Output].val;        \
+        enum backup_type val                                            \
+          = argmatch_backup_args[Output < 0 ? 0 : Output].val;          \
         ASSERT (*argmatch_backup_value ("test", Input) == val);         \
         ASSERT (*argmatch_backup_value ("test",                         \
                                         argmatch_backup_argument (&val)) \

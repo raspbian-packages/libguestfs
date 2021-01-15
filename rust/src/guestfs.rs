@@ -2592,6 +2592,55 @@ impl convert::From<&CExprCpioOutOptArgs> for RawCpioOutOptArgs {
 
 /* Optional Structs */
 #[derive(Default)]
+pub struct CryptsetupOpenOptArgs<'a> {
+    pub readonly: Option<bool>,
+    pub crypttype: Option<&'a str>,
+}
+
+struct CExprCryptsetupOpenOptArgs {
+    readonly: Option<c_int>,
+    crypttype: Option<ffi::CString>,
+}
+
+impl<'a> TryFrom<CryptsetupOpenOptArgs<'a>> for CExprCryptsetupOpenOptArgs {
+    type Error = Error;
+    fn try_from(optargs: CryptsetupOpenOptArgs<'a>) -> Result<Self, Self::Error> {
+        Ok(CExprCryptsetupOpenOptArgs {
+        readonly: optargs.readonly.map(|b| if b { 1 } else { 0 }),
+        crypttype: optargs.crypttype.map(|v| ffi::CString::new(v)).transpose()?,
+         })
+    }
+}
+#[repr(C)]
+struct RawCryptsetupOpenOptArgs {
+    bitmask: u64,
+    readonly: c_int,
+    crypttype: *const c_char,
+}
+
+impl convert::From<&CExprCryptsetupOpenOptArgs> for RawCryptsetupOpenOptArgs {
+    fn from(optargs: &CExprCryptsetupOpenOptArgs) -> Self {
+        let mut bitmask = 0;
+        RawCryptsetupOpenOptArgs {
+        readonly: if let Some(v) = optargs.readonly {
+            bitmask |= 1 << 0;
+            v
+        } else {
+            0
+        },
+        crypttype: if let Some(ref v) = optargs.crypttype {
+            bitmask |= 1 << 1;
+            v.as_ptr()
+        } else {
+            ptr::null()
+        },
+              bitmask,
+         }
+    }
+}
+
+/* Optional Structs */
+#[derive(Default)]
 pub struct DiskCreateOptArgs<'a> {
     pub backingfile: Option<&'a str>,
     pub backingformat: Option<&'a str>,
@@ -6412,6 +6461,10 @@ extern "C" {
     #[allow(non_snake_case)]
     fn guestfs_cpio_out_argv(g: *const guestfs_h, directory: *const c_char, cpiofile: *const c_char, optarg: *const RawCpioOutOptArgs) -> c_int;
     #[allow(non_snake_case)]
+    fn guestfs_cryptsetup_close(g: *const guestfs_h, device: *const c_char) -> c_int;
+    #[allow(non_snake_case)]
+    fn guestfs_cryptsetup_open_argv(g: *const guestfs_h, device: *const c_char, key: *const c_char, mapname: *const c_char, optarg: *const RawCryptsetupOpenOptArgs) -> c_int;
+    #[allow(non_snake_case)]
     fn guestfs_dd(g: *const guestfs_h, src: *const c_char, dest: *const c_char) -> c_int;
     #[allow(non_snake_case)]
     fn guestfs_debug(g: *const guestfs_h, subcmd: *const c_char, extraargs: *const *const c_char) -> *const c_char;
@@ -9124,6 +9177,38 @@ impl<'a> Handle<'a> {
         }
         drop(c_directory);
         drop(c_cpiofile);
+        drop(optargs_cexpr);
+        Ok(())
+    }
+
+    /// close an encrypted device
+    #[allow(non_snake_case)]
+    pub fn cryptsetup_close(&self, device: &str) -> Result<(), Error> {
+        let c_device = ffi::CString::new(device)?;
+        
+        let r = unsafe { guestfs_cryptsetup_close(self.g, (&c_device).as_ptr()) };
+        if r == -1 {
+            return Err(self.get_error_from_handle("cryptsetup_close"));
+        }
+        drop(c_device);
+        Ok(())
+    }
+
+    /// open an encrypted block device
+    #[allow(non_snake_case)]
+    pub fn cryptsetup_open(&self, device: &str, key: &str, mapname: &str, optargs: CryptsetupOpenOptArgs) -> Result<(), Error> {
+        let c_device = ffi::CString::new(device)?;
+        let c_key = ffi::CString::new(key)?;
+        let c_mapname = ffi::CString::new(mapname)?;
+        let optargs_cexpr = CExprCryptsetupOpenOptArgs::try_from(optargs)?;
+        
+        let r = unsafe { guestfs_cryptsetup_open_argv(self.g, (&c_device).as_ptr(), (&c_key).as_ptr(), (&c_mapname).as_ptr(), &(RawCryptsetupOpenOptArgs::from(&optargs_cexpr)) as *const RawCryptsetupOpenOptArgs) };
+        if r == -1 {
+            return Err(self.get_error_from_handle("cryptsetup_open"));
+        }
+        drop(c_device);
+        drop(c_key);
+        drop(c_mapname);
         drop(optargs_cexpr);
         Ok(())
     }

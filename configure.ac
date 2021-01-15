@@ -19,7 +19,7 @@
 # add extra information using --with-extra="..." which may be any
 # freeform string.
 m4_define([libguestfs_major],   [1])
-m4_define([libguestfs_minor],   [42])
+m4_define([libguestfs_minor],   [44])
 m4_define([libguestfs_release], [0])
 
 AC_INIT([libguestfs],libguestfs_major.libguestfs_minor.libguestfs_release)
@@ -271,11 +271,13 @@ AC_CONFIG_FILES([Makefile
                  golang/Makefile
                  golang/examples/Makefile
                  haskell/Makefile
+                 include/Makefile
                  inspector/Makefile
                  java/Makefile
                  java/examples/Makefile
                  lib/Makefile
                  lib/libguestfs.pc
+                 lib/local/libguestfs.pc
                  lua/Makefile
                  lua/examples/Makefile
                  make-fs/Makefile

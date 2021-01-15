@@ -288,6 +288,10 @@
         guestfs_cpio_out_va;
         guestfs_create;
         guestfs_create_flags;
+        guestfs_cryptsetup_close;
+        guestfs_cryptsetup_open;
+        guestfs_cryptsetup_open_argv;
+        guestfs_cryptsetup_open_va;
         guestfs_dd;
         guestfs_debug;
         guestfs_debug_drives;

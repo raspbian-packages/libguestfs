@@ -843,6 +843,44 @@ guestfs_int_ruby_cp (VALUE gv, VALUE srcv, VALUE destv)
 
 /*
  * call-seq:
+ *   g.cryptsetup_close(device) -> nil
+ *
+ * close an encrypted device
+ *
+ * This closes an encrypted device that was created earlier
+ * by "g.cryptsetup_open". The "device" parameter must be
+ * the name of the mapping device (ie. /dev/mapper/mapname)
+ * and *not* the name of the underlying block device.
+ *
+ *
+ * [Since] Added in version 1.43.2.
+ *
+ * [Feature] This function depends on the feature +luks+.  See also {#feature_available}[rdoc-ref:feature_available].
+ *
+ * [C API] For the C API documentation for this function, see
+ *         {guestfs_cryptsetup_close}[http://libguestfs.org/guestfs.3.html#guestfs_cryptsetup_close].
+ */
+VALUE
+guestfs_int_ruby_cryptsetup_close (VALUE gv, VALUE devicev)
+{
+  guestfs_h *g;
+  Data_Get_Struct (gv, guestfs_h, g);
+  if (!g)
+    rb_raise (rb_eArgError, "%s: used handle after closing it", "cryptsetup_close");
+
+  const char *device = StringValueCStr (devicev);
+
+  int r;
+
+  r = guestfs_cryptsetup_close (g, device);
+  if (r == -1)
+    rb_raise (e_Error, "%s", guestfs_last_error (g));
+
+  return Qnil;
+}
+
+/*
+ * call-seq:
  *   g.df_h() -> string
  *
  * report file system disk space usage (human readable)
@@ -2704,6 +2742,8 @@ guestfs_int_ruby_lstatnslist (VALUE gv, VALUE pathv, VALUE namesv)
  *
  * [Since] Added in version 1.5.1.
  *
+ * [Deprecated] In new code, use rdoc-ref:cryptsetup_close instead.
+ *
  * [Feature] This function depends on the feature +luks+.  See also {#feature_available}[rdoc-ref:feature_available].
  *
  * [C API] For the C API documentation for this function, see
@@ -2716,6 +2756,8 @@ guestfs_int_ruby_luks_close (VALUE gv, VALUE devicev)
   Data_Get_Struct (gv, guestfs_h, g);
   if (!g)
     rb_raise (rb_eArgError, "%s: used handle after closing it", "luks_close");
+
+  rb_warn ("Guestfs#luks_close is deprecated; use #cryptsetup_close instead");
 
   const char *device = StringValueCStr (devicev);
 

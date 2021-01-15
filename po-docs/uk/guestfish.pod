@@ -291,11 +291,7 @@ L</add>.
 
 __INCLUDE:key-option.pod__
 
-=item B<--keys-from-stdin>
-
-Прочитати параметри ключа або пароля із джерела стандартного
-введення. Типово програма намагається читати паролі від користувача
-відкриттям F</dev/tty>.
+__INCLUDE:keys-from-stdin-option.pod__
 
 =item B<--listen>
 
@@ -881,36 +877,40 @@ C<~user> для іншого користувача).
 
 =head1 ЗАШИФРОВАНІ ДИСКИ
 
-Libguestfs має певну підтримку гостьових систем Linux, які зашифровано
-відповідно до стандарту Linux Unified Key Setup (LUKS), що включає майже усі
-системи шифрування усього диска, які використовуються сучасними гостьовими
-системами Linux. У поточній версії передбачено лише підтримку LVM-на-LUKS.
+Libguestfs has some support for Linux guests encrypted according to the
+Linux Unified Key Setup (LUKS) standard, which includes nearly all whole
+disk encryption systems used by modern Linux guests, and Windows BitLocker.
 
 Знайдіть шифровані блокові пристрої та розділи за допомогою L</vfs-type>:
 
  ><fs> vfs-type /dev/sda2
  crypto_LUKS
 
-Далі, відкрийте ці пристрої за допомогою L</luks-open>. У результаті буде
-створено пристрій прив'язки до пристрою із назвою F</dev/mapper/luksdev>.
+або:
 
- ><fs> luks-open /dev/sda2 luksdev
- Enter key or passphrase ("key"): <введіть пароль>
+ ><fs> vfs-type /dev/sda2
+ BitLocker
 
-Нарешті, вам слід наказати LVM виконати сканування груп томів на
-новоствореному пристрої прив'язки:
+Then open those devices using L</cryptsetup-open>.  This creates a
+device-mapper device called F</dev/mapper/name>.
+
+ ><fs> cryptsetup-open /dev/sda2 name
+ Enter key or passphrase ("key"): <enter the passphrase>
+
+For Linux guests you have to tell LVM to scan for volume groups on the newly
+created mapper device:
 
  vgscan
  vg-activate-all true
 
-Тепер логічні томи можна змонтувати у звичний спосіб.
+The filesystems or logical volumes can now be mounted in the usual way.
 
-До закриття пристрою LUKS вам слід демонтувати усі логічні томи на ньому і
-деактивувати групи томів викликом C<vg-activate false VG> для кожної. Далі,
-ви можете закрити пристрій прив'язки:
+Before closing an encrypted device you must unmount any logical volumes on
+it and deactivate the volume groups by calling C<vg-activate false VG> on
+each one.  Then you can close the mapper device:
 
  vg-activate false /dev/VG
- luks-close /dev/mapper/luksdev
+ cryptsetup-close /dev/mapper/name
 
 =head1 ШЛЯХИ У WINDOWS
 
@@ -1223,8 +1223,8 @@ C<localhost>.
 
 Додати образ диска, розташований у сховищі даних Network Block Device (nbd).
 
-Частина I</exportname> адреси вказує назву експортування NBD, але, зазвичай,
-її лишають порожньою.
+The I<exportname> part of the URI specifies an NBD export name, but is
+usually left empty.
 
 Необов'язковим параметром I<?socket> може бути використано для визначення
 сокета домену Unix, крізь який можна обмінюватися даними із сервером

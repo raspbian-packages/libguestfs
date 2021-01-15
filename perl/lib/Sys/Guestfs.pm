@@ -2042,6 +2042,64 @@ New (SVR4) portable format with a checksum.
 
 =back
 
+=item $g->cryptsetup_close ($device);
+
+This closes an encrypted device that was created earlier by
+C<$g-E<gt>cryptsetup_open>.  The C<device> parameter must be
+the name of the mapping device (ie. F</dev/mapper/mapname>)
+and I<not> the name of the underlying block device.
+
+This function depends on the feature C<luks>.  See also
+C<$g-E<gt>feature-available>.
+
+=item $g->cryptsetup_open ($device, $key, $mapname [, readonly => $readonly] [, crypttype => $crypttype]);
+
+This command opens a block device which has been encrypted
+according to the Linux Unified Key Setup (LUKS) standard,
+Windows BitLocker, or some other types.
+
+C<device> is the encrypted block device or partition.
+
+The caller must supply one of the keys associated with the
+encrypted block device, in the C<key> parameter.
+
+This creates a new block device called F</dev/mapper/mapname>.
+Reads and writes to this block device are decrypted from and
+encrypted to the underlying C<device> respectively.
+
+C<mapname> cannot be C<"control"> because that name is reserved
+by device-mapper.
+
+If the optional C<crypttype> parameter is not present then
+libguestfs tries to guess the correct type (for example
+LUKS or BitLocker).  However you can override this by
+specifying one of the following types:
+
+=over 4
+
+=item C<luks>
+
+A Linux LUKS device.
+
+=item C<bitlk>
+
+A Windows BitLocker device.
+
+=back
+
+The optional C<readonly> flag, if set to true, creates a
+read-only mapping.
+
+If this block device contains LVM volume groups, then
+calling C<$g-E<gt>lvm_scan> with the C<activate>
+parameter C<true> will make them visible.
+
+Use C<$g-E<gt>list_dm_devices> to list all device mapper
+devices.
+
+This function depends on the feature C<luks>.  See also
+C<$g-E<gt>feature-available>.
+
 =item $g->dd ($src, $dest);
 
 This command copies from one source device or file C<src>
@@ -5460,6 +5518,13 @@ of the underlying block device.
 This function depends on the feature C<luks>.  See also
 C<$g-E<gt>feature-available>.
 
+I<This function is deprecated.>
+In new code, use the L</cryptsetup_close> call instead.
+
+Deprecated functions will not be removed from the API, but the
+fact that they are deprecated indicates that there are problems
+with correct use of these functions.
+
 =item $g->luks_format ($device, $key, $keyslot);
 
 This command erases existing data on C<device> and formats
@@ -5511,6 +5576,13 @@ devices.
 This function depends on the feature C<luks>.  See also
 C<$g-E<gt>feature-available>.
 
+I<This function is deprecated.>
+In new code, use the L</cryptsetup_open> call instead.
+
+Deprecated functions will not be removed from the API, but the
+fact that they are deprecated indicates that there are problems
+with correct use of these functions.
+
 =item $g->luks_open_ro ($device, $key, $mapname);
 
 This is the same as C<$g-E<gt>luks_open> except that a read-only
@@ -5518,6 +5590,13 @@ mapping is created.
 
 This function depends on the feature C<luks>.  See also
 C<$g-E<gt>feature-available>.
+
+I<This function is deprecated.>
+In new code, use the L</cryptsetup_open> call instead.
+
+Deprecated functions will not be removed from the API, but the
+fact that they are deprecated indicates that there are problems
+with correct use of these functions.
 
 =item $uuid = $g->luks_uuid ($device);
 
@@ -5551,7 +5630,8 @@ might find to the canonical name.  For example, F</dev/mapper/VG-LV>
 is converted to F</dev/VG/LV>.
 
 This command returns an error if the C<lvname> parameter does
-not refer to a logical volume.
+not refer to a logical volume.  In this case errno will be
+set to C<EINVAL>.
 
 See also C<$g-E<gt>is_lv>, C<$g-E<gt>canonical_device_name>.
 

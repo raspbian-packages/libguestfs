@@ -538,6 +538,12 @@ extern PyObject *guestfs_int_py_cp_r (PyObject *self, PyObject *args);
 #ifdef GUESTFS_HAVE_CPIO_OUT
 extern PyObject *guestfs_int_py_cpio_out (PyObject *self, PyObject *args);
 #endif
+#ifdef GUESTFS_HAVE_CRYPTSETUP_CLOSE
+extern PyObject *guestfs_int_py_cryptsetup_close (PyObject *self, PyObject *args);
+#endif
+#ifdef GUESTFS_HAVE_CRYPTSETUP_OPEN
+extern PyObject *guestfs_int_py_cryptsetup_open (PyObject *self, PyObject *args);
+#endif
 #ifdef GUESTFS_HAVE_DD
 extern PyObject *guestfs_int_py_dd (PyObject *self, PyObject *args);
 #endif

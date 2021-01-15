@@ -1,6 +1,6 @@
 /* Test for nonblocking read and write on sockets.
 
-   Copyright (C) 2011-2020 Free Software Foundation, Inc.
+   Copyright (C) 2011-2021 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ main (int argc, char *argv[])
   int test;
   int server;
   int port;
-  int child;
+  pid_t child;
   int server_socket;
   int exitcode;
 
@@ -69,8 +69,8 @@ main (int argc, char *argv[])
     child_argv[3] = NULL;
 
 #if defined _WIN32 && ! defined __CYGWIN__
-    child = spawnvpe (P_NOWAIT, child_path, child_argv,
-                      (const char **) environ);
+    child = _spawnvpe (P_NOWAIT, child_path, child_argv,
+                       (const char **) environ);
     ASSERT (child >= 0);
 #else
     {

@@ -250,11 +250,7 @@ L</РОЗРІДЖЕННЯ НА МІСЦІ> нижче.
 
 __INCLUDE:key-option.pod__
 
-=item B<--keys-from-stdin>
-
-Прочитати параметри ключа або пароля із джерела стандартного
-введення. Типово програма намагається читати паролі від користувача
-відкриттям F</dev/tty>.
+__INCLUDE:keys-from-stdin-option.pod__
 
 =item B<--machine-readable>
 

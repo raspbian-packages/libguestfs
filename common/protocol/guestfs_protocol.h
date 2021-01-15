@@ -1249,6 +1249,20 @@ struct guestfs_cpio_out_args {
 };
 typedef struct guestfs_cpio_out_args guestfs_cpio_out_args;
 
+struct guestfs_cryptsetup_close_args {
+	char *device;
+};
+typedef struct guestfs_cryptsetup_close_args guestfs_cryptsetup_close_args;
+
+struct guestfs_cryptsetup_open_args {
+	char *device;
+	char *key;
+	char *mapname;
+	bool_t readonly;
+	char *crypttype;
+};
+typedef struct guestfs_cryptsetup_open_args guestfs_cryptsetup_open_args;
+
 struct guestfs_dd_args {
 	char *src;
 	char *dest;
@@ -4593,6 +4607,8 @@ enum guestfs_procedure {
 	GUESTFS_PROC_CP_A = 88,
 	GUESTFS_PROC_CP_R = 401,
 	GUESTFS_PROC_CPIO_OUT = 419,
+	GUESTFS_PROC_CRYPTSETUP_CLOSE = 509,
+	GUESTFS_PROC_CRYPTSETUP_OPEN = 508,
 	GUESTFS_PROC_DD = 217,
 	GUESTFS_PROC_DEBUG = 76,
 	GUESTFS_PROC_DEBUG_UPLOAD = 241,
@@ -4989,7 +5005,7 @@ enum guestfs_procedure {
 	GUESTFS_PROC_ZGREPI = 160,
 };
 typedef enum guestfs_procedure guestfs_procedure;
-#define GUESTFS_MAX_PROC_NR 507
+#define GUESTFS_MAX_PROC_NR 509
 #define GUESTFS_MESSAGE_MAX 4194304
 #define GUESTFS_PROGRAM 0x2000F5F5
 #define GUESTFS_PROTOCOL_VERSION 4
@@ -5228,6 +5244,8 @@ extern  bool_t xdr_guestfs_cp_args (XDR *, guestfs_cp_args*);
 extern  bool_t xdr_guestfs_cp_a_args (XDR *, guestfs_cp_a_args*);
 extern  bool_t xdr_guestfs_cp_r_args (XDR *, guestfs_cp_r_args*);
 extern  bool_t xdr_guestfs_cpio_out_args (XDR *, guestfs_cpio_out_args*);
+extern  bool_t xdr_guestfs_cryptsetup_close_args (XDR *, guestfs_cryptsetup_close_args*);
+extern  bool_t xdr_guestfs_cryptsetup_open_args (XDR *, guestfs_cryptsetup_open_args*);
 extern  bool_t xdr_guestfs_dd_args (XDR *, guestfs_dd_args*);
 extern  bool_t xdr_guestfs_debug_args (XDR *, guestfs_debug_args*);
 extern  bool_t xdr_guestfs_debug_ret (XDR *, guestfs_debug_ret*);
@@ -5948,6 +5966,8 @@ extern bool_t xdr_guestfs_cp_args ();
 extern bool_t xdr_guestfs_cp_a_args ();
 extern bool_t xdr_guestfs_cp_r_args ();
 extern bool_t xdr_guestfs_cpio_out_args ();
+extern bool_t xdr_guestfs_cryptsetup_close_args ();
+extern bool_t xdr_guestfs_cryptsetup_open_args ();
 extern bool_t xdr_guestfs_dd_args ();
 extern bool_t xdr_guestfs_debug_args ();
 extern bool_t xdr_guestfs_debug_ret ();

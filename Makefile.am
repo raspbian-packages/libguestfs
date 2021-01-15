@@ -41,7 +41,7 @@ endif
 SUBDIRS += common/errnostring common/protocol common/qemuopts
 SUBDIRS += common/utils
 SUBDIRS += common/structs
-SUBDIRS += lib docs examples
+SUBDIRS += include lib docs examples
 
 # The daemon and the appliance.
 SUBDIRS += common/mlutils
@@ -261,9 +261,7 @@ EXTRA_DIST = \
 	website/index.css \
 	website/index.html.in \
 	website/pod.css \
-	website/standard.css \
-	zanata.xml \
-	zanata-pull.sh
+	website/standard.css
 
 WEBSITESDIR = $(HOME)/d/websites
 
@@ -344,6 +342,7 @@ po/POTFILES-ml: configure.ac
 	cd $(srcdir); \
 	find builder common/ml* customize dib get-kernel resize sparsify sysprep -name '*.ml' | \
 	grep -v '^builder/templates/' | \
+	grep -v '^common/mlv2v/' | \
 	grep -v -E '.*_tests\.ml$$' | \
 	LC_ALL=C sort > $@-t
 	mv $@-t $@

@@ -380,6 +380,12 @@ static PyMethodDef methods[] = {
 #ifdef GUESTFS_HAVE_CPIO_OUT
   { (char *) "cpio_out", guestfs_int_py_cpio_out, METH_VARARGS, NULL },
 #endif
+#ifdef GUESTFS_HAVE_CRYPTSETUP_CLOSE
+  { (char *) "cryptsetup_close", guestfs_int_py_cryptsetup_close, METH_VARARGS, NULL },
+#endif
+#ifdef GUESTFS_HAVE_CRYPTSETUP_OPEN
+  { (char *) "cryptsetup_open", guestfs_int_py_cryptsetup_open, METH_VARARGS, NULL },
+#endif
 #ifdef GUESTFS_HAVE_DD
   { (char *) "dd", guestfs_int_py_dd, METH_VARARGS, NULL },
 #endif
@@ -1892,7 +1898,6 @@ static PyMethodDef methods[] = {
   { NULL, NULL, 0, NULL }
 };
 
-#if PY_MAJOR_VERSION >= 3
 static struct PyModuleDef moduledef = {
   PyModuleDef_HEAD_INIT,
   "libguestfsmod",     /* m_name */
@@ -1904,18 +1909,13 @@ static struct PyModuleDef moduledef = {
   NULL,                  /* m_clear */
   NULL,                  /* m_free */
 };
-#endif
 
 static PyObject *
 moduleinit (void)
 {
   PyObject *m;
 
-#if PY_MAJOR_VERSION >= 3
   m = PyModule_Create (&moduledef);
-#else
-  m = Py_InitModule ((char *) "libguestfsmod", methods);
-#endif
 
   if (m != NULL)
     guestfs_int_py_extend_module (m);
@@ -1923,7 +1923,6 @@ moduleinit (void)
   return m; /* m might be NULL if module init failed */
 }
 
-#if PY_MAJOR_VERSION >= 3
 extern PyMODINIT_FUNC PyInit_libguestfsmod (void);
 
 PyMODINIT_FUNC
@@ -1931,12 +1930,3 @@ PyInit_libguestfsmod (void)
 {
   return moduleinit ();
 }
-#else
-extern void initlibguestfsmod (void);
-
-void
-initlibguestfsmod (void)
-{
-  (void) moduleinit ();
-}
-#endif

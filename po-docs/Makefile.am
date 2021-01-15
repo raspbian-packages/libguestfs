@@ -21,70 +21,45 @@ include $(top_srcdir)/subdir-rules.mk
 # into the po/ directory and the translations into the usual
 # libguestfs.pot file.
 
-# Languages that we translate.
+# Languages.
 # Don't use LINGUAS (uppercase) as Gentoo defines it (RHBZ#804464).
-linguas = ja uk
+linguas     := $(shell cat $(srcdir)/LINGUAS)
 
-# Languages that we have PO files for, but we don't translate
-# because there is insufficient coverage.
-linguas_not_translated = cs de en_GB es eu fr nl pt_BR tg zh_CN
+# Languages that we translate, as they have enough coverage.
+linguas_translated = ja uk
 
 EXTRA_DIST = \
+	LINGUAS \
 	libguestfs-docs.pot \
 	$(linguas:%=%.po) \
-	$(linguas_not_translated:%=%.po) \
 	podfiles
-
-CLEANFILES += po4a.conf
 
 # Build the final man pages from the translated POD files.  Each
 # language directory contains a Makefile.am that we need to keep up to
 # date (note each $lang/Makefile.am should be identical).
 # XXX Is there a better way?
-SUBDIRS = $(linguas)
+SUBDIRS = $(linguas_translated)
 
-update-po: libguestfs-docs.pot
-
-# Note: po4a puts the following junk at the top of every POD file it
-# generates:
-#  - a warning
-#  - a probably bogus =encoding line
-# Remove both.
-# XXX Fix po4a so it doesn't do this.
-libguestfs-docs.pot: po4a.conf
-	$(PO4A) \
-	  -M utf-8 -L utf-8 -A utf-8 \
-	  -v \
-	  -k 0 \
+libguestfs-docs.pot:
+	cd $(top_srcdir) && $(PO4A_GETTEXTIZE) \
+	  -f pod \
+	  -M utf-8 -L utf-8 \
 	  --package-name $(PACKAGE_NAME) \
 	  --package-version $(PACKAGE_VERSION) \
 	  --msgid-bugs-address libguestfs@redhat.com \
 	  --copyright-holder "Red Hat Inc." \
-	  po4a.conf
-	for f in `cd $(srcdir); find $(linguas) -name '*.pod'`; do \
-	  $(SED) '0,/^=encoding/d' < $$f > $$f.new; \
-	  mv $$f.new $$f; \
-	done
-
-po4a.conf: podfiles
-	rm -f $@-t
-	echo "[po_directory] $(srcdir)" >> $@-t
-	echo >> $@-t
-	for f in `cat podfiles`; do \
-	  out=`basename -- $$f .pod`.pod; \
-	  echo "[type: pod] $$f \$$lang:\$$lang/$$out" >> $@-t; \
-	  echo >> $@-t; \
-	done;
-	mv $@-t $@
+	  -p $(abs_srcdir)/$@ \
+	  $(patsubst %,-m %,$(shell cat $(srcdir)/podfiles))
 
 podfiles: Makefile
 	rm -f $@ $@-t
-	find $(top_srcdir) -name '*.pod' | \
-	  grep -v /debian/ | \
-	  grep -v /libguestfs-1 | \
-	  grep -v /po-docs/ | \
+	cd $(top_srcdir) && find . -name '*.pod' -printf '%P\n'| \
+	  grep -v ^debian/ | \
+	  grep -v ^libguestfs-1 | \
+	  grep -v ^po-docs/ | \
+	  grep -v ^stamp- | \
 	  grep -v /stamp- \
-	  > $@-t
-	for f in `cat $(top_srcdir)/po/POTFILES-pl`; do echo $(top_srcdir)/$$f; done >> $@-t
+	  > $(abs_srcdir)/$@-t
+	cat $(top_srcdir)/po/POTFILES-pl >> $@-t
 	LC_ALL=C sort -o $@-t $@-t
 	mv $@-t $@

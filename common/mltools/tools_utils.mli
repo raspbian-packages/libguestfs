@@ -195,9 +195,8 @@ val is_btrfs_subvolume : Guestfs.guestfs -> string -> bool
 (** Checks if a filesystem is a btrfs subvolume. *)
 
 val inspect_decrypt : Guestfs.guestfs -> key_store -> unit
-(** Simple implementation of decryption: look for any [crypto_LUKS]
-    partitions and decrypt them, then rescan for VGs.  This only works
-    for Fedora whole-disk encryption. *)
+(** Simple implementation of decryption: look for any encrypted
+    partitions and decrypt them, then rescan for VGs. *)
 
 val with_timeout : string -> int -> ?sleep:int -> (unit -> 'a option) -> 'a
 (** [with_timeout op timeout ?sleep fn] implements a timeout loop.
@@ -212,3 +211,13 @@ val with_timeout : string -> int -> ?sleep:int -> (unit -> 'a option) -> 'a
     calls {!error} and the program exits.  The error message will
     contain the diagnostic string [op] to identify the operation
     which timed out. *)
+
+val run_in_guest_command : Guestfs.guestfs -> string -> ?logfile:string -> ?incompatible_fn:(unit -> unit) -> string -> unit
+(** [run_in_guest_command g root ?incompatible_archs_fn cmd]
+    runs a command in the guest, which is already mounted for the
+    specified [root].  The command is run directly in case the
+    architecture of the host and the guest are compatible, optionally
+    calling [?incompatible_fn] in case they are not.
+
+    [?logfile] is an optional file in the guest to where redirect
+    stdout and stderr of the command. *)

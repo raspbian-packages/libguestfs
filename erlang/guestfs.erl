@@ -141,6 +141,8 @@
 -export([cp_a/3]).
 -export([cp_r/3]).
 -export([cpio_out/3, cpio_out/4]).
+-export([cryptsetup_close/2]).
+-export([cryptsetup_open/4, cryptsetup_open/5]).
 -export([dd/3]).
 -export([debug/3]).
 -export([debug_drives/1]).
@@ -1088,6 +1090,14 @@ cpio_out(G, Directory, Cpiofile, Optargs) ->
   call_port(G, {cpio_out, Directory, Cpiofile, Optargs}).
 cpio_out(G, Directory, Cpiofile) ->
   cpio_out(G, Directory, Cpiofile, []).
+
+cryptsetup_close(G, Device) ->
+  call_port(G, {cryptsetup_close, Device}).
+
+cryptsetup_open(G, Device, Key, Mapname, Optargs) ->
+  call_port(G, {cryptsetup_open, Device, Key, Mapname, Optargs}).
+cryptsetup_open(G, Device, Key, Mapname) ->
+  cryptsetup_open(G, Device, Key, Mapname, []).
 
 dd(G, Src, Dest) ->
   call_port(G, {dd, Src, Dest}).

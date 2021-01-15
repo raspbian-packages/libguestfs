@@ -568,6 +568,54 @@ cp_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
+#ifdef HAVE_ATTRIBUTE_CLEANUP
+
+#define CLEANUP_XDR_FREE_CRYPTSETUP_CLOSE_ARGS \
+    __attribute__((cleanup(cleanup_xdr_free_cryptsetup_close_args)))
+
+static void
+cleanup_xdr_free_cryptsetup_close_args (struct guestfs_cryptsetup_close_args *argsp)
+{
+  xdr_free ((xdrproc_t) xdr_guestfs_cryptsetup_close_args, (char *) argsp);
+}
+
+#else /* !HAVE_ATTRIBUTE_CLEANUP */
+#define CLEANUP_XDR_FREE_CRYPTSETUP_CLOSE_ARGS
+#endif /* !HAVE_ATTRIBUTE_CLEANUP */
+
+void
+cryptsetup_close_stub (XDR *xdr_in)
+{
+  int r;
+  CLEANUP_XDR_FREE_CRYPTSETUP_CLOSE_ARGS struct guestfs_cryptsetup_close_args args;
+  memset (&args, 0, sizeof args);
+  CLEANUP_FREE char *device = NULL;
+
+  /* The caller should have checked before calling this. */
+  if (! optgroup_luks_available ()) {
+    reply_with_unavailable_feature ("luks");
+    return;
+  }
+
+  if (optargs_bitmask != 0) {
+    reply_with_error ("header optargs_bitmask field must be passed as 0 for calls that don't take optional arguments");
+    return;
+  }
+
+  if (!xdr_guestfs_cryptsetup_close_args (xdr_in, &args)) {
+    reply_with_error ("daemon failed to decode procedure arguments");
+    return;
+  }
+  RESOLVE_DEVICE (args.device, device, false);
+
+  r = do_cryptsetup_close (device);
+  if (r == -1)
+    /* do_cryptsetup_close has already called reply_with_error */
+    return;
+
+  reply (NULL, NULL);
+}
+
 void
 df_h_stub (XDR *xdr_in)
 {

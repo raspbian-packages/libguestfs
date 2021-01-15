@@ -124,6 +124,9 @@ output_template:
 # Special Makefile magic ends here
 
 override_dh_autoreconf:
+# Get rid of files shipped in upstream tarball so they get rebuilt in
+# the build directories.
+	rm -f po/*.gmo po/*.pot
 	dh_autoreconf -- debian/dh-autoreconf.sh
 
 # Just run the test on the last build.

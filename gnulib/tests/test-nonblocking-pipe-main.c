@@ -1,6 +1,6 @@
 /* Test for nonblocking read and write on pipes.
 
-   Copyright (C) 2011-2020 Free Software Foundation, Inc.
+   Copyright (C) 2011-2021 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ main (int argc, char *argv[])
   const char *child_path;
   int test;
   int fd[2];
-  int child;
+  pid_t child;
   int exitcode;
 
   child_path = argv[1];
@@ -82,8 +82,8 @@ main (int argc, char *argv[])
     child_argv[2] = NULL;
 
 #if defined _WIN32 && ! defined __CYGWIN__
-    child = spawnvpe (P_NOWAIT, child_path, child_argv,
-                      (const char **) environ);
+    child = _spawnvpe (P_NOWAIT, child_path, child_argv,
+                       (const char **) environ);
     ASSERT (child >= 0);
 #else
     {

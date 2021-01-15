@@ -1,5 +1,5 @@
 /* Waiting for a subprocess to finish.
-   Copyright (C) 2001-2003, 2005-2020 Free Software Foundation, Inc.
+   Copyright (C) 2001-2003, 2005-2021 Free Software Foundation, Inc.
    Written by Bruno Haible <haible@clisp.cons.org>, 2001.
 
    This program is free software: you can redistribute it and/or modify
@@ -44,7 +44,7 @@
 # define WIN32_LEAN_AND_MEAN
 # include <windows.h>
 
-/* The return value of spawnvp() is really a process handle as returned
+/* The return value of _spawnvp() is really a process handle as returned
    by CreateProcess().  Therefore we can kill it using TerminateProcess.  */
 # define kill(pid,sig) TerminateProcess ((HANDLE) (pid), sig)
 

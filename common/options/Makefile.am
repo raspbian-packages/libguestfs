@@ -19,6 +19,7 @@ include $(top_srcdir)/subdir-rules.mk
 
 EXTRA_DIST = \
 	key-option.pod \
+	keys-from-stdin-option.pod \
 	blocksize-option.pod
 
 # liboptions.la contains guestfish code which is used in other
@@ -40,12 +41,14 @@ liboptions_la_SOURCES = \
 liboptions_la_CPPFLAGS = \
 	-DGUESTFS_NO_DEPRECATED=1 \
 	-I$(top_srcdir)/common/utils -I$(top_builddir)/common/utils \
+	-I$(top_srcdir)/gnulib/lib -I$(top_builddir)/gnulib/lib \
 	-I$(top_srcdir)/lib -I$(top_builddir)/lib \
-	-I$(top_srcdir)/gnulib/lib -I$(top_builddir)/gnulib/lib
+	$(INCLUDE_DIRECTORY)
 liboptions_la_CFLAGS = \
 	$(WARN_CFLAGS) $(WERROR_CFLAGS) \
 	$(LIBCONFIG_CFLAGS) \
-	$(LIBXML2_CFLAGS)
+	$(LIBXML2_CFLAGS) \
+	$(LIBGUESTFS_CFLAGS)
 liboptions_la_LIBADD = \
 	$(top_builddir)/common/utils/libutils.la \
 	$(LIBCONFIG_LIBS) \

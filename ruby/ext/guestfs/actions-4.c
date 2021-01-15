@@ -2113,7 +2113,8 @@ guestfs_int_ruby_luks_format (VALUE gv, VALUE devicev, VALUE keyv, VALUE keyslot
  * /dev/mapper/VG-LV is converted to /dev/VG/LV.
  * 
  * This command returns an error if the "lvname" parameter
- * does not refer to a logical volume.
+ * does not refer to a logical volume. In this case errno
+ * will be set to "EINVAL".
  * 
  * See also "g.is_lv", "g.canonical_device_name".
  *

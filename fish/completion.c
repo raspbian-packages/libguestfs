@@ -160,6 +160,8 @@ static const char *const commands[] = {
   "cp-a",
   "cp-r",
   "cpio-out",
+  "cryptsetup-close",
+  "cryptsetup-open",
   "dd",
   "debug",
   "debug-drives",
