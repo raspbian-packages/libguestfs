@@ -51,6 +51,7 @@ ifelse(REDHAT,1,
 
 ifelse(DEBIAN,1,
   bsdmainutils
+  bsdextrautils
 dnl old name used in Jessie and earlier
   btrfs-tools
   cryptsetup-bin
