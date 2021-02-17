@@ -17,4 +17,5 @@
 0018-Fix-documentation-generation-for-out-of-tree-builds.patch
 0019-Add-support-for-YARA-4.patch
 0019-Fix-out-of-tree-build-for-po.patch
+0020-Update-packagelist-as-haxdump-has-been-moved-to-bsde.patch
 auto-1:1.44.0-1+rpi1-4b5577a431c96e44282e63413b3555bcef626c3a-1610706180

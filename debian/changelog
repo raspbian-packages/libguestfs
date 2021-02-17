@@ -1,11 +1,17 @@
-libguestfs (1:1.44.0-1+rpi1) bullseye-staging; urgency=medium
+libguestfs (1:1.44.0-2+rpi1) bullseye-staging; urgency=medium
 
   [changes brought forward from 1:1.42.0-11+rpi1 by Peter Michael Green <plugwash@raspbian.org> at Thu, 12 Nov 2020 16:03:00 +0000]
   * Add raspbian to the list of distros with dpkg.
   * Disable dh_missing
   * Partiall fix clean target.
 
- -- Peter Michael Green <plugwash@raspbian.org>  Fri, 15 Jan 2021 10:09:13 +0000
+ -- Raspbian forward porter <root@raspbian.org>  Wed, 17 Feb 2021 05:23:13 +0000
+
+libguestfs (1:1.44.0-2) unstable; urgency=medium
+
+  * Replace bsdmainutils dependency (Closes: #964531, 964533)
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 01 Feb 2021 21:19:33 +0100
 
 libguestfs (1:1.44.0-1) unstable; urgency=medium
 

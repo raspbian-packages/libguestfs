@@ -53,7 +53,7 @@ Build-Depends: debhelper (>= 12),
   acl,
   attr,
   binutils,
-  bsdmainutils,
+  bsdextrautils,
   btrfs-progs,
   bzip2,
   cpio,
@@ -125,7 +125,7 @@ XS-Ruby-Versions: all
 Package: guestfsd
 Architecture: linux-any
 Depends: ${shlibs:Depends}, ${misc:Depends},
-  bsdmainutils,
+  bsdextrautils,
   diffutils,
 # grub-pc,
   iproute2 | iproute,
