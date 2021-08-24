@@ -1,0 +1,976 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Tue, 10 Mar 2020 20:10:28 +0100
+Subject: Fix documentation generation for out-of-tree builds
+
+---
+ Makefile.am                 |  2 +-
+ align/Makefile.am           |  2 +-
+ appliance/Makefile.am       |  2 +-
+ builder/Makefile.am         |  6 ++---
+ cat/Makefile.am             | 10 ++++----
+ customize/Makefile.am       |  4 ++--
+ daemon/Makefile.am          |  2 +-
+ df/Makefile.am              |  2 +-
+ dib/Makefile.am             |  2 +-
+ diff/Makefile.am            |  2 +-
+ docs/Makefile.am            | 58 ++++++++++++++++++++++-----------------------
+ edit/Makefile.am            |  2 +-
+ erlang/examples/Makefile.am |  2 +-
+ examples/Makefile.am        |  2 +-
+ fish/Makefile.am            | 12 +++++-----
+ format/Makefile.am          |  2 +-
+ fuse/Makefile.am            |  4 ++--
+ get-kernel/Makefile.am      |  2 +-
+ gobject/Makefile.am         |  2 +-
+ golang/examples/Makefile.am |  2 +-
+ inspector/Makefile.am       |  2 +-
+ java/examples/Makefile.am   |  2 +-
+ lib/Makefile.am             |  2 +-
+ lua/examples/Makefile.am    |  2 +-
+ make-fs/Makefile.am         |  2 +-
+ ocaml/examples/Makefile.am  |  2 +-
+ perl/examples/Makefile.am   |  2 +-
+ po-docs/language.mk         | 20 ++++++++--------
+ python/examples/Makefile.am |  2 +-
+ rescue/Makefile.am          |  2 +-
+ resize/Makefile.am          |  2 +-
+ ruby/examples/Makefile.am   |  2 +-
+ sparsify/Makefile.am        |  2 +-
+ sysprep/Makefile.am         |  2 +-
+ test-tool/Makefile.am       |  2 +-
+ tools/Makefile.am           |  8 +++----
+ 36 files changed, 89 insertions(+), 89 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 3df1b6a..a966046 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -370,7 +370,7 @@ installcheck-local: installcheck.sh
+ # It should be noinst_MANS but that doesn't work.
+ noinst_DATA += podwrapper.1
+ podwrapper.1: podwrapper.pl
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man $@-t \
+ 	  --license GPLv2+ \
+diff --git a/align/Makefile.am b/align/Makefile.am
+index a3a5d67..b6fb18d 100644
+--- a/align/Makefile.am
++++ b/align/Makefile.am
+@@ -64,7 +64,7 @@ noinst_DATA = $(top_builddir)/website/virt-alignment-scan.1.html
+ virt-alignment-scan.1 $(top_builddir)/website/virt-alignment-scan.1.html: stamp-virt-alignment-scan.pod
+ 
+ stamp-virt-alignment-scan.pod: virt-alignment-scan.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-alignment-scan.1 \
+ 	  --html $(top_builddir)/website/virt-alignment-scan.1.html \
+ 	  --path $(top_srcdir)/common/options \
+diff --git a/appliance/Makefile.am b/appliance/Makefile.am
+index 7204c95..ceecf7a 100644
+--- a/appliance/Makefile.am
++++ b/appliance/Makefile.am
+@@ -165,7 +165,7 @@ man_MANS = libguestfs-make-fixed-appliance.1
+ libguestfs-make-fixed-appliance.1 $(top_builddir)/website/libguestfs-make-fixed-appliance.1.html: stamp-libguestfs-make-fixed-appliance.pod
+ 
+ stamp-libguestfs-make-fixed-appliance.pod: libguestfs-make-fixed-appliance.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man libguestfs-make-fixed-appliance.1 \
+ 	  --html $(top_builddir)/website/libguestfs-make-fixed-appliance.1.html \
+ 	  --license GPLv2+ \
+diff --git a/builder/Makefile.am b/builder/Makefile.am
+index 5add6f8..33669fc 100644
+--- a/builder/Makefile.am
++++ b/builder/Makefile.am
+@@ -265,7 +265,7 @@ noinst_DATA += $(top_builddir)/website/virt-builder.1.html
+ virt-builder.1 $(top_builddir)/website/virt-builder.1.html: stamp-virt-builder.pod
+ 
+ stamp-virt-builder.pod: virt-builder.pod $(top_srcdir)/common/mlcustomize/customize-synopsis.pod $(top_srcdir)/common/mlcustomize/customize-options.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-builder.1 \
+ 	  --html $(top_builddir)/website/virt-builder.1.html \
+ 	  --insert $(top_srcdir)/common/mlcustomize/customize-synopsis.pod:__CUSTOMIZE_SYNOPSIS__ \
+@@ -281,7 +281,7 @@ noinst_DATA += $(top_builddir)/website/virt-builder-repository.1.html
+ virt-builder-repository.1 $(top_builddir)/website/virt-builder-repository.1.html: stamp-virt-builder-repository.pod
+ 
+ stamp-virt-builder-repository.pod: virt-builder-repository.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-builder-repository.1 \
+ 	  --html $(top_builddir)/website/virt-builder-repository.1.html \
+ 	  --license GPLv2+ \
+@@ -465,7 +465,7 @@ noinst_DATA += $(top_builddir)/website/virt-index-validate.1.html
+ virt-index-validate.1 $(top_builddir)/website/virt-index-validate.1.html: stamp-virt-index-validate.pod
+ 
+ stamp-virt-index-validate.pod: virt-index-validate.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-index-validate.1 \
+ 	  --html $(top_builddir)/website/virt-index-validate.1.html \
+ 	  --license GPLv2+ \
+diff --git a/cat/Makefile.am b/cat/Makefile.am
+index f6253fb..310756b 100644
+--- a/cat/Makefile.am
++++ b/cat/Makefile.am
+@@ -190,7 +190,7 @@ noinst_DATA = \
+ virt-cat.1 $(top_builddir)/website/virt-cat.1.html: stamp-virt-cat.pod
+ 
+ stamp-virt-cat.pod: virt-cat.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-cat.1 \
+ 	  --html $(top_builddir)/website/virt-cat.1.html \
+ 	  --path $(top_srcdir)/common/options \
+@@ -202,7 +202,7 @@ stamp-virt-cat.pod: virt-cat.pod
+ virt-filesystems.1 $(top_builddir)/website/virt-filesystems.1.html: stamp-virt-filesystems.pod
+ 
+ stamp-virt-filesystems.pod: virt-filesystems.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-filesystems.1 \
+ 	  --html $(top_builddir)/website/virt-filesystems.1.html \
+ 	  --path $(top_srcdir)/common/options \
+@@ -214,7 +214,7 @@ stamp-virt-filesystems.pod: virt-filesystems.pod
+ virt-log.1 $(top_builddir)/website/virt-log.1.html: stamp-virt-log.pod
+ 
+ stamp-virt-log.pod: virt-log.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-log.1 \
+ 	  --html $(top_builddir)/website/virt-log.1.html \
+ 	  --path $(top_srcdir)/common/options \
+@@ -226,7 +226,7 @@ stamp-virt-log.pod: virt-log.pod
+ virt-ls.1 $(top_builddir)/website/virt-ls.1.html: stamp-virt-ls.pod
+ 
+ stamp-virt-ls.pod: virt-ls.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-ls.1 \
+ 	  --html $(top_builddir)/website/virt-ls.1.html \
+ 	  --path $(top_srcdir)/common/options \
+@@ -238,7 +238,7 @@ stamp-virt-ls.pod: virt-ls.pod
+ virt-tail.1 $(top_builddir)/website/virt-tail.1.html: stamp-virt-tail.pod
+ 
+ stamp-virt-tail.pod: virt-tail.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-tail.1 \
+ 	  --html $(top_builddir)/website/virt-tail.1.html \
+ 	  --path $(top_srcdir)/common/options \
+diff --git a/customize/Makefile.am b/customize/Makefile.am
+index c926687..f9f9f13 100644
+--- a/customize/Makefile.am
++++ b/customize/Makefile.am
+@@ -200,8 +200,8 @@ noinst_DATA += $(top_builddir)/website/virt-customize.1.html
+ 
+ virt-customize.1 $(top_builddir)/website/virt-customize.1.html: stamp-virt-customize.pod
+ 
+-stamp-virt-customize.pod: virt-customize.pod $(top_srcdir)/common/mlcustomize/customize-synopsis.pod $(top_srcdir)/common/mlcustomize/customize-options.pod
+-	$(PODWRAPPER) \
++stamp-virt-customize.pod: virt-customize.pod $(top_builddir)/common/mlcustomize/customize-synopsis.pod $(top_srcdir)/common/mlcustomize/customize-options.pod
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-customize.1 \
+ 	  --html $(top_builddir)/website/virt-customize.1.html \
+ 	  --path $(top_srcdir)/common/options \
+diff --git a/daemon/Makefile.am b/daemon/Makefile.am
+index fb5b9ff..8125585 100644
+--- a/daemon/Makefile.am
++++ b/daemon/Makefile.am
+@@ -465,7 +465,7 @@ noinst_DATA += $(top_builddir)/website/guestfsd.8.html
+ guestfsd.8 $(top_builddir)/website/guestfsd.8.html: stamp-guestfsd.pod
+ 
+ stamp-guestfsd.pod: guestfsd.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 8 \
+ 	  --man guestfsd.8 \
+ 	  --html $(top_builddir)/website/guestfsd.8.html \
+diff --git a/df/Makefile.am b/df/Makefile.am
+index 4fc3e2e..582d272 100644
+--- a/df/Makefile.am
++++ b/df/Makefile.am
+@@ -68,7 +68,7 @@ noinst_DATA = $(top_builddir)/website/virt-df.1.html
+ virt-df.1 $(top_builddir)/website/virt-df.1.html: stamp-virt-df.pod
+ 
+ stamp-virt-df.pod: virt-df.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-df.1 \
+ 	  --html $(top_builddir)/website/virt-df.1.html \
+ 	  --path $(top_srcdir)/common/options \
+diff --git a/dib/Makefile.am b/dib/Makefile.am
+index ce742f7..a207c58 100644
+--- a/dib/Makefile.am
++++ b/dib/Makefile.am
+@@ -154,7 +154,7 @@ noinst_DATA = $(top_builddir)/website/virt-dib.1.html
+ virt-dib.1 $(top_builddir)/website/virt-dib.1.html: stamp-virt-dib.pod
+ 
+ stamp-virt-dib.pod: virt-dib.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-dib.1 \
+ 	  --html $(top_builddir)/website/virt-dib.1.html \
+ 	  --license GPLv2+ \
+diff --git a/diff/Makefile.am b/diff/Makefile.am
+index 60434fb..edfbd0c 100644
+--- a/diff/Makefile.am
++++ b/diff/Makefile.am
+@@ -62,7 +62,7 @@ noinst_DATA = \
+ virt-diff.1 $(top_builddir)/website/virt-diff.1.html: stamp-virt-diff.pod
+ 
+ stamp-virt-diff.pod: virt-diff.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-diff.1 \
+ 	  --html $(top_builddir)/website/virt-diff.1.html \
+ 	  --path $(top_srcdir)/common/options \
+diff --git a/docs/Makefile.am b/docs/Makefile.am
+index 75a2e718..ea9e976 100644
+--- a/docs/Makefile.am
++++ b/docs/Makefile.am
+@@ -121,7 +121,7 @@ noinst_DATA = \
+ guestfs-building.1 $(top_builddir)/website/guestfs-building.1.html: stamp-guestfs-building.pod
+ 
+ stamp-guestfs-building.pod: guestfs-building.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-building.1 \
+ 	  --html $(top_builddir)/website/guestfs-building.1.html \
+@@ -132,7 +132,7 @@ stamp-guestfs-building.pod: guestfs-building.pod
+ guestfs-faq.1 $(top_builddir)/website/guestfs-faq.1.html: stamp-guestfs-faq.pod
+ 
+ stamp-guestfs-faq.pod: guestfs-faq.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-faq.1 \
+ 	  --html $(top_builddir)/website/guestfs-faq.1.html \
+@@ -143,7 +143,7 @@ stamp-guestfs-faq.pod: guestfs-faq.pod
+ guestfs-hacking.1 $(top_builddir)/website/guestfs-hacking.1.html: stamp-guestfs-hacking.pod
+ 
+ stamp-guestfs-hacking.pod: guestfs-hacking.pod internal-documentation.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-hacking.1 \
+ 	  --html $(top_builddir)/website/guestfs-hacking.1.html \
+@@ -165,7 +165,7 @@ internal-documentation.pod: $(source_files:%=$(top_srcdir)/%) $(srcdir)/make-int
+ guestfs-internals.1 $(top_builddir)/website/guestfs-internals.1.html: stamp-guestfs-internals.pod
+ 
+ stamp-guestfs-internals.pod: guestfs-internals.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-internals.1 \
+ 	  --html $(top_builddir)/website/guestfs-internals.1.html \
+@@ -176,7 +176,7 @@ stamp-guestfs-internals.pod: guestfs-internals.pod
+ guestfs-performance.1 $(top_builddir)/website/guestfs-performance.1.html: stamp-guestfs-performance.pod
+ 
+ stamp-guestfs-performance.pod: guestfs-performance.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-performance.1 \
+ 	  --html $(top_builddir)/website/guestfs-performance.1.html \
+@@ -187,7 +187,7 @@ stamp-guestfs-performance.pod: guestfs-performance.pod
+ guestfs-recipes.1 $(top_builddir)/website/guestfs-recipes.1.html: stamp-guestfs-recipes.pod
+ 
+ stamp-guestfs-recipes.pod: guestfs-recipes.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-recipes.1 \
+ 	  --html $(top_builddir)/website/guestfs-recipes.1.html \
+@@ -209,7 +209,7 @@ stamp-guestfs-release-notes-1.44.pod: guestfs-release-notes-1.44.pod
+ guestfs-release-notes-1.42.1 guestfs-release-notes-1.42.txt $(top_builddir)/website/guestfs-release-notes-1.42.1.html: stamp-guestfs-release-notes-1.42.pod
+ 
+ stamp-guestfs-release-notes-1.42.pod: guestfs-release-notes-1.42.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-release-notes-1.42.1 \
+ 	  --html $(top_builddir)/website/guestfs-release-notes-1.42.1.html \
+@@ -220,7 +220,7 @@ stamp-guestfs-release-notes-1.42.pod: guestfs-release-notes-1.42.pod
+ guestfs-release-notes-1.40.1 guestfs-release-notes-1.40.txt $(top_builddir)/website/guestfs-release-notes-1.40.1.html: stamp-guestfs-release-notes-1.40.pod
+ 
+ stamp-guestfs-release-notes-1.40.pod: guestfs-release-notes-1.40.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-release-notes-1.40.1 \
+ 	  --html $(top_builddir)/website/guestfs-release-notes-1.40.1.html \
+@@ -231,7 +231,7 @@ stamp-guestfs-release-notes-1.40.pod: guestfs-release-notes-1.40.pod
+ guestfs-release-notes-1.38.1 guestfs-release-notes-1.38.txt $(top_builddir)/website/guestfs-release-notes-1.38.1.html: stamp-guestfs-release-notes-1.38.pod
+ 
+ stamp-guestfs-release-notes-1.38.pod: guestfs-release-notes-1.38.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-release-notes-1.38.1 \
+ 	  --html $(top_builddir)/website/guestfs-release-notes-1.38.1.html \
+@@ -242,7 +242,7 @@ stamp-guestfs-release-notes-1.38.pod: guestfs-release-notes-1.38.pod
+ guestfs-release-notes-1.36.1 guestfs-release-notes-1.36.txt $(top_builddir)/website/guestfs-release-notes-1.36.1.html: stamp-guestfs-release-notes-1.36.pod
+ 
+ stamp-guestfs-release-notes-1.36.pod: guestfs-release-notes-1.36.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-release-notes-1.36.1 \
+ 	  --html $(top_builddir)/website/guestfs-release-notes-1.36.1.html \
+@@ -253,7 +253,7 @@ stamp-guestfs-release-notes-1.36.pod: guestfs-release-notes-1.36.pod
+ guestfs-release-notes-1.34.1 guestfs-release-notes-1.34.txt $(top_builddir)/website/guestfs-release-notes-1.34.1.html: stamp-guestfs-release-notes-1.34.pod
+ 
+ stamp-guestfs-release-notes-1.34.pod: guestfs-release-notes-1.34.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-release-notes-1.34.1 \
+ 	  --html $(top_builddir)/website/guestfs-release-notes-1.34.1.html \
+@@ -264,7 +264,7 @@ stamp-guestfs-release-notes-1.34.pod: guestfs-release-notes-1.34.pod
+ guestfs-release-notes-1.32.1 guestfs-release-notes-1.32.txt $(top_builddir)/website/guestfs-release-notes-1.32.1.html: stamp-guestfs-release-notes-1.32.pod
+ 
+ stamp-guestfs-release-notes-1.32.pod: guestfs-release-notes-1.32.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-release-notes-1.32.1 \
+ 	  --html $(top_builddir)/website/guestfs-release-notes-1.32.1.html \
+@@ -275,7 +275,7 @@ stamp-guestfs-release-notes-1.32.pod: guestfs-release-notes-1.32.pod
+ guestfs-release-notes-1.30.1 guestfs-release-notes-1.30.txt $(top_builddir)/website/guestfs-release-notes-1.30.1.html: stamp-guestfs-release-notes-1.30.pod
+ 
+ stamp-guestfs-release-notes-1.30.pod: guestfs-release-notes-1.30.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-release-notes-1.30.1 \
+ 	  --html $(top_builddir)/website/guestfs-release-notes-1.30.1.html \
+@@ -286,7 +286,7 @@ stamp-guestfs-release-notes-1.30.pod: guestfs-release-notes-1.30.pod
+ guestfs-release-notes-1.28.1 guestfs-release-notes-1.28.txt $(top_builddir)/website/guestfs-release-notes-1.28.1.html: stamp-guestfs-release-notes-1.28.pod
+ 
+ stamp-guestfs-release-notes-1.28.pod: guestfs-release-notes-1.28.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-release-notes-1.28.1 \
+ 	  --html $(top_builddir)/website/guestfs-release-notes-1.28.1.html \
+@@ -297,7 +297,7 @@ stamp-guestfs-release-notes-1.28.pod: guestfs-release-notes-1.28.pod
+ guestfs-release-notes-1.26.1 guestfs-release-notes-1.26.txt $(top_builddir)/website/guestfs-release-notes-1.26.1.html: stamp-guestfs-release-notes-1.26.pod
+ 
+ stamp-guestfs-release-notes-1.26.pod: guestfs-release-notes-1.26.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-release-notes-1.26.1 \
+ 	  --html $(top_builddir)/website/guestfs-release-notes-1.26.1.html \
+@@ -308,7 +308,7 @@ stamp-guestfs-release-notes-1.26.pod: guestfs-release-notes-1.26.pod
+ guestfs-release-notes-1.24.1 guestfs-release-notes-1.24.txt $(top_builddir)/website/guestfs-release-notes-1.24.1.html: stamp-guestfs-release-notes-1.24.pod
+ 
+ stamp-guestfs-release-notes-1.24.pod: guestfs-release-notes-1.24.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-release-notes-1.24.1 \
+ 	  --html $(top_builddir)/website/guestfs-release-notes-1.24.1.html \
+@@ -319,7 +319,7 @@ stamp-guestfs-release-notes-1.24.pod: guestfs-release-notes-1.24.pod
+ guestfs-release-notes-1.22.1 guestfs-release-notes-1.22.txt $(top_builddir)/website/guestfs-release-notes-1.22.1.html: stamp-guestfs-release-notes-1.22.pod
+ 
+ stamp-guestfs-release-notes-1.22.pod: guestfs-release-notes-1.22.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-release-notes-1.22.1 \
+ 	  --html $(top_builddir)/website/guestfs-release-notes-1.22.1.html \
+@@ -330,7 +330,7 @@ stamp-guestfs-release-notes-1.22.pod: guestfs-release-notes-1.22.pod
+ guestfs-release-notes-1.20.1 guestfs-release-notes-1.20.txt $(top_builddir)/website/guestfs-release-notes-1.20.1.html: stamp-guestfs-release-notes-1.20.pod
+ 
+ stamp-guestfs-release-notes-1.20.pod: guestfs-release-notes-1.20.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-release-notes-1.20.1 \
+ 	  --html $(top_builddir)/website/guestfs-release-notes-1.20.1.html \
+@@ -341,7 +341,7 @@ stamp-guestfs-release-notes-1.20.pod: guestfs-release-notes-1.20.pod
+ guestfs-release-notes-1.18.1 guestfs-release-notes-1.18.txt $(top_builddir)/website/guestfs-release-notes-1.18.1.html: stamp-guestfs-release-notes-1.18.pod
+ 
+ stamp-guestfs-release-notes-1.18.pod: guestfs-release-notes-1.18.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-release-notes-1.18.1 \
+ 	  --html $(top_builddir)/website/guestfs-release-notes-1.18.1.html \
+@@ -352,7 +352,7 @@ stamp-guestfs-release-notes-1.18.pod: guestfs-release-notes-1.18.pod
+ guestfs-release-notes-1.16.1 guestfs-release-notes-1.16.txt $(top_builddir)/website/guestfs-release-notes-1.16.1.html: stamp-guestfs-release-notes-1.16.pod
+ 
+ stamp-guestfs-release-notes-1.16.pod: guestfs-release-notes-1.16.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-release-notes-1.16.1 \
+ 	  --html $(top_builddir)/website/guestfs-release-notes-1.16.1.html \
+@@ -363,7 +363,7 @@ stamp-guestfs-release-notes-1.16.pod: guestfs-release-notes-1.16.pod
+ guestfs-release-notes-1.14.1 guestfs-release-notes-1.14.txt $(top_builddir)/website/guestfs-release-notes-1.14.1.html: stamp-guestfs-release-notes-1.14.pod
+ 
+ stamp-guestfs-release-notes-1.14.pod: guestfs-release-notes-1.14.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-release-notes-1.14.1 \
+ 	  --html $(top_builddir)/website/guestfs-release-notes-1.14.1.html \
+@@ -374,7 +374,7 @@ stamp-guestfs-release-notes-1.14.pod: guestfs-release-notes-1.14.pod
+ guestfs-release-notes-1.12.1 guestfs-release-notes-1.12.txt $(top_builddir)/website/guestfs-release-notes-1.12.1.html: stamp-guestfs-release-notes-1.12.pod
+ 
+ stamp-guestfs-release-notes-1.12.pod: guestfs-release-notes-1.12.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-release-notes-1.12.1 \
+ 	  --html $(top_builddir)/website/guestfs-release-notes-1.12.1.html \
+@@ -385,7 +385,7 @@ stamp-guestfs-release-notes-1.12.pod: guestfs-release-notes-1.12.pod
+ guestfs-release-notes-1.10.1 guestfs-release-notes-1.10.txt $(top_builddir)/website/guestfs-release-notes-1.10.1.html: stamp-guestfs-release-notes-1.10.pod
+ 
+ stamp-guestfs-release-notes-1.10.pod: guestfs-release-notes-1.10.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-release-notes-1.10.1 \
+ 	  --html $(top_builddir)/website/guestfs-release-notes-1.10.1.html \
+@@ -396,7 +396,7 @@ stamp-guestfs-release-notes-1.10.pod: guestfs-release-notes-1.10.pod
+ guestfs-release-notes-1.8.1 guestfs-release-notes-1.8.txt $(top_builddir)/website/guestfs-release-notes-1.8.1.html: stamp-guestfs-release-notes-1.8.pod
+ 
+ stamp-guestfs-release-notes-1.8.pod: guestfs-release-notes-1.8.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-release-notes-1.8.1 \
+ 	  --html $(top_builddir)/website/guestfs-release-notes-1.8.1.html \
+@@ -407,7 +407,7 @@ stamp-guestfs-release-notes-1.8.pod: guestfs-release-notes-1.8.pod
+ guestfs-release-notes-1.6.1 guestfs-release-notes-1.6.txt $(top_builddir)/website/guestfs-release-notes-1.6.1.html: stamp-guestfs-release-notes-1.6.pod
+ 
+ stamp-guestfs-release-notes-1.6.pod: guestfs-release-notes-1.6.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-release-notes-1.6.1 \
+ 	  --html $(top_builddir)/website/guestfs-release-notes-1.6.1.html \
+@@ -418,7 +418,7 @@ stamp-guestfs-release-notes-1.6.pod: guestfs-release-notes-1.6.pod
+ guestfs-release-notes-1.4.1 guestfs-release-notes-1.4.txt $(top_builddir)/website/guestfs-release-notes-1.4.1.html: stamp-guestfs-release-notes-1.4.pod
+ 
+ stamp-guestfs-release-notes-1.4.pod: guestfs-release-notes-1.4.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-release-notes-1.4.1 \
+ 	  --html $(top_builddir)/website/guestfs-release-notes-1.4.1.html \
+@@ -429,7 +429,7 @@ stamp-guestfs-release-notes-1.4.pod: guestfs-release-notes-1.4.pod
+ guestfs-release-notes-historical.1 guestfs-release-notes-historical.txt $(top_builddir)/website/guestfs-release-notes-historical.1.html: stamp-guestfs-release-notes-historical.pod
+ 
+ stamp-guestfs-release-notes-historical.pod: guestfs-release-notes-historical.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-release-notes-historical.1 \
+ 	  --html $(top_builddir)/website/guestfs-release-notes-historical.1.html \
+@@ -440,7 +440,7 @@ stamp-guestfs-release-notes-historical.pod: guestfs-release-notes-historical.pod
+ guestfs-security.1 $(top_builddir)/website/guestfs-security.1.html: stamp-guestfs-security.pod
+ 
+ stamp-guestfs-security.pod: guestfs-security.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-security.1 \
+ 	  --html $(top_builddir)/website/guestfs-security.1.html \
+@@ -451,7 +451,7 @@ stamp-guestfs-security.pod: guestfs-security.pod
+ guestfs-testing.1 $(top_builddir)/website/guestfs-testing.1.html: stamp-guestfs-testing.pod
+ 
+ stamp-guestfs-testing.pod: guestfs-testing.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 1 \
+ 	  --man guestfs-testing.1 \
+ 	  --html $(top_builddir)/website/guestfs-testing.1.html \
+diff --git a/edit/Makefile.am b/edit/Makefile.am
+index 3da5d27..aef99de 100644
+--- a/edit/Makefile.am
++++ b/edit/Makefile.am
+@@ -60,7 +60,7 @@ noinst_DATA = $(top_builddir)/website/virt-edit.1.html
+ virt-edit.1 $(top_builddir)/website/virt-edit.1.html: stamp-virt-edit.pod
+ 
+ stamp-virt-edit.pod: virt-edit.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-edit.1 \
+ 	  --html $(top_builddir)/website/virt-edit.1.html \
+ 	  --path $(top_srcdir)/common/options \
+diff --git a/erlang/examples/Makefile.am b/erlang/examples/Makefile.am
+index da7fc43..2e9d1cc 100644
+--- a/erlang/examples/Makefile.am
++++ b/erlang/examples/Makefile.am
+@@ -29,7 +29,7 @@ noinst_DATA = $(top_builddir)/website/guestfs-erlang.3.html
+ guestfs-erlang.3 $(top_builddir)/website/guestfs-erlang.3.html: stamp-guestfs-erlang.pod
+ 
+ stamp-guestfs-erlang.pod: guestfs-erlang.pod create_disk.erl inspect_vm.erl
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 3 \
+ 	  --man guestfs-erlang.3 \
+ 	  --html $(top_builddir)/website/guestfs-erlang.3.html \
+diff --git a/examples/Makefile.am b/examples/Makefile.am
+index 3212840..3bc2ab3 100644
+--- a/examples/Makefile.am
++++ b/examples/Makefile.am
+@@ -133,7 +133,7 @@ noinst_DATA = $(top_builddir)/website/guestfs-examples.3.html
+ guestfs-examples.3 $(top_builddir)/website/guestfs-examples.3.html: stamp-guestfs-examples.pod
+ 
+ stamp-guestfs-examples.pod: guestfs-examples.pod copy-over.c create-disk.c debug-logging.c display-icon.c inspect-vm.c libvirt-auth.c mount-local.c virt-dhcp-address.c
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 3 \
+ 	  --man guestfs-examples.3 \
+ 	  --html $(top_builddir)/website/guestfs-examples.3.html \
+diff --git a/fish/Makefile.am b/fish/Makefile.am
+index d418c9a..685de69 100644
+--- a/fish/Makefile.am
++++ b/fish/Makefile.am
+@@ -200,7 +200,7 @@ noinst_DATA = \
+ guestfish.1 $(top_builddir)/website/guestfish.1.html: stamp-guestfish.pod
+ 
+ stamp-guestfish.pod: guestfish.pod guestfish-actions.pod guestfish-commands.pod guestfish-prepopts.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man guestfish.1 \
+ 	  --html $(top_builddir)/website/guestfish.1.html \
+ 	  --path $(srcdir) --path $(top_srcdir)/common/options \
+@@ -212,7 +212,7 @@ stamp-guestfish.pod: guestfish.pod guestfish-actions.pod guestfish-commands.pod
+ libguestfs-tools.conf.5 $(top_builddir)/website/libguestfs-tools.conf.5.html: stamp-libguestfs-tools.conf.pod
+ 
+ stamp-libguestfs-tools.conf.pod: libguestfs-tools.conf.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 5 \
+ 	  --man libguestfs-tools.conf.5 \
+ 	  --html $(top_builddir)/website/libguestfs-tools.conf.5.html \
+@@ -223,7 +223,7 @@ stamp-libguestfs-tools.conf.pod: libguestfs-tools.conf.pod
+ virt-copy-in.1 $(top_builddir)/website/virt-copy-in.1.html: stamp-virt-copy-in.pod
+ 
+ stamp-virt-copy-in.pod: virt-copy-in.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-copy-in.1 \
+ 	  --html $(top_builddir)/website/virt-copy-in.1.html \
+ 	  --license GPLv2+ \
+@@ -234,7 +234,7 @@ stamp-virt-copy-in.pod: virt-copy-in.pod
+ virt-copy-out.1 $(top_builddir)/website/virt-copy-out.1.html: stamp-virt-copy-out.pod
+ 
+ stamp-virt-copy-out.pod: virt-copy-out.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-copy-out.1 \
+ 	  --html $(top_builddir)/website/virt-copy-out.1.html \
+ 	  --license GPLv2+ \
+@@ -245,7 +245,7 @@ stamp-virt-copy-out.pod: virt-copy-out.pod
+ virt-tar-in.1 $(top_builddir)/website/virt-tar-in.1.html: stamp-virt-tar-in.pod
+ 
+ stamp-virt-tar-in.pod: virt-tar-in.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-tar-in.1 \
+ 	  --html $(top_builddir)/website/virt-tar-in.1.html \
+ 	  --license GPLv2+ \
+@@ -256,7 +256,7 @@ stamp-virt-tar-in.pod: virt-tar-in.pod
+ virt-tar-out.1 $(top_builddir)/website/virt-tar-out.1.html: stamp-virt-tar-out.pod
+ 
+ stamp-virt-tar-out.pod: virt-tar-out.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-tar-out.1 \
+ 	  --html $(top_builddir)/website/virt-tar-out.1.html \
+ 	  --license GPLv2+ \
+diff --git a/format/Makefile.am b/format/Makefile.am
+index 783f029..4f85ea8 100644
+--- a/format/Makefile.am
++++ b/format/Makefile.am
+@@ -58,7 +58,7 @@ noinst_DATA = $(top_builddir)/website/virt-format.1.html
+ virt-format.1 $(top_builddir)/website/virt-format.1.html: stamp-virt-format.pod
+ 
+ stamp-virt-format.pod: virt-format.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-format.1 \
+ 	  --html $(top_builddir)/website/virt-format.1.html \
+ 	  --path $(top_srcdir)/common/options \
+diff --git a/fuse/Makefile.am b/fuse/Makefile.am
+index 940eeff..b9626d3 100644
+--- a/fuse/Makefile.am
++++ b/fuse/Makefile.am
+@@ -100,7 +100,7 @@ noinst_DATA = \
+ guestmount.1 $(top_builddir)/website/guestmount.1.html: stamp-guestmount.pod
+ 
+ stamp-guestmount.pod: guestmount.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man guestmount.1 \
+ 	  --html $(top_builddir)/website/guestmount.1.html \
+ 	  --path $(top_srcdir)/common/options \
+@@ -112,7 +112,7 @@ stamp-guestmount.pod: guestmount.pod
+ guestunmount.1 $(top_builddir)/website/guestunmount.1.html: stamp-guestunmount.pod
+ 
+ stamp-guestunmount.pod: guestunmount.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man guestunmount.1 \
+ 	  --html $(top_builddir)/website/guestunmount.1.html \
+ 	  --license GPLv2+ \
+diff --git a/get-kernel/Makefile.am b/get-kernel/Makefile.am
+index bfc1195..2d7d7df 100644
+--- a/get-kernel/Makefile.am
++++ b/get-kernel/Makefile.am
+@@ -125,7 +125,7 @@ noinst_DATA += $(top_builddir)/website/virt-get-kernel.1.html
+ virt-get-kernel.1 $(top_builddir)/website/virt-get-kernel.1.html: stamp-virt-get-kernel.pod
+ 
+ stamp-virt-get-kernel.pod: virt-get-kernel.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-get-kernel.1 \
+ 	  --html $(top_builddir)/website/virt-get-kernel.1.html \
+ 	  --path $(top_srcdir)/common/options \
+diff --git a/gobject/Makefile.am b/gobject/Makefile.am
+index e4de150..8bd1c05 100644
+--- a/gobject/Makefile.am
++++ b/gobject/Makefile.am
+@@ -134,7 +134,7 @@ noinst_DATA = $(top_builddir)/website/guestfs-gobject.3.html
+ guestfs-gobject.3 $(top_builddir)/website/guestfs-gobject.3.html: stamp-guestfs-gobject.pod
+ 
+ stamp-guestfs-gobject.pod: guestfs-gobject.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 3 \
+ 	  --man guestfs-gobject.3 \
+ 	  --html $(top_builddir)/website/guestfs-gobject.3.html \
+diff --git a/golang/examples/Makefile.am b/golang/examples/Makefile.am
+index 88bab10..53493e4 100644
+--- a/golang/examples/Makefile.am
++++ b/golang/examples/Makefile.am
+@@ -29,7 +29,7 @@ noinst_DATA = $(top_builddir)/website/guestfs-golang.3.html
+ guestfs-golang.3 $(top_builddir)/website/guestfs-golang.3.html: stamp-guestfs-golang.pod
+ 
+ stamp-guestfs-golang.pod: guestfs-golang.pod create-disk.go inspect-vm.go
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 3 \
+ 	  --man guestfs-golang.3 \
+ 	  --html $(top_builddir)/website/guestfs-golang.3.html \
+diff --git a/inspector/Makefile.am b/inspector/Makefile.am
+index 45aeea2..6b03337 100644
+--- a/inspector/Makefile.am
++++ b/inspector/Makefile.am
+@@ -80,7 +80,7 @@ noinst_DATA = $(top_builddir)/website/virt-inspector.1.html
+ virt-inspector.1 $(top_builddir)/website/virt-inspector.1.html: stamp-virt-inspector.pod
+ 
+ stamp-virt-inspector.pod: virt-inspector.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-inspector.1 \
+ 	  --html $(top_builddir)/website/virt-inspector.1.html \
+ 	  --path $(top_srcdir)/common/options \
+diff --git a/java/examples/Makefile.am b/java/examples/Makefile.am
+index c6767e6..00b35bc 100644
+--- a/java/examples/Makefile.am
++++ b/java/examples/Makefile.am
+@@ -32,7 +32,7 @@ noinst_DATA = $(top_builddir)/website/guestfs-java.3.html
+ guestfs-java.3 $(top_builddir)/website/guestfs-java.3.html: stamp-guestfs-java.pod
+ 
+ stamp-guestfs-java.pod: guestfs-java.pod CreateDisk.java InspectVM.java
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 3 \
+ 	  --man guestfs-java.3 \
+ 	  --html $(top_builddir)/website/guestfs-java.3.html \
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index f9cc53d..6b941f6 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -236,7 +236,7 @@ stamp-guestfs.pod: guestfs.pod \
+ 		guestfs-actions.pod \
+ 		guestfs-availability.pod \
+ 		guestfs-structs.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 3 \
+ 	  --man guestfs.3 \
+ 	  --html $(top_builddir)/website/guestfs.3.html \
+diff --git a/lua/examples/Makefile.am b/lua/examples/Makefile.am
+index 239f92c..e5169a7 100644
+--- a/lua/examples/Makefile.am
++++ b/lua/examples/Makefile.am
+@@ -29,7 +29,7 @@ noinst_DATA = $(top_builddir)/website/guestfs-lua.3.html
+ guestfs-lua.3 $(top_builddir)/website/guestfs-lua.3.html: stamp-guestfs-lua.pod
+ 
+ stamp-guestfs-lua.pod: guestfs-lua.pod create_disk.lua inspect_vm.lua
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 3 \
+ 	  --man guestfs-lua.3 \
+ 	  --html $(top_builddir)/website/guestfs-lua.3.html \
+diff --git a/make-fs/Makefile.am b/make-fs/Makefile.am
+index 614586f..e94001a 100644
+--- a/make-fs/Makefile.am
++++ b/make-fs/Makefile.am
+@@ -60,7 +60,7 @@ noinst_DATA = \
+ virt-make-fs.1 $(top_builddir)/website/virt-make-fs.1.html: stamp-virt-make-fs.pod
+ 
+ stamp-virt-make-fs.pod: virt-make-fs.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-make-fs.1 \
+ 	  --html $(top_builddir)/website/virt-make-fs.1.html \
+ 	  --license GPLv2+ \
+diff --git a/ocaml/examples/Makefile.am b/ocaml/examples/Makefile.am
+index 19cbebd..8a9c783 100644
+--- a/ocaml/examples/Makefile.am
++++ b/ocaml/examples/Makefile.am
+@@ -33,7 +33,7 @@ noinst_DATA = $(top_builddir)/website/guestfs-ocaml.3.html
+ guestfs-ocaml.3 $(top_builddir)/website/guestfs-ocaml.3.html: stamp-guestfs-ocaml.pod
+ 
+ stamp-guestfs-ocaml.pod: guestfs-ocaml.pod create_disk.ml inspect_vm.ml
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 3 \
+ 	  --man guestfs-ocaml.3 \
+ 	  --html $(top_builddir)/website/guestfs-ocaml.3.html \
+diff --git a/perl/examples/Makefile.am b/perl/examples/Makefile.am
+index 7b4c29d..47ff06f 100644
+--- a/perl/examples/Makefile.am
++++ b/perl/examples/Makefile.am
+@@ -29,7 +29,7 @@ noinst_DATA = $(top_builddir)/website/guestfs-perl.3.html
+ guestfs-perl.3 $(top_builddir)/website/guestfs-perl.3.html: stamp-guestfs-perl.pod
+ 
+ stamp-guestfs-perl.pod: guestfs-perl.pod create_disk.pl inspect_vm.pl
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 3 \
+ 	  --man guestfs-perl.3 \
+ 	  --html $(top_builddir)/website/guestfs-perl.3.html \
+diff --git a/po-docs/language.mk b/po-docs/language.mk
+index 88d7d34..ad9e3b8 100644
+--- a/po-docs/language.mk
++++ b/po-docs/language.mk
+@@ -112,7 +112,7 @@ EXTRA_DIST = \
+ all-local: $(MANPAGES)
+ 
+ guestfs.3: guestfs.pod guestfs-actions.pod guestfs-availability.pod guestfs-structs.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --no-strict-checks \
+ 	  --man $@ \
+ 	  --section 3 \
+@@ -127,14 +127,14 @@ guestfs.3: guestfs.pod guestfs-actions.pod guestfs-availability.pod guestfs-stru
+ # out all the %.1 pattern rules below.
+ 
+ guestfish.1: guestfish.pod guestfish-actions.pod guestfish-commands.pod guestfish-prepopts.pod blocksize-option.pod key-option.pod keys-from-stdin-option.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --no-strict-checks \
+ 	  --man $@ \
+ 	  --license GPLv2+ \
+ 	  $<
+ 
+ virt-builder.1: virt-builder.pod customize-synopsis.pod customize-options.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --no-strict-checks \
+ 	  --man $@ \
+ 	  --license GPLv2+ \
+@@ -143,7 +143,7 @@ virt-builder.1: virt-builder.pod customize-synopsis.pod customize-options.pod
+ 	  $<
+ 
+ virt-customize.1: virt-customize.pod customize-synopsis.pod customize-options.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --no-strict-checks \
+ 	  --man $@ \
+ 	  --license GPLv2+ \
+@@ -152,7 +152,7 @@ virt-customize.1: virt-customize.pod customize-synopsis.pod customize-options.po
+ 	  $<
+ 
+ virt-sysprep.1: virt-sysprep.pod sysprep-extra-options.pod sysprep-operations.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --no-strict-checks \
+ 	  --man $@ \
+ 	  --license GPLv2+ \
+@@ -161,7 +161,7 @@ virt-sysprep.1: virt-sysprep.pod sysprep-extra-options.pod sysprep-operations.po
+ 	  $<
+ 
+ virt-p2v.1: virt-p2v.pod virt-p2v-kernel-config.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --no-strict-checks \
+ 	  --man $@ \
+ 	  --license GPLv2+ \
+@@ -169,27 +169,27 @@ virt-p2v.1: virt-p2v.pod virt-p2v-kernel-config.pod
+ 	  $<
+ 
+ %.1: %.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --no-strict-checks \
+ 	  --man $@ \
+ 	  $<
+ 
+ %.3: %.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --no-strict-checks \
+ 	  --man $@ \
+ 	  --section 3 \
+ 	  $<
+ 
+ %.5: %.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --no-strict-checks \
+ 	  --man $@ \
+ 	  --section 5 \
+ 	  $<
+ 
+ %.8: %.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --no-strict-checks \
+ 	  --man $@ \
+ 	  --section 8 \
+diff --git a/python/examples/Makefile.am b/python/examples/Makefile.am
+index fc23b91..198ec6d 100644
+--- a/python/examples/Makefile.am
++++ b/python/examples/Makefile.am
+@@ -33,7 +33,7 @@ noinst_DATA = $(top_builddir)/website/guestfs-python.3.html
+ guestfs-python.3 $(top_builddir)/website/guestfs-python.3.html: stamp-guestfs-python.pod
+ 
+ stamp-guestfs-python.pod: guestfs-python.pod create_disk.py inspect_vm.py
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 3 \
+ 	  --man guestfs-python.3 \
+ 	  --html $(top_builddir)/website/guestfs-python.3.html \
+diff --git a/rescue/Makefile.am b/rescue/Makefile.am
+index 297978f..8d26d87 100644
+--- a/rescue/Makefile.am
++++ b/rescue/Makefile.am
+@@ -64,7 +64,7 @@ noinst_DATA = $(top_builddir)/website/virt-rescue.1.html
+ virt-rescue.1 $(top_builddir)/website/virt-rescue.1.html: stamp-virt-rescue.pod
+ 
+ stamp-virt-rescue.pod: virt-rescue.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-rescue.1 \
+ 	  --html $(top_builddir)/website/virt-rescue.1.html \
+ 	  --path $(top_srcdir)/common/options \
+diff --git a/resize/Makefile.am b/resize/Makefile.am
+index fa88cc6..779effd 100644
+--- a/resize/Makefile.am
++++ b/resize/Makefile.am
+@@ -119,7 +119,7 @@ noinst_DATA = $(top_builddir)/website/virt-resize.1.html
+ virt-resize.1 $(top_builddir)/website/virt-resize.1.html: stamp-virt-resize.pod
+ 
+ stamp-virt-resize.pod: virt-resize.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-resize.1 \
+ 	  --html $(top_builddir)/website/virt-resize.1.html \
+ 	  --license GPLv2+ \
+diff --git a/ruby/examples/Makefile.am b/ruby/examples/Makefile.am
+index 6ba2481..34e7ae3 100644
+--- a/ruby/examples/Makefile.am
++++ b/ruby/examples/Makefile.am
+@@ -29,7 +29,7 @@ noinst_DATA = $(top_builddir)/website/guestfs-ruby.3.html
+ guestfs-ruby.3 $(top_builddir)/website/guestfs-ruby.3.html: stamp-guestfs-ruby.pod
+ 
+ stamp-guestfs-ruby.pod: guestfs-ruby.pod create_disk.rb inspect_vm.rb
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --section 3 \
+ 	  --man guestfs-ruby.3 \
+ 	  --html $(top_builddir)/website/guestfs-ruby.3.html \
+diff --git a/sparsify/Makefile.am b/sparsify/Makefile.am
+index fa964e8..3d1b2e7 100644
+--- a/sparsify/Makefile.am
++++ b/sparsify/Makefile.am
+@@ -127,7 +127,7 @@ noinst_DATA = $(top_builddir)/website/virt-sparsify.1.html
+ virt-sparsify.1 $(top_builddir)/website/virt-sparsify.1.html: stamp-virt-sparsify.pod
+ 
+ stamp-virt-sparsify.pod: virt-sparsify.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-sparsify.1 \
+ 	  --html $(top_builddir)/website/virt-sparsify.1.html \
+ 	  --path $(top_srcdir)/common/options \
+diff --git a/sysprep/Makefile.am b/sysprep/Makefile.am
+index 69bb928..bdf66ad 100644
+--- a/sysprep/Makefile.am
++++ b/sysprep/Makefile.am
+@@ -190,7 +190,7 @@ noinst_DATA = $(top_builddir)/website/virt-sysprep.1.html
+ virt-sysprep.1 $(top_builddir)/website/virt-sysprep.1.html: stamp-virt-sysprep.pod
+ 
+ stamp-virt-sysprep.pod: virt-sysprep.pod sysprep-extra-options.pod sysprep-operations.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-sysprep.1 \
+           --insert sysprep-extra-options.pod:__EXTRA_OPTIONS__ \
+           --insert sysprep-operations.pod:__OPERATIONS__ \
+diff --git a/test-tool/Makefile.am b/test-tool/Makefile.am
+index 8b7107f..88fa52d 100644
+--- a/test-tool/Makefile.am
++++ b/test-tool/Makefile.am
+@@ -51,7 +51,7 @@ libguestfs_test_tool_LDADD = \
+ libguestfs-test-tool.1 $(top_builddir)/website/libguestfs-test-tool.1.html: stamp-libguestfs-test-tool.pod
+ 
+ stamp-libguestfs-test-tool.pod: libguestfs-test-tool.pod
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man libguestfs-test-tool.1 \
+ 	  --html $(top_builddir)/website/libguestfs-test-tool.1.html \
+ 	  --license GPLv2+ \
+diff --git a/tools/Makefile.am b/tools/Makefile.am
+index 20c8a01..a733fa9 100644
+--- a/tools/Makefile.am
++++ b/tools/Makefile.am
+@@ -42,7 +42,7 @@ man_MANS = \
+ virt-list-filesystems.1 $(top_builddir)/website/virt-list-filesystems.1.html: stamp-virt-list-filesystems.pod
+ 
+ stamp-virt-list-filesystems.pod: virt-list-filesystems
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-list-filesystems.1 \
+ 	  --html $(top_builddir)/website/virt-list-filesystems.1.html \
+ 	  --license GPLv2+ \
+@@ -53,7 +53,7 @@ stamp-virt-list-filesystems.pod: virt-list-filesystems
+ virt-list-partitions.1 $(top_builddir)/website/virt-list-partitions.1.html: stamp-virt-list-partitions.pod
+ 
+ stamp-virt-list-partitions.pod: virt-list-partitions
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-list-partitions.1 \
+ 	  --html $(top_builddir)/website/virt-list-partitions.1.html \
+ 	  --license GPLv2+ \
+@@ -64,7 +64,7 @@ stamp-virt-list-partitions.pod: virt-list-partitions
+ virt-tar.1 $(top_builddir)/website/virt-tar.1.html: stamp-virt-tar.pod
+ 
+ stamp-virt-tar.pod: virt-tar
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-tar.1 \
+ 	  --html $(top_builddir)/website/virt-tar.1.html \
+ 	  --license GPLv2+ \
+@@ -75,7 +75,7 @@ stamp-virt-tar.pod: virt-tar
+ virt-win-reg.1 $(top_builddir)/website/virt-win-reg.1.html: stamp-virt-win-reg.pod
+ 
+ stamp-virt-win-reg.pod: virt-win-reg
+-	$(PODWRAPPER) \
++	$(PODWRAPPER) --path $(srcdir) \
+ 	  --man virt-win-reg.1 \
+ 	  --html $(top_builddir)/website/virt-win-reg.1.html \
+ 	  --license GPLv2+ \
