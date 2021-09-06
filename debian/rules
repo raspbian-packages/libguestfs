@@ -151,6 +151,15 @@ override_dh_install:
 
 	dh_install -X.la -X.so.owner -Xbindtests -X/usr/lib/go/ -X/usr/lib/go- -Xpackages.orig -Xetc/php.d
 
+	# Workaround for Ubuntu's strict kernel permissions
+	if [ "$$(sed -ne '/^ID=/ { s/^[^=]*=//;p }' /etc/os-release)" = ubuntu ]; then \
+		mkidr -p debian/libguestfs0/etc/kernel/preinst.d debian/libguestfs0/etc/kernel/postrm.d ; \
+		install -m755 debian/libguestfs0.kernel-preinst debian/libguestfs0/etc/kernel/preinst.d/libguestfs0 ; \
+		install -m755 debian/libguestfs0.kernel-postrm  debian/libguestfs0/etc/kernel/postrm.d/libguestfs0  ; \
+		cat debian/libguestfs0.preinst.snippet >> debian/libguestfs0.preinst.debhelper ; \
+		cat debian/libguestfs0.postrm.snippet  >> debian/libguestfs0.postrm.debhelper  ; \
+	fi
+
 override_dh_missing:
 	#dh_missing --fail-missing \
 	#	-X.la -X.so.owner -Xbindtests -X/usr/lib/go/ -X/usr/lib/go- -Xpackages.orig -Xetc/php.d -Xguestfs-erlang.3
