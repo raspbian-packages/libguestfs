@@ -1,0 +1,32 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Tue, 31 Aug 2021 17:00:10 +0200
+Subject: appliance: Fix searching for shared libraries on usr-merged Debian
+ systems
+
+If /lib is a symlink to usr/lib, paths to shared libraries as
+determined by ld.so may differ from dpkg's file lists.
+
+We turn the filename search pattern into a glob expression by
+prefixing it with a '*', so the required packages are found again:
+
+$ dpkg -S /lib/x86_64-linux-gnu/libpcre2-8.so.0
+dpkg-query: no path found matching pattern /lib/x86_64-linux-gnu/libpcre2-8.so.0
+$ dpkg -S */lib/x86_64-linux-gnu/libpcre2-8.so.0
+libpcre2-8-0:amd64: /usr/lib/x86_64-linux-gnu/libpcre2-8.so.0
+---
+ appliance/Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/appliance/Makefile.am b/appliance/Makefile.am
+index ceecf7a..88fec6c 100644
+--- a/appliance/Makefile.am
++++ b/appliance/Makefile.am
+@@ -85,7 +85,7 @@ if HAVE_RPM
+ QUERY_FILES_CMD := xargs rpm -qf --qf '%{name}\n'
+ endif
+ if HAVE_DPKG
+-QUERY_FILES_CMD := xargs dpkg -S | cut -d: -f1
++QUERY_FILES_CMD := sed -e 's,^/,\*/,' | xargs dpkg -S | cut -d: -f1
+ endif
+ if HAVE_PACMAN
+ QUERY_FILES_CMD := xargs pacman -Qo | sed -r 's/.* is owned by ([^ ]+) .*/\1/'
