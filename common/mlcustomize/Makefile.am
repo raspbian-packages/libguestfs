@@ -82,7 +82,7 @@ BOBJECTS = $(SOURCES_ML:.ml=.cmo)
 XOBJECTS = $(BOBJECTS:.cmo=.cmx)
 
 OCAMLPACKAGES = \
-	-package str,unix,guestfs \
+	-package str,unix \
 	-I $(top_builddir)/common/utils/.libs \
 	-I $(top_builddir)/ocaml \
 	-I $(top_builddir)/common/mlstdutils \
