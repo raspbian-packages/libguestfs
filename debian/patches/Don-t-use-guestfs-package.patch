@@ -1,0 +1,70 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Sat, 25 Sep 2021 17:19:25 +0200
+Subject: Don't use guestfs package
+
+This avoids build errors:
+,----
+| ocamlfind: Package `guestfs' not found
+`----
+
+Apparently, ocamlfind only looks for the guestfs package in
+system-wide preconfigured search paths, not in paths specified with -I.
+---
+ common/mlcustomize/Makefile.am | 2 +-
+ common/mlprogress/Makefile.am  | 2 +-
+ common/mltools/Makefile.am     | 2 +-
+ common/mlvisit/Makefile.am     | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/common/mlcustomize/Makefile.am b/common/mlcustomize/Makefile.am
+index cd7d897..2beb147 100644
+--- a/common/mlcustomize/Makefile.am
++++ b/common/mlcustomize/Makefile.am
+@@ -82,7 +82,7 @@ BOBJECTS = $(SOURCES_ML:.ml=.cmo)
+ XOBJECTS = $(BOBJECTS:.cmo=.cmx)
+ 
+ OCAMLPACKAGES = \
+-	-package str,unix,guestfs \
++	-package str,unix \
+ 	-I $(top_builddir)/common/utils/.libs \
+ 	-I $(top_builddir)/ocaml \
+ 	-I $(top_builddir)/common/mlstdutils \
+diff --git a/common/mlprogress/Makefile.am b/common/mlprogress/Makefile.am
+index 3f3424e..e24c62f 100644
+--- a/common/mlprogress/Makefile.am
++++ b/common/mlprogress/Makefile.am
+@@ -67,7 +67,7 @@ BOBJECTS = $(SOURCES_ML:.ml=.cmo)
+ XOBJECTS = $(BOBJECTS:.cmo=.cmx)
+ 
+ OCAMLPACKAGES = \
+-	-package str,unix,guestfs \
++	-package str,unix \
+ 	-I $(top_builddir)/common/utils/.libs \
+ 	-I $(top_builddir)/ocaml \
+ 	-I $(builddir)
+diff --git a/common/mltools/Makefile.am b/common/mltools/Makefile.am
+index 343fd92..c03ddfd 100644
+--- a/common/mltools/Makefile.am
++++ b/common/mltools/Makefile.am
+@@ -114,7 +114,7 @@ BOBJECTS = $(SOURCES_ML:.ml=.cmo)
+ XOBJECTS = $(BOBJECTS:.cmo=.cmx)
+ 
+ OCAMLPACKAGES = \
+-	-package str,unix,guestfs \
++	-package str,unix \
+ 	-I $(top_builddir)/common/utils/.libs \
+ 	-I $(top_builddir)/gnulib/lib/.libs \
+ 	-I $(top_builddir)/ocaml \
+diff --git a/common/mlvisit/Makefile.am b/common/mlvisit/Makefile.am
+index a20cbc9..fc0e484 100644
+--- a/common/mlvisit/Makefile.am
++++ b/common/mlvisit/Makefile.am
+@@ -68,7 +68,7 @@ BOBJECTS = $(SOURCES_ML:.ml=.cmo)
+ XOBJECTS = $(BOBJECTS:.cmo=.cmx)
+ 
+ OCAMLPACKAGES = \
+-	-package str,unix,guestfs \
++	-package str,unix \
+ 	-I $(top_builddir)/common/mlutils \
+ 	-I $(top_builddir)/ocaml \
+ 	-I $(top_builddir)/common/utils/.libs \
