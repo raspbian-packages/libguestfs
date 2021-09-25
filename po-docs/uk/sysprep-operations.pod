@@ -1,0 +1,665 @@
+
+=head2 B<abrt-data> *
+
+Вилучити дані щодо аварії, створені ABRT.
+
+Вилучити автоматично створені ABRT дані щодо аварії у C</var/spool/abrt/>.
+
+=head2 B<backup-files> *
+
+Вилучити файли резервних копій редактора з гостьової системи.
+
+Вказані нижче файли буде вилучено з усіх каталогів файлової системи
+гостьової операційної системи:
+
+=over 4
+
+=item ·
+
+*.bak
+
+=item ·
+
+*~
+
+=back
+
+У операційних системах Linux та Unix оброблятимуться лише такі файлові
+системи:
+
+=over 4
+
+=item ·
+
+/etc
+
+=item ·
+
+/root
+
+=item ·
+
+/srv
+
+=item ·
+
+/tmp
+
+=item ·
+
+/var
+
+=back
+
+=head2 B<bash-history> *
+
+Вилучити журнал команд bash у гостьовій системі.
+
+Вилучити журнал команд bash користувача «root» та всіх інших користувачів, у
+домашніх каталогах яких містяться файли C<.bash_history>.
+
+=head3 Нотатки щодо журналу команд bash
+
+У поточній версії пошук домашніх каталогів користувачів виконується лише у
+C</root> і C</home/*>. Отже, журнал bash користувачів, дані яких
+зберігаються у інших каталогах, не буде вилучено.
+
+=head2 B<blkid-tab> *
+
+Вилучити вкладку ідентифікаторів блоків у гостьовій системі.
+
+=head2 B<ca-certificates>
+
+Вилучити сертифікати CA у гостьовій системі.
+
+In case any certificate is removed, the system CA store is updated.
+
+=head2 B<crash-data> *
+
+Вилучити дані щодо аварії, створені kexec-tools.
+
+Вилучити автоматично створені kdump дані аварії ядра.
+
+=head2 B<cron-spool> *
+
+Вилучити завдання at та cron користувачів.
+
+=head2 B<customize> *
+
+Налаштувати гостьову систему.
+
+Налаштувати гостьову систему визначенням параметрів L<virt-customize(1)> для
+встановлення пакунків, редагування файлів тощо.
+
+=head2 B<dhcp-client-state> *
+
+Вилучити надані клієнтські адреси DHCP.
+
+=head2 B<dhcp-server-state> *
+
+Вилучити надані серверні адреси DHCP.
+
+=head2 B<dovecot-data> *
+
+Вилучити дані Dovecot (поштового сервера).
+
+=head2 B<firewall-rules>
+
+Вилучити правила брандмауера.
+
+Вилучає нетипові правила брандмауера вилученням C</etc/sysconfig/iptables>
+або нетипових налаштувань firewalld з C</etc/firewalld/*/*>.
+
+Зауважте, що цю можливість типово I<не> увімкнено, оскільки може відкрити
+гостьову систему для вразливостей. Користуйтеся обережно.
+
+=head2 B<flag-reconfiguration>
+
+Позначити систему для зміни налаштувань.
+
+Для гостьових систем Linux оновлює часову позначку C</.unconfigured>, отже,
+під час першого завантаження користувачеві буде надіслано запит щодо
+параметрів, зокрема пароля root та часового поясу.
+
+=head2 B<fs-uuids>
+
+Змінити UUID файлових систем.
+
+У гостьових системах та типах файлових систем, де передбачено таку
+підтримку, буде створено нові випадкові UUID, які буде пов’язано з файловими
+системами.
+
+=head3 Зауваження щодо fs-uuids
+
+Типово, дію fs-uuids вимкнено, оскільки у поточній версії програма ще не
+здатна знайти і оновити усі записи у гостьовій системі, які використовують
+UUID, наприклад C</etc/fstab> або завантажувач. Вмикання цієї дії може з
+високою ймовірністю зробити вашу гостьову систему непридатною до
+завантаження.
+
+Див. L<https://bugzilla.redhat.com/show_bug.cgi?id=991641>
+
+=head2 B<ipa-client> *
+
+Remove the IPA files.
+
+Remove all the files related to an IPA (Identity, Policy, Audit) system.
+This effectively unenrolls the guest from an IPA server without interacting
+with it.
+
+This operation does not run C<ipa-client>.
+
+=head2 B<дані-kerberos>
+
+Вилучити дані Kerberos у гостьовій системі.
+
+=head2 B<kerberos-hostkeytab> *
+
+Remove the Kerberos host keytab file in the guest.
+
+=head2 B<logfiles> *
+
+Вилучити з гостьової системи багато файлів журналів.
+
+У Linux вилучено такі файли:
+
+=over 4
+
+=item ·
+
+/etc/Pegasus/*.cnf
+
+=item ·
+
+/etc/Pegasus/*.crt
+
+=item ·
+
+/etc/Pegasus/*.csr
+
+=item ·
+
+/etc/Pegasus/*.pem
+
+=item ·
+
+/etc/Pegasus/*.srl
+
+=item ·
+
+/root/anaconda-ks.cfg
+
+=item ·
+
+/root/anaconda-post.log
+
+=item ·
+
+/root/initial-setup-ks.cfg
+
+=item ·
+
+/root/install.log
+
+=item ·
+
+/root/install.log.syslog
+
+=item ·
+
+/root/original-ks.cfg
+
+=item ·
+
+/var/cache/fontconfig/*
+
+=item ·
+
+/var/cache/gdm/*
+
+=item ·
+
+/var/cache/man/*
+
+=item ·
+
+/var/lib/AccountService/users/*
+
+=item ·
+
+/var/lib/fprint/*
+
+=item ·
+
+/var/lib/logrotate.status
+
+=item ·
+
+/var/log/*.log*
+
+=item ·
+
+/var/log/BackupPC/LOG
+
+=item ·
+
+/var/log/ConsoleKit/*
+
+=item ·
+
+/var/log/anaconda.syslog
+
+=item ·
+
+/var/log/anaconda/*
+
+=item ·
+
+/var/log/apache2/*_log
+
+=item ·
+
+/var/log/apache2/*_log-*
+
+=item ·
+
+/var/log/apt/*
+
+=item ·
+
+/var/log/aptitude*
+
+=item ·
+
+/var/log/audit/*
+
+=item ·
+
+/var/log/btmp*
+
+=item ·
+
+/var/log/ceph/*.log
+
+=item ·
+
+/var/log/chrony/*.log
+
+=item ·
+
+/var/log/cron*
+
+=item ·
+
+/var/log/cups/*_log*
+
+=item ·
+
+/var/log/debug*
+
+=item ·
+
+/var/log/dmesg*
+
+=item ·
+
+/var/log/exim4/*
+
+=item ·
+
+/var/log/faillog*
+
+=item ·
+
+/var/log/firewalld*
+
+=item ·
+
+/var/log/gdm/*
+
+=item ·
+
+/var/log/glusterfs/*glusterd.vol.log
+
+=item ·
+
+/var/log/glusterfs/glusterfs.log
+
+=item ·
+
+/var/log/grubby*
+
+=item ·
+
+/var/log/httpd/*log
+
+=item ·
+
+/var/log/installer/*
+
+=item ·
+
+/var/log/jetty/jetty-console.log
+
+=item ·
+
+/var/log/journal/*
+
+=item ·
+
+/var/log/lastlog*
+
+=item ·
+
+/var/log/libvirt/libvirtd.log
+
+=item ·
+
+/var/log/libvirt/libxl/*.log
+
+=item ·
+
+/var/log/libvirt/lxc/*.log
+
+=item ·
+
+/var/log/libvirt/qemu/*.log
+
+=item ·
+
+/var/log/libvirt/uml/*.log
+
+=item ·
+
+/var/log/lightdm/*
+
+=item ·
+
+/var/log/mail/*
+
+=item ·
+
+/var/log/maillog*
+
+=item ·
+
+/var/log/messages*
+
+=item ·
+
+/var/log/ntp
+
+=item ·
+
+/var/log/ntpstats/*
+
+=item ·
+
+/var/log/ppp/connect-errors
+
+=item ·
+
+/var/log/rhsm/*
+
+=item ·
+
+/var/log/sa/*
+
+=item ·
+
+/var/log/secure*
+
+=item ·
+
+/var/log/setroubleshoot/*.log
+
+=item ·
+
+/var/log/spooler*
+
+=item ·
+
+/var/log/squid/*.log
+
+=item ·
+
+/var/log/syslog*
+
+=item ·
+
+/var/log/tallylog*
+
+=item ·
+
+/var/log/tuned/tuned.log
+
+=item ·
+
+/var/log/wtmp*
+
+=item ·
+
+/var/log/xferlog*
+
+=item ·
+
+/var/named/data/named.run
+
+=back
+
+=head2 B<lvm-uuids> *
+
+Змінити UUID ФТ і ГТ LVM2.
+
+Для гостьових систем Linux, які містять фізичні томи (ФТ) або групи томів
+(ГТ) LVM2 для ФТ і ГТ буде створено і призначено випадкові UUID.
+
+=head2 B<ід-комп’ютера> *
+
+Вилучити ідентифікатор локального комп’ютера.
+
+Зазвичай, ідентифікатор системи створюється на основі випадкових джерел
+даних під час встановлення системи і не змінюється під час всіх наступних її
+завантажень. За потреби у системах без певного стану цей ідентифікатор
+створюється під час роботи завантажувача,
+якщо буде виявлено порожнє значення.
+
+=head2 B<mail-spool> *
+
+Вилучити поштове повідомлення з локального каталогу поштового буфера.
+
+=head2 B<net-hostname> *
+
+Вилучити HOSTNAME та DHCP_HOSTNAME у налаштуваннях інтерфейсу мережі.
+
+Для Fedora і Red Hat Enterprise Linux це вилучається з файлів C<ifcfg-*>.
+
+=head2 B<net-hwaddr> *
+
+Вилучити налаштування HWADDR (апаратної адреси MAC).
+
+Для Fedora і Red Hat Enterprise Linux це вилучається з файлів C<ifcfg-*>.
+
+=head2 B<pacct-log> *
+
+Вилучити файли журналу обліку процесів.
+
+Дані обліку процесів системи будуть зберігатися у файлах журналу pacct, якщо
+увімкнено облік процесів.
+
+=head2 B<package-manager-cache> *
+
+Вилучити кеш керування пакунками.
+
+=head2 B<pam-data> *
+
+Вилучити дані PAM у гостьовій системі.
+
+=head2 B<passwd-backups> *
+
+Вилучити /etc/passwd- та подібні файли резервних копій.
+
+У Linux вилучено такі файли:
+
+=over 4
+
+=item ·
+
+/etc/group-
+
+=item ·
+
+/etc/gshadow-
+
+=item ·
+
+/etc/passwd-
+
+=item ·
+
+/etc/shadow-
+
+=item ·
+
+/etc/subgid-
+
+=item ·
+
+/etc/subuid-
+
+=back
+
+=head2 B<puppet-data-log> *
+
+Вилучити дані та файли журналів puppet.
+
+=head2 B<rh-subscription-manager> *
+
+Вилучити файли керування передплатою RH.
+
+=head2 B<rhn-systemid> *
+
+Вилучити ідентифікатор системи у RHN.
+
+=head2 B<rpm-db> *
+
+Вилучити специфічні для системи файли баз даних RPM.
+
+Вилучити специфічні для системи файли баз даних RPM. RPM буде повторно
+створено ці файли, якщо це потрібно.
+
+=head2 B<samba-db-log> *
+
+Вилучити бази даних та файли журналів Samba.
+
+=head2 B<script> *
+
+Запустити довільні скрипти дій над гостьовою системою.
+
+Модуль C<script> надає вам змогу запускати довільні скрипти оболонки або
+програми для обробки гостьових систем.
+
+Зауважте, що використання цієї можливості потребує підтримки FUSE. Вам варто
+увімкнути цю підтримку у вашій основній системі, наприклад, додаванням
+поточного користувача до групи C<fuse> або завантаженням модуля ядра.
+
+Скористайтеся одним або декількома параметрами I<--script> для визначення
+скриптів або програм, які слід запустити для обробки гостьової системи.
+
+Скрипт або програма виконується з поточним каталогом, який є кореневим
+каталогом гостьової системи, отже слід використовувати відносні
+шляхи. Приклад: C<rm etc/resolv.conf> у скрипті призведе до вилучення файла
+налаштувань DNS у гостьовій системі Linux, а C<rm /etc/resolv.conf>
+(спробує) вилучити відповідний файл у основній системі.
+
+Зазвичай, використовується тимчасова точка монтування гостьової системи, але
+ви можете вибрати якусь іншу за допомогою параметра I<--scriptdir>.
+
+B<Зауваження:> описані тут скрипти відрізняються від скриптів I<--firstboot>
+(скриптів, які виконуються у контексті гостьової системи під час першого
+завантаження цієї системи). Скрипти I<--script> запускаються у основній
+системі, а не у гостьовій.
+
+=head2 B<smolt-uuid> *
+
+Вилучити UUID обладнання Smolt.
+
+=head2 B<ssh-hostkeys> *
+
+Вилучити ключі вузла SSH у гостьовій системі.
+
+Ключі вузла SSH повторно створюються (незалежно) під час наступного
+завантаження гостьової системи.
+
+Якщо після клонування гостьова система отримати ту саму IP-адресу, ssh
+надасть вам додаткове попередження щодо зміни ключа вузла:
+
+ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ @    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+
+=head2 B<ssh-userdir> *
+
+Вилучити каталоги «.ssh» у гостьовій системі.
+
+Вилучити каталог C<.ssh> користувача «root» та всіх інших користувачів,
+домашні каталоги яких містять каталог C<.ssh>.
+
+=head3 Зауваження щодо ssh-userdir
+
+У поточній версії пошук домашніх каталогів користувачів виконується лише у
+C</root> і C</home/*>. Отже, файли ssh користувачів, дані яких зберігаються
+у інших каталогах, не буде вилучено.
+
+=head2 B<sssd-db-log> *
+
+Вилучити бази даних і файли журналів sssd.
+
+=head2 B<tmp-files> *
+
+Вилучити тимчасові файли.
+
+Вилучає тимчасові файли з C</tmp> і C</var/tmp>.
+
+=head2 B<udev-persistent-net> *
+
+Вилучити постійні правила мережі udev.
+
+Вилучити постійні правила мережі udev, які відображають вже створену
+MAC-адресу гостьової системи на фіксований пристрій ethernet (наприклад
+eth0).
+
+Після клонування гостьової системи MAC-адреса зазвичай змінюється. Оскільки
+стару MAC-адресу вже пов’язано зі старою назвою (наприклад eth0), це
+означає, що нову MAC-адресу буде пов’язано з новою назвою (наприклад eth1),
+а це зазвичай є небажаним. За допомогою вилучення постійних правил мережі
+udev цьому можна запобігти.
+
+=head2 B<user-account>
+
+Вилучити облікові записи користувачів у гостьовій системі.
+
+Типово вилучити всі облікові записи користувачів та відповідні домашні
+каталоги. Обліковий запис «root» вилучено не буде.
+
+Див. опис параметра I<--remove-user-accounts>, щоб дізнатися про те, як
+наказати
+програмі вилучити лише деяких з користувачів і не вилучати інших.
+
+=head2 B<utmp> *
+
+Вилучити файл utmp.
+
+У цьому файлі зберігаються записи щодо входу користувачів до машини. У
+сучасних дистрибутивах Linux ці записи зберігаються на диску у пам’яті, тому
+не є частиною віртуальної машини на диску, але ці дані зберігаються на диску
+у старіших версіях дистрибутивів.
+
+=head2 B<yum-uuid> *
+
+Вилучити UUID yum.
+
+Yum створить новий UUID під час наступного запуску, коли виявить, що
+початковий UUID було вилучено.
+
