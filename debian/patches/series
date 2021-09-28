@@ -19,4 +19,6 @@
 0019-Fix-out-of-tree-build-for-po.patch
 0020-Update-packagelist-as-haxdump-has-been-moved-to-bsde.patch
 0021-appliance-Fix-searching-for-shared-libraries-on-usr-.patch
+0022-launch-board-model-for-RISC-V.patch
+0023-golang-Fix-bindings-for-golang-1.16.patch
 auto-1:1.44.0-1+rpi1-4b5577a431c96e44282e63413b3555bcef626c3a-1610706180

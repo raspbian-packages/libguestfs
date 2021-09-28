@@ -50,7 +50,7 @@ QEMU_CPU := $(shell echo $(DEB_HOST_GNU_CPU) \
 			-e 's,arm.*,arm,')
 
 # Run "make quickcheck" only on these architectures
-QUICKCHECK_ARCHITECTURES := i386 amd64
+QUICKCHECK_ARCHITECTURES := i386 amd64 arm64 riscv64
 
 # Template for generating dh_{clean,configure,build,test} overrides.
 # $1 is replaced with the build number.
@@ -133,7 +133,11 @@ override_dh_autoreconf:
 override_dh_auto_test:
 ifneq "" "$(findstring $(DEB_HOST_ARCH),$(QUICKCHECK_ARCHITECTURES))"
 	printenv
-	unset XDG_RUNTIME_DIR; make -C $(CURDIR)/debian/build-$(BUILD_COUNT) quickcheck
+	unset XDG_RUNTIME_DIR; \
+		if ! test -w /dev/kvm; then \
+			export LIBGUESTFS_BACKEND_SETTINGS=force_tcg; \
+		fi; \
+		make -C $(CURDIR)/debian/build-$(BUILD_COUNT) quickcheck
 endif
 
 # Installation needs to happen in order because only the last build
