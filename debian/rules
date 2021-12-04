@@ -1,0 +1,188 @@
+#!/usr/bin/make -f
+
+# Notes
+# -----
+#
+# - Bindings for all available Ruby, Python, Lua, and PHP versions (as
+#   determined in RUBY_VERSIONS, PYTHON_VERSIONS, LUA_VERSIONS,
+#   PHP_VERSIONS, respectively) are built, using the minimum number of
+#   configure/make/install cycles (BUILD_COUNT, BUILDS). Builds are
+#   performed out-of-tree, in directories debian/build-1,
+#   debian/build-2, etc..
+#
+# - Targets for individual builds are generated in GNU Make on the
+#   fly, by evaluating expansions of the `DH_AUTO_TEMPLATE' variable
+#   multiple times. (See the foreach loop below the variable
+#   definition.) Multiple recipies for the `override_dh_auto_clean'
+#   target as well as multiple prerequisites for the
+#   `override_dh_auto_{configure,build}' targets are defined. Only the
+#   last build contains the full feature set (including FUSE support
+#   and Perl, OCaml, and GLib bindings).
+#
+# - Running `debian/rules output_template' can be used to inspect the
+#   targets that have been generated using `DH_AUTO_TEMPLATE'.
+
+# export DH_VERBOSE=1
+include /usr/share/dpkg/architecture.mk
+
+PYTHON_VERSIONS := $(shell py3versions --installed)
+RUBY_VERSIONS   := $(shell dh_ruby --print-supported)
+LUA_VERSIONS    := $(shell find /usr/bin/ -name 'lua5.?' \
+			| xargs -n1 readlink -f | xargs -r -n1 basename)
+PHP_VERSIONS    := $(subst -config,,\
+			$(shell find /usr/bin -name 'php-config?*' \
+				| xargs -r -n1 basename))
+
+# Use private Go build cache
+export GOCACHE = $(CURDIR)/debian/gocache
+
+# Determine the number of builds needed due to script language version
+# variants
+BUILD_COUNT := $(lastword $(sort $(foreach lang,PYTHON RUBY LUA PHP,$(words $($(lang)_VERSIONS)))))
+BUILDS := $(foreach n,$(wordlist 1,$(BUILD_COUNT),1 2 3 4 5 6 7 8 9),$(n))
+
+QEMU_CPU := $(shell echo $(DEB_HOST_GNU_CPU) \
+		    | sed -r \
+			-e 's,i[456]86,i386,' \
+			-e 's,sparc.*,sparc64,' \
+			-e 's,powerpc(64.*)?,ppc64,' \
+			-e 's,arm.*,arm,')
+
+# Run "make quickcheck" only on these architectures
+QUICKCHECK_ARCHITECTURES := i386 amd64 arm64 riscv64
+
+# Template for generating dh_{clean,configure,build,test} overrides.
+# $1 is replaced with the build number.
+define DH_AUTO_TEMPLATE
+override_dh_auto_clean::
+	dh_auto_clean --builddir=$(CURDIR)/debian/build-$1
+
+$(CURDIR)/debian/build-$1/config.status::
+	dh_auto_configure --builddir=$(CURDIR)/debian/build-$1 \
+		-- \
+		--disable-gnulib-tests     \
+		--with-readline	           \
+		--disable-haskell          \
+		--with-guestfs-path=/usr/lib/$(DEB_HOST_MULTIARCH)/guestfs \
+		--with-qemu=qemu-system-$(QEMU_CPU) \
+		$(if $(findstring powerpcspe,$(DEB_HOST_GNU_CPU)),\
+			--with-qemu-options="-M ppce500 -cpu e500v2") \
+		--with-supermin-extra-options='--use-installed' \
+		$(if $(findstring $1,$(BUILD_COUNT)),\
+			--enable-install-daemon \
+			--with-java=/usr/lib/jvm/default-java \
+			JNI_INSTALL_DIR='$$$${libdir}/jni' \
+			,\
+			--with-java=no --without-java \
+			--disable-fuse \
+			--disable-ocaml \
+			--disable-perl \
+			--disable-gobject \
+			--disable-daemon --disable-appliance ) \
+		$(if $(word $1,$(RUBY_VERSIONS)),\
+			RUBY=$(word $1,$(RUBY_VERSIONS)) \
+			RAKE="$(word $1,$(RUBY_VERSIONS)) -S rake" \
+			,\
+			--disable-ruby) \
+		$(if $(word $1,$(PYTHON_VERSIONS)),\
+			PYTHON=$(word $1,$(PYTHON_VERSIONS)) \
+			,\
+			--disable-python) \
+		$(if $(word $1,$(LUA_VERSIONS)),\
+			LUA=$(word $1,$(LUA_VERSIONS)) \
+			,\
+			--disable-lua) \
+		$(if $(word $1,$(PHP_VERSIONS)),\
+			PHP=$(word $1,$(PHP_VERSIONS)) \
+			PHPIZE=$(subst php,phpize,$(word $1,$(PHP_VERSIONS))) \
+			,\
+			--disable-php)
+
+override_dh_auto_configure:: $(CURDIR)/debian/build-$1/config.status
+
+$(CURDIR)/debian/build-$1/build-stamp:
+	dh_auto_build --builddir=$(CURDIR)/debian/build-$1 \
+		-- INSTALLDIRS=vendor LD_RUN_PATH=""
+	touch $$@
+
+override_dh_auto_build:: $(CURDIR)/debian/build-$1/build-stamp
+
+endef
+
+$(foreach build,$(BUILDS),$(eval $(call DH_AUTO_TEMPLATE,$(build))))
+
+output_template:
+	$(foreach build,$(BUILDS),$(info $(call DH_AUTO_TEMPLATE,$(build))))
+
+# Special Makefile magic ends here
+
+override_dh_autoreconf:
+# Get rid of files shipped in upstream tarball so they get rebuilt in
+# the build directories.
+	rm -f po/*.gmo po/*.pot
+	dh_autoreconf -- debian/dh-autoreconf.sh
+
+# Just run the test on the last build.
+override_dh_auto_test:
+ifneq "" "$(findstring $(DEB_HOST_ARCH),$(QUICKCHECK_ARCHITECTURES))"
+	printenv
+	unset XDG_RUNTIME_DIR; \
+		if ! test -w /dev/kvm; then \
+			export LIBGUESTFS_BACKEND_SETTINGS=force_tcg; \
+		fi; \
+		make -C $(CURDIR)/debian/build-$(BUILD_COUNT) quickcheck
+endif
+
+# Installation needs to happen in order because only the last build
+# contains all features.
+override_dh_auto_install:
+	set -e; for build in $(BUILDS); do \
+		dh_auto_install --builddir=$(CURDIR)/debian/build-$$build \
+			-- INSTALLDIRS=vendor; \
+	done
+
+override_dh_install:
+# Split the supermin appliance packages list into subpackages, so the
+# main libguestfs0 can avoid depending on everything.
+	debian/split-appliance.sh
+
+	dh_install -X.la -X.so.owner -Xbindtests -X/usr/lib/go/ -X/usr/lib/go- -Xpackages.orig -Xetc/php.d
+
+	# Workaround for Ubuntu's strict kernel permissions
+	if [ "$$(sed -ne '/^ID=/ { s/^[^=]*=//;p }' /etc/os-release)" = ubuntu ]; then \
+		mkidr -p debian/libguestfs0/etc/kernel/preinst.d debian/libguestfs0/etc/kernel/postrm.d ; \
+		install -m755 debian/libguestfs0.kernel-preinst debian/libguestfs0/etc/kernel/preinst.d/libguestfs0 ; \
+		install -m755 debian/libguestfs0.kernel-postrm  debian/libguestfs0/etc/kernel/postrm.d/libguestfs0  ; \
+		cat debian/libguestfs0.preinst.snippet >> debian/libguestfs0.preinst.debhelper ; \
+		cat debian/libguestfs0.postrm.snippet  >> debian/libguestfs0.postrm.debhelper  ; \
+	fi
+
+override_dh_missing:
+	dh_missing --fail-missing \
+		-X.la -X.so.owner -Xbindtests -X/usr/lib/go/ -X/usr/lib/go- -Xpackages.orig -Xetc/php.d -Xguestfs-erlang.3
+
+# Add packages (except essential packages) from appliance packagelist
+# to libguestfs* dependencies
+	debian/gen-appliance-depends.sh
+
+override_dh_php:
+	dh_php -p php-guestfs
+override_dh_python3:
+	dh_python3 -p python3-guestfs
+override_dh_shlibdeps:
+	dh_shlibdeps
+# Add libraries needed by guestfsd to libguestfs0 dependencies
+	dh_shlibdeps -p libguestfs0 -- -e debian/guestfsd/usr/sbin/guestfsd
+
+# Workaround for Lintian warning
+# "{pre,post}inst-has-useless-call-to-ldconfig"
+override_dh_makeshlibs:
+	dh_makeshlibs -X/jni/ -X/python3/
+# Workaround for
+# dwz: [...] DWARF version 0 unhandled
+override_dh_dwz:
+
+%:
+	dh $@ \
+	   --without=python-support \
+	   --with=ocaml,python3,bash-completion,ruby,gir,lua,php
