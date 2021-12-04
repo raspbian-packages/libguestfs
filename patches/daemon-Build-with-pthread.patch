@@ -1,0 +1,28 @@
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Sat, 11 Sep 2021 09:27:17 +0100
+Subject: daemon: Build with -pthread
+
+The daemon failed to link with glibc < 2.34 because we didn't include
+the separate pthread library.  Adding -pthread fixes this.
+
+Note this change was also make upstream in commit 733d2182b6 ("Remove
+the tools.") although I think either by accident or unrelated.
+
+Reported-by: Toolybird
+Fixes: https://bugzilla.redhat.com/show_bug.cgi?id=2003326
+---
+ daemon/Makefile.am | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/daemon/Makefile.am b/daemon/Makefile.am
+index 92e5aa4..cbf5a95 100644
+--- a/daemon/Makefile.am
++++ b/daemon/Makefile.am
+@@ -256,6 +256,7 @@ guestfsd_CPPFLAGS = \
+ 	-I$(top_srcdir)/common/utils \
+ 	-I$(top_builddir)/common/utils
+ guestfsd_CFLAGS = \
++	-pthread \
+ 	$(WARN_CFLAGS) $(WERROR_CFLAGS) \
+ 	$(RPC_CFLAGS) \
+ 	$(AUGEAS_CFLAGS) \
