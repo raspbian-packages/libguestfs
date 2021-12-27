@@ -1,0 +1,22 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Mon, 27 Dec 2021 01:14:32 +0100
+Subject: Update packagelist to require grub-pc on Debian
+
+This is required to get a test passing
+---
+ appliance/packagelist.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/appliance/packagelist.in b/appliance/packagelist.in
+index 1756751..0f39b6a 100644
+--- a/appliance/packagelist.in
++++ b/appliance/packagelist.in
+@@ -62,7 +62,7 @@ dnl gfs-tools, gfs2-tools have been renamed to gfs2-utils
+   gfs-tools
+   gfs2-tools
+   gfs2-utils
+-  grub2-common
++  grub-pc
+   hfsplus
+ dnl iproute has been renamed to iproute2
+   iproute
