@@ -22,7 +22,7 @@
 exitcode=0
 
 for f in $(
-    find -name '*.ml' |
+    find "$abs_srcdir" "$abs_builddir" -name '*.ml' |
     grep -v builder/templates |
     grep -v contrib/ |
     grep -v ocaml/examples/ |
