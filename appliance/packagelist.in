@@ -62,7 +62,7 @@ dnl gfs-tools, gfs2-tools have been renamed to gfs2-utils
   gfs-tools
   gfs2-tools
   gfs2-utils
-  grub2-common
+  grub-pc
   hfsplus
 dnl iproute has been renamed to iproute2
   iproute
