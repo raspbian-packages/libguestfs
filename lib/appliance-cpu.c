@@ -84,6 +84,8 @@ guestfs_int_get_cpu_model (int kvm)
 #elif defined(__powerpc64__)
   /* See discussion in https://bugzilla.redhat.com/show_bug.cgi?id=1605071 */
   return NULL;
+#elif defined(__riscv)
+  return "rv64";
 #else
   /* On most architectures we can use "max" to get the best possible CPU.
    * For recent qemu this should work even on TCG.
