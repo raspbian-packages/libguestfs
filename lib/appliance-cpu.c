@@ -81,9 +81,11 @@ guestfs_int_get_cpu_model (int kvm)
     return "host";
   else
     return "cortex-a57";
-#elif defined(__powerpc64__)
+#elif defined(__powerpc64__) || defined(__mips) || defined(__mips64)
   /* See discussion in https://bugzilla.redhat.com/show_bug.cgi?id=1605071 */
   return NULL;
+#elif defined(__riscv)
+  return "rv64";
 #else
   /* On most architectures we can use "max" to get the best possible CPU.
    * For recent qemu this should work even on TCG.
