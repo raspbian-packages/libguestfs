@@ -87,6 +87,12 @@ guestfs_int_get_cpu_model (int kvm)
 #elif defined(__riscv)
   /* qemu-system-riscv64 (7.0) doesn't yet support -cpu max */
   return NULL;
+#elif defined(__mips64)
+  /* Taken from https://gist.github.com/bradfa/46ceff759a0cf9f392cc069c4f0f095a */
+  return "5KEc";
+#elif defined(__mips)
+  /* Guessed from mips64 */
+  return "4KEc";
 #else
   /* On most architectures we can use "max" to get the best possible CPU.
    * For recent qemu this should work even on TCG.
