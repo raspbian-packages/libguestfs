@@ -1,0 +1,2 @@
+Tests: extlinux
+Depends: guestfish, libguestfs-tools, mmdebstrap, fakeroot, fakechroot, linux-image-amd64, openssh-client
