@@ -1,0 +1,11 @@
+--- libguestfs-1.46.2.orig/m4/guestfs-appliance.m4
++++ libguestfs-1.46.2/m4/guestfs-appliance.m4
+@@ -120,7 +120,7 @@ AM_CONDITIONAL([HAVE_RPM],
+     [AS_CASE([$DISTRO], [REDHAT | SUSE | OPENMANDRIVA | MAGEIA ], [true],
+                         [*], [false])])
+ AM_CONDITIONAL([HAVE_DPKG],
+-    [AS_CASE([$DISTRO], [DEBIAN | UBUNTU ], [true],
++    [AS_CASE([$DISTRO], [DEBIAN | UBUNTU | RASPBIAN ], [true],
+                         [*], [false])])
+ AM_CONDITIONAL([HAVE_PACMAN],
+     [AS_CASE([$DISTRO], [ARCHLINUX | FRUGALWARE ], [true],

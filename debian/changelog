@@ -5,7 +5,7 @@ libguestfs (1:1.46.2-4+rpi1) bookworm-staging; urgency=medium
   * Disable dh_missing
   * Partiall fix clean target.
 
- -- Raspbian forward porter <root@raspbian.org>  Wed, 26 Jan 2022 06:35:33 +0000
+ -- Peter Michael Green <plugwash@raspbian.org>  Wed, 26 Jan 2022 06:35:33 +0000
 
 libguestfs (1:1.46.2-4) unstable; urgency=medium
 

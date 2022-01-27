@@ -17,4 +17,4 @@ Fix-out-of-tree-build-for-po.patch
 Update-packagelist-as-haxdump-has-been-moved-to-bsdextrau.patch
 Fix-golang-bindtest-and-check-mli.sh-for-out-of-tree-buil.patch
 Set-special-CPU-type-on-RISCV64.patch
-auto-1:1.44.0-1+rpi1-4b5577a431c96e44282e63413b3555bcef626c3a-1610706180
+recognise-raspbian.diff
