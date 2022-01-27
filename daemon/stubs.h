@@ -234,6 +234,7 @@ extern void internal_hot_add_drive_stub (XDR *xdr_in);
 extern void internal_hot_remove_drive_stub (XDR *xdr_in);
 extern void internal_hot_remove_drive_precheck_stub (XDR *xdr_in);
 extern void internal_journal_get_stub (XDR *xdr_in);
+extern void internal_list_rpm_applications_stub (XDR *xdr_in);
 extern void internal_lstatnslist_stub (XDR *xdr_in);
 extern void internal_lxattrlist_stub (XDR *xdr_in);
 extern void internal_parse_mountable_stub (XDR *xdr_in);

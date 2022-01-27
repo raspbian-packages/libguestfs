@@ -21,11 +21,11 @@ open Printf
 
 open Std_utils
 
-external get_verbose_flag : unit -> bool = "guestfs_int_daemon_get_verbose_flag" "noalloc"
-external is_device_parameter : string -> bool = "guestfs_int_daemon_is_device_parameter" "noalloc"
-external is_root_device : string -> bool = "guestfs_int_daemon_is_root_device" "noalloc"
-external prog_exists : string -> bool = "guestfs_int_daemon_prog_exists" "noalloc"
-external udev_settle : ?filename:string -> unit -> unit = "guestfs_int_daemon_udev_settle" "noalloc"
+external get_verbose_flag : unit -> bool = "guestfs_int_daemon_get_verbose_flag" [@@noalloc]
+external is_device_parameter : string -> bool = "guestfs_int_daemon_is_device_parameter" [@@noalloc]
+external is_root_device : string -> bool = "guestfs_int_daemon_is_root_device" [@@noalloc]
+external prog_exists : string -> bool = "guestfs_int_daemon_prog_exists" [@@noalloc]
+external udev_settle : ?filename:string -> unit -> unit = "guestfs_int_daemon_udev_settle" [@@noalloc]
 
 let commandr ?(fold_stdout_on_stderr = false) prog args =
   if verbose () then
@@ -186,6 +186,51 @@ and compare_device_names a b =
       compare part_a part_b
     )
   )
+
+let has_bogus_mbr device =
+  try
+    with_openfile device [O_RDONLY; O_CLOEXEC] 0 (fun fd ->
+      let sec0size = 0x200
+      and sigofs = 0x1FE
+      and sysidofs = 0x003 and sysidsize = 0x008
+      and pte1ofs = 0x1BE
+      and parttypes = [0x01; (* FAT12 *)
+                       0x04; (* FAT16 *)
+                       0x06; (* FAT12, FAT16, FAT16B *)
+                       0x0C; (* FAT32 LBA *)
+                       0x0E  (* FAT16B LBA *)] in
+      let sec0 = Bytes.create sec0size in
+      let sec0read = read fd sec0 0 sec0size in
+      let sec0at = Bytes.get_uint8 sec0 in
+
+      (* sector read completely *)
+      sec0read = sec0size &&
+
+      (* boot signature present *)
+      sec0at (sigofs       ) = 0x55 &&
+      sec0at (sigofs  + 0x1) = 0xAA &&
+
+      (* mkfs.fat signature present *)
+      Bytes.sub_string sec0 sysidofs sysidsize = "mkfs.fat" &&
+
+      (* partition bootable *)
+      sec0at (pte1ofs      ) = 0x80 &&
+
+      (* partition starts at C/H/S 0/0/1 *)
+      sec0at (pte1ofs + 0x1) = 0x00 &&
+      sec0at (pte1ofs + 0x2) = 0x01 &&
+      sec0at (pte1ofs + 0x3) = 0x00 &&
+
+      (* partition type is a FAT variant that mkfs.fat is known to create *)
+      List.mem (sec0at (pte1ofs + 0x4)) parttypes &&
+
+      (* partition starts at LBA 0 *)
+      sec0at (pte1ofs + 0x8) = 0x00 &&
+      sec0at (pte1ofs + 0x9) = 0x00 &&
+      sec0at (pte1ofs + 0xA) = 0x00 &&
+      sec0at (pte1ofs + 0xB) = 0x00
+    )
+  with _ -> false
 
 let proc_unmangle_path path =
   let n = String.length path in

@@ -57,10 +57,8 @@ let part_get_mbr_id device partnum =
   (* It's printed in hex, possibly with a leading space. *)
   sscanf out " %x" identity
 
-(* This is not equivalent to print_partition_table in the C code, as
- * it only deals with the ‘-m’ option output, and it partially parses
- * that.  If we convert other functions that don't use the ‘-m’ version
- * we'll have to refactor this. XXX
+(* This is almost equivalent to print_partition_table in the C code. The
+ * difference is that here we enforce the "BYT;" header internally.
  *)
 let print_partition_table_machine_readable device =
   udev_settle ();
@@ -120,7 +118,12 @@ let part_get_parttype device =
   let fields = String.nsplit ":" device_line in
   match fields with
   | _::_::_::_::_::"loop"::_ -> (* If "loop" return an error (RHBZ#634246). *)
-     failwithf "%s: not a partitioned device" device
+     (* ... Unless parted failed to recognize the fake MBR that mkfs.fat from
+      * dosfstools-4.2+ created. In that case, return "msdos" for MBR
+      * (RHBZ#1931821).
+      *)
+     if Utils.has_bogus_mbr device then "msdos"
+     else failwithf "%s: not a partitioned device" device
   | _::_::_::_::_::ret::_ -> ret
   | _ ->
      failwithf "%s: cannot parse the output of parted" device

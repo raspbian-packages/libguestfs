@@ -4694,6 +4694,16 @@ xdr_guestfs_internal_hot_remove_drive_precheck_args (XDR *xdrs, guestfs_internal
 }
 
 bool_t
+xdr_guestfs_internal_list_rpm_applications_ret (XDR *xdrs, guestfs_internal_list_rpm_applications_ret *objp)
+{
+	register int32_t *buf;
+
+	 if (!xdr_guestfs_int_application2_list (xdrs, &objp->applications2))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
 xdr_guestfs_internal_lstatnslist_args (XDR *xdrs, guestfs_internal_lstatnslist_args *objp)
 {
 	register int32_t *buf;

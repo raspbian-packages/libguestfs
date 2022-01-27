@@ -23,6 +23,11 @@ C<-cpu> qemu або його еквівалента у libvirt. Повертає
 
 Рядок-літерал C<"host"> означає використання C<-cpu host>.
 
+=item C<"max">
+
+The literal string C<"max"> means use C<-cpu max> (the best possible).  This
+requires awkward translation for libvirt.
+
 =item якийсь рядок
 
 Якийсь рядок, зокрема C<"cortex-a57"> означає використання C<-cpu
@@ -1050,11 +1055,10 @@ C<virStreamPtr>).
    struct guestfs_h *next;	/* Пов'язаний список відкритих дескрипторів. */
    enum state state;             /* Див. діаграму скінченного автомата у guestfs(3)*/
  
-   /* Для захисту дескриптора надсилається запит щодо
-    * блокування під час входу до будь-якої публічної
-    * функціїg guestfs_*.
+   /* Lock acquired when entering any public guestfs_* function to
+    * protect the handle.
     */
-   gl_recursive_lock_define (, lock);
+   pthread_mutex_t lock;
  
    /**** Налаштування дескриптора. ****/
    bool verbose;                 /* Діагностика. */
@@ -1128,13 +1132,13 @@ C<virStreamPtr>).
    char *int_tmpdir;   /* $LIBGUESTFS_TMPDIR or guestfs_set_tmpdir або NULL */
    char *int_cachedir; /* $LIBGUESTFS_CACHEDIR, або guestfs_set_cachedir, або NULL */
  
-   /* Обробник помилок і стос старих обробників помилок. */
-   gl_tls_key_t error_data;
+   /* Error handler, plus stack of old error handlers. */
+   pthread_key_t error_data;
  
-   /* Пов'язаний список структур error_data, розміщених для цього дескриптора,
-    * і семафор для захисту пов'язаного списку.
+   /* Linked list of error_data structures allocated for this handle,
+    * plus a mutex to protect the linked list.
     */
-   gl_lock_define (, error_data_list_lock);
+   pthread_mutex_t error_data_list_lock;
    struct error_data *error_data_list;
  
    /* Обробник станів нестачі пам'яті. */
@@ -2173,7 +2177,7 @@ C<0>, якщо запис не вдасться знайти, і C<1>, якщо 
 
  int
  guestfs_int_version_from_x_y_re (guestfs_h *g, struct version *v,
-                                  const char *str, const pcre *re)
+                                  const char *str, const pcre2_code *re)
 
 Визначає версію за рядком на основі вказаного формального виразу C<re>, який
 I<має> визначати (принаймні) два відповідних записи.
@@ -2267,14 +2271,6 @@ C<EINTR>.
 контролем ненадійного користувача, оскільки це може призвести до нападу із
 відмовою в обслуговуванні.
 
-=head2 Підкаталог F<builder>
-
-=head3 Файл F<builder/index-parser-c.c>
-
-Цей файл обробляє інтерфейс між обробником файла покажчика C/lex/yacc і
-«світом» OCaml. Див. F<builder/index_parser.ml>, щоб ознайомитися із
-визначенням типів OCaml.
-
 =head2 Підкаталог F<common/edit>
 
 =head3 Файл F<common/edit/file-edit.c>
@@ -2320,12 +2316,6 @@ C<perl_expr>, використовуючи Perl.
 суфіксом назви C<backup_extension>, дописаним до назви файла.
 
 Повертає C<-1>, якщо сталася помилка, C<0>, якщо виконано успішно.
-
-=head2 Підкаталог F<common/mlxml>
-
-=head3 Файл F<common/mlxml/xml-c.c>
-
-Мініінтерфейс до libxml2.
 
 =head2 Підкаталог F<common/options>
 
@@ -3493,6 +3483,20 @@ L<https://www.gnu.org/software/bash/manual/html_node/Double-Quotes.html>
 
 Створює дамп блоку пам'яті у C<FILE *>, використовується для діагностування
 проблем.
+
+=head4 Function C<common/utils/utils.c:guestfs_int_strerror>
+
+ const char *
+ guestfs_int_strerror (int errnum, char *buf, size_t buflen)
+
+Thread-safe strerror_r.
+
+This is a wrapper around the two variants of L<strerror_r(3)> in glibc since
+it is hard to use correctly (RHBZ#2030396).
+
+The buffer passed in should be large enough to store the error message (256
+chars at least) and should be non-static.  Note that the buffer might not be
+used, use the return value.
 
 =head2 Підкаталог F<common/visit>
 

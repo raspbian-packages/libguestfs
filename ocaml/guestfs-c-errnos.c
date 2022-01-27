@@ -47,49 +47,49 @@ value guestfs_int_ocaml_get_ENOENT (value unitv);
 value guestfs_int_ocaml_get_EROFS (value unitv);
 value guestfs_int_ocaml_get_ENOSPC (value unitv);
 
-/* NB: "noalloc" function. */
+/* NB: [@@noalloc] function. */
 value
 guestfs_int_ocaml_get_EINVAL (value unitv)
 {
   return Val_int (EINVAL);
 }
 
-/* NB: "noalloc" function. */
+/* NB: [@@noalloc] function. */
 value
 guestfs_int_ocaml_get_ENOTSUP (value unitv)
 {
   return Val_int (ENOTSUP);
 }
 
-/* NB: "noalloc" function. */
+/* NB: [@@noalloc] function. */
 value
 guestfs_int_ocaml_get_EPERM (value unitv)
 {
   return Val_int (EPERM);
 }
 
-/* NB: "noalloc" function. */
+/* NB: [@@noalloc] function. */
 value
 guestfs_int_ocaml_get_ESRCH (value unitv)
 {
   return Val_int (ESRCH);
 }
 
-/* NB: "noalloc" function. */
+/* NB: [@@noalloc] function. */
 value
 guestfs_int_ocaml_get_ENOENT (value unitv)
 {
   return Val_int (ENOENT);
 }
 
-/* NB: "noalloc" function. */
+/* NB: [@@noalloc] function. */
 value
 guestfs_int_ocaml_get_EROFS (value unitv)
 {
   return Val_int (EROFS);
 }
 
-/* NB: "noalloc" function. */
+/* NB: [@@noalloc] function. */
 value
 guestfs_int_ocaml_get_ENOSPC (value unitv)
 {

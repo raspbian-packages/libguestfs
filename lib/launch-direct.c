@@ -385,6 +385,8 @@ launch_direct (guestfs_h *g, void *datav, const char *arg)
   struct hv_param *hp;
   bool has_kvm;
   int force_tcg;
+  int force_kvm;
+  const char *accel_val = "kvm:tcg";
   const char *cpu_model;
   CLEANUP_FREE char *append = NULL;
   CLEANUP_FREE_STRING_LIST char **argv = NULL;
@@ -433,9 +435,27 @@ launch_direct (guestfs_h *g, void *datav, const char *arg)
   force_tcg = guestfs_int_get_backend_setting_bool (g, "force_tcg");
   if (force_tcg == -1)
     return -1;
+  else if (force_tcg)
+    accel_val = "tcg";
 
-  if (!has_kvm && !force_tcg)
-    debian_kvm_warning (g);
+  force_kvm = guestfs_int_get_backend_setting_bool (g, "force_kvm");
+  if (force_kvm == -1)
+    return -1;
+  else if (force_kvm)
+    accel_val = "kvm";
+
+  if (force_kvm && force_tcg) {
+    error (g, "Both force_kvm and force_tcg backend settings supplied.");
+    return -1;
+  }
+  if (!has_kvm) {
+    if (!force_tcg)
+      debian_kvm_warning (g);
+    if (force_kvm) {
+      error (g, "force_kvm supplied but kvm not available.");
+      return -1;
+    }
+  }
 
   /* Using virtio-serial, we need to create a local Unix domain socket
    * for qemu to connect to.
@@ -494,13 +514,6 @@ launch_direct (guestfs_h *g, void *datav, const char *arg)
   if (guestfs_int_qemu_supports (g, data->qemu_data, "-no-user-config"))
     flag ("-no-user-config");
 
-  /* This oddly named option doesn't actually enable FIPS.  It just
-   * causes qemu to do the right thing if FIPS is enabled in the
-   * kernel.  So like libvirt, we pass it unconditionally.
-   */
-  if (guestfs_int_qemu_supports (g, data->qemu_data, "-enable-fips"))
-    flag ("-enable-fips");
-
   /* Newer versions of qemu (from around 2009/12) changed the
    * behaviour of monitors so that an implicit '-monitor stdio' is
    * assumed if we are in -nographic mode and there is no other
@@ -530,7 +543,14 @@ launch_direct (guestfs_h *g, void *datav, const char *arg)
     if (has_kvm && !force_tcg)
       append_list ("gic-version=host");
 #endif
-    append_list_format ("accel=%s", !force_tcg ? "kvm:tcg" : "tcg");
+    append_list_format ("accel=%s", accel_val);
+#if defined(__i386__) || defined(__x86_64__)
+    /* Tell seabios to send debug messages to the serial port.
+     * This used to be done by sgabios.
+     */
+    if (g->verbose)
+      append_list ("graphics=off");
+#endif
   } end_list ();
 
   cpu_model = guestfs_int_get_cpu_model (has_kvm && !force_tcg);
@@ -652,18 +672,6 @@ launch_direct (guestfs_h *g, void *datav, const char *arg)
   } end_list ();
 #endif
 
-  if (g->verbose &&
-      guestfs_int_qemu_supports_device (g, data->qemu_data,
-                                        "Serial Graphics Adapter")) {
-    /* Use sgabios instead of vgabios.  This means we'll see BIOS
-     * messages on the serial port, and also works around this bug
-     * in qemu 1.1.0:
-     * https://bugs.launchpad.net/qemu/+bug/1021649
-     * QEmu has included sgabios upstream since just before 1.0.
-     */
-    arg ("-device", "sga");
-  }
-
   /* Set up virtio-serial for the communications channel. */
   start_list ("-chardev") {
     append_list ("socket");
@@ -681,7 +689,7 @@ launch_direct (guestfs_h *g, void *datav, const char *arg)
     start_list ("-netdev") {
       append_list ("user");
       append_list ("id=usernet");
-      append_list ("net=169.254.0.0/16");
+      append_list ("net=" NETWORK_ADDRESS "/" NETWORK_PREFIX);
     } end_list ();
     start_list ("-device") {
       append_list (VIRTIO_DEVICE_NAME ("virtio-net"));

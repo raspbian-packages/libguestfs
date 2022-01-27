@@ -4121,6 +4121,9 @@ extern GUESTFS_DLL_PUBLIC int guestfs_internal_hot_remove_drive_precheck (guestf
 #define GUESTFS_HAVE_INTERNAL_JOURNAL_GET 1
 extern GUESTFS_DLL_PUBLIC int guestfs_internal_journal_get (guestfs_h *g, const char *filename);
 
+#define GUESTFS_HAVE_INTERNAL_LIST_RPM_APPLICATIONS 1
+extern GUESTFS_DLL_PUBLIC struct guestfs_application2_list *guestfs_internal_list_rpm_applications (guestfs_h *g);
+
 #define GUESTFS_HAVE_INTERNAL_LSTATNSLIST 1
 extern GUESTFS_DLL_PUBLIC struct guestfs_statns_list *guestfs_internal_lstatnslist (guestfs_h *g, const char *path, char *const *names);
 

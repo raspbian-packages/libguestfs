@@ -672,6 +672,9 @@ dispatch_incoming_message (XDR *xdr_in)
     case GUESTFS_PROC_INTERNAL_JOURNAL_GET:
       internal_journal_get_stub (xdr_in);
       break;
+    case GUESTFS_PROC_INTERNAL_LIST_RPM_APPLICATIONS:
+      internal_list_rpm_applications_stub (xdr_in);
+      break;
     case GUESTFS_PROC_INTERNAL_LSTATNSLIST:
       internal_lstatnslist_stub (xdr_in);
       break;

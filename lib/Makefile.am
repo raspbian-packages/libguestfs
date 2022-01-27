@@ -81,7 +81,6 @@ libguestfs_la_SOURCES = \
 	conn-socket.c \
 	copy-in-out.c \
 	create.c \
-	dbdump.c \
 	drives.c \
 	errors.c \
 	event-string.c \
@@ -137,7 +136,7 @@ libguestfs_la_CFLAGS = \
 	$(WARN_CFLAGS) $(WERROR_CFLAGS) \
 	$(RPC_CFLAGS) \
 	$(GCC_VISIBILITY_HIDDEN) \
-	$(PCRE_CFLAGS) \
+	$(PCRE2_CFLAGS) \
 	$(LIBVIRT_CFLAGS) \
 	$(LIBXML2_CFLAGS) \
 	$(JANSSON_CFLAGS)
@@ -148,7 +147,7 @@ libguestfs_la_LIBADD = \
 	../common/qemuopts/libqemuopts.la \
 	../common/structs/libstructs.la \
 	../common/utils/libutils.la \
-	$(PCRE_LIBS) \
+	$(PCRE2_LIBS) \
 	$(LIBVIRT_LIBS) $(LIBXML2_LIBS) \
 	$(SELINUX_LIBS) \
 	$(JANSSON_LIBS) \
@@ -236,7 +235,7 @@ stamp-guestfs.pod: guestfs.pod \
 		guestfs-actions.pod \
 		guestfs-availability.pod \
 		guestfs-structs.pod
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --section 3 \
 	  --man guestfs.3 \
 	  --html $(top_builddir)/website/guestfs.3.html \

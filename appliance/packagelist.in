@@ -26,9 +26,9 @@ ifelse(REDHAT,1,
   cryptsetup
   cryptsetup-luks      dnl old name used before Fedora 17
   dhclient
-  genisoimage
   gfs-utils
   gfs2-utils
+  glibc-gconv-extra    dnl syslinux requires IBM850 iconv converter
   grub
   hfsplus-tools
   iproute
@@ -41,6 +41,7 @@ ifelse(REDHAT,1,
   openssh-clients
   policycoreutils
   reiserfs-utils
+  rpm-libs
   syslinux-extlinux
   systemd              dnl for /sbin/reboot and udevd
   vim-minimal
@@ -57,7 +58,6 @@ dnl old name used in Jessie and earlier
   dash
   extlinux
   fdisk
-  genisoimage
 dnl gfs-tools, gfs2-tools have been renamed to gfs2-utils
   gfs-tools
   gfs2-tools
@@ -73,9 +73,11 @@ dnl iproute has been renamed to iproute2
   isc-dhcp-client
   ldmtool
   libc-bin
+  librpm9
   linux-image
   dnl syslinux 'suggests' mtools, but in reality it's a hard dependency:
   mtools
+  mount                     dnl util-linux subpackage containing mount cmd
   nilfs-tools
   ntfs-3g
   openssh-client
@@ -122,18 +124,18 @@ ifelse(SUSE,1,
   cryptsetup
   dhcpcd
   dhcp-client
-  genisoimage
   glibc-locale
   gptfdisk
   initviocons
   iproute2
   iputils
-  mkisofs
   ntfsprogs
   ntfs-3g
   reiserfs
   squashfs
+  sysconfig-netconfig
   systemd
+  systemd-sysvinit
   vim
   xz
 )
@@ -162,8 +164,6 @@ ifelse(FRUGALWARE,1,
 ifelse(MAGEIA,1,
   cryptsetup
   chkconfig /* for /etc/init.d */
-  cdrkit-genisoimage
-  cdrkit-isotools
   dhcp-client
   extlinux
   gfs2-utils
@@ -188,8 +188,6 @@ ifelse(MAGEIA,1,
 ifelse(OPENMANDRIVA,1,
   cryptsetup
   chkconfig /* for /etc/init.d */
-  cdrkit-genisoimage
-  cdrkit-isotools
   dhcp-client
   extlinux
   grub2

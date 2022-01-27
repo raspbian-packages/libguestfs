@@ -237,6 +237,7 @@ const char *function_names[] = {
   [372] = "internal_hot_remove_drive",
   [371] = "internal_hot_remove_drive_precheck",
   [408] = "internal_journal_get",
+  [510] = "internal_list_rpm_applications",
   [423] = "internal_lstatnslist",
   [205] = "internal_lxattrlist",
   [396] = "internal_parse_mountable",

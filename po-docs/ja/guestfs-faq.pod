@@ -107,7 +107,7 @@ There is a mailing list, mainly for development, but users are also welcome
 to ask questions about libguestfs and the virt tools:
 L<https://www.redhat.com/mailman/listinfo/libguestfs>
 
-You can also talk to us on IRC channel C<#libguestfs> on FreeNode.  We're
+You can also talk to us on IRC channel C<#guestfs> on Libera Chat.  We're
 not always around, so please stay in the channel after asking your question
 and someone will get back to you.
 
@@ -395,7 +395,7 @@ should contain:
 
  source localenv
  #export PATH=/tmp/qemu/x86_64-softmmu:$PATH
- ./autogen.sh --prefix /usr "$@"
+ ./configure --prefix /usr "$@"
 
 Make C<localconfigure> executable.
 
@@ -423,7 +423,7 @@ enough supermin installed, then see the previous question.
 If supermin 5 doesn't support your distro at all, you will need to use the
 "fixed appliance method" where you use a pre-compiled binary appliance.  To
 build libguestfs without supermin, you need to pass C<--disable-appliance
---disable-daemon> to either F<./autogen.sh> or F<./configure> (depending
+--disable-daemon> to either F<./configure> or F<./configure> (depending
 whether you are building respectively from git or from tarballs).  Then,
 when using libguestfs, you B<must> set the C<LIBGUESTFS_PATH> environment
 variable to the directory of a pre-compiled appliance, as also described in

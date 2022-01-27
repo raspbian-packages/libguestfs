@@ -3,18 +3,25 @@
    Inc.
    Written by Jim Meyering <meyering@ascend.com>, 1998.
 
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
-   (at your option) any later version.
+   (NB: I modified the original GPL boilerplate here to LGPLv2+.  This
+   is because of the weird way that gnulib uses licenses, where the
+   real license is covered in the modules/X file.  The real license
+   for this file is LGPLv2+, not GPL.  - RWMJ)
 
-   This program is distributed in the hope that it will be useful,
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+
+   This library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 /* A generic hash table package.  */
 
@@ -60,25 +67,20 @@ typedef struct hash_table Hash_table;
 /* Return the number of buckets in the hash table.  The table size, the total
    number of buckets (used plus unused), or the maximum number of slots, are
    the same quantity.  */
-extern size_t hash_get_n_buckets (const Hash_table *table)
-       _GL_ATTRIBUTE_PURE;
+extern size_t hash_get_n_buckets (const Hash_table *table);
 
 /* Return the number of slots in use (non-empty buckets).  */
-extern size_t hash_get_n_buckets_used (const Hash_table *table)
-       _GL_ATTRIBUTE_PURE;
+extern size_t hash_get_n_buckets_used (const Hash_table *table);
 
 /* Return the number of active entries.  */
-extern size_t hash_get_n_entries (const Hash_table *table)
-       _GL_ATTRIBUTE_PURE;
+extern size_t hash_get_n_entries (const Hash_table *table);
 
 /* Return the length of the longest chain (bucket).  */
-extern size_t hash_get_max_bucket_length (const Hash_table *table)
-       _GL_ATTRIBUTE_PURE;
+extern size_t hash_get_max_bucket_length (const Hash_table *table);
 
 /* Do a mild validation of a hash table, by traversing it and checking two
    statistics.  */
-extern bool hash_table_ok (const Hash_table *table)
-       _GL_ATTRIBUTE_PURE;
+extern bool hash_table_ok (const Hash_table *table);
 
 extern void hash_print_statistics (const Hash_table *table, FILE *stream);
 
@@ -98,8 +100,7 @@ extern void *hash_lookup (const Hash_table *table, const void *entry);
    removed has already been passed to hash_get_next.  */
 
 /* Return the first data in the table, or NULL if the table is empty.  */
-extern void *hash_get_first (const Hash_table *table)
-       _GL_ATTRIBUTE_PURE;
+extern void *hash_get_first (const Hash_table *table);
 
 /* Return the user data for the entry following ENTRY, where ENTRY has been
    returned by a previous call to either 'hash_get_first' or 'hash_get_next'.
@@ -130,8 +131,7 @@ extern size_t hash_do_for_each (const Hash_table *table,
 
 /* Return a hash index for a NUL-terminated STRING between 0 and N_BUCKETS-1.
    This is a convenience routine for constructing other hashing functions.  */
-extern size_t hash_string (const char *string, size_t n_buckets)
-       _GL_ATTRIBUTE_PURE;
+extern size_t hash_string (const char *string, size_t n_buckets);
 
 extern void hash_reset_tuning (Hash_tuning *tuning);
 
@@ -176,8 +176,7 @@ extern Hash_table *hash_initialize (size_t candidate,
                                     const Hash_tuning *tuning,
                                     Hash_hasher hasher,
                                     Hash_comparator comparator,
-                                    Hash_data_freer data_freer)
-       _GL_ATTRIBUTE_NODISCARD;
+                                    Hash_data_freer data_freer);
 
 /* Same as hash_initialize, but invokes xalloc_die on memory exhaustion.  */
 /* This function is defined by module 'xhash'.  */
@@ -185,8 +184,7 @@ extern Hash_table *hash_xinitialize (size_t candidate,
                                      const Hash_tuning *tuning,
                                      Hash_hasher hasher,
                                      Hash_comparator comparator,
-                                     Hash_data_freer data_freer)
-       _GL_ATTRIBUTE_NODISCARD;
+                                     Hash_data_freer data_freer);
 
 /* Make all buckets empty, placing any chained entries on the free list.
    Apply the user-specified function data_freer (if any) to the datas of any
@@ -210,16 +208,14 @@ extern void hash_free (Hash_table *table);
    those already in the table, before any other growth of the hash table size
    occurs.  If TUNING->IS_N_BUCKETS is true, then CANDIDATE specifies the
    exact number of buckets desired.  Return true iff the rehash succeeded.  */
-extern bool hash_rehash (Hash_table *table, size_t candidate)
-       _GL_ATTRIBUTE_NODISCARD;
+extern bool hash_rehash (Hash_table *table, size_t candidate);
 
 /* If ENTRY matches an entry already in the hash table, return the pointer
    to the entry from the table.  Otherwise, insert ENTRY and return ENTRY.
    Return NULL if the storage required for insertion cannot be allocated.
    This implementation does not support duplicate entries or insertion of
    NULL.  */
-extern void *hash_insert (Hash_table *table, const void *entry)
-       _GL_ATTRIBUTE_NODISCARD;
+extern void *hash_insert (Hash_table *table, const void *entry);
 
 /* Same as hash_insert, but invokes xalloc_die on memory exhaustion.  */
 /* This function is defined by module 'xhash'.  */
@@ -251,8 +247,7 @@ extern void *hash_remove (Hash_table *table, const void *entry);
 
 /* Same as hash_remove.  This interface is deprecated.
    FIXME: Remove in 2022.  */
-extern void *hash_delete (Hash_table *table, const void *entry)
-       _GL_ATTRIBUTE_DEPRECATED;
+extern void *hash_delete (Hash_table *table, const void *entry);
 
 # ifdef __cplusplus
 }

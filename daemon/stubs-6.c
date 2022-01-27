@@ -1265,6 +1265,27 @@ internal_feature_available_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_internal_feature_available_ret, (char *) &ret);
 }
 
+void
+internal_list_rpm_applications_stub (XDR *xdr_in)
+{
+  CLEANUP_FREE guestfs_int_application2_list *r = NULL;
+
+  if (optargs_bitmask != 0) {
+    reply_with_error ("header optargs_bitmask field must be passed as 0 for calls that don't take optional arguments");
+    return;
+  }
+
+  r = do_internal_list_rpm_applications ();
+  if (r == NULL)
+    /* do_internal_list_rpm_applications has already called reply_with_error */
+    return;
+
+  struct guestfs_internal_list_rpm_applications_ret ret;
+  ret.applications2 = *r;
+  reply ((xdrproc_t) xdr_guestfs_internal_list_rpm_applications_ret, (char *) &ret);
+  xdr_free ((xdrproc_t) xdr_guestfs_internal_list_rpm_applications_ret, (char *) &ret);
+}
+
 #ifdef HAVE_ATTRIBUTE_CLEANUP
 
 #define CLEANUP_XDR_FREE_INTERNAL_PARSE_MOUNTABLE_ARGS \

@@ -117,6 +117,188 @@ return_partition_list (value retv)
   return real_ret;
 }
 
+/* Implement RStruct ("application2", _). */
+static guestfs_int_application2 *
+return_application2 (value retv)
+{
+  CLEANUP_FREE_APPLICATION2 guestfs_int_application2 *ret = NULL;
+  guestfs_int_application2 *real_ret;
+  value v;
+
+  ret = calloc (1, sizeof (*ret));
+  if (ret == NULL) {
+    reply_with_perror ("calloc");
+    return NULL;
+  }
+
+  v = Field (retv, 0);
+  ret->app2_name = strdup (String_val (v));
+  if (ret->app2_name == NULL) return NULL;
+  v = Field (retv, 1);
+  ret->app2_display_name = strdup (String_val (v));
+  if (ret->app2_display_name == NULL) return NULL;
+  v = Field (retv, 2);
+  ret->app2_epoch = Int32_val (v);
+  v = Field (retv, 3);
+  ret->app2_version = strdup (String_val (v));
+  if (ret->app2_version == NULL) return NULL;
+  v = Field (retv, 4);
+  ret->app2_release = strdup (String_val (v));
+  if (ret->app2_release == NULL) return NULL;
+  v = Field (retv, 5);
+  ret->app2_arch = strdup (String_val (v));
+  if (ret->app2_arch == NULL) return NULL;
+  v = Field (retv, 6);
+  ret->app2_install_path = strdup (String_val (v));
+  if (ret->app2_install_path == NULL) return NULL;
+  v = Field (retv, 7);
+  ret->app2_trans_path = strdup (String_val (v));
+  if (ret->app2_trans_path == NULL) return NULL;
+  v = Field (retv, 8);
+  ret->app2_publisher = strdup (String_val (v));
+  if (ret->app2_publisher == NULL) return NULL;
+  v = Field (retv, 9);
+  ret->app2_url = strdup (String_val (v));
+  if (ret->app2_url == NULL) return NULL;
+  v = Field (retv, 10);
+  ret->app2_source_package = strdup (String_val (v));
+  if (ret->app2_source_package == NULL) return NULL;
+  v = Field (retv, 11);
+  ret->app2_summary = strdup (String_val (v));
+  if (ret->app2_summary == NULL) return NULL;
+  v = Field (retv, 12);
+  ret->app2_description = strdup (String_val (v));
+  if (ret->app2_description == NULL) return NULL;
+  v = Field (retv, 13);
+  ret->app2_spare1 = strdup (String_val (v));
+  if (ret->app2_spare1 == NULL) return NULL;
+  v = Field (retv, 14);
+  ret->app2_spare2 = strdup (String_val (v));
+  if (ret->app2_spare2 == NULL) return NULL;
+  v = Field (retv, 15);
+  ret->app2_spare3 = strdup (String_val (v));
+  if (ret->app2_spare3 == NULL) return NULL;
+  v = Field (retv, 16);
+  ret->app2_spare4 = strdup (String_val (v));
+  if (ret->app2_spare4 == NULL) return NULL;
+
+  real_ret = ret;
+  ret = NULL;
+  return real_ret;
+}
+
+/* Implement RStructList ("application2", _). */
+static guestfs_int_application2_list *
+return_application2_list (value retv)
+{
+  CLEANUP_FREE_APPLICATION2_LIST guestfs_int_application2_list *ret = NULL;
+  guestfs_int_application2_list *real_ret;
+  guestfs_int_application2 *r;
+  size_t i, len;
+  value v, rv;
+
+  /* Count the number of elements in the list. */
+  rv = retv;
+  len = 0;
+  while (rv != Val_int (0)) {
+    len++;
+    rv = Field (rv, 1);
+  }
+
+  ret = calloc (1, sizeof *ret);
+  if (ret == NULL) {
+    reply_with_perror ("calloc");
+    return NULL;
+  }
+  if (len > 0) {
+    ret->guestfs_int_application2_list_val =
+      calloc (len, sizeof (guestfs_int_application2));
+    if (ret->guestfs_int_application2_list_val == NULL) {
+      reply_with_perror ("calloc");
+      return NULL;
+    }
+    ret->guestfs_int_application2_list_len = len;
+  }
+
+  rv = retv;
+  for (i = 0; i < len; ++i) {
+    v = Field (rv, 0);
+    r = return_application2 (v);
+    if (r == NULL)
+      return NULL;
+    memcpy (&ret->guestfs_int_application2_list_val[i], r, sizeof (*r));
+    free (r);
+    rv = Field (rv, 1);
+  }
+
+  real_ret = ret;
+  ret = NULL;
+  return real_ret;
+}
+
+/* Implement RStruct ("isoinfo", _). */
+static guestfs_int_isoinfo *
+return_isoinfo (value retv)
+{
+  CLEANUP_FREE_ISOINFO guestfs_int_isoinfo *ret = NULL;
+  guestfs_int_isoinfo *real_ret;
+  value v;
+
+  ret = calloc (1, sizeof (*ret));
+  if (ret == NULL) {
+    reply_with_perror ("calloc");
+    return NULL;
+  }
+
+  v = Field (retv, 0);
+  ret->iso_system_id = strdup (String_val (v));
+  if (ret->iso_system_id == NULL) return NULL;
+  v = Field (retv, 1);
+  ret->iso_volume_id = strdup (String_val (v));
+  if (ret->iso_volume_id == NULL) return NULL;
+  v = Field (retv, 2);
+  ret->iso_volume_space_size = Int32_val (v);
+  v = Field (retv, 3);
+  ret->iso_volume_set_size = Int32_val (v);
+  v = Field (retv, 4);
+  ret->iso_volume_sequence_number = Int32_val (v);
+  v = Field (retv, 5);
+  ret->iso_logical_block_size = Int32_val (v);
+  v = Field (retv, 6);
+  ret->iso_volume_set_id = strdup (String_val (v));
+  if (ret->iso_volume_set_id == NULL) return NULL;
+  v = Field (retv, 7);
+  ret->iso_publisher_id = strdup (String_val (v));
+  if (ret->iso_publisher_id == NULL) return NULL;
+  v = Field (retv, 8);
+  ret->iso_data_preparer_id = strdup (String_val (v));
+  if (ret->iso_data_preparer_id == NULL) return NULL;
+  v = Field (retv, 9);
+  ret->iso_application_id = strdup (String_val (v));
+  if (ret->iso_application_id == NULL) return NULL;
+  v = Field (retv, 10);
+  ret->iso_copyright_file_id = strdup (String_val (v));
+  if (ret->iso_copyright_file_id == NULL) return NULL;
+  v = Field (retv, 11);
+  ret->iso_abstract_file_id = strdup (String_val (v));
+  if (ret->iso_abstract_file_id == NULL) return NULL;
+  v = Field (retv, 12);
+  ret->iso_bibliographic_file_id = strdup (String_val (v));
+  if (ret->iso_bibliographic_file_id == NULL) return NULL;
+  v = Field (retv, 13);
+  ret->iso_volume_creation_t = Int64_val (v);
+  v = Field (retv, 14);
+  ret->iso_volume_modification_t = Int64_val (v);
+  v = Field (retv, 15);
+  ret->iso_volume_expiration_t = Int64_val (v);
+  v = Field (retv, 16);
+  ret->iso_volume_effective_t = Int64_val (v);
+
+  real_ret = ret;
+  ret = NULL;
+  return real_ret;
+}
+
 /* Implement RStruct ("btrfssubvolume", _). */
 static guestfs_int_btrfssubvolume *
 return_btrfssubvolume (value retv)
@@ -1126,6 +1308,33 @@ do_inspect_os (void)
   CAMLreturnT (char **, ret); /* caller frees */
 }
 
+/* Wrapper for OCaml function ‘Rpm.internal_list_rpm_applications’. */
+guestfs_int_application2_list *
+do_internal_list_rpm_applications (void)
+{
+  static const value *cb = NULL;
+  CAMLparam0 ();
+  CAMLlocal2 (v, retv);
+  CAMLlocalN (args, 1);
+
+  if (cb == NULL)
+    cb = caml_named_value ("Rpm.internal_list_rpm_applications");
+
+  args[0] = Val_unit;
+  retv = caml_callbackN_exn (*cb, 1, args);
+
+  if (Is_exception_result (retv)) {
+    retv = Extract_exception (retv);
+    guestfs_int_daemon_exn_to_reply_with_error ("internal_list_rpm_applications", retv);
+    CAMLreturnT (void *, NULL);
+  }
+
+  guestfs_int_application2_list *ret =
+    return_application2_list (retv);
+  /* caller frees */
+  CAMLreturnT (guestfs_int_application2_list *, ret);
+}
+
 /* Wrapper for OCaml function ‘Is.is_dir’. */
 int
 do_is_dir (const char *path,
@@ -1236,6 +1445,60 @@ do_is_whole_device (const char *device)
   }
 
   CAMLreturnT (int, Bool_val (retv));
+}
+
+/* Wrapper for OCaml function ‘Isoinfo.isoinfo’. */
+guestfs_int_isoinfo *
+do_isoinfo (const char *isofile)
+{
+  static const value *cb = NULL;
+  CAMLparam0 ();
+  CAMLlocal2 (v, retv);
+  CAMLlocalN (args, 1);
+
+  if (cb == NULL)
+    cb = caml_named_value ("Isoinfo.isoinfo");
+
+  args[0] = caml_copy_string (isofile);
+  retv = caml_callbackN_exn (*cb, 1, args);
+
+  if (Is_exception_result (retv)) {
+    retv = Extract_exception (retv);
+    guestfs_int_daemon_exn_to_reply_with_error ("isoinfo", retv);
+    CAMLreturnT (void *, NULL);
+  }
+
+  guestfs_int_isoinfo *ret =
+    return_isoinfo (retv);
+  /* caller frees */
+  CAMLreturnT (guestfs_int_isoinfo *, ret);
+}
+
+/* Wrapper for OCaml function ‘Isoinfo.isoinfo_device’. */
+guestfs_int_isoinfo *
+do_isoinfo_device (const char *device)
+{
+  static const value *cb = NULL;
+  CAMLparam0 ();
+  CAMLlocal2 (v, retv);
+  CAMLlocalN (args, 1);
+
+  if (cb == NULL)
+    cb = caml_named_value ("Isoinfo.isoinfo_device");
+
+  args[0] = caml_copy_string (device);
+  retv = caml_callbackN_exn (*cb, 1, args);
+
+  if (Is_exception_result (retv)) {
+    retv = Extract_exception (retv);
+    guestfs_int_daemon_exn_to_reply_with_error ("isoinfo_device", retv);
+    CAMLreturnT (void *, NULL);
+  }
+
+  guestfs_int_isoinfo *ret =
+    return_isoinfo (retv);
+  /* caller frees */
+  CAMLreturnT (guestfs_int_isoinfo *, ret);
 }
 
 /* Wrapper for OCaml function ‘Devsparts.list_devices’. */

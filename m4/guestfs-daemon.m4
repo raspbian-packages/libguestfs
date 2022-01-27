@@ -102,6 +102,14 @@ PKG_CHECK_MODULES([HIVEX], [hivex],[
     [AC_MSG_FAILURE([hivex library is required])])
 AM_CONDITIONAL([HAVE_HIVEX],[test "x$HIVEX_LIBS" != "x"])
 
+dnl librpm library (optional)
+PKG_CHECK_MODULES([LIBRPM], [rpm >= 4.6.0],[
+    AC_SUBST([LIBRPM_CFLAGS])
+    AC_SUBST([LIBRPM_LIBS])
+    AC_DEFINE([HAVE_LIBRPM],[1],[librpm library found at compile time.])
+],[AC_MSG_WARN([librpm library not found])]
+)
+
 dnl systemd journal library (optional)
 PKG_CHECK_MODULES([SD_JOURNAL], [libsystemd],[
     AC_SUBST([SD_JOURNAL_CFLAGS])
@@ -126,15 +134,8 @@ AC_CHECK_LIB([tsk],[tsk_version_print],[
 ],[AC_MSG_WARN([The Sleuth Kit library (libtsk) not found])])
 
 dnl yara library (optional)
-PKG_CHECK_MODULES([YARA], [libyara],[
+PKG_CHECK_MODULES([YARA], [yara >= 4.0.0],[
     AC_SUBST([YARA_CFLAGS])
     AC_SUBST([YARA_LIBS])
     AC_DEFINE([HAVE_YARA],[1],[yara library found at compile time.])
-],[
-    AC_CHECK_LIB([yara],[yr_initialize],[
-        AC_CHECK_HEADER([yara.h],[
-            AC_SUBST([YARA_LIBS], [-lyara])
-            AC_DEFINE([HAVE_YARA], [1], [Define to 1 if Yara library is available.])
-        ], [])
-    ],[AC_MSG_WARN([Yara library not found])])
-])
+],[AC_MSG_WARN([Yara library not found])])

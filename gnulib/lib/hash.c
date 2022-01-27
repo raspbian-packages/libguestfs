@@ -4,18 +4,25 @@
 
    Written by Jim Meyering, 1992.
 
-   This program is free software: you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
-   (at your option) any later version.
+   (NB: I modified the original GPL boilerplate here to LGPLv2+.  This
+   is because of the weird way that gnulib uses licenses, where the
+   real license is covered in the modules/X file.  The real license
+   for this file is LGPLv2+, not GPL.  - RWMJ)
 
-   This program is distributed in the hope that it will be useful,
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+
+   This library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 /* A generic hash table package.  */
 
@@ -392,7 +399,7 @@ hash_string (const char *string, size_t n_buckets)
 /* Return true if CANDIDATE is a prime number.  CANDIDATE should be an odd
    number at least equal to 11.  */
 
-static bool _GL_ATTRIBUTE_CONST
+static bool
 is_prime (size_t candidate)
 {
   size_t divisor = 3;
@@ -411,7 +418,7 @@ is_prime (size_t candidate)
 /* Round a given CANDIDATE number up to the nearest prime, and return that
    prime.  Primes lower than 10 are merely skipped.  */
 
-static size_t _GL_ATTRIBUTE_CONST
+static size_t
 next_prime (size_t candidate)
 {
   /* Skip small primes.  */
@@ -492,7 +499,7 @@ check_tuning (Hash_table *table)
    TUNING, or return 0 if there is no possible way to allocate that
    many entries.  */
 
-static size_t _GL_ATTRIBUTE_PURE
+static size_t
 compute_bucket_size (size_t candidate, const Hash_tuning *tuning)
 {
   if (!tuning->is_n_buckets)

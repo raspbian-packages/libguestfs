@@ -23,6 +23,11 @@ equivalent in libvirt.  This returns:
 
 The literal string C<"host"> means use C<-cpu host>.
 
+=item C<"max">
+
+The literal string C<"max"> means use C<-cpu max> (the best possible).  This
+requires awkward translation for libvirt.
+
 =item some string
 
 Some string such as C<"cortex-a57"> means use C<-cpu cortex-a57>.
@@ -1022,7 +1027,7 @@ Used to cache the appliance features (see F<lib/available.c>).
    /* Lock acquired when entering any public guestfs_* function to
     * protect the handle.
     */
-   gl_recursive_lock_define (, lock);
+   pthread_mutex_t lock;
  
    /**** Configuration of the handle. ****/
    bool verbose;                 /* Debugging. */
@@ -1092,12 +1097,12 @@ Used to cache the appliance features (see F<lib/available.c>).
    char *int_cachedir; /* $LIBGUESTFS_CACHEDIR or guestfs_set_cachedir or NULL */
  
    /* Error handler, plus stack of old error handlers. */
-   gl_tls_key_t error_data;
+   pthread_key_t error_data;
  
    /* Linked list of error_data structures allocated for this handle,
     * plus a mutex to protect the linked list.
     */
-   gl_lock_define (, error_data_list_lock);
+   pthread_mutex_t error_data_list_lock;
    struct error_data *error_data_list;
  
    /* Out of memory error handler. */
@@ -2104,7 +2109,7 @@ successful match.
 
  int
  guestfs_int_version_from_x_y_re (guestfs_h *g, struct version *v,
-                                  const char *str, const pcre *re)
+                                  const char *str, const pcre2_code *re)
 
 Parses a version from a string, using the specified C<re> as regular
 expression which I<must> provide (at least) two matches.
@@ -2196,14 +2201,6 @@ The file must be a B<regular>, B<local>, B<trusted> file.  In particular, do
 not use this function to read files that might be under control of an
 untrusted user since that will lead to a denial-of-service attack.
 
-=head2 Subdirectory F<builder>
-
-=head3 File F<builder/index-parser-c.c>
-
-This file handles the interface between the C/lex/yacc index file parser,
-and the OCaml world.  See F<builder/index_parser.ml> for the OCaml type
-definition.
-
 =head2 Subdirectory F<common/edit>
 
 =head3 File F<common/edit/file-edit.c>
@@ -2244,12 +2241,6 @@ If C<backup_extension> is not null, then a copy of C<filename> is saved with
 C<backup_extension> appended to its file name.
 
 Returns C<-1> for failure, C<0> on success.
-
-=head2 Subdirectory F<common/mlxml>
-
-=head3 File F<common/mlxml/xml-c.c>
-
-Mini interface to libxml2.
 
 =head2 Subdirectory F<common/options>
 
@@ -3361,6 +3352,20 @@ This function sets C<errno> and returns C<NULL> on error.
  guestfs_int_hexdump (const void *data, size_t len, FILE *fp)
 
 Hexdump a block of memory to C<FILE *>, used for debugging.
+
+=head4 Function C<common/utils/utils.c:guestfs_int_strerror>
+
+ const char *
+ guestfs_int_strerror (int errnum, char *buf, size_t buflen)
+
+Thread-safe strerror_r.
+
+This is a wrapper around the two variants of L<strerror_r(3)> in glibc since
+it is hard to use correctly (RHBZ#2030396).
+
+The buffer passed in should be large enough to store the error message (256
+chars at least) and should be non-static.  Note that the buffer might not be
+used, use the return value.
 
 =head2 Subdirectory F<common/visit>
 

@@ -29441,6 +29441,9 @@ guestfs_session_write_file (GuestfsSession *session, const gchar *path, const gc
  * modified using the guestfs_session_xfs_info() and
  * guestfs_session_xfs_growfs() calls.
  * 
+ * Beginning with XFS version 5, it is no longer possible to modify the
+ * lazy-counters setting (ie. @lazycounter parameter has no effect).
+ * 
  * This function depends on the feature "xfs".
  * See also guestfs_session_feature_available().
  *

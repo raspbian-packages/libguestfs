@@ -33,7 +33,7 @@ noinst_DATA = $(top_builddir)/website/guestfs-ocaml.3.html
 guestfs-ocaml.3 $(top_builddir)/website/guestfs-ocaml.3.html: stamp-guestfs-ocaml.pod
 
 stamp-guestfs-ocaml.pod: guestfs-ocaml.pod create_disk.ml inspect_vm.ml
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --section 3 \
 	  --man guestfs-ocaml.3 \
 	  --html $(top_builddir)/website/guestfs-ocaml.3.html \

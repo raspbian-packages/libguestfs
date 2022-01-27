@@ -79,7 +79,7 @@ struct optgroup optgroups[] = {
 /* Wrappers so these functions can be called from OCaml code. */
 extern value guestfs_int_daemon_optgroup_acl_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_acl_available (value unitv)
 {
@@ -88,7 +88,7 @@ guestfs_int_daemon_optgroup_acl_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_blkdiscard_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_blkdiscard_available (value unitv)
 {
@@ -97,7 +97,7 @@ guestfs_int_daemon_optgroup_blkdiscard_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_blkdiscardzeroes_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_blkdiscardzeroes_available (value unitv)
 {
@@ -106,7 +106,7 @@ guestfs_int_daemon_optgroup_blkdiscardzeroes_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_btrfs_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_btrfs_available (value unitv)
 {
@@ -115,7 +115,7 @@ guestfs_int_daemon_optgroup_btrfs_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_extlinux_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_extlinux_available (value unitv)
 {
@@ -124,7 +124,7 @@ guestfs_int_daemon_optgroup_extlinux_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_f2fs_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_f2fs_available (value unitv)
 {
@@ -133,7 +133,7 @@ guestfs_int_daemon_optgroup_f2fs_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_fstrim_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_fstrim_available (value unitv)
 {
@@ -142,7 +142,7 @@ guestfs_int_daemon_optgroup_fstrim_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_gdisk_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_gdisk_available (value unitv)
 {
@@ -151,7 +151,7 @@ guestfs_int_daemon_optgroup_gdisk_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_grub_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_grub_available (value unitv)
 {
@@ -160,7 +160,7 @@ guestfs_int_daemon_optgroup_grub_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_hivex_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_hivex_available (value unitv)
 {
@@ -169,7 +169,7 @@ guestfs_int_daemon_optgroup_hivex_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_inotify_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_inotify_available (value unitv)
 {
@@ -178,7 +178,7 @@ guestfs_int_daemon_optgroup_inotify_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_journal_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_journal_available (value unitv)
 {
@@ -187,7 +187,7 @@ guestfs_int_daemon_optgroup_journal_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_ldm_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_ldm_available (value unitv)
 {
@@ -196,7 +196,7 @@ guestfs_int_daemon_optgroup_ldm_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_libtsk_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_libtsk_available (value unitv)
 {
@@ -205,7 +205,7 @@ guestfs_int_daemon_optgroup_libtsk_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_libyara_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_libyara_available (value unitv)
 {
@@ -214,7 +214,7 @@ guestfs_int_daemon_optgroup_libyara_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_linuxcaps_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_linuxcaps_available (value unitv)
 {
@@ -223,7 +223,7 @@ guestfs_int_daemon_optgroup_linuxcaps_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_linuxfsuuid_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_linuxfsuuid_available (value unitv)
 {
@@ -232,7 +232,7 @@ guestfs_int_daemon_optgroup_linuxfsuuid_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_linuxmodules_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_linuxmodules_available (value unitv)
 {
@@ -241,7 +241,7 @@ guestfs_int_daemon_optgroup_linuxmodules_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_linuxxattrs_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_linuxxattrs_available (value unitv)
 {
@@ -250,7 +250,7 @@ guestfs_int_daemon_optgroup_linuxxattrs_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_luks_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_luks_available (value unitv)
 {
@@ -259,7 +259,7 @@ guestfs_int_daemon_optgroup_luks_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_lvm2_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_lvm2_available (value unitv)
 {
@@ -268,7 +268,7 @@ guestfs_int_daemon_optgroup_lvm2_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_mdadm_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_mdadm_available (value unitv)
 {
@@ -277,7 +277,7 @@ guestfs_int_daemon_optgroup_mdadm_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_mknod_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_mknod_available (value unitv)
 {
@@ -286,7 +286,7 @@ guestfs_int_daemon_optgroup_mknod_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_ntfs3g_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_ntfs3g_available (value unitv)
 {
@@ -295,7 +295,7 @@ guestfs_int_daemon_optgroup_ntfs3g_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_ntfsprogs_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_ntfsprogs_available (value unitv)
 {
@@ -304,7 +304,7 @@ guestfs_int_daemon_optgroup_ntfsprogs_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_rsync_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_rsync_available (value unitv)
 {
@@ -313,7 +313,7 @@ guestfs_int_daemon_optgroup_rsync_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_scrub_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_scrub_available (value unitv)
 {
@@ -322,7 +322,7 @@ guestfs_int_daemon_optgroup_scrub_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_selinux_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_selinux_available (value unitv)
 {
@@ -331,7 +331,7 @@ guestfs_int_daemon_optgroup_selinux_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_selinuxrelabel_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_selinuxrelabel_available (value unitv)
 {
@@ -340,7 +340,7 @@ guestfs_int_daemon_optgroup_selinuxrelabel_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_sleuthkit_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_sleuthkit_available (value unitv)
 {
@@ -349,7 +349,7 @@ guestfs_int_daemon_optgroup_sleuthkit_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_squashfs_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_squashfs_available (value unitv)
 {
@@ -358,7 +358,7 @@ guestfs_int_daemon_optgroup_squashfs_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_syslinux_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_syslinux_available (value unitv)
 {
@@ -367,7 +367,7 @@ guestfs_int_daemon_optgroup_syslinux_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_wipefs_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_wipefs_available (value unitv)
 {
@@ -376,7 +376,7 @@ guestfs_int_daemon_optgroup_wipefs_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_xfs_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_xfs_available (value unitv)
 {
@@ -385,7 +385,7 @@ guestfs_int_daemon_optgroup_xfs_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_xz_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_xz_available (value unitv)
 {
@@ -394,7 +394,7 @@ guestfs_int_daemon_optgroup_xz_available (value unitv)
 
 extern value guestfs_int_daemon_optgroup_zerofree_available (value);
 
-/* NB: This is a "noalloc" call. */
+/* NB: This is a [@@noalloc] call. */
 value
 guestfs_int_daemon_optgroup_zerofree_available (value unitv)
 {

@@ -15323,6 +15323,9 @@ filesystems before this call can modify parameters.
 Some of the parameters of a mounted filesystem can be examined and modified
 using the C<guestfs_xfs_info> and C<guestfs_xfs_growfs> calls.
 
+Beginning with XFS version 5, it is no longer possible to modify the
+lazy-counters setting (ie. C<lazycounter> parameter has no effect).
+
 この関数は、成功のとき 0 を、エラーのとき -1 を返します。
 
 This function depends on the feature C<xfs>.  See also

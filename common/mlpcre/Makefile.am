@@ -56,6 +56,7 @@ libmlpcre_a_CPPFLAGS = \
 	-I$(top_srcdir)/common/utils -I$(top_builddir)/common/utils \
 	-I$(shell $(OCAMLC) -where)
 libmlpcre_a_CFLAGS = \
+	-pthread \
 	$(WARN_CFLAGS) $(WERROR_CFLAGS) \
 	-fPIC
 
@@ -83,7 +84,7 @@ libmlpcre_a_DEPENDENCIES = $(OBJECTS)
 
 $(MLPCRE_CMA): $(OBJECTS) libmlpcre.a
 	$(OCAMLFIND) mklib $(OCAMLPACKAGES) \
-	    $(OBJECTS) $(libmlpcre_a_OBJECTS) -cclib -lpcre -o mlpcre
+	    $(OBJECTS) $(libmlpcre_a_OBJECTS) -cclib -lpcre2-8 -o mlpcre
 
 # Tests.
 
@@ -108,7 +109,7 @@ pcre_tests_DEPENDENCIES = \
 	$(top_builddir)/ocaml-link.sh
 pcre_tests_LINK = \
 	$(top_builddir)/ocaml-link.sh \
-	  -cclib '-lutils -lpcre -lgnu' -- \
+	  -cclib '-pthread -lpthread -lutils -lpcre2-8 -lgnu' -- \
 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
 	  $(pcre_tests_THEOBJECTS) -o $@

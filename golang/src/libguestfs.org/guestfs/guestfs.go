@@ -36,6 +36,40 @@ _go_guestfs_create_flags (unsigned flags)
 {
     return guestfs_create_flags (flags);
 }
+
+// Passing a Go pointer to C via CGo is allowed, but the memory that points to
+// is not allowed to contain further Go pointers. The helper functions below
+// are one way to implement this, although the same can be achieved purely in
+// Go as well. See the discussion here:
+// <https://listman.redhat.com/archives/libguestfs/2021-September/msg00101.html>.
+typedef char *pChar;
+
+pChar *allocStringArray (size_t nmemb)
+{
+    pChar *array;
+
+    array = malloc (sizeof (pChar) * (nmemb + 1));
+    array[nmemb] = NULL;
+    return array;
+}
+
+void storeString (pChar *array, size_t idx, pChar string)
+{
+    array[idx] = string;
+}
+
+void freeStringArray (pChar *array)
+{
+    pChar *position;
+    pChar string;
+
+    position = array;
+    while ((string = *position) != NULL) {
+      free (string);
+      position++;
+    }
+    free (array);
+}
 */
 import "C"
 
@@ -132,12 +166,11 @@ func (g *Guestfs) Close () *GuestfsError {
  * C strings and golang []string.
  */
 func arg_string_list (xs []string) **C.char {
-    r := make ([]*C.char, 1 + len (xs))
+    r := C.allocStringArray (C.size_t (len (xs)))
     for i, x := range xs {
-        r[i] = C.CString (x)
+        C.storeString (r, C.size_t (i), C.CString (x));
     }
-    r[len (xs)] = nil
-    return &r[0]
+    return (**C.char) (r)
 }
 
 func count_string_list (argv **C.char) int {
@@ -151,11 +184,7 @@ func count_string_list (argv **C.char) int {
 }
 
 func free_string_list (argv **C.char) {
-    for *argv != nil {
-        //C.free (*argv)
-        argv = (**C.char) (unsafe.Pointer (uintptr (unsafe.Pointer (argv)) +
-                                           unsafe.Sizeof (*argv)))
-    }
+    C.freeStringArray ((*C.pChar) (argv))
 }
 
 func return_string_list (argv **C.char) []string {
@@ -4942,7 +4971,7 @@ func (g *Guestfs) Get_append () (*string, error) {
 
     r := C.guestfs_get_append (g.g)
     if r != nil {
-        r_s := string (*r)
+        r_s := string (rune (*r))
         return &r_s, nil
     } else {
         return nil, nil
@@ -7317,7 +7346,7 @@ func (g *Guestfs) Internal_test_rconstoptstring (val string) (*string, error) {
 
     r := C.guestfs_internal_test_rconstoptstring (g.g, c_val)
     if r != nil {
-        r_s := string (*r)
+        r_s := string (rune (*r))
         return &r_s, nil
     } else {
         return nil, nil
@@ -7332,7 +7361,7 @@ func (g *Guestfs) Internal_test_rconstoptstringerr () (*string, error) {
 
     r := C.guestfs_internal_test_rconstoptstringerr (g.g)
     if r != nil {
-        r_s := string (*r)
+        r_s := string (rune (*r))
         return &r_s, nil
     } else {
         return nil, nil

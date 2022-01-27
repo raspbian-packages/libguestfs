@@ -772,6 +772,7 @@ parse_capabilities (guestfs_h *g, const char *capabilities_xml,
   xmlAttrPtr attr;
   size_t seen_qemu, seen_kvm;
   int force_tcg;
+  int force_kvm;
 
   doc = xmlReadMemory (capabilities_xml, strlen (capabilities_xml),
                        NULL, NULL, XML_PARSE_NONET);
@@ -819,11 +820,15 @@ parse_capabilities (guestfs_h *g, const char *capabilities_xml,
     }
   }
 
+  force_kvm = guestfs_int_get_backend_setting_bool (g, "force_kvm");
+  if (force_kvm == -1)
+    return -1;
+
   /* This was RHBZ#886915: in that case the default libvirt URI
    * pointed to a Xen hypervisor, and so could not create the
    * appliance VM.
    */
-  if (!seen_qemu && !seen_kvm) {
+  if ((!seen_qemu || force_kvm) && !seen_kvm) {
     CLEANUP_FREE char *backend = guestfs_get_backend (g);
 
     error (g,
@@ -844,6 +849,14 @@ parse_capabilities (guestfs_h *g, const char *capabilities_xml,
   force_tcg = guestfs_int_get_backend_setting_bool (g, "force_tcg");
   if (force_tcg == -1)
     return -1;
+
+  if (force_kvm && force_tcg) {
+    error (g, "Both force_kvm and force_tcg backend settings supplied.");
+    return -1;
+  }
+
+  /* if force_kvm then seen_kvm */
+  assert (!force_kvm || seen_kvm);
 
   if (!force_tcg)
     data->is_kvm = seen_kvm;
@@ -1169,6 +1182,10 @@ construct_libvirt_xml_cpu (guestfs_h *g,
           attribute ("fallback", "allow");
         } end_element ();
       }
+      else if (STREQ (cpu_model, "max")) {
+        /* https://bugzilla.redhat.com/show_bug.cgi?id=1935572#c11 */
+        attribute ("mode", "maximum");
+      }
       else
         single_element ("model", cpu_model);
     } end_element ();
@@ -1395,6 +1412,28 @@ construct_libvirt_xml_devices (guestfs_h *g,
         attribute ("name", "org.libguestfs.channel.0");
       } end_element ();
     } end_element ();
+
+    /* Virtio-net NIC with SLIRP (= userspace) back-end, if networking is
+     * enabled. Starting with libvirt 3.8.0, we can specify the network address
+     * and prefix for SLIRP in the domain XML. Therefore, we can add the NIC
+     * via the standard <interface> element rather than <qemu:commandline>, and
+     * so libvirt can manage the PCI address of the virtio-net NIC like the PCI
+     * addresses of all other devices. Refer to RHBZ#2034160.
+     */
+    if (g->enable_network &&
+        guestfs_int_version_ge (&params->data->libvirt_version, 3, 8, 0)) {
+      start_element ("interface") {
+        attribute ("type", "user");
+        start_element ("model") {
+          attribute ("type", "virtio");
+        } end_element ();
+        start_element ("ip") {
+          attribute ("family", "ipv4");
+          attribute ("address", NETWORK_ADDRESS);
+          attribute ("prefix", NETWORK_PREFIX);
+        } end_element ();
+      } end_element ();
+    }
 
     /* Libvirt adds some devices by default.  Indicate to libvirt
      * that we don't want them.
@@ -1818,15 +1857,17 @@ construct_libvirt_xml_qemu_cmdline (guestfs_h *g,
     } end_element ();
 
     /* Workaround because libvirt user networking cannot specify "net="
-     * parameter.
+     * parameter. Necessary only before libvirt 3.8.0; refer to RHBZ#2034160.
      */
-    if (g->enable_network) {
+    if (g->enable_network &&
+        !guestfs_int_version_ge (&params->data->libvirt_version, 3, 8, 0)) {
       start_element ("qemu:arg") {
         attribute ("value", "-netdev");
       } end_element ();
 
       start_element ("qemu:arg") {
-        attribute ("value", "user,id=usernet,net=169.254.0.0/16");
+        attribute ("value",
+                   "user,id=usernet,net=" NETWORK_ADDRESS "/" NETWORK_PREFIX);
       } end_element ();
 
       start_element ("qemu:arg") {
@@ -1834,7 +1875,9 @@ construct_libvirt_xml_qemu_cmdline (guestfs_h *g,
       } end_element ();
 
       start_element ("qemu:arg") {
-        attribute ("value", VIRTIO_DEVICE_NAME ("virtio-net") ",netdev=usernet");
+        attribute ("value", (VIRTIO_DEVICE_NAME ("virtio-net")
+                             ",netdev=usernet"
+                             VIRTIO_NET_PCI_ADDR));
       } end_element ();
     }
 

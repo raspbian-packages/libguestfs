@@ -2188,6 +2188,9 @@ struct command_entry xfs_admin_cmd_entry = {
           "    Some of the parameters of a mounted filesystem can be examined and\n"
           "    modified using the \"xfs_info\" and \"xfs_growfs\" calls.\n"
           "\n"
+          "    Beginning with XFS version 5, it is no longer possible to modify the\n"
+          "    lazy-counters setting (ie. \"lazycounter\" parameter has no effect).\n"
+          "\n"
           "",
   .synopsis = "xfs-admin device [extunwritten:true|false] [imgfile:true|false] [v2log:true|false] [projid32bit:true|false] [lazycounter:true|false] [label:..] [uuid:..]",
   .run = run_xfs_admin

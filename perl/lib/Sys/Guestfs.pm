@@ -9062,6 +9062,9 @@ Some of the parameters of a mounted filesystem can be examined
 and modified using the C<$g-E<gt>xfs_info> and
 C<$g-E<gt>xfs_growfs> calls.
 
+Beginning with XFS version 5, it is no longer possible to modify
+the lazy-counters setting (ie. C<lazycounter> parameter has no effect).
+
 This function depends on the feature C<xfs>.  See also
 C<$g-E<gt>feature-available>.
 

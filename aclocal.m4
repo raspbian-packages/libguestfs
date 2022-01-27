@@ -14,8 +14,8 @@
 m4_ifndef([AC_CONFIG_MACRO_DIRS], [m4_defun([_AM_CONFIG_MACRO_DIRS], [])m4_defun([AC_CONFIG_MACRO_DIRS], [_AM_CONFIG_MACRO_DIRS($@)])])
 m4_ifndef([AC_AUTOCONF_VERSION],
   [m4_copy([m4_PACKAGE_VERSION], [AC_AUTOCONF_VERSION])])dnl
-m4_if(m4_defn([AC_AUTOCONF_VERSION]), [2.69],,
-[m4_warning([this file was generated for autoconf 2.69.
+m4_if(m4_defn([AC_AUTOCONF_VERSION]), [2.71],,
+[m4_warning([this file was generated for autoconf 2.71.
 You have another version of autoconf.  It may work, but is not guaranteed to.
 If you have problems, you may need to regenerate the build system entirely.
 To do so, use the procedure documented by the package, typically 'autoreconf'.])])
@@ -1370,6 +1370,72 @@ size_t iconv();
        ICONV_CONST="const"
      fi
     ])
+])
+
+# intlmacosx.m4 serial 8 (gettext-0.20.2)
+dnl Copyright (C) 2004-2014, 2016, 2019-2020 Free Software Foundation, Inc.
+dnl This file is free software; the Free Software Foundation
+dnl gives unlimited permission to copy and/or distribute it,
+dnl with or without modifications, as long as this notice is preserved.
+dnl
+dnl This file can be used in projects which are not available under
+dnl the GNU General Public License or the GNU Lesser General Public
+dnl License but which still want to provide support for the GNU gettext
+dnl functionality.
+dnl Please note that the actual code of the GNU gettext library is covered
+dnl by the GNU Lesser General Public License, and the rest of the GNU
+dnl gettext package is covered by the GNU General Public License.
+dnl They are *not* in the public domain.
+
+dnl Checks for special options needed on Mac OS X.
+dnl Defines INTL_MACOSX_LIBS.
+AC_DEFUN([gt_INTL_MACOSX],
+[
+  dnl Check for API introduced in Mac OS X 10.4.
+  AC_CACHE_CHECK([for CFPreferencesCopyAppValue],
+    [gt_cv_func_CFPreferencesCopyAppValue],
+    [gt_save_LIBS="$LIBS"
+     LIBS="$LIBS -Wl,-framework -Wl,CoreFoundation"
+     AC_LINK_IFELSE(
+       [AC_LANG_PROGRAM(
+          [[#include <CoreFoundation/CFPreferences.h>]],
+          [[CFPreferencesCopyAppValue(NULL, NULL)]])],
+       [gt_cv_func_CFPreferencesCopyAppValue=yes],
+       [gt_cv_func_CFPreferencesCopyAppValue=no])
+     LIBS="$gt_save_LIBS"])
+  if test $gt_cv_func_CFPreferencesCopyAppValue = yes; then
+    AC_DEFINE([HAVE_CFPREFERENCESCOPYAPPVALUE], [1],
+      [Define to 1 if you have the Mac OS X function CFPreferencesCopyAppValue in the CoreFoundation framework.])
+  fi
+  dnl Don't check for the API introduced in Mac OS X 10.5, CFLocaleCopyCurrent,
+  dnl because in macOS 10.13.4 it has the following behaviour:
+  dnl When two or more languages are specified in the
+  dnl "System Preferences > Language & Region > Preferred Languages" panel,
+  dnl it returns en_CC where CC is the territory (even when English is not among
+  dnl the preferred languages!).  What we want instead is what
+  dnl CFLocaleCopyCurrent returned in earlier macOS releases and what
+  dnl CFPreferencesCopyAppValue still returns, namely ll_CC where ll is the
+  dnl first among the preferred languages and CC is the territory.
+  AC_CACHE_CHECK([for CFLocaleCopyPreferredLanguages], [gt_cv_func_CFLocaleCopyPreferredLanguages],
+    [gt_save_LIBS="$LIBS"
+     LIBS="$LIBS -Wl,-framework -Wl,CoreFoundation"
+     AC_LINK_IFELSE(
+       [AC_LANG_PROGRAM(
+          [[#include <CoreFoundation/CFLocale.h>]],
+          [[CFLocaleCopyPreferredLanguages();]])],
+       [gt_cv_func_CFLocaleCopyPreferredLanguages=yes],
+       [gt_cv_func_CFLocaleCopyPreferredLanguages=no])
+     LIBS="$gt_save_LIBS"])
+  if test $gt_cv_func_CFLocaleCopyPreferredLanguages = yes; then
+    AC_DEFINE([HAVE_CFLOCALECOPYPREFERREDLANGUAGES], [1],
+      [Define to 1 if you have the Mac OS X function CFLocaleCopyPreferredLanguages in the CoreFoundation framework.])
+  fi
+  INTL_MACOSX_LIBS=
+  if test $gt_cv_func_CFPreferencesCopyAppValue = yes \
+     || test $gt_cv_func_CFLocaleCopyPreferredLanguages = yes; then
+    INTL_MACOSX_LIBS="-Wl,-framework -Wl,CoreFoundation"
+  fi
+  AC_SUBST([INTL_MACOSX_LIBS])
 ])
 
 # lib-ld.m4 serial 9
@@ -4698,261 +4764,12 @@ AC_SUBST([am__tar])
 AC_SUBST([am__untar])
 ]) # _AM_PROG_TAR
 
-m4_include([m4/00gnulib.m4])
-m4_include([m4/__inline.m4])
-m4_include([m4/absolute-header.m4])
-m4_include([m4/accept4.m4])
-m4_include([m4/access.m4])
-m4_include([m4/alloca.m4])
-m4_include([m4/arpa_inet_h.m4])
-m4_include([m4/asm-underscore.m4])
-m4_include([m4/base64.m4])
-m4_include([m4/btowc.m4])
-m4_include([m4/builtin-expect.m4])
-m4_include([m4/byteswap.m4])
-m4_include([m4/chdir-long.m4])
-m4_include([m4/clock_time.m4])
-m4_include([m4/close.m4])
-m4_include([m4/closedir.m4])
-m4_include([m4/codeset.m4])
-m4_include([m4/creat.m4])
-m4_include([m4/ctype.m4])
-m4_include([m4/d-type.m4])
-m4_include([m4/dirent_h.m4])
-m4_include([m4/dirfd.m4])
-m4_include([m4/double-slash-root.m4])
-m4_include([m4/dup.m4])
-m4_include([m4/dup2.m4])
-m4_include([m4/eaccess.m4])
-m4_include([m4/eealloc.m4])
-m4_include([m4/environ.m4])
-m4_include([m4/errno_h.m4])
-m4_include([m4/error.m4])
-m4_include([m4/exponentd.m4])
-m4_include([m4/extensions.m4])
-m4_include([m4/extern-inline.m4])
-m4_include([m4/fatal-signal.m4])
-m4_include([m4/fchdir.m4])
-m4_include([m4/fcntl-o.m4])
-m4_include([m4/fcntl.m4])
-m4_include([m4/fcntl_h.m4])
-m4_include([m4/fdopen.m4])
-m4_include([m4/filenamecat.m4])
-m4_include([m4/findprog-in.m4])
-m4_include([m4/flexmember.m4])
-m4_include([m4/float_h.m4])
-m4_include([m4/fnmatch.m4])
-m4_include([m4/fnmatch_h.m4])
-m4_include([m4/fpending.m4])
-m4_include([m4/fpieee.m4])
-m4_include([m4/fstat.m4])
-m4_include([m4/fstatat.m4])
-m4_include([m4/ftruncate.m4])
-m4_include([m4/futimens.m4])
-m4_include([m4/getcwd.m4])
-m4_include([m4/getdelim.m4])
-m4_include([m4/getdtablesize.m4])
-m4_include([m4/getline.m4])
-m4_include([m4/getlogin.m4])
-m4_include([m4/getlogin_r.m4])
-m4_include([m4/getopt.m4])
-m4_include([m4/getpagesize.m4])
-m4_include([m4/getprogname.m4])
-m4_include([m4/getrandom.m4])
-m4_include([m4/gettime.m4])
-m4_include([m4/gettimeofday.m4])
-m4_include([m4/glob.m4])
-m4_include([m4/glob_h.m4])
-m4_include([m4/gnulib-common.m4])
-m4_include([m4/gnulib-comp.m4])
-m4_include([m4/guestfs-find-db-tool.m4])
 m4_include([m4/guestfs-ocaml-gettext.m4])
-m4_include([m4/human.m4])
-m4_include([m4/include_next.m4])
-m4_include([m4/inet_pton.m4])
-m4_include([m4/intl-thread-locale.m4])
-m4_include([m4/intlmacosx.m4])
-m4_include([m4/intmax_t.m4])
 m4_include([m4/introspection.m4])
-m4_include([m4/inttostr.m4])
-m4_include([m4/inttypes.m4])
-m4_include([m4/inttypes_h.m4])
-m4_include([m4/ioctl.m4])
-m4_include([m4/isblank.m4])
-m4_include([m4/langinfo_h.m4])
-m4_include([m4/largefile.m4])
-m4_include([m4/lcmessage.m4])
 m4_include([m4/libtool.m4])
-m4_include([m4/limits-h.m4])
-m4_include([m4/localcharset.m4])
-m4_include([m4/locale-fr.m4])
-m4_include([m4/locale-ja.m4])
-m4_include([m4/locale-tr.m4])
-m4_include([m4/locale-zh.m4])
-m4_include([m4/locale_h.m4])
-m4_include([m4/localeconv.m4])
-m4_include([m4/localename.m4])
-m4_include([m4/lock.m4])
-m4_include([m4/lseek.m4])
-m4_include([m4/lstat.m4])
 m4_include([m4/ltoptions.m4])
 m4_include([m4/ltsugar.m4])
 m4_include([m4/ltversion.m4])
 m4_include([m4/lt~obsolete.m4])
-m4_include([m4/malloc.m4])
-m4_include([m4/malloca.m4])
-m4_include([m4/manywarnings.m4])
-m4_include([m4/mbrtowc.m4])
-m4_include([m4/mbsinit.m4])
-m4_include([m4/mbsrtowcs.m4])
-m4_include([m4/mbstate_t.m4])
-m4_include([m4/mbtowc.m4])
-m4_include([m4/memchr.m4])
-m4_include([m4/memmem.m4])
-m4_include([m4/mempcpy.m4])
-m4_include([m4/memrchr.m4])
-m4_include([m4/minmax.m4])
-m4_include([m4/mkdir.m4])
-m4_include([m4/mkdtemp.m4])
-m4_include([m4/mkstemps.m4])
-m4_include([m4/mmap-anon.m4])
-m4_include([m4/mode_t.m4])
-m4_include([m4/msvc-inval.m4])
-m4_include([m4/msvc-nothrow.m4])
-m4_include([m4/multiarch.m4])
-m4_include([m4/musl.m4])
-m4_include([m4/nanosleep.m4])
-m4_include([m4/netdb_h.m4])
-m4_include([m4/netinet_in_h.m4])
-m4_include([m4/nocrash.m4])
-m4_include([m4/nonblocking.m4])
 m4_include([m4/ocaml.m4])
-m4_include([m4/off_t.m4])
-m4_include([m4/open-cloexec.m4])
-m4_include([m4/open-slash.m4])
-m4_include([m4/open.m4])
-m4_include([m4/openat.m4])
-m4_include([m4/opendir.m4])
-m4_include([m4/pathmax.m4])
-m4_include([m4/perror.m4])
-m4_include([m4/pid_t.m4])
-m4_include([m4/pipe.m4])
-m4_include([m4/pipe2.m4])
-m4_include([m4/posix_spawn.m4])
-m4_include([m4/pread.m4])
-m4_include([m4/printf.m4])
-m4_include([m4/priv-set.m4])
-m4_include([m4/pthread-thread.m4])
-m4_include([m4/pthread_h.m4])
-m4_include([m4/pthread_rwlock_rdlock.m4])
-m4_include([m4/pthread_sigmask.m4])
-m4_include([m4/putenv.m4])
-m4_include([m4/quote.m4])
-m4_include([m4/quotearg.m4])
-m4_include([m4/raise.m4])
-m4_include([m4/rawmemchr.m4])
-m4_include([m4/read.m4])
-m4_include([m4/readdir.m4])
-m4_include([m4/readlink.m4])
-m4_include([m4/readlinkat.m4])
-m4_include([m4/realloc.m4])
-m4_include([m4/rmdir.m4])
-m4_include([m4/safe-read.m4])
-m4_include([m4/safe-write.m4])
-m4_include([m4/save-cwd.m4])
-m4_include([m4/sched_h.m4])
-m4_include([m4/select.m4])
-m4_include([m4/semaphore.m4])
-m4_include([m4/setenv.m4])
-m4_include([m4/setlocale.m4])
-m4_include([m4/setlocale_null.m4])
-m4_include([m4/sh-filename.m4])
-m4_include([m4/sig_atomic_t.m4])
-m4_include([m4/sigaction.m4])
-m4_include([m4/signal_h.m4])
-m4_include([m4/signalblocking.m4])
-m4_include([m4/size_max.m4])
-m4_include([m4/sleep.m4])
-m4_include([m4/snprintf.m4])
-m4_include([m4/socketlib.m4])
-m4_include([m4/sockets.m4])
-m4_include([m4/socklen.m4])
-m4_include([m4/sockpfaf.m4])
-m4_include([m4/spawn_h.m4])
-m4_include([m4/ssize_t.m4])
-m4_include([m4/stat-time.m4])
-m4_include([m4/stat.m4])
-m4_include([m4/std-gnu11.m4])
-m4_include([m4/stdalign.m4])
-m4_include([m4/stdarg.m4])
-m4_include([m4/stdbool.m4])
-m4_include([m4/stddef_h.m4])
-m4_include([m4/stdint.m4])
-m4_include([m4/stdint_h.m4])
-m4_include([m4/stdio_h.m4])
-m4_include([m4/stdlib_h.m4])
-m4_include([m4/stpcpy.m4])
-m4_include([m4/strchrnul.m4])
-m4_include([m4/strdup.m4])
-m4_include([m4/strerror.m4])
-m4_include([m4/strerror_r.m4])
-m4_include([m4/string_h.m4])
-m4_include([m4/strndup.m4])
-m4_include([m4/strnlen.m4])
-m4_include([m4/strtoll.m4])
-m4_include([m4/strtoull.m4])
-m4_include([m4/strtoumax.m4])
-m4_include([m4/symlink.m4])
-m4_include([m4/symlinkat.m4])
-m4_include([m4/sys_ioctl_h.m4])
-m4_include([m4/sys_random_h.m4])
-m4_include([m4/sys_select_h.m4])
-m4_include([m4/sys_socket_h.m4])
-m4_include([m4/sys_stat_h.m4])
-m4_include([m4/sys_time_h.m4])
-m4_include([m4/sys_types_h.m4])
-m4_include([m4/sys_uio_h.m4])
-m4_include([m4/sys_wait_h.m4])
-m4_include([m4/tempname.m4])
-m4_include([m4/thread.m4])
-m4_include([m4/threadlib.m4])
-m4_include([m4/time_h.m4])
-m4_include([m4/timespec.m4])
-m4_include([m4/tls.m4])
-m4_include([m4/unistd-safer.m4])
-m4_include([m4/unistd_h.m4])
-m4_include([m4/unlink.m4])
-m4_include([m4/unlinkat.m4])
-m4_include([m4/unlinkdir.m4])
-m4_include([m4/usleep.m4])
-m4_include([m4/utime.m4])
-m4_include([m4/utime_h.m4])
-m4_include([m4/utimecmp.m4])
-m4_include([m4/utimens.m4])
-m4_include([m4/utimensat.m4])
-m4_include([m4/utimes.m4])
 m4_include([m4/vapigen.m4])
-m4_include([m4/vasnprintf.m4])
-m4_include([m4/vasprintf.m4])
-m4_include([m4/visibility.m4])
-m4_include([m4/vsnprintf.m4])
-m4_include([m4/wait-process.m4])
-m4_include([m4/waitpid.m4])
-m4_include([m4/warn-on-use.m4])
-m4_include([m4/warnings.m4])
-m4_include([m4/wchar_h.m4])
-m4_include([m4/wchar_t.m4])
-m4_include([m4/wcrtomb.m4])
-m4_include([m4/wctob.m4])
-m4_include([m4/wctomb.m4])
-m4_include([m4/wctype_h.m4])
-m4_include([m4/wint_t.m4])
-m4_include([m4/wmemchr.m4])
-m4_include([m4/wmempcpy.m4])
-m4_include([m4/write.m4])
-m4_include([m4/xalloc.m4])
-m4_include([m4/xsize.m4])
-m4_include([m4/xstrtol.m4])
-m4_include([m4/xvasprintf.m4])
-m4_include([m4/yield.m4])
-m4_include([m4/zzgnulib.m4])

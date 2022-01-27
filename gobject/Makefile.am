@@ -134,7 +134,7 @@ noinst_DATA = $(top_builddir)/website/guestfs-gobject.3.html
 guestfs-gobject.3 $(top_builddir)/website/guestfs-gobject.3.html: stamp-guestfs-gobject.pod
 
 stamp-guestfs-gobject.pod: guestfs-gobject.pod
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --section 3 \
 	  --man guestfs-gobject.3 \
 	  --html $(top_builddir)/website/guestfs-gobject.3.html \

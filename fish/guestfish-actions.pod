@@ -9880,6 +9880,9 @@ Some of the parameters of a mounted filesystem can be examined
 and modified using the L</xfs-info> and
 L</xfs-growfs> calls.
 
+Beginning with XFS version 5, it is no longer possible to modify
+the lazy-counters setting (ie. C<lazycounter> parameter has no effect).
+
 This command has one or more optional arguments.  See L</OPTIONAL ARGUMENTS>.
 
 This command depends on the feature C<xfs>.   See also

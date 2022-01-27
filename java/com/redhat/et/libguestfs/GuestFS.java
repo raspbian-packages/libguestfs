@@ -21587,6 +21587,10 @@ public class GuestFS {
    * examined and modified using the "g.xfs_info" and
    * "g.xfs_growfs" calls.
    * </p><p>
+   * Beginning with XFS version 5, it is no longer possible
+   * to modify the lazy-counters setting (ie. "lazycounter"
+   * parameter has no effect).
+   * </p><p>
    * Optional arguments are supplied in the final
    * Map&lt;String,Object&gt; parameter, which is a hash of the
    * argument name to its value (cast to Object). Pass an

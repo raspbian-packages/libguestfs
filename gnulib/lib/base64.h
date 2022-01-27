@@ -2,18 +2,25 @@
    Copyright (C) 2004-2006, 2009-2021 Free Software Foundation, Inc.
    Written by Simon Josefsson.
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3, or (at your option)
-   any later version.
+   (NB: I modified the original GPL boilerplate here to LGPLv2+.  This
+   is because of the weird way that gnulib uses licenses, where the
+   real license is covered in the modules/X file.  The real license
+   for this file is LGPLv2+, not GPL.  - RWMJ)
 
-   This program is distributed in the hope that it will be useful,
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+
+   This library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, see <https://www.gnu.org/licenses/>.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef BASE64_H
 # define BASE64_H
@@ -38,7 +45,7 @@ struct base64_decode_context
   char buf[4];
 };
 
-extern bool isbase64 (char ch) _GL_ATTRIBUTE_CONST;
+extern bool isbase64 (char ch);
 
 extern void base64_encode (const char *restrict in, size_t inlen,
                            char *restrict out, size_t outlen);

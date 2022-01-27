@@ -27,11 +27,22 @@
 #define GUESTFS_INTERNAL_H_
 
 #include <stdbool.h>
+#include <assert.h>
 
 #include <rpc/types.h>  /* Needed on libc's different than glibc. */
 #include <rpc/xdr.h>
 
-#include <pcre.h>
+#define PCRE2_CODE_UNIT_WIDTH 8
+#include <pcre2.h>
+
+#include <pthread.h>
+
+#include "guestfs-utils.h"
+
+/* Defined in gnulib "hash.h", but we explicitly define it here to
+ * avoid having to include that header everywhere.
+ */
+typedef struct hash_table Hash_table;
 
 /* Minimum required version of libvirt for the libvirt backend.
  *
@@ -51,12 +62,6 @@
 #define HAVE_LIBVIRT_BACKEND
 #endif
 #endif
-
-#include "glthread/lock.h"
-#include "glthread/tls.h"
-#include "hash.h"
-
-#include "guestfs-utils.h"
 
 #if ENABLE_PROBES
 #include <sys/sdt.h>
@@ -78,22 +83,29 @@
 #define TRACE4(name, arg1, arg2, arg3, arg4)
 #endif
 
+/* https://stackoverflow.com/a/1597129 */
+#define XXUNIQUE_VAR(name, line) name ## line
+#define XUNIQUE_VAR(name, line) XXUNIQUE_VAR (name, line)
+#define UNIQUE_VAR(name) XUNIQUE_VAR (name, __LINE__)
+
 /* Acquire and release the per-handle lock.  Note the release happens
  * in an __attribute__((cleanup)) handler, making it simple to write
  * bug-free code.
  */
-#define ACQUIRE_LOCK_FOR_CURRENT_SCOPE(g) \
-  CLEANUP_GL_RECURSIVE_LOCK_UNLOCK gl_recursive_lock_t *_lock = &(g)->lock; \
-  gl_recursive_lock_lock (*_lock)
+#define ACQUIRE_LOCK_FOR_CURRENT_SCOPE(mutex)                           \
+  CLEANUP_MUTEX_UNLOCK pthread_mutex_t *UNIQUE_VAR(_lock) = mutex;      \
+  do {                                                                  \
+    int _r = pthread_mutex_lock (UNIQUE_VAR(_lock));                    \
+    assert (!_r);                                                       \
+  } while (0)
 
-#define CLEANUP_GL_RECURSIVE_LOCK_UNLOCK \
-  __attribute__((cleanup(guestfs_int_cleanup_gl_recursive_lock_unlock)))
+#define CLEANUP_MUTEX_UNLOCK __attribute__((cleanup (cleanup_mutex_unlock)))
 
 static inline void
-guestfs_int_cleanup_gl_recursive_lock_unlock (void *ptr)
+cleanup_mutex_unlock (pthread_mutex_t **ptr)
 {
-  gl_recursive_lock_t *lockp = * (gl_recursive_lock_t **) ptr;
-  gl_recursive_lock_unlock (*lockp);
+  int r = pthread_mutex_unlock (*ptr);
+  assert (!r);
 }
 
 /* Default and minimum appliance memory size. */
@@ -162,6 +174,24 @@ guestfs_int_cleanup_gl_recursive_lock_unlock (void *ptr)
 #else
 #define VIRTIO_DEVICE_NAME(type) type "-pci"
 #endif
+
+/* Place the virtio-net controller in slot 0x1e on the root bus, on normal
+ * hardware with PCI. Necessary only before libvirt 3.8.0. Refer to
+ * RHBZ#2034160.
+ */
+#ifdef HAVE_LIBVIRT_BACKEND
+#if defined(__arm__) || defined(__s390x__)
+#define VIRTIO_NET_PCI_ADDR ""
+#else
+#define VIRTIO_NET_PCI_ADDR ",addr=1e.0"
+#endif
+#endif
+
+/* Network address and network mask (expressed as address prefix) that the
+ * appliance will see (if networking is enabled).
+ */
+#define NETWORK_ADDRESS "169.254.0.0"
+#define NETWORK_PREFIX  "16"
 
 /* Guestfs handle and associated structures. */
 
@@ -394,7 +424,7 @@ struct guestfs_h {
   /* Lock acquired when entering any public guestfs_* function to
    * protect the handle.
    */
-  gl_recursive_lock_define (, lock);
+  pthread_mutex_t lock;
 
   /**** Configuration of the handle. ****/
   bool verbose;                 /* Debugging. */
@@ -464,12 +494,12 @@ struct guestfs_h {
   char *int_cachedir; /* $LIBGUESTFS_CACHEDIR or guestfs_set_cachedir or NULL */
 
   /* Error handler, plus stack of old error handlers. */
-  gl_tls_key_t error_data;
+  pthread_key_t error_data;
 
   /* Linked list of error_data structures allocated for this handle,
    * plus a mutex to protect the linked list.
    */
-  gl_lock_define (, error_data_list_lock);
+  pthread_mutex_t error_data_list_lock;
   struct error_data *error_data_list;
 
   /* Out of memory error handler. */
@@ -619,12 +649,12 @@ extern void guestfs_int_trace_open (struct trace_buffer *tb);
 extern void guestfs_int_trace_send_line (guestfs_h *g, struct trace_buffer *tb);
 
 /* match.c */
-extern int guestfs_int_match (guestfs_h *g, const char *str, const pcre *re);
-extern char *guestfs_int_match1 (guestfs_h *g, const char *str, const pcre *re);
-extern int guestfs_int_match2 (guestfs_h *g, const char *str, const pcre *re, char **ret1, char **ret2);
-extern int guestfs_int_match3 (guestfs_h *g, const char *str, const pcre *re, char **ret1, char **ret2, char **ret3);
-extern int guestfs_int_match4 (guestfs_h *g, const char *str, const pcre *re, char **ret1, char **ret2, char **ret3, char **ret4);
-extern int guestfs_int_match6 (guestfs_h *g, const char *str, const pcre *re, char **ret1, char **ret2, char **ret3, char **ret4, char **ret5, char **ret6);
+extern int guestfs_int_match (guestfs_h *g, const char *str, const pcre2_code *re);
+extern char *guestfs_int_match1 (guestfs_h *g, const char *str, const pcre2_code *re);
+extern int guestfs_int_match2 (guestfs_h *g, const char *str, const pcre2_code *re, char **ret1, char **ret2);
+extern int guestfs_int_match3 (guestfs_h *g, const char *str, const pcre2_code *re, char **ret1, char **ret2, char **ret3);
+extern int guestfs_int_match4 (guestfs_h *g, const char *str, const pcre2_code *re, char **ret1, char **ret2, char **ret3, char **ret4);
+extern int guestfs_int_match6 (guestfs_h *g, const char *str, const pcre2_code *re, char **ret1, char **ret2, char **ret3, char **ret4, char **ret5, char **ret6);
 
 #define match guestfs_int_match
 #define match1 guestfs_int_match1
@@ -735,10 +765,6 @@ extern int guestfs_int_set_backend (guestfs_h *g, const char *method);
 /* inspect.c */
 extern char *guestfs_int_download_to_tmp (guestfs_h *g, const char *filename, const char *extension, uint64_t max_size);
 
-/* dbdump.c */
-typedef int (*guestfs_int_db_dump_callback) (guestfs_h *g, const unsigned char *key, size_t keylen, const unsigned char *value, size_t valuelen, void *opaque);
-extern int guestfs_int_read_db_dump (guestfs_h *g, const char *dumpfile, void *opaque, guestfs_int_db_dump_callback callback);
-
 /* lpj.c */
 extern int guestfs_int_get_lpj (guestfs_h *g);
 
@@ -821,7 +847,7 @@ extern int guestfs_int_wait4 (guestfs_h *g, pid_t pid, int *status, struct rusag
 extern void guestfs_int_version_from_libvirt (struct version *v, int vernum);
 extern void guestfs_int_version_from_values (struct version *v, int maj, int min, int mic);
 extern int guestfs_int_version_from_x_y (guestfs_h *g, struct version *v, const char *str);
-extern int guestfs_int_version_from_x_y_re (guestfs_h *g, struct version *v, const char *str, const pcre *re);
+extern int guestfs_int_version_from_x_y_re (guestfs_h *g, struct version *v, const char *str, const pcre2_code *re);
 extern int guestfs_int_version_from_x_y_or_x (guestfs_h *g, struct version *v, const char *str);
 extern bool guestfs_int_version_ge (const struct version *v, int maj, int min, int mic);
 extern bool guestfs_int_version_cmp_ge (const struct version *a, const struct version *b);

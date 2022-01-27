@@ -27,6 +27,7 @@ daemon/filearch.mli
 daemon/findfs.mli
 daemon/inspect.mli
 daemon/is.mli
+daemon/isoinfo.mli
 daemon/ldm.mli
 daemon/link.mli
 daemon/listfs.mli
@@ -42,6 +43,7 @@ daemon/optgroups.ml
 daemon/optgroups.mli
 daemon/parted.mli
 daemon/realpath.mli
+daemon/rpm.mli
 daemon/statvfs.mli
 daemon/structs-cleanups.c
 daemon/structs-cleanups.h
@@ -280,7 +282,7 @@ gobject/src/struct-xattr.c
 gobject/src/struct-xfsinfo.c
 gobject/src/struct-yara_detection.c
 gobject/src/tristate.c
-golang/bindtests.go
+golang/bindtests/bindtests.go
 golang/src/libguestfs.org/guestfs/guestfs.go
 haskell/Bindtests.hs
 haskell/Guestfs.hs

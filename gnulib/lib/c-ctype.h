@@ -7,31 +7,30 @@
 
    Copyright (C) 2000-2003, 2006, 2008-2021 Free Software Foundation, Inc.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-(at your option) any later version.
+   (NB: I modified the original GPL boilerplate here to LGPLv2+.  This
+   is because of the weird way that gnulib uses licenses, where the
+   real license is covered in the modules/X file.  The real license
+   for this file is LGPLv2+, not GPL.  - RWMJ)
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, see <https://www.gnu.org/licenses/>.  */
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef C_CTYPE_H
 #define C_CTYPE_H
 
 #include <stdbool.h>
-
-#ifndef _GL_INLINE_HEADER_BEGIN
- #error "Please include config.h first."
-#endif
-_GL_INLINE_HEADER_BEGIN
-#ifndef C_CTYPE_INLINE
-# define C_CTYPE_INLINE _GL_INLINE
-#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -165,7 +164,7 @@ extern "C" {
          if (c_isalpha (*s)) ...
  */
 
-C_CTYPE_INLINE bool
+static inline bool
 c_isalnum (int c)
 {
   switch (c)
@@ -179,7 +178,7 @@ c_isalnum (int c)
     }
 }
 
-C_CTYPE_INLINE bool
+static inline bool
 c_isalpha (int c)
 {
   switch (c)
@@ -194,7 +193,7 @@ c_isalpha (int c)
 
 /* The function isascii is not locale dependent.
    Its use in EBCDIC is questionable. */
-C_CTYPE_INLINE bool
+static inline bool
 c_isascii (int c)
 {
   switch (c)
@@ -211,13 +210,13 @@ c_isascii (int c)
     }
 }
 
-C_CTYPE_INLINE bool
+static inline bool
 c_isblank (int c)
 {
   return c == ' ' || c == '\t';
 }
 
-C_CTYPE_INLINE bool
+static inline bool
 c_iscntrl (int c)
 {
   switch (c)
@@ -229,7 +228,7 @@ c_iscntrl (int c)
     }
 }
 
-C_CTYPE_INLINE bool
+static inline bool
 c_isdigit (int c)
 {
   switch (c)
@@ -241,7 +240,7 @@ c_isdigit (int c)
     }
 }
 
-C_CTYPE_INLINE bool
+static inline bool
 c_isgraph (int c)
 {
   switch (c)
@@ -256,7 +255,7 @@ c_isgraph (int c)
     }
 }
 
-C_CTYPE_INLINE bool
+static inline bool
 c_islower (int c)
 {
   switch (c)
@@ -268,7 +267,7 @@ c_islower (int c)
     }
 }
 
-C_CTYPE_INLINE bool
+static inline bool
 c_isprint (int c)
 {
   switch (c)
@@ -284,7 +283,7 @@ c_isprint (int c)
     }
 }
 
-C_CTYPE_INLINE bool
+static inline bool
 c_ispunct (int c)
 {
   switch (c)
@@ -296,7 +295,7 @@ c_ispunct (int c)
     }
 }
 
-C_CTYPE_INLINE bool
+static inline bool
 c_isspace (int c)
 {
   switch (c)
@@ -308,7 +307,7 @@ c_isspace (int c)
     }
 }
 
-C_CTYPE_INLINE bool
+static inline bool
 c_isupper (int c)
 {
   switch (c)
@@ -320,7 +319,7 @@ c_isupper (int c)
     }
 }
 
-C_CTYPE_INLINE bool
+static inline bool
 c_isxdigit (int c)
 {
   switch (c)
@@ -333,7 +332,7 @@ c_isxdigit (int c)
     }
 }
 
-C_CTYPE_INLINE int
+static inline int
 c_tolower (int c)
 {
   switch (c)
@@ -345,7 +344,7 @@ c_tolower (int c)
     }
 }
 
-C_CTYPE_INLINE int
+static inline int
 c_toupper (int c)
 {
   switch (c)
@@ -360,7 +359,5 @@ c_toupper (int c)
 #ifdef __cplusplus
 }
 #endif
-
-_GL_INLINE_HEADER_END
 
 #endif /* C_CTYPE_H */

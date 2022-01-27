@@ -25,9 +25,8 @@
 # export DH_VERBOSE=1
 include /usr/share/dpkg/architecture.mk
 
-PYTHON_VERSIONS := $(shell py3versions --installed)
-RUBY_VERSIONS   := $(shell find /usr/bin/ -name 'ruby[12]*' \
-			| xargs -n1 readlink -f | xargs -r -n1 basename)
+PYTHON_VERSIONS := $(shell py3versions --supported)
+RUBY_VERSIONS   := $(shell dh_ruby --print-supported)
 LUA_VERSIONS    := $(shell find /usr/bin/ -name 'lua5.?' \
 			| xargs -n1 readlink -f | xargs -r -n1 basename)
 PHP_VERSIONS    := $(subst -config,,\

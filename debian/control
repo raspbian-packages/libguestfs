@@ -3,15 +3,16 @@ Section: libs
 Priority: optional
 Maintainer: Debian Libvirt Maintainers <pkg-libvirt-maintainers@lists.alioth.debian.org>
 Uploaders: Richard Jones <rjones@redhat.com>, Guido Günther <agx@sigxcpu.org>, Hilko Bengen <bengen@debian.org>
-Build-Depends: debhelper (>= 12),
+Build-Depends: debhelper-compat (= 13),
   po-debconf, bash-completion,
   supermin (>= 5),
   libreadline-dev, libaugeas-dev (>= 1.0.0), libselinux1-dev, libhivex-ocaml-dev, libvirt-dev (>= 1.2.20),
   libvirt-ocaml-dev,
   libounit-ocaml-dev,
-  liblzma-dev, libmagic-dev, libncurses5-dev, libncursesw5-dev, libpcre3-dev, libxml2-dev,
+  liblzma-dev, libmagic-dev, libncurses5-dev, libncursesw5-dev, libpcre2-dev, libxml2-dev,
   libconfig-dev, libc-dev-bin,
   libdbus-1-dev,
+  librpm-dev,
   systemtap-sdt-dev,
   libcap-dev, libacl1-dev, libyajl-dev,
   libsystemd-dev | libsystemd-journal-dev,
@@ -26,9 +27,11 @@ Build-Depends: debhelper (>= 12),
   qemu-system-ppc [powerpc powerpcspe ppc64 ppc64el],
   qemu-system-sparc [sparc sparc64],
   qemu-system-x86 [i386 amd64],
-  genisoimage, pkg-config,
+  xorriso,
+  sqlite3,
+  pkg-config,
   dh-lua,
-  dh-ocaml, ocaml-nox, ocaml-findlib, libpcre-ocaml-dev, libgettext-ocaml-dev,
+  dh-ocaml, ocaml-nox, ocaml-findlib, libgettext-ocaml-dev,
   python3-all-dev,
   dh-python,
   default-jdk,
@@ -56,6 +59,7 @@ Build-Depends: debhelper (>= 12),
   attr,
   binutils,
   bsdextrautils,
+  bsdmainutils,
   btrfs-progs,
   bzip2,
   cpio,
@@ -63,14 +67,13 @@ Build-Depends: debhelper (>= 12),
   curl,
   debootstrap,
   dosfstools,
-  exfat-fuse, exfat-utils,
+  exfatprogs,
   extlinux [i386 amd64],
   f2fs-tools,
   fdisk,
   file,
   gawk,
   gdisk,
-  genisoimage,
   gfs2-utils,
 # gfs-tools,
   grub2-common [amd64 arm64 armel armhf i386 mipsel ppc64el],
@@ -91,6 +94,7 @@ Build-Depends: debhelper (>= 12),
   lvm2,
   lzop,
   mdadm,
+  mount,
   mtools,
   nilfs-tools,
   ntfs-3g,
@@ -107,6 +111,7 @@ Build-Depends: debhelper (>= 12),
   sleuthkit,
   squashfs-tools,
   strace,
+  systemd-sysv,
   syslinux [i386 amd64],
   udev,
 # ufsutils,
@@ -119,7 +124,8 @@ Build-Depends: debhelper (>= 12),
   zfs-fuse [i386 amd64 armel armhf powerpc ppc64el sparc],
 #-# appliance end
 Homepage: http://libguestfs.org
-Standards-Version: 4.3.0
+Standards-Version: 4.6.0
+Rules-Requires-Root: no
 Vcs-Git: https://salsa.debian.org/libvirt-team/libguestfs.git
 Vcs-Browser: https://salsa.debian.org/libvirt-team/libguestfs
 XS-Ruby-Versions: all
@@ -332,15 +338,38 @@ Description: guest disk image management system - ZFS support
  .
  This package contains appliance fragments for ZFS support.
 
+Package: guestfish
+Section: admin
+Architecture: linux-any
+Depends: libguestfs0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
+Replaces: libguestfs-tools (<< 1:1.46),
+Breaks: libguestfs-tools (<< 1:1.46),
+Description: guest filesystem shell
+ The libguestfs library allows accessing and modifying guest disk
+ images.
+ .
+ This package contains guestfish, the interactive shell, and some
+ small tools that are built around it.
+
+Package: guestmount
+Section: admin
+Architecture: linux-any
+Depends: libguestfs0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
+Replaces: libguestfs-tools (<< 1:1.46),
+Breaks: libguestfs-tools (<< 1:1.46),
+Description: FUSE-based mount utility for guest filesystems
+ The libguestfs library allows accessing and modifying guest disk
+ images.
+ .
+ This package contains the guestmount and guestunmount programs for
+ mounting virtual machine filesystems and other disk images on the
+ host.
+
 Package: libguestfs-tools
 Section: admin
 Architecture: linux-any
 Depends: libguestfs0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
- libsys-virt-perl, libguestfs-perl (= ${binary:Version}),
- libwin-hivex-perl,
- libintl-perl, libstring-shellquote-perl,
- curl,
-Recommends: virt-p2v, gnupg,
+ guestfs-tools, guestmount, guestfish,
 Replaces: guestfish (<< 1:1.22.6-1~),
  guestmount (<< 1.24.2-1~),
  libguestfs0 (<< 1:1.18.2-1~),
@@ -351,10 +380,8 @@ Description: guest disk image management system - tools
  The libguestfs library allows accessing and modifying guest disk
  images.
  .
- This package contains the guestfish interactive shell and various
- virtualization tools, including virt-cat, virt-df, virt-edit,
- virt-filesystems, virt-inspector, virt-ls, virt-make-fs, virt-rescue,
- virt-resize, virt-tar, and virt-win-reg.
+ This package contains the libguestfs-teest-tool and
+ libguestfs-make-fixed-appliance programs.
 
 Package: python3-guestfs
 Section: python

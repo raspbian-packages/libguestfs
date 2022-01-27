@@ -13,11 +13,11 @@ libguestfs власноруч.
 Код libguestfs зберігається у сховищі github
 L<https://github.com/libguestfs/libguestfs>
 
-Велика частина стереотипного коду у libguestfs (RPC, прив'язки,
-документація) створюється автоматично. Це означає, що у звичайному клоні
-сховища git не буде багатьох файлів, які є у архівах з початковим кодом. Вам
-доведеться запустити генератор (C<./autogen.sh && make -C generator>), щоб
-створити ці файли.
+Large amounts of boilerplate code in libguestfs (RPC, bindings,
+documentation) are generated.  This means that many source files will appear
+to be missing from a straightforward git checkout.  You have to run the
+generator (C<./configure && make -C generator>) in order to create those
+files.
 
 У libguestfs використовується система збирання на основі autotools,
 основними файлами якої є F<configure.ac> і F<Makefile.am>. Див. L</СИСТЕМА
@@ -258,11 +258,6 @@ L<guestmount(1)>, FUSE (файлова система у просторі кор
 =item F<get-kernel>
 
 Програма L<virt-get-kernel(1)> та документація до неї.
-
-=item F<gnulib>
-
-Gnulib використовується як бібліотека забезпечення портованості. До цього
-каталогу включено копію gnulib.
 
 =item F<inspector>
 
@@ -825,7 +820,7 @@ check-slow
 
 Команди:
 
- ./autogen.sh
+ ./configure
  make clean ||:
  make
  make installcheck
@@ -950,7 +945,7 @@ ocamlopt працювати разом», оскільки самі програ
 належному порядку.
 
  virt_customize_LINK = \
-     $(top_builddir)/ocaml-link.sh -cclib '-lutils -lgnu' -- ...
+     $(top_builddir)/ocaml-link.sh -cclib '-lutils' -- ...
 
 The actual rules, which you can examine in F<customize/Makefile.am>, are a
 little bit more complicated than this because they have to handle:
@@ -1056,10 +1051,6 @@ L<guestfs(3)/НУМЕРАЦІЯ ВЕРСІЙ LIBGUESTFS>.
 =item *
 
 Внесіть завершальні зміни до F<guestfs-release-notes.pod>
-
-=item *
-
-Оновіть gnulib до найсвіжішої версії основної гілки розробки.
 
 =item *
 

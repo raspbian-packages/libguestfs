@@ -46,6 +46,7 @@ generator_built = \
 	findfs.mli \
 	inspect.mli \
 	is.mli \
+	isoinfo.mli \
 	ldm.mli \
 	link.mli \
 	listfs.mli \
@@ -57,6 +58,7 @@ generator_built = \
 	optgroups.mli \
 	parted.mli \
 	realpath.mli \
+	rpm.mli \
 	statvfs.mli \
 	structs.ml \
 	structs.mli
@@ -141,7 +143,6 @@ guestfsd_SOURCES = \
 	inotify.c \
 	internal.c \
 	is.c \
-	isoinfo.c \
 	journal.c \
 	labels.c \
 	ldm.c \
@@ -168,6 +169,7 @@ guestfsd_SOURCES = \
 	proto.c \
 	readdir.c \
 	rename.c \
+	rpm-c.c \
 	rsync.c \
 	scrub.c \
 	selinux.c \
@@ -213,7 +215,7 @@ guestfsd_SOURCES = \
 
 guestfsd_LDFLAGS = \
 	-L$(shell $(OCAMLC) -where) \
-	-L$(shell $(OCAMLC) -where)/hivex \
+	-L$(shell $(OCAMLFIND) query hivex) \
 	-L../common/mlutils \
 	-L../common/mlstdutils \
 	-L../bundled/ocaml-augeas \
@@ -231,7 +233,8 @@ guestfsd_LDADD = \
 	$(LIBSOCKET) \
 	$(LIB_CLOCK_GETTIME) \
 	$(LIBINTL) \
-	$(PCRE_LIBS) \
+	$(PCRE2_LIBS) \
+	$(LIBRPM_LIBS) \
 	$(TSK_LIBS) \
 	$(RPC_LIBS) \
 	$(YARA_LIBS) \
@@ -244,7 +247,6 @@ guestfsd_LDADD = \
 guestfsd_CPPFLAGS = \
 	-DCAML_NAME_SPACE \
 	-I$(shell $(OCAMLC) -where) \
-	-I$(shell $(OCAMLC) -where)/hivex \
 	-I$(top_srcdir)/gnulib/lib \
 	-I$(top_builddir)/gnulib/lib \
 	-I$(top_srcdir)/lib \
@@ -256,13 +258,15 @@ guestfsd_CPPFLAGS = \
 	-I$(top_srcdir)/common/utils \
 	-I$(top_builddir)/common/utils
 guestfsd_CFLAGS = \
+	-pthread \
 	$(WARN_CFLAGS) $(WERROR_CFLAGS) \
 	$(RPC_CFLAGS) \
 	$(AUGEAS_CFLAGS) \
 	$(HIVEX_CFLAGS) \
 	$(SD_JOURNAL_CFLAGS) \
 	$(JANSSON_CFLAGS) \
-	$(PCRE_CFLAGS)
+	$(PCRE2_CFLAGS) \
+	$(LIBRPM_CFLAGS)
 
 # Parts of the daemon are written in OCaml.  These are linked into a
 # library and then linked to the daemon.  See
@@ -287,6 +291,7 @@ SOURCES_MLI = \
 	inspect_types.mli \
 	inspect_utils.mli \
 	is.mli \
+	isoinfo.mli \
 	ldm.mli \
 	link.mli \
 	listfs.mli \
@@ -300,6 +305,7 @@ SOURCES_MLI = \
 	optgroups.mli \
 	parted.mli \
 	realpath.mli \
+	rpm.mli \
 	statvfs.mli \
 	structs.mli \
 	sysroot.mli \
@@ -319,6 +325,7 @@ SOURCES_ML = \
 	devsparts.ml \
 	file.ml \
 	filearch.ml \
+	isoinfo.ml \
 	is.ml \
 	ldm.ml \
 	link.ml \
@@ -340,6 +347,7 @@ SOURCES_ML = \
 	inspect_fs_windows.ml \
 	inspect_fs.ml \
 	inspect.ml \
+	rpm.ml \
 	callbacks.ml \
 	daemon.ml
 
@@ -446,7 +454,7 @@ daemon_utils_tests_DEPENDENCIES = \
 	$(top_builddir)/ocaml-link.sh
 daemon_utils_tests_LINK = \
 	$(top_builddir)/ocaml-link.sh \
-	  -cclib '-lutils -lgnu' \
+	  -cclib '-lutils -lgnu $(HIVEX_LIBS)' \
 	  -- \
 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
 	  $(OCAMLPACKAGES) \
@@ -465,7 +473,7 @@ noinst_DATA += $(top_builddir)/website/guestfsd.8.html
 guestfsd.8 $(top_builddir)/website/guestfsd.8.html: stamp-guestfsd.pod
 
 stamp-guestfsd.pod: guestfsd.pod
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --section 8 \
 	  --man guestfsd.8 \
 	  --html $(top_builddir)/website/guestfsd.8.html \

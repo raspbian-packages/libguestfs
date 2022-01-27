@@ -28,7 +28,7 @@ use std::default::Default;
 fn main() {
     let g = match Handle::create() {
         Ok(g) => g,
-        Err(e) => panic!(format!(" could not create handle {:?}", e)),
+        Err(e) => panic!("could not create handle {:?}", e),
     };
     g.internal_test("abc", Some("def"), &vec![], false, 0, 0i64, "123", "456", &[97, 98, 99, 0, 97, 98, 99], InternalTestOptArgs{obool: Some(true), oint: Some(1), oint64: Some(9223372036854775807i64), .. Default::default()}).expect("failed to run");
     g.internal_test("abc", None, &vec![], false, 0, 0i64, "123", "456", &[97, 98, 99, 0, 97, 98, 99], InternalTestOptArgs{oint64: Some(1i64), ostring: Some("string"), .. Default::default()}).expect("failed to run");

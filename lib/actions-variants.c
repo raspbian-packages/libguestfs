@@ -53,7 +53,7 @@ guestfs_add_domain_va (guestfs_h *g,
                        const char *dom,
                        va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_add_domain_argv optargs_s;
   struct guestfs_add_domain_argv *optargs = &optargs_s;
   int i;
@@ -129,7 +129,7 @@ guestfs_add_drive_opts_va (guestfs_h *g,
                            const char *filename,
                            va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_add_drive_opts_argv optargs_s;
   struct guestfs_add_drive_opts_argv *optargs = &optargs_s;
   int i;
@@ -200,7 +200,7 @@ int
 guestfs_add_drive (guestfs_h *g,
                    const char *filename)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_add_drive_opts_argv optargs_s = { .bitmask = 0 };
   struct guestfs_add_drive_opts_argv *optargs = &optargs_s;
 
@@ -228,7 +228,7 @@ guestfs_add_drive_scratch_va (guestfs_h *g,
                               int64_t size,
                               va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_add_drive_scratch_argv optargs_s;
   struct guestfs_add_drive_scratch_argv *optargs = &optargs_s;
   int i;
@@ -286,7 +286,7 @@ guestfs_add_libvirt_dom_va (guestfs_h *g,
                             void * /* really virDomainPtr */ dom,
                             va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_add_libvirt_dom_argv optargs_s;
   struct guestfs_add_libvirt_dom_argv *optargs = &optargs_s;
   int i;
@@ -358,7 +358,7 @@ guestfs_aug_transform_va (guestfs_h *g,
                           const char *file,
                           va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_aug_transform_argv optargs_s;
   struct guestfs_aug_transform_argv *optargs = &optargs_s;
   int i;
@@ -410,7 +410,7 @@ guestfs_btrfs_filesystem_defragment_va (guestfs_h *g,
                                         const char *path,
                                         va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_btrfs_filesystem_defragment_argv optargs_s;
   struct guestfs_btrfs_filesystem_defragment_argv *optargs = &optargs_s;
   int i;
@@ -465,7 +465,7 @@ guestfs_btrfs_filesystem_resize_va (guestfs_h *g,
                                     const char *mountpoint,
                                     va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_btrfs_filesystem_resize_argv optargs_s;
   struct guestfs_btrfs_filesystem_resize_argv *optargs = &optargs_s;
   int i;
@@ -517,7 +517,7 @@ guestfs_btrfs_fsck_va (guestfs_h *g,
                        const char *device,
                        va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_btrfs_fsck_argv optargs_s;
   struct guestfs_btrfs_fsck_argv *optargs = &optargs_s;
   int i;
@@ -574,7 +574,7 @@ guestfs_btrfs_image_va (guestfs_h *g,
                         const char *image,
                         va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_btrfs_image_argv optargs_s;
   struct guestfs_btrfs_image_argv *optargs = &optargs_s;
   int i;
@@ -626,7 +626,7 @@ guestfs_btrfs_subvolume_create_opts_va (guestfs_h *g,
                                         const char *dest,
                                         va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_btrfs_subvolume_create_opts_argv optargs_s;
   struct guestfs_btrfs_subvolume_create_opts_argv *optargs = &optargs_s;
   int i;
@@ -661,7 +661,7 @@ int
 guestfs_btrfs_subvolume_create (guestfs_h *g,
                                 const char *dest)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_btrfs_subvolume_create_opts_argv optargs_s = { .bitmask = 0 };
   struct guestfs_btrfs_subvolume_create_opts_argv *optargs = &optargs_s;
 
@@ -691,7 +691,7 @@ guestfs_btrfs_subvolume_snapshot_opts_va (guestfs_h *g,
                                           const char *dest,
                                           va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_btrfs_subvolume_snapshot_opts_argv optargs_s;
   struct guestfs_btrfs_subvolume_snapshot_opts_argv *optargs = &optargs_s;
   int i;
@@ -730,7 +730,7 @@ guestfs_btrfs_subvolume_snapshot (guestfs_h *g,
                                   const char *source,
                                   const char *dest)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_btrfs_subvolume_snapshot_opts_argv optargs_s = { .bitmask = 0 };
   struct guestfs_btrfs_subvolume_snapshot_opts_argv *optargs = &optargs_s;
 
@@ -762,7 +762,7 @@ guestfs_compress_device_out_va (guestfs_h *g,
                                 const char *zdevice,
                                 va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_compress_device_out_argv optargs_s;
   struct guestfs_compress_device_out_argv *optargs = &optargs_s;
   int i;
@@ -818,7 +818,7 @@ guestfs_compress_out_va (guestfs_h *g,
                          const char *zfile,
                          va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_compress_out_argv optargs_s;
   struct guestfs_compress_out_argv *optargs = &optargs_s;
   int i;
@@ -872,7 +872,7 @@ guestfs_copy_attributes_va (guestfs_h *g,
                             const char *dest,
                             va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_copy_attributes_argv optargs_s;
   struct guestfs_copy_attributes_argv *optargs = &optargs_s;
   int i;
@@ -935,7 +935,7 @@ guestfs_copy_device_to_device_va (guestfs_h *g,
                                   const char *dest,
                                   va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_copy_device_to_device_argv optargs_s;
   struct guestfs_copy_device_to_device_argv *optargs = &optargs_s;
   int i;
@@ -1001,7 +1001,7 @@ guestfs_copy_device_to_file_va (guestfs_h *g,
                                 const char *dest,
                                 va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_copy_device_to_file_argv optargs_s;
   struct guestfs_copy_device_to_file_argv *optargs = &optargs_s;
   int i;
@@ -1067,7 +1067,7 @@ guestfs_copy_file_to_device_va (guestfs_h *g,
                                 const char *dest,
                                 va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_copy_file_to_device_argv optargs_s;
   struct guestfs_copy_file_to_device_argv *optargs = &optargs_s;
   int i;
@@ -1133,7 +1133,7 @@ guestfs_copy_file_to_file_va (guestfs_h *g,
                               const char *dest,
                               va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_copy_file_to_file_argv optargs_s;
   struct guestfs_copy_file_to_file_argv *optargs = &optargs_s;
   int i;
@@ -1199,7 +1199,7 @@ guestfs_cpio_out_va (guestfs_h *g,
                      const char *cpiofile,
                      va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_cpio_out_argv optargs_s;
   struct guestfs_cpio_out_argv *optargs = &optargs_s;
   int i;
@@ -1255,7 +1255,7 @@ guestfs_cryptsetup_open_va (guestfs_h *g,
                             const char *mapname,
                             va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_cryptsetup_open_argv optargs_s;
   struct guestfs_cryptsetup_open_argv *optargs = &optargs_s;
   int i;
@@ -1314,7 +1314,7 @@ guestfs_disk_create_va (guestfs_h *g,
                         int64_t size,
                         va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_disk_create_argv optargs_s;
   struct guestfs_disk_create_argv *optargs = &optargs_s;
   int i;
@@ -1384,7 +1384,7 @@ guestfs_download_blocks_va (guestfs_h *g,
                             const char *filename,
                             va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_download_blocks_argv optargs_s;
   struct guestfs_download_blocks_argv *optargs = &optargs_s;
   int i;
@@ -1436,7 +1436,7 @@ guestfs_e2fsck_va (guestfs_h *g,
                    const char *device,
                    va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_e2fsck_argv optargs_s;
   struct guestfs_e2fsck_argv *optargs = &optargs_s;
   int i;
@@ -1491,7 +1491,7 @@ guestfs_fstrim_va (guestfs_h *g,
                    const char *mountpoint,
                    va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_fstrim_argv optargs_s;
   struct guestfs_fstrim_argv *optargs = &optargs_s;
   int i;
@@ -1549,7 +1549,7 @@ guestfs_glob_expand_opts_va (guestfs_h *g,
                              const char *pattern,
                              va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_glob_expand_opts_argv optargs_s;
   struct guestfs_glob_expand_opts_argv *optargs = &optargs_s;
   int i;
@@ -1584,7 +1584,7 @@ char **
 guestfs_glob_expand (guestfs_h *g,
                      const char *pattern)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_glob_expand_opts_argv optargs_s = { .bitmask = 0 };
   struct guestfs_glob_expand_opts_argv *optargs = &optargs_s;
 
@@ -1614,7 +1614,7 @@ guestfs_grep_opts_va (guestfs_h *g,
                       const char *path,
                       va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_grep_opts_argv optargs_s;
   struct guestfs_grep_opts_argv *optargs = &optargs_s;
   int i;
@@ -1659,7 +1659,7 @@ guestfs_grep (guestfs_h *g,
               const char *regex,
               const char *path)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_grep_opts_argv optargs_s = { .bitmask = 0 };
   struct guestfs_grep_opts_argv *optargs = &optargs_s;
 
@@ -1687,7 +1687,7 @@ guestfs_hivex_open_va (guestfs_h *g,
                        const char *filename,
                        va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_hivex_open_argv optargs_s;
   struct guestfs_hivex_open_argv *optargs = &optargs_s;
   int i;
@@ -1750,7 +1750,7 @@ guestfs_inspect_get_icon_va (guestfs_h *g,
                              size_t *size_r,
                              va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_inspect_get_icon_argv optargs_s;
   struct guestfs_inspect_get_icon_argv *optargs = &optargs_s;
   int i;
@@ -1823,7 +1823,7 @@ guestfs_internal_test_va (guestfs_h *g,
                           size_t bufferin_size,
                           va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_internal_test_argv optargs_s;
   struct guestfs_internal_test_argv *optargs = &optargs_s;
   int i;
@@ -1885,7 +1885,7 @@ int
 guestfs_internal_test_63_optargs_va (guestfs_h *g,
                                      va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_internal_test_63_optargs_argv optargs_s;
   struct guestfs_internal_test_63_optargs_argv *optargs = &optargs_s;
   int i;
@@ -2121,7 +2121,7 @@ int
 guestfs_internal_test_only_optargs_va (guestfs_h *g,
                                        va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_internal_test_only_optargs_argv optargs_s;
   struct guestfs_internal_test_only_optargs_argv *optargs = &optargs_s;
   int i;
@@ -2173,7 +2173,7 @@ guestfs_is_blockdev_opts_va (guestfs_h *g,
                              const char *path,
                              va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_is_blockdev_opts_argv optargs_s;
   struct guestfs_is_blockdev_opts_argv *optargs = &optargs_s;
   int i;
@@ -2208,7 +2208,7 @@ int
 guestfs_is_blockdev (guestfs_h *g,
                      const char *path)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_is_blockdev_opts_argv optargs_s = { .bitmask = 0 };
   struct guestfs_is_blockdev_opts_argv *optargs = &optargs_s;
 
@@ -2236,7 +2236,7 @@ guestfs_is_chardev_opts_va (guestfs_h *g,
                             const char *path,
                             va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_is_chardev_opts_argv optargs_s;
   struct guestfs_is_chardev_opts_argv *optargs = &optargs_s;
   int i;
@@ -2271,7 +2271,7 @@ int
 guestfs_is_chardev (guestfs_h *g,
                     const char *path)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_is_chardev_opts_argv optargs_s = { .bitmask = 0 };
   struct guestfs_is_chardev_opts_argv *optargs = &optargs_s;
 
@@ -2299,7 +2299,7 @@ guestfs_is_dir_opts_va (guestfs_h *g,
                         const char *path,
                         va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_is_dir_opts_argv optargs_s;
   struct guestfs_is_dir_opts_argv *optargs = &optargs_s;
   int i;
@@ -2334,7 +2334,7 @@ int
 guestfs_is_dir (guestfs_h *g,
                 const char *path)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_is_dir_opts_argv optargs_s = { .bitmask = 0 };
   struct guestfs_is_dir_opts_argv *optargs = &optargs_s;
 
@@ -2362,7 +2362,7 @@ guestfs_is_fifo_opts_va (guestfs_h *g,
                          const char *path,
                          va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_is_fifo_opts_argv optargs_s;
   struct guestfs_is_fifo_opts_argv *optargs = &optargs_s;
   int i;
@@ -2397,7 +2397,7 @@ int
 guestfs_is_fifo (guestfs_h *g,
                  const char *path)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_is_fifo_opts_argv optargs_s = { .bitmask = 0 };
   struct guestfs_is_fifo_opts_argv *optargs = &optargs_s;
 
@@ -2425,7 +2425,7 @@ guestfs_is_file_opts_va (guestfs_h *g,
                          const char *path,
                          va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_is_file_opts_argv optargs_s;
   struct guestfs_is_file_opts_argv *optargs = &optargs_s;
   int i;
@@ -2460,7 +2460,7 @@ int
 guestfs_is_file (guestfs_h *g,
                  const char *path)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_is_file_opts_argv optargs_s = { .bitmask = 0 };
   struct guestfs_is_file_opts_argv *optargs = &optargs_s;
 
@@ -2488,7 +2488,7 @@ guestfs_is_socket_opts_va (guestfs_h *g,
                            const char *path,
                            va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_is_socket_opts_argv optargs_s;
   struct guestfs_is_socket_opts_argv *optargs = &optargs_s;
   int i;
@@ -2523,7 +2523,7 @@ int
 guestfs_is_socket (guestfs_h *g,
                    const char *path)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_is_socket_opts_argv optargs_s = { .bitmask = 0 };
   struct guestfs_is_socket_opts_argv *optargs = &optargs_s;
 
@@ -2553,7 +2553,7 @@ guestfs_md_create_va (guestfs_h *g,
                       char *const *devices,
                       va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_md_create_argv optargs_s;
   struct guestfs_md_create_argv *optargs = &optargs_s;
   int i;
@@ -2617,7 +2617,7 @@ guestfs_mke2fs_va (guestfs_h *g,
                    const char *device,
                    va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_mke2fs_argv optargs_s;
   struct guestfs_mke2fs_argv *optargs = &optargs_s;
   int i;
@@ -2782,7 +2782,7 @@ guestfs_mkfs_opts_va (guestfs_h *g,
                       const char *device,
                       va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_mkfs_opts_argv optargs_s;
   struct guestfs_mkfs_opts_argv *optargs = &optargs_s;
   int i;
@@ -2830,7 +2830,7 @@ guestfs_mkfs (guestfs_h *g,
               const char *fstype,
               const char *device)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_mkfs_opts_argv optargs_s = { .bitmask = 0 };
   struct guestfs_mkfs_opts_argv *optargs = &optargs_s;
 
@@ -2858,7 +2858,7 @@ guestfs_mkfs_btrfs_va (guestfs_h *g,
                        char *const *devices,
                        va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_mkfs_btrfs_argv optargs_s;
   struct guestfs_mkfs_btrfs_argv *optargs = &optargs_s;
   int i;
@@ -2933,7 +2933,7 @@ guestfs_mksquashfs_va (guestfs_h *g,
                        const char *filename,
                        va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_mksquashfs_argv optargs_s;
   struct guestfs_mksquashfs_argv *optargs = &optargs_s;
   int i;
@@ -2988,7 +2988,7 @@ guestfs_mkswap_opts_va (guestfs_h *g,
                         const char *device,
                         va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_mkswap_opts_argv optargs_s;
   struct guestfs_mkswap_opts_argv *optargs = &optargs_s;
   int i;
@@ -3026,7 +3026,7 @@ int
 guestfs_mkswap (guestfs_h *g,
                 const char *device)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_mkswap_opts_argv optargs_s = { .bitmask = 0 };
   struct guestfs_mkswap_opts_argv *optargs = &optargs_s;
 
@@ -3054,7 +3054,7 @@ guestfs_mktemp_va (guestfs_h *g,
                    const char *tmpl,
                    va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_mktemp_argv optargs_s;
   struct guestfs_mktemp_argv *optargs = &optargs_s;
   int i;
@@ -3108,7 +3108,7 @@ guestfs_mount_9p_va (guestfs_h *g,
                      const char *mountpoint,
                      va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_mount_9p_argv optargs_s;
   struct guestfs_mount_9p_argv *optargs = &optargs_s;
   int i;
@@ -3160,7 +3160,7 @@ guestfs_mount_local_va (guestfs_h *g,
                         const char *localmountpoint,
                         va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_mount_local_argv optargs_s;
   struct guestfs_mount_local_argv *optargs = &optargs_s;
   int i;
@@ -3223,7 +3223,7 @@ guestfs_ntfsclone_out_va (guestfs_h *g,
                           const char *backupfile,
                           va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_ntfsclone_out_argv optargs_s;
   struct guestfs_ntfsclone_out_argv *optargs = &optargs_s;
   int i;
@@ -3287,7 +3287,7 @@ guestfs_ntfsfix_va (guestfs_h *g,
                     const char *device,
                     va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_ntfsfix_argv optargs_s;
   struct guestfs_ntfsfix_argv *optargs = &optargs_s;
   int i;
@@ -3339,7 +3339,7 @@ guestfs_ntfsresize_opts_va (guestfs_h *g,
                             const char *device,
                             va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_ntfsresize_opts_argv optargs_s;
   struct guestfs_ntfsresize_opts_argv *optargs = &optargs_s;
   int i;
@@ -3377,7 +3377,7 @@ int
 guestfs_ntfsresize (guestfs_h *g,
                     const char *device)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_ntfsresize_opts_argv optargs_s = { .bitmask = 0 };
   struct guestfs_ntfsresize_opts_argv *optargs = &optargs_s;
 
@@ -3405,7 +3405,7 @@ guestfs_remount_va (guestfs_h *g,
                     const char *mountpoint,
                     va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_remount_argv optargs_s;
   struct guestfs_remount_argv *optargs = &optargs_s;
   int i;
@@ -3459,7 +3459,7 @@ guestfs_rsync_va (guestfs_h *g,
                   const char *dest,
                   va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_rsync_argv optargs_s;
   struct guestfs_rsync_argv *optargs = &optargs_s;
   int i;
@@ -3516,7 +3516,7 @@ guestfs_rsync_in_va (guestfs_h *g,
                      const char *dest,
                      va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_rsync_in_argv optargs_s;
   struct guestfs_rsync_in_argv *optargs = &optargs_s;
   int i;
@@ -3573,7 +3573,7 @@ guestfs_rsync_out_va (guestfs_h *g,
                       const char *remote,
                       va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_rsync_out_argv optargs_s;
   struct guestfs_rsync_out_argv *optargs = &optargs_s;
   int i;
@@ -3630,7 +3630,7 @@ guestfs_selinux_relabel_va (guestfs_h *g,
                             const char *path,
                             va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_selinux_relabel_argv optargs_s;
   struct guestfs_selinux_relabel_argv *optargs = &optargs_s;
   int i;
@@ -3684,7 +3684,7 @@ guestfs_set_e2attrs_va (guestfs_h *g,
                         const char *attrs,
                         va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_set_e2attrs_argv optargs_s;
   struct guestfs_set_e2attrs_argv *optargs = &optargs_s;
   int i;
@@ -3736,7 +3736,7 @@ guestfs_syslinux_va (guestfs_h *g,
                      const char *device,
                      va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_syslinux_argv optargs_s;
   struct guestfs_syslinux_argv *optargs = &optargs_s;
   int i;
@@ -3790,7 +3790,7 @@ guestfs_tar_in_opts_va (guestfs_h *g,
                         const char *directory,
                         va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_tar_in_opts_argv optargs_s;
   struct guestfs_tar_in_opts_argv *optargs = &optargs_s;
   int i;
@@ -3835,7 +3835,7 @@ guestfs_tar_in (guestfs_h *g,
                 const char *tarfile,
                 const char *directory)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_tar_in_opts_argv optargs_s = { .bitmask = 0 };
   struct guestfs_tar_in_opts_argv *optargs = &optargs_s;
 
@@ -3865,7 +3865,7 @@ guestfs_tar_out_opts_va (guestfs_h *g,
                          const char *tarfile,
                          va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_tar_out_opts_argv optargs_s;
   struct guestfs_tar_out_opts_argv *optargs = &optargs_s;
   int i;
@@ -3916,7 +3916,7 @@ guestfs_tar_out (guestfs_h *g,
                  const char *directory,
                  const char *tarfile)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_tar_out_opts_argv optargs_s = { .bitmask = 0 };
   struct guestfs_tar_out_opts_argv *optargs = &optargs_s;
 
@@ -3944,7 +3944,7 @@ guestfs_tune2fs_va (guestfs_h *g,
                     const char *device,
                     va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_tune2fs_argv optargs_s;
   struct guestfs_tune2fs_argv *optargs = &optargs_s;
   int i;
@@ -4023,7 +4023,7 @@ guestfs_umount_opts_va (guestfs_h *g,
                         const char *pathordevice,
                         va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_umount_opts_argv optargs_s;
   struct guestfs_umount_opts_argv *optargs = &optargs_s;
   int i;
@@ -4061,7 +4061,7 @@ int
 guestfs_umount (guestfs_h *g,
                 const char *pathordevice)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_umount_opts_argv optargs_s = { .bitmask = 0 };
   struct guestfs_umount_opts_argv *optargs = &optargs_s;
 
@@ -4087,7 +4087,7 @@ int
 guestfs_umount_local_va (guestfs_h *g,
                          va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_umount_local_argv optargs_s;
   struct guestfs_umount_local_argv *optargs = &optargs_s;
   int i;
@@ -4139,7 +4139,7 @@ guestfs_xfs_admin_va (guestfs_h *g,
                       const char *device,
                       va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_xfs_admin_argv optargs_s;
   struct guestfs_xfs_admin_argv *optargs = &optargs_s;
   int i;
@@ -4209,7 +4209,7 @@ guestfs_xfs_growfs_va (guestfs_h *g,
                        const char *path,
                        va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_xfs_growfs_argv optargs_s;
   struct guestfs_xfs_growfs_argv *optargs = &optargs_s;
   int i;
@@ -4282,7 +4282,7 @@ guestfs_xfs_repair_va (guestfs_h *g,
                        const char *device,
                        va_list args)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_xfs_repair_argv optargs_s;
   struct guestfs_xfs_repair_argv *optargs = &optargs_s;
   int i;

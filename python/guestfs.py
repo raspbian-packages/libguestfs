@@ -11407,6 +11407,10 @@ class GuestFS(object):
         examined and modified using the "g.xfs_info" and
         "g.xfs_growfs" calls.
 
+        Beginning with XFS version 5, it is no longer possible
+        to modify the lazy-counters setting (ie. "lazycounter"
+        parameter has no effect).
+
         This function depends on the feature "xfs". See also
         "g.feature-available".
         """

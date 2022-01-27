@@ -24,8 +24,9 @@ sub tests {
 	my $g = Sys::Guestfs->new ();
 
 	foreach ("gpt", "mbr") {
-		$g->disk_create ("disk_$_.img", "qcow2", 50 * 1024 * 1024);
-		$g->add_drive ("disk_$_.img", format => "qcow2");
+		$g->disk_create ("gdisk/disk_$_.img",
+                                 "qcow2", 50 * 1024 * 1024);
+		$g->add_drive ("gdisk/disk_$_.img", format => "qcow2");
 	}
 
 	$g->launch ();
@@ -35,12 +36,12 @@ sub tests {
 
 	$g->close ();
 
-	die if system ("qemu-img resize disk_gpt.img 100M &>/dev/null");
+	die if system ("qemu-img resize gdisk/disk_gpt.img 100M >/dev/null");
 
 	$g = Sys::Guestfs->new ();
 
 	foreach ("gpt", "mbr") {
-		$g->add_drive ("disk_$_.img", format => "qcow2");
+		$g->add_drive ("gdisk/disk_$_.img", format => "qcow2");
 	}
 
 	$g->launch ();
@@ -61,26 +62,26 @@ sub tests {
 	$g->close ();
 
 	# Disk shrink test
-	die if system ("qemu-img resize --shrink disk_gpt.img 50M &>/dev/null");
+	die if system ("qemu-img resize --shrink gdisk/disk_gpt.img 50M >/dev/null");
 
 	$g = Sys::Guestfs->new ();
 
-	$g->add_drive ("disk_gpt.img", format => "qcow2");
+	$g->add_drive ("gdisk/disk_gpt.img", format => "qcow2");
 	$g->launch ();
 
 	die if $g->part_expand_gpt ("/dev/sda");
 
-	my $output = $g->debug ("sh", ["sgdisk", "-p", "/dev/sda"]);
+	$output = $g->debug ("sh", ["sgdisk", "-p", "/dev/sda"]);
 	die if $output eq "";
 	$output =~ s/\n/ /g;
 	$output =~ s/.*last usable sector is (\d+).*/$1/g;
 
-	my $end_sectors = 50 * 1024 * 2 - $output;
+	$end_sectors = 50 * 1024 * 2 - $output;
 	die unless $end_sectors <= 34;
 }
 
 eval { tests() };
-system ("rm -f disk_*.img");
+system ("rm -f gdisk/disk_*.img");
 if ($@) {
     die;
 }

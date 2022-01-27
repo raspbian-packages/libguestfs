@@ -71,34 +71,11 @@ MANPAGES = \
 	libguestfs-make-fixed-appliance.1 \
 	libguestfs-test-tool.1 \
 	libguestfs-tools.conf.5 \
-	virt-alignment-scan.1 \
-	virt-builder.1 \
-	virt-cat.1 \
 	virt-copy-in.1 \
 	virt-copy-out.1 \
-	virt-customize.1 \
-	virt-df.1 \
-	virt-dib.1 \
-	virt-diff.1 \
-	virt-edit.1 \
-	virt-filesystems.1 \
-	virt-format.1 \
-	virt-get-kernel.1 \
-	virt-index-validate.1 \
-	virt-inspector.1 \
-	virt-list-filesystems.1 \
-	virt-list-partitions.1 \
-	virt-log.1 \
-	virt-ls.1 \
-	virt-make-fs.1 \
 	virt-rescue.1 \
-	virt-resize.1 \
-	virt-sparsify.1 \
-	virt-sysprep.1 \
-	virt-tar.1 \
 	virt-tar-in.1 \
-	virt-tar-out.1 \
-	virt-win-reg.1
+	virt-tar-out.1
 
 podfiles := $(shell for f in `cat $(top_srcdir)/po-docs/podfiles`; do echo `basename $$f .pod`.pod; done)
 
@@ -112,7 +89,7 @@ EXTRA_DIST = \
 all-local: $(MANPAGES)
 
 guestfs.3: guestfs.pod guestfs-actions.pod guestfs-availability.pod guestfs-structs.pod
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --no-strict-checks \
 	  --man $@ \
 	  --section 3 \
@@ -127,14 +104,14 @@ guestfs.3: guestfs.pod guestfs-actions.pod guestfs-availability.pod guestfs-stru
 # out all the %.1 pattern rules below.
 
 guestfish.1: guestfish.pod guestfish-actions.pod guestfish-commands.pod guestfish-prepopts.pod blocksize-option.pod key-option.pod keys-from-stdin-option.pod
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --no-strict-checks \
 	  --man $@ \
 	  --license GPLv2+ \
 	  $<
 
 virt-builder.1: virt-builder.pod customize-synopsis.pod customize-options.pod
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --no-strict-checks \
 	  --man $@ \
 	  --license GPLv2+ \
@@ -143,7 +120,7 @@ virt-builder.1: virt-builder.pod customize-synopsis.pod customize-options.pod
 	  $<
 
 virt-customize.1: virt-customize.pod customize-synopsis.pod customize-options.pod
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --no-strict-checks \
 	  --man $@ \
 	  --license GPLv2+ \
@@ -152,7 +129,7 @@ virt-customize.1: virt-customize.pod customize-synopsis.pod customize-options.po
 	  $<
 
 virt-sysprep.1: virt-sysprep.pod sysprep-extra-options.pod sysprep-operations.pod
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --no-strict-checks \
 	  --man $@ \
 	  --license GPLv2+ \
@@ -161,7 +138,7 @@ virt-sysprep.1: virt-sysprep.pod sysprep-extra-options.pod sysprep-operations.po
 	  $<
 
 virt-p2v.1: virt-p2v.pod virt-p2v-kernel-config.pod
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --no-strict-checks \
 	  --man $@ \
 	  --license GPLv2+ \
@@ -169,27 +146,27 @@ virt-p2v.1: virt-p2v.pod virt-p2v-kernel-config.pod
 	  $<
 
 %.1: %.pod
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --no-strict-checks \
 	  --man $@ \
 	  $<
 
 %.3: %.pod
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --no-strict-checks \
 	  --man $@ \
 	  --section 3 \
 	  $<
 
 %.5: %.pod
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --no-strict-checks \
 	  --man $@ \
 	  --section 5 \
 	  $<
 
 %.8: %.pod
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --no-strict-checks \
 	  --man $@ \
 	  --section 8 \

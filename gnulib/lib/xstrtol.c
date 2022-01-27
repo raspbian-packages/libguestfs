@@ -39,8 +39,7 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "assure.h"
+#include <assert.h>
 
 #define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
 
@@ -81,7 +80,7 @@ __xstrtol (const char *s, char **ptr, int strtol_base,
   __strtol_t tmp;
   strtol_error err = LONGINT_OK;
 
-  assure (0 <= strtol_base && strtol_base <= 36);
+  assert (0 <= strtol_base && strtol_base <= 36);
 
   p = (ptr ? ptr : &t_ptr);
 

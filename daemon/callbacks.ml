@@ -55,10 +55,13 @@ let init_callbacks () =
   Callback.register "Inspect.inspect_is_multipart" Inspect.inspect_is_multipart;
   Callback.register "Inspect.inspect_is_netinst" Inspect.inspect_is_netinst;
   Callback.register "Inspect.inspect_os" Inspect.inspect_os;
+  Callback.register "Rpm.internal_list_rpm_applications" Rpm.internal_list_rpm_applications;
   Callback.register "Is.is_dir" Is.is_dir;
   Callback.register "Is.is_file" Is.is_file;
   Callback.register "Is.is_symlink" Is.is_symlink;
   Callback.register "Devsparts.is_whole_device" Devsparts.is_whole_device;
+  Callback.register "Isoinfo.isoinfo" Isoinfo.isoinfo;
+  Callback.register "Isoinfo.isoinfo_device" Isoinfo.isoinfo_device;
   Callback.register "Devsparts.list_devices" Devsparts.list_devices;
   Callback.register "Lvm_dm.list_dm_devices" Lvm_dm.list_dm_devices;
   Callback.register "Listfs.list_filesystems" Listfs.list_filesystems;

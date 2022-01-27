@@ -4603,6 +4603,10 @@ guestfs_int_ruby_vgscan (VALUE gv)
  * examined and modified using the "g.xfs_info" and
  * "g.xfs_growfs" calls.
  * 
+ * Beginning with XFS version 5, it is no longer possible
+ * to modify the lazy-counters setting (ie. "lazycounter"
+ * parameter has no effect).
+ * 
  * Optional arguments are supplied in the final hash
  * parameter, which is a hash of the argument name to its
  * value. Pass an empty {} for no optional arguments.

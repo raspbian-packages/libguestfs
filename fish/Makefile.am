@@ -200,7 +200,7 @@ noinst_DATA = \
 guestfish.1 $(top_builddir)/website/guestfish.1.html: stamp-guestfish.pod
 
 stamp-guestfish.pod: guestfish.pod guestfish-actions.pod guestfish-commands.pod guestfish-prepopts.pod
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --man guestfish.1 \
 	  --html $(top_builddir)/website/guestfish.1.html \
 	  --path $(srcdir) --path $(top_srcdir)/common/options \
@@ -212,7 +212,7 @@ stamp-guestfish.pod: guestfish.pod guestfish-actions.pod guestfish-commands.pod 
 libguestfs-tools.conf.5 $(top_builddir)/website/libguestfs-tools.conf.5.html: stamp-libguestfs-tools.conf.pod
 
 stamp-libguestfs-tools.conf.pod: libguestfs-tools.conf.pod
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --section 5 \
 	  --man libguestfs-tools.conf.5 \
 	  --html $(top_builddir)/website/libguestfs-tools.conf.5.html \
@@ -223,7 +223,7 @@ stamp-libguestfs-tools.conf.pod: libguestfs-tools.conf.pod
 virt-copy-in.1 $(top_builddir)/website/virt-copy-in.1.html: stamp-virt-copy-in.pod
 
 stamp-virt-copy-in.pod: virt-copy-in.pod
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --man virt-copy-in.1 \
 	  --html $(top_builddir)/website/virt-copy-in.1.html \
 	  --license GPLv2+ \
@@ -234,7 +234,7 @@ stamp-virt-copy-in.pod: virt-copy-in.pod
 virt-copy-out.1 $(top_builddir)/website/virt-copy-out.1.html: stamp-virt-copy-out.pod
 
 stamp-virt-copy-out.pod: virt-copy-out.pod
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --man virt-copy-out.1 \
 	  --html $(top_builddir)/website/virt-copy-out.1.html \
 	  --license GPLv2+ \
@@ -245,7 +245,7 @@ stamp-virt-copy-out.pod: virt-copy-out.pod
 virt-tar-in.1 $(top_builddir)/website/virt-tar-in.1.html: stamp-virt-tar-in.pod
 
 stamp-virt-tar-in.pod: virt-tar-in.pod
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --man virt-tar-in.1 \
 	  --html $(top_builddir)/website/virt-tar-in.1.html \
 	  --license GPLv2+ \
@@ -256,7 +256,7 @@ stamp-virt-tar-in.pod: virt-tar-in.pod
 virt-tar-out.1 $(top_builddir)/website/virt-tar-out.1.html: stamp-virt-tar-out.pod
 
 stamp-virt-tar-out.pod: virt-tar-out.pod
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --man virt-tar-out.1 \
 	  --html $(top_builddir)/website/virt-tar-out.1.html \
 	  --license GPLv2+ \

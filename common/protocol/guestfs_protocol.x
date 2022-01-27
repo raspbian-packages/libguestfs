@@ -1739,6 +1739,10 @@ struct guestfs_internal_hot_remove_drive_precheck_args {
   string label<>;
 };
 
+struct guestfs_internal_list_rpm_applications_ret {
+  guestfs_int_application2_list applications2;
+};
+
 struct guestfs_internal_lstatnslist_args {
   string path<>;
   guestfs_str names<>;
@@ -3700,6 +3704,7 @@ enum guestfs_procedure {
   GUESTFS_PROC_INTERNAL_HOT_REMOVE_DRIVE = 372,
   GUESTFS_PROC_INTERNAL_HOT_REMOVE_DRIVE_PRECHECK = 371,
   GUESTFS_PROC_INTERNAL_JOURNAL_GET = 408,
+  GUESTFS_PROC_INTERNAL_LIST_RPM_APPLICATIONS = 510,
   GUESTFS_PROC_INTERNAL_LSTATNSLIST = 423,
   GUESTFS_PROC_INTERNAL_LXATTRLIST = 205,
   GUESTFS_PROC_INTERNAL_PARSE_MOUNTABLE = 396,
@@ -3986,7 +3991,7 @@ enum guestfs_procedure {
   GUESTFS_PROC_ZGREPI = 160
 };
 
-const GUESTFS_MAX_PROC_NR = 509;
+const GUESTFS_MAX_PROC_NR = 510;
 
 /* The remote procedure call protocol. */
 

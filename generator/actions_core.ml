@@ -1048,19 +1048,19 @@ hidden files are shown." };
     style = RString (RPlainString, "format"), [String (PlainString, "filename")], [];
     tests = [
       InitEmpty, Always, TestResultString (
-        [["disk_format"; "../../test-data/blank-disks/blank-disk-1s.raw"]], "raw"), [];
+        [["disk_format"; "../test-data/blank-disks/blank-disk-1s.raw"]], "raw"), [];
       InitEmpty, Always, TestResultString (
-        [["disk_format"; "../../test-data/blank-disks/blank-disk-1s.qcow2"]], "qcow2"), [];
+        [["disk_format"; "../test-data/blank-disks/blank-disk-1s.qcow2"]], "qcow2"), [];
       InitEmpty, Always, TestResultString (
-        [["disk_format"; "../../test-data/blank-disks/blank-disk-1K.raw"]], "raw"), [];
+        [["disk_format"; "../test-data/blank-disks/blank-disk-1K.raw"]], "raw"), [];
       InitEmpty, Always, TestResultString (
-        [["disk_format"; "../../test-data/blank-disks/blank-disk-1K.qcow2"]], "qcow2"), [];
+        [["disk_format"; "../test-data/blank-disks/blank-disk-1K.qcow2"]], "qcow2"), [];
       InitEmpty, Always, TestResultString (
-        [["disk_format"; "../../test-data/blank-disks/blank-disk-1M.raw"]], "raw"), [];
+        [["disk_format"; "../test-data/blank-disks/blank-disk-1M.raw"]], "raw"), [];
       InitEmpty, Always, TestResultString (
-        [["disk_format"; "../../test-data/blank-disks/blank-disk-1M.qcow2"]], "qcow2"), [];
+        [["disk_format"; "../test-data/blank-disks/blank-disk-1M.qcow2"]], "qcow2"), [];
       InitEmpty, Always, TestResultString (
-        [["disk_format"; "../../test-data/blank-disks/blank-disk-with-backing.qcow2"]], "qcow2"), [];
+        [["disk_format"; "../test-data/blank-disks/blank-disk-with-backing.qcow2"]], "qcow2"), [];
     ];
     shortdesc = "detect the disk format of a disk image";
     longdesc = "\
@@ -1078,19 +1078,19 @@ See also: L<guestfs(3)/DISK IMAGE FORMATS>" };
     style = RInt64 "size", [String (PlainString, "filename")], [];
     tests = [
       InitEmpty, Always, TestResult (
-        [["disk_virtual_size"; "../../test-data/blank-disks/blank-disk-1s.raw"]], "ret == 512"), [];
+        [["disk_virtual_size"; "../test-data/blank-disks/blank-disk-1s.raw"]], "ret == 512"), [];
       InitEmpty, Always, TestResult (
-        [["disk_virtual_size"; "../../test-data/blank-disks/blank-disk-1s.qcow2"]], "ret == 512"), [];
+        [["disk_virtual_size"; "../test-data/blank-disks/blank-disk-1s.qcow2"]], "ret == 512"), [];
       InitEmpty, Always, TestResult (
-        [["disk_virtual_size"; "../../test-data/blank-disks/blank-disk-1K.raw"]], "ret == 1024"), [];
+        [["disk_virtual_size"; "../test-data/blank-disks/blank-disk-1K.raw"]], "ret == 1024"), [];
       InitEmpty, Always, TestResult (
-        [["disk_virtual_size"; "../../test-data/blank-disks/blank-disk-1K.qcow2"]], "ret == 1024"), [];
+        [["disk_virtual_size"; "../test-data/blank-disks/blank-disk-1K.qcow2"]], "ret == 1024"), [];
       InitEmpty, Always, TestResult (
-        [["disk_virtual_size"; "../../test-data/blank-disks/blank-disk-1M.raw"]], "ret == 1024*1024"), [];
+        [["disk_virtual_size"; "../test-data/blank-disks/blank-disk-1M.raw"]], "ret == 1024*1024"), [];
       InitEmpty, Always, TestResult (
-        [["disk_virtual_size"; "../../test-data/blank-disks/blank-disk-1M.qcow2"]], "ret == 1024*1024"), [];
+        [["disk_virtual_size"; "../test-data/blank-disks/blank-disk-1M.qcow2"]], "ret == 1024*1024"), [];
       InitEmpty, Always, TestResult (
-        [["disk_virtual_size"; "../../test-data/blank-disks/blank-disk-with-backing.qcow2"]], "ret == 1024*1024"), [];
+        [["disk_virtual_size"; "../test-data/blank-disks/blank-disk-with-backing.qcow2"]], "ret == 1024*1024"), [];
     ];
     shortdesc = "return virtual size of a disk";
     longdesc = "\
@@ -1105,19 +1105,19 @@ circumstances.  See L<guestfs(3)/CVE-2010-3851>." };
     style = RBool "backingfile", [String (PlainString, "filename")], [];
     tests = [
       InitEmpty, Always, TestResultFalse (
-        [["disk_has_backing_file"; "../../test-data/blank-disks/blank-disk-1s.raw"]]), [];
+        [["disk_has_backing_file"; "../test-data/blank-disks/blank-disk-1s.raw"]]), [];
       InitEmpty, Always, TestResultFalse (
-        [["disk_has_backing_file"; "../../test-data/blank-disks/blank-disk-1s.qcow2"]]), [];
+        [["disk_has_backing_file"; "../test-data/blank-disks/blank-disk-1s.qcow2"]]), [];
       InitEmpty, Always, TestResultFalse (
-        [["disk_has_backing_file"; "../../test-data/blank-disks/blank-disk-1K.raw"]]), [];
+        [["disk_has_backing_file"; "../test-data/blank-disks/blank-disk-1K.raw"]]), [];
       InitEmpty, Always, TestResultFalse (
-        [["disk_has_backing_file"; "../../test-data/blank-disks/blank-disk-1K.qcow2"]]), [];
+        [["disk_has_backing_file"; "../test-data/blank-disks/blank-disk-1K.qcow2"]]), [];
       InitEmpty, Always, TestResultFalse (
-        [["disk_has_backing_file"; "../../test-data/blank-disks/blank-disk-1M.raw"]]), [];
+        [["disk_has_backing_file"; "../test-data/blank-disks/blank-disk-1M.raw"]]), [];
       InitEmpty, Always, TestResultFalse (
-        [["disk_has_backing_file"; "../../test-data/blank-disks/blank-disk-1M.qcow2"]]), [];
+        [["disk_has_backing_file"; "../test-data/blank-disks/blank-disk-1M.qcow2"]]), [];
       InitEmpty, Always, TestResultTrue (
-        [["disk_has_backing_file"; "../../test-data/blank-disks/blank-disk-with-backing.qcow2"]]), [];
+        [["disk_has_backing_file"; "../test-data/blank-disks/blank-disk-with-backing.qcow2"]]), [];
     ];
     shortdesc = "return whether disk has a backing file";
     longdesc = "\
@@ -2176,67 +2176,67 @@ C<guestfs_is_file>, C<guestfs_is_blockdev> (etc), C<guestfs_is_zero>." };
     tests = [
       InitScratchFS, IfNotCrossAppliance, TestResultString (
         [["mkdir"; "/command"];
-         ["upload"; "test-command"; "/command/test-command"];
+         ["upload"; "c-api/test-command"; "/command/test-command"];
          ["chmod"; "0o755"; "/command/test-command"];
          ["command"; "/command/test-command 1"]], "Result1"), [];
       InitScratchFS, IfNotCrossAppliance, TestResultString (
         [["mkdir"; "/command2"];
-         ["upload"; "test-command"; "/command2/test-command"];
+         ["upload"; "c-api/test-command"; "/command2/test-command"];
          ["chmod"; "0o755"; "/command2/test-command"];
          ["command"; "/command2/test-command 2"]], "Result2\n"), [];
       InitScratchFS, IfNotCrossAppliance, TestResultString (
         [["mkdir"; "/command3"];
-         ["upload"; "test-command"; "/command3/test-command"];
+         ["upload"; "c-api/test-command"; "/command3/test-command"];
          ["chmod"; "0o755"; "/command3/test-command"];
          ["command"; "/command3/test-command 3"]], "\nResult3"), [];
       InitScratchFS, IfNotCrossAppliance, TestResultString (
         [["mkdir"; "/command4"];
-         ["upload"; "test-command"; "/command4/test-command"];
+         ["upload"; "c-api/test-command"; "/command4/test-command"];
          ["chmod"; "0o755"; "/command4/test-command"];
          ["command"; "/command4/test-command 4"]], "\nResult4\n"), [];
       InitScratchFS, IfNotCrossAppliance, TestResultString (
         [["mkdir"; "/command5"];
-         ["upload"; "test-command"; "/command5/test-command"];
+         ["upload"; "c-api/test-command"; "/command5/test-command"];
          ["chmod"; "0o755"; "/command5/test-command"];
          ["command"; "/command5/test-command 5"]], "\nResult5\n\n"), [];
       InitScratchFS, IfNotCrossAppliance, TestResultString (
         [["mkdir"; "/command6"];
-         ["upload"; "test-command"; "/command6/test-command"];
+         ["upload"; "c-api/test-command"; "/command6/test-command"];
          ["chmod"; "0o755"; "/command6/test-command"];
          ["command"; "/command6/test-command 6"]], "\n\nResult6\n\n"), [];
       InitScratchFS, IfNotCrossAppliance, TestResultString (
         [["mkdir"; "/command7"];
-         ["upload"; "test-command"; "/command7/test-command"];
+         ["upload"; "c-api/test-command"; "/command7/test-command"];
          ["chmod"; "0o755"; "/command7/test-command"];
          ["command"; "/command7/test-command 7"]], ""), [];
       InitScratchFS, IfNotCrossAppliance, TestResultString (
         [["mkdir"; "/command8"];
-         ["upload"; "test-command"; "/command8/test-command"];
+         ["upload"; "c-api/test-command"; "/command8/test-command"];
          ["chmod"; "0o755"; "/command8/test-command"];
          ["command"; "/command8/test-command 8"]], "\n"), [];
       InitScratchFS, IfNotCrossAppliance, TestResultString (
         [["mkdir"; "/command9"];
-         ["upload"; "test-command"; "/command9/test-command"];
+         ["upload"; "c-api/test-command"; "/command9/test-command"];
          ["chmod"; "0o755"; "/command9/test-command"];
          ["command"; "/command9/test-command 9"]], "\n\n"), [];
       InitScratchFS, IfNotCrossAppliance, TestResultString (
         [["mkdir"; "/command10"];
-         ["upload"; "test-command"; "/command10/test-command"];
+         ["upload"; "c-api/test-command"; "/command10/test-command"];
          ["chmod"; "0o755"; "/command10/test-command"];
          ["command"; "/command10/test-command 10"]], "Result10-1\nResult10-2\n"), [];
       InitScratchFS, IfNotCrossAppliance, TestResultString (
         [["mkdir"; "/command11"];
-         ["upload"; "test-command"; "/command11/test-command"];
+         ["upload"; "c-api/test-command"; "/command11/test-command"];
          ["chmod"; "0o755"; "/command11/test-command"];
          ["command"; "/command11/test-command 11"]], "Result11-1\nResult11-2"), [];
       InitScratchFS, IfNotCrossAppliance, TestLastFail (
         [["mkdir"; "/command12"];
-         ["upload"; "test-command"; "/command12/test-command"];
+         ["upload"; "c-api/test-command"; "/command12/test-command"];
          ["chmod"; "0o755"; "/command12/test-command"];
          ["command"; "/command12/test-command"]]), [];
       InitScratchFS, IfNotCrossAppliance, TestResultString (
         [["mkdir"; "/pwd"];
-         ["upload"; "test-pwd"; "/pwd/test-pwd"];
+         ["upload"; "c-api/test-pwd"; "/pwd/test-pwd"];
          ["chmod"; "0o755"; "/pwd/test-pwd"];
          ["command"; "/pwd/test-pwd"]], "/"), [];
     ];
@@ -2279,67 +2279,67 @@ locations." };
     tests = [
       InitScratchFS, IfNotCrossAppliance, TestResult (
         [["mkdir"; "/command_lines"];
-         ["upload"; "test-command"; "/command_lines/test-command"];
+         ["upload"; "c-api/test-command"; "/command_lines/test-command"];
          ["chmod"; "0o755"; "/command_lines/test-command"];
          ["command_lines"; "/command_lines/test-command 1"]],
         "is_string_list (ret, 1, \"Result1\")"), [];
       InitScratchFS, IfNotCrossAppliance, TestResult (
         [["mkdir"; "/command_lines2"];
-         ["upload"; "test-command"; "/command_lines2/test-command"];
+         ["upload"; "c-api/test-command"; "/command_lines2/test-command"];
          ["chmod"; "0o755"; "/command_lines2/test-command"];
          ["command_lines"; "/command_lines2/test-command 2"]],
         "is_string_list (ret, 1, \"Result2\")"), [];
       InitScratchFS, IfNotCrossAppliance, TestResult (
         [["mkdir"; "/command_lines3"];
-         ["upload"; "test-command"; "/command_lines3/test-command"];
+         ["upload"; "c-api/test-command"; "/command_lines3/test-command"];
          ["chmod"; "0o755"; "/command_lines3/test-command"];
          ["command_lines"; "/command_lines3/test-command 3"]],
         "is_string_list (ret, 2, \"\", \"Result3\")"), [];
       InitScratchFS, IfNotCrossAppliance, TestResult (
         [["mkdir"; "/command_lines4"];
-         ["upload"; "test-command"; "/command_lines4/test-command"];
+         ["upload"; "c-api/test-command"; "/command_lines4/test-command"];
          ["chmod"; "0o755"; "/command_lines4/test-command"];
          ["command_lines"; "/command_lines4/test-command 4"]],
         "is_string_list (ret, 2, \"\", \"Result4\")"), [];
       InitScratchFS, IfNotCrossAppliance, TestResult (
         [["mkdir"; "/command_lines5"];
-         ["upload"; "test-command"; "/command_lines5/test-command"];
+         ["upload"; "c-api/test-command"; "/command_lines5/test-command"];
          ["chmod"; "0o755"; "/command_lines5/test-command"];
          ["command_lines"; "/command_lines5/test-command 5"]],
         "is_string_list (ret, 3, \"\", \"Result5\", \"\")"), [];
       InitScratchFS, IfNotCrossAppliance, TestResult (
         [["mkdir"; "/command_lines6"];
-         ["upload"; "test-command"; "/command_lines6/test-command"];
+         ["upload"; "c-api/test-command"; "/command_lines6/test-command"];
          ["chmod"; "0o755"; "/command_lines6/test-command"];
          ["command_lines"; "/command_lines6/test-command 6"]],
         "is_string_list (ret, 4, \"\", \"\", \"Result6\", \"\")"), [];
       InitScratchFS, IfNotCrossAppliance, TestResult (
         [["mkdir"; "/command_lines7"];
-         ["upload"; "test-command"; "/command_lines7/test-command"];
+         ["upload"; "c-api/test-command"; "/command_lines7/test-command"];
          ["chmod"; "0o755"; "/command_lines7/test-command"];
          ["command_lines"; "/command_lines7/test-command 7"]],
         "is_string_list (ret, 0)"), [];
       InitScratchFS, IfNotCrossAppliance, TestResult (
         [["mkdir"; "/command_lines8"];
-         ["upload"; "test-command"; "/command_lines8/test-command"];
+         ["upload"; "c-api/test-command"; "/command_lines8/test-command"];
          ["chmod"; "0o755"; "/command_lines8/test-command"];
          ["command_lines"; "/command_lines8/test-command 8"]],
         "is_string_list (ret, 1, \"\")"), [];
       InitScratchFS, IfNotCrossAppliance, TestResult (
         [["mkdir"; "/command_lines9"];
-         ["upload"; "test-command"; "/command_lines9/test-command"];
+         ["upload"; "c-api/test-command"; "/command_lines9/test-command"];
          ["chmod"; "0o755"; "/command_lines9/test-command"];
          ["command_lines"; "/command_lines9/test-command 9"]],
         "is_string_list (ret, 2, \"\", \"\")"), [];
       InitScratchFS, IfNotCrossAppliance, TestResult (
         [["mkdir"; "/command_lines10"];
-         ["upload"; "test-command"; "/command_lines10/test-command"];
+         ["upload"; "c-api/test-command"; "/command_lines10/test-command"];
          ["chmod"; "0o755"; "/command_lines10/test-command"];
          ["command_lines"; "/command_lines10/test-command 10"]],
         "is_string_list (ret, 2, \"Result10-1\", \"Result10-2\")"), [];
       InitScratchFS, IfNotCrossAppliance, TestResult (
         [["mkdir"; "/command_lines11"];
-         ["upload"; "test-command"; "/command_lines11/test-command"];
+         ["upload"; "c-api/test-command"; "/command_lines11/test-command"];
          ["chmod"; "0o755"; "/command_lines11/test-command"];
          ["command_lines"; "/command_lines11/test-command 11"]],
         "is_string_list (ret, 2, \"Result11-1\", \"Result11-2\")"), []
@@ -2532,7 +2532,7 @@ This uses the L<blockdev(8)> command." };
       InitScratchFS, Always, TestResultString (
         (* Pick a file from cwd which isn't likely to change. *)
         [["mkdir"; "/upload"];
-         ["upload"; "$srcdir/../../COPYING.LIB"; "/upload/COPYING.LIB"];
+         ["upload"; "$srcdir/../COPYING.LIB"; "/upload/COPYING.LIB"];
          ["checksum"; "md5"; "/upload/COPYING.LIB"]],
         Digest.to_hex (Digest.file "COPYING.LIB")), []
     ];
@@ -2553,7 +2553,7 @@ See also C<guestfs_download>." };
       InitScratchFS, Always, TestResultString (
         (* Pick a file from cwd which isn't likely to change. *)
         [["mkdir"; "/download"];
-         ["upload"; "$srcdir/../../COPYING.LIB"; "/download/COPYING.LIB"];
+         ["upload"; "$srcdir/../COPYING.LIB"; "/download/COPYING.LIB"];
          ["download"; "/download/COPYING.LIB"; "testdownload.tmp"];
          ["upload"; "testdownload.tmp"; "/download/upload"];
          ["checksum"; "md5"; "/download/upload"]],
@@ -2647,15 +2647,15 @@ To get the checksums for many files, use C<guestfs_checksums_out>." };
     tests = [
       InitScratchFS, Always, TestResultString (
         [["mkdir"; "/tar_in"];
-         ["tar_in"; "$srcdir/../../test-data/files/helloworld.tar"; "/tar_in"; "NOARG"; ""; ""; ""];
+         ["tar_in"; "$srcdir/../test-data/files/helloworld.tar"; "/tar_in"; "NOARG"; ""; ""; ""];
          ["cat"; "/tar_in/hello"]], "hello\n"), [];
       InitScratchFS, Always, TestResultString (
         [["mkdir"; "/tar_in_gz"];
-         ["tar_in"; "$srcdir/../../test-data/files/helloworld.tar.gz"; "/tar_in_gz"; "gzip"; ""; ""; ""];
+         ["tar_in"; "$srcdir/../test-data/files/helloworld.tar.gz"; "/tar_in_gz"; "gzip"; ""; ""; ""];
          ["cat"; "/tar_in_gz/hello"]], "hello\n"), [];
       InitScratchFS, IfAvailable "xz", TestResultString (
         [["mkdir"; "/tar_in_xz"];
-         ["tar_in"; "$srcdir/../../test-data/files/helloworld.tar.xz"; "/tar_in_xz"; "xz"; ""; ""; ""];
+         ["tar_in"; "$srcdir/../test-data/files/helloworld.tar.xz"; "/tar_in_xz"; "xz"; ""; ""; ""];
          ["cat"; "/tar_in_xz/hello"]], "hello\n"), []
     ];
     shortdesc = "unpack tarfile to directory";
@@ -5356,7 +5356,7 @@ types (see C<guestfs_part_get_parttype>)." };
     tests = [
       InitISOFS, Always, TestResult (
         [["checksum_device"; "md5"; "/dev/sdd"]],
-        "check_file_md5 (ret, \"../../test-data/test.iso\") == 0"), []
+        "check_file_md5 (ret, \"../test-data/test.iso\") == 0"), []
     ];
     shortdesc = "compute MD5, SHAx or CRC checksum of the contents of a device";
     longdesc = "\
@@ -5403,7 +5403,7 @@ unless it has been set by calling C<guestfs_umask>." };
     cancellable = true;
     tests = [
       InitScratchFS, Always, TestResultString (
-        [["base64_in"; "../../test-data/files/hello.b64"; "/base64_in"];
+        [["base64_in"; "../test-data/files/hello.b64"; "/base64_in"];
          ["cat"; "/base64_in"]], "hello\n"), []
     ];
     shortdesc = "upload base64-encoded data to file";
@@ -5882,7 +5882,7 @@ See also C<guestfs_part_to_partnum>, C<guestfs_device_index>." };
     tests =
       (let md5 = Digest.to_hex (Digest.file "COPYING.LIB") in [
         InitScratchFS, Always, TestResultString (
-          [["upload_offset"; "$srcdir/../../COPYING.LIB"; "/upload_offset"; "0"];
+          [["upload_offset"; "$srcdir/../COPYING.LIB"; "/upload_offset"; "0"];
            ["checksum"; "md5"; "/upload_offset"]], md5), []
       ]);
     shortdesc = "upload a file from the local machine with offset";
@@ -5916,7 +5916,7 @@ See also C<guestfs_upload>, C<guestfs_pwrite>." };
          InitScratchFS, Always, TestResultString (
            (* Pick a file from cwd which isn't likely to change. *)
            [["mkdir"; "/download_offset"];
-            ["upload"; "$srcdir/../../COPYING.LIB"; "/download_offset/COPYING.LIB"];
+            ["upload"; "$srcdir/../COPYING.LIB"; "/download_offset/COPYING.LIB"];
             ["download_offset"; "/download_offset/COPYING.LIB"; "testdownload.tmp"; offset; size];
             ["upload_offset"; "testdownload.tmp"; "/download_offset/COPYING.LIB"; offset];
             ["checksum"; "md5"; "/download_offset/COPYING.LIB"]], md5), []
@@ -6878,11 +6878,11 @@ this will create the largest possible LV." };
   { defaults with
     name = "isoinfo_device"; added = (1, 17, 19);
     style = RStruct ("isodata", "isoinfo"), [String (Device, "device")], [];
+    impl = OCaml "Isoinfo.isoinfo_device";
     tests = [
       InitNone, Always, TestResult (
         [["isoinfo_device"; "/dev/sdd"]],
-        "STREQ (ret->iso_system_id, GUESTFS_ISO_SYSTEM_ID) && "^
-          "STREQ (ret->iso_volume_id, \"CDROM\") && "^
+          "STREQ (ret->iso_volume_id, \"ISOIMAGE\") && "^
           "STREQ (ret->iso_volume_set_id, \"\") && "^
           "ret->iso_volume_set_size == 1 && "^
           "ret->iso_volume_sequence_number == 1 && "^
@@ -6904,6 +6904,7 @@ L<https://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor>" };
   { defaults with
     name = "isoinfo"; added = (1, 17, 19);
     style = RStruct ("isodata", "isoinfo"), [String (Pathname, "isofile")], [];
+    impl = OCaml "Isoinfo.isoinfo";
     shortdesc = "get ISO information from primary volume descriptor of ISO file";
     longdesc = "\
 This is the same as C<guestfs_isoinfo_device> except that it
@@ -7643,12 +7644,6 @@ with zeroes)." };
     style = RErr, [String (Device, "device")], [OBool "extunwritten"; OBool "imgfile"; OBool "v2log"; OBool "projid32bit"; OBool "lazycounter"; OString "label"; OString "uuid"];
     optional = Some "xfs";
     tests = [
-        InitEmpty, Always, TestResult (
-          [["part_disk"; "/dev/sda"; "mbr"];
-           ["mkfs"; "xfs"; "/dev/sda1"; ""; "NOARG"; ""; ""; "NOARG"];
-           ["xfs_admin"; "/dev/sda1"; ""; ""; ""; ""; "false"; "NOARG"; "NOARG"];
-           ["mount"; "/dev/sda1"; "/"];
-           ["xfs_info"; "/"]], "ret->xfs_lazycount == 0"), [];
         InitEmpty, Always, TestResultString (
           [["part_disk"; "/dev/sda"; "mbr"];
            ["mkfs"; "xfs"; "/dev/sda1"; ""; "NOARG"; ""; ""; "NOARG"];
@@ -7670,7 +7665,10 @@ can modify parameters.
 
 Some of the parameters of a mounted filesystem can be examined
 and modified using the C<guestfs_xfs_info> and
-C<guestfs_xfs_growfs> calls." };
+C<guestfs_xfs_growfs> calls.
+
+Beginning with XFS version 5, it is no longer possible to modify
+the lazy-counters setting (ie. C<lazycounter> parameter has no effect)." };
 
   { defaults with
     name = "xfs_repair"; added = (1, 19, 36);

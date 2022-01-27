@@ -22,22 +22,12 @@ ACLOCAL_AMFLAGS = -I m4
 # The generator - must be before anything else.
 SUBDIRS = common/mlstdutils generator
 
-# Must be the first tests that run.
-if ENABLE_APPLIANCE
-SUBDIRS += tests/qemu
-endif
-
 # Files and other test data used by the tests.  Must be before any
-# tests run, except tests/qemu.
+# tests run.
 SUBDIRS += test-data
 
-# Gnulib - must be built and tested before the library.
-SUBDIRS += gnulib/lib
-if ENABLE_GNULIB_TESTS
-SUBDIRS += gnulib/tests
-endif
-
 # Basic source for the library.
+SUBDIRS += gnulib/lib
 SUBDIRS += common/errnostring common/protocol common/qemuopts
 SUBDIRS += common/utils
 SUBDIRS += common/structs
@@ -47,52 +37,16 @@ SUBDIRS += include lib docs examples
 SUBDIRS += common/mlutils
 SUBDIRS += bundled/ocaml-augeas
 SUBDIRS += common/mlpcre
+SUBDIRS += common/mlgettext
 if ENABLE_DAEMON
 SUBDIRS += daemon
-SUBDIRS += tests/daemon
 endif
 if ENABLE_APPLIANCE
 SUBDIRS += appliance
 endif
 
-# Tests - order is important.
-if ENABLE_APPLIANCE
-SUBDIRS += tests/c-api
-SUBDIRS += tests/tmpdirs
-SUBDIRS += tests/protocol
-SUBDIRS += tests/events
-SUBDIRS += tests/parallel
-SUBDIRS += tests/create
-SUBDIRS += tests/disks
-SUBDIRS += tests/discard
-SUBDIRS += tests/mountable
-SUBDIRS += tests/network
-SUBDIRS += tests/lvm
-SUBDIRS += tests/luks
-SUBDIRS += tests/md
-SUBDIRS += tests/selinux
-SUBDIRS += tests/relabel
-SUBDIRS += tests/ntfs
-SUBDIRS += tests/btrfs
-SUBDIRS += tests/xfs
-SUBDIRS += tests/charsets
-SUBDIRS += tests/xml
-SUBDIRS += tests/mount-local
-SUBDIRS += tests/9p
-SUBDIRS += tests/rsync
-SUBDIRS += tests/bigdirs
-SUBDIRS += tests/disk-labels
-SUBDIRS += tests/hotplug
-SUBDIRS += tests/nbd
-SUBDIRS += tests/http
-SUBDIRS += tests/syslinux
-SUBDIRS += tests/journal
-SUBDIRS += tests/relative-paths
-SUBDIRS += tests/gdisk
-SUBDIRS += tests/regressions
-SUBDIRS += tests/tsk
-SUBDIRS += tests/yara
-endif
+# Tests.
+SUBDIRS += tests
 
 # Common code used by the tools.
 SUBDIRS += common/edit
@@ -102,14 +56,8 @@ SUBDIRS += common/progress
 SUBDIRS += common/visit
 SUBDIRS += common/windows
 
-# libguestfs-test-tool
-SUBDIRS += test-tool
-
-# Guestfish.
-SUBDIRS += fish
-
-# virt-tools in C.
-SUBDIRS += align cat diff df edit format inspector make-fs rescue
+# Small tools written in C.
+SUBDIRS += test-tool fish rescue
 
 # bash-completion
 SUBDIRS += bash
@@ -155,31 +103,6 @@ endif
 # Unconditional because nothing is built yet.
 SUBDIRS += csharp
 
-# OCaml tools.  Note 'common/ml*' and 'customize' contain shared code
-# used by other OCaml tools, so these must come first.
-if HAVE_OCAML
-SUBDIRS += common/mlgettext
-SUBDIRS += common/mlprogress
-SUBDIRS += common/mlvisit
-SUBDIRS += common/mlxml
-SUBDIRS += common/mltools
-SUBDIRS += common/mlcustomize
-SUBDIRS += customize
-SUBDIRS += builder builder/templates
-SUBDIRS += get-kernel
-SUBDIRS += resize
-SUBDIRS += sparsify
-SUBDIRS += sysprep
-if HAVE_FUSE
-SUBDIRS += dib
-endif
-endif
-
-# Perl tools.
-if HAVE_TOOLS
-SUBDIRS += tools
-endif
-
 # guestmount
 if HAVE_FUSE
 SUBDIRS += fuse
@@ -194,16 +117,13 @@ SUBDIRS += po-docs
 endif
 
 EXTRA_DIST = \
-	AUTHORS BUGS HACKING RELEASES TODO \
+	AUTHORS HACKING RELEASES TODO \
 	.gitignore \
 	.lvimrc \
 	.mailmap \
-	bootstrap \
 	bugs-in-changelog.sh \
-	autogen.sh \
 	bindtests \
 	build-aux/config.rpath \
-	cfg.mk \
 	check-mli.sh \
 	common/.gitignore \
 	common/README \
@@ -236,11 +156,9 @@ EXTRA_DIST = \
 	logo/fish-5yrs.svg logo/fish-5yrs.png \
 	logo/fish-10yrs.svg logo/fish-10yrs.png \
 	logo/virt-builder.svg \
-	m4/.gitignore \
 	podcheck.pl \
 	tests/test-functions.sh \
 	tmp/.gitignore \
-	update-bugs.sh \
 	valgrind-suppressions \
 	website/bugs.png \
 	website/communicate.png \
@@ -286,36 +204,19 @@ maintainer-upload-website:
 
 # When doing 'make dist' update a few files automatically.
 #
-#  BUGS           - list of bugs (created from Bugzilla)
-#  ChangeLog      - changelog (created from git)
 #  docs/C_SOURCE_FILES
 #                 - source files scanned for internal documentation
 #  po/POTFILES    - files with ordinary extensions, but not OCaml files
-#  po/POTFILES-pl - Perl files that don't end in *.pl, which need a
-#                   special xgettext option [not generated here]
 #  po/POTFILES-ml - OCaml files, which need a special tool to translate
 
-dist-hook: BUGS ChangeLog docs/C_SOURCE_FILES po/POTFILES po/POTFILES-ml
-	cp BUGS $(distdir)/BUGS
-	cp ChangeLog $(distdir)/ChangeLog
-
-BUGS: configure.ac
-	rm -f $@ $@-t
-	unset LC_ALL; \
-	$(top_srcdir)/update-bugs.sh > $@-t
-	mv $@-t $@
-
-ChangeLog: configure.ac
-	rm -f $@ $@-t
-	git log --decorate=false > $@-t
-	mv $@-t $@
+dist-hook: docs/C_SOURCE_FILES po/POTFILES po/POTFILES-ml
 
 # This has to be in the top-level Makefile.am so that we have access
 # to DIST_SUBDIRS.
 docs/C_SOURCE_FILES: configure.ac
 	rm -f $@ $@-t
 	find $(DIST_SUBDIRS) -name '*.[ch]' | \
-	grep -v -E '^(builder/index-parse\.|builder/index-scan\.|examples/|gnulib/|gobject/|java/com_redhat_et_libguestfs|perl/|php/extension/config\.h|ruby/ext/guestfs/extconf\.h|tests/|test-data/|bundled/)' | \
+	grep -v -E '^(builder/index-parse\.|builder/index-scan\.|examples/|gobject/|java/com_redhat_et_libguestfs|perl/|php/extension/config\.h|ruby/ext/guestfs/extconf\.h|tests/|test-data/|bundled/)' | \
 	grep -v -E '/(guestfs|rc)_protocol\.' | \
 	grep -v -E '.*/errnostring\.' | \
 	grep -v -E '.*-gperf\.' | \
@@ -328,22 +229,12 @@ po/POTFILES: configure.ac
 	rm -f $@ $@-t
 	cd $(srcdir); \
 	find $(DIST_SUBDIRS) -name '*.c' | \
-	grep -v -E '^(examples|gnulib|perl/(blib|examples)|po-docs|tests|test-data|bundled)/' | \
+	grep -v -E '^(examples|perl/(blib|examples)|po-docs|tests|test-data|bundled)/' | \
 	grep -v -E '/((guestfs|rc)_protocol\.c|dummy\.c)$$' | \
 	grep -v -E '^python/utils\.c$$' | \
 	grep -v -E '^perl/lib/Sys/Guestfs\.c$$' | \
 	grep -v -E '.*-(tests|gperf)\.c$$' | \
 	LC_ALL=C sort -u > $@-t
-	mv $@-t $@
-
-po/POTFILES-ml: configure.ac
-	rm -f $@ $@-t
-	cd $(srcdir); \
-	find builder common/ml* customize dib get-kernel resize sparsify sysprep -name '*.ml' | \
-	grep -v '^builder/templates/' | \
-	grep -v '^common/mlv2v/' | \
-	grep -v -E '.*_tests\.ml$$' | \
-	LC_ALL=C sort > $@-t
 	mv $@-t $@
 
 # Try to stop people using 'make install' without 'DESTDIR'.
@@ -369,7 +260,7 @@ installcheck-local: installcheck.sh
 # It should be noinst_MANS but that doesn't work.
 noinst_DATA += podwrapper.1
 podwrapper.1: podwrapper.pl
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --section 1 \
 	  --man $@-t \
 	  --license GPLv2+ \
@@ -409,7 +300,6 @@ check-all:
 	$(MAKE) -j1 \
 	  check \
 	  check-valgrind \
-	  check-valgrind-local-guests \
 	  check-direct \
 	  check-valgrind-direct \
 	  check-uml \
@@ -432,15 +322,6 @@ check-valgrind: build-test-guests
 	for f in `grep -l '^$@:' $(SUBDIRS:%=%/Makefile.am)`; do \
 	  echo $(MAKE) -C `dirname $$f` $@; \
 	  $(MAKE) -C `dirname $$f` $@ || (( errors++ )); \
-	done; \
-	exit $$(( $$errors ? 1 : 0 ))
-
-check-valgrind-local-guests:
-	@GUESTS=`$(top_builddir)/run ./pick-guests.pl 5`; \
-	errors=0; \
-	for f in `grep -l '^$@:' $(SUBDIRS:%=%/Makefile.am)`; do \
-	  echo $(MAKE) GUESTS="$$GUESTS" -C `dirname $$f` $@; \
-	  $(MAKE) GUESTS="$$GUESTS" -C `dirname $$f` $@ || (( errors++ )); \
 	done; \
 	exit $$(( $$errors ? 1 : 0 ))
 
@@ -583,17 +464,21 @@ maintainer-check-extra-dist:
 	( git ls-files ; \
 	  cd common; git ls-files | sed 's,^,common/,' ) | \
 	  grep -v '^common$$' | \
+	  grep -v '^common/mlcustomize/' | \
+	  grep -v '^common/mlprogress/' | \
+	  grep -v '^common/mltools/' | \
 	  grep -v '^common/mlv2v/' | \
+	  grep -v '^common/mlvisit/' | \
+	  grep -v '^common/mlxml/' | \
 	  grep -v '^intltool-.*\.in' | \
 	  grep -v '^\.gitmodules' | \
-	  grep -v '^\.gnulib' | \
 	  sort > tmp/gitfiles
 	comm -13 tmp/tarfiles tmp/gitfiles > tmp/comm-out
 	@echo Checking for differences between EXTRA_DIST and git ...
 	cat tmp/comm-out
 	[ ! -s tmp/comm-out ]
 	@echo Checking for generated files missing from the tarball ...
-	@for f in `cat generator/files-generated.txt | grep -v '^common/mlv2v/'`; do \
+	@for f in `cat generator/files-generated.txt | grep -v '^common/mlcustomize' | grep -v '^common/mlv2v/'`; do \
 	  if ! grep -sq "^$$f\$$" tmp/tarfiles; then \
 	    echo generated file missing from tarball: $$f; \
 	    exit 1; \
@@ -612,7 +497,6 @@ help:
 	@echo "make -k check                       ... and display all errors at once."
 	@echo
 	@echo "make check-valgrind               Run a subset of the tests under valgrind."
-	@echo "make check-valgrind-local-guests  Test under valgrind using local guests."
 	@echo "make check-direct                 Test using direct backend."
 	@echo "make check-valgrind-direct        Test valgrind + direct backend."
 	@echo "make check-uml                    Test using User-Mode Linux."

@@ -16111,6 +16111,9 @@ I<NB.> Через ваду запис даних, які містять симв
 Деякі з параметрів змонтованих файлових систем можна визначати та вносити до
 них зміни за допомогою викликів C<guestfs_xfs_info> і C<guestfs_xfs_growfs>.
 
+Beginning with XFS version 5, it is no longer possible to modify the
+lazy-counters setting (ie. C<lazycounter> parameter has no effect).
+
 Ця функція повертає 0 у разі успіху і -1 у разі помилки.
 
 Працездатність цієї функції залежить від можливості C<xfs>. Див. також

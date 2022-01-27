@@ -220,10 +220,10 @@ start_thread (void *statevp)
 
     if (pid == 0) { /* child */
       setpgid (0, 0);           /* so we don't get ^C from parent */
-      execlp ("./test-parallel-mount-local",
+      execlp ("mount-local/test-parallel-mount-local",
               "test-parallel-mount-local", "--test", state->mp, NULL);
       perror ("execlp");
-      goto error;
+      _exit (EXIT_FAILURE);
     }
 
     /* Run the FUSE main loop.  We don't really want to see libguestfs
@@ -371,7 +371,7 @@ guestunmount (const char *mp, unsigned flags)
   }
 
   snprintf (cmd, sizeof cmd,
-            "../../fuse/guestunmount%s %s",
+            "../fuse/guestunmount%s %s",
             (flags & GUESTUNMOUNT_SILENT) ? " --quiet" : "", mp);
 
   status = system (cmd);

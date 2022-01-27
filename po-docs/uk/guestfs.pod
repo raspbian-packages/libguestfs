@@ -1599,6 +1599,15 @@ libguestfs E<ge> 1.19.24, libguestfs можна зібрати із іншим �
 примусово визначить для модулів обробки direct та libvirt використання TCG
 (програмної емуляції) замість KVM (апаратно прискореної віртуалізації).
 
+=head3 force_kvm
+
+Використовується:
+
+ export LIBGUESTFS_BACKEND_SETTINGS=force_kvm
+
+will force the direct and libvirt backends to use KVM (hardware accelerated
+virtualization) instead of TCG (software emulation).
+
 =head3 gdb
 
 У модулі direct передбачено підтримку:

@@ -29,7 +29,7 @@ noinst_DATA = $(top_builddir)/website/guestfs-lua.3.html
 guestfs-lua.3 $(top_builddir)/website/guestfs-lua.3.html: stamp-guestfs-lua.pod
 
 stamp-guestfs-lua.pod: guestfs-lua.pod create_disk.lua inspect_vm.lua
-	$(PODWRAPPER) --path $(srcdir) \
+	$(PODWRAPPER) \
 	  --section 3 \
 	  --man guestfs-lua.3 \
 	  --html $(top_builddir)/website/guestfs-lua.3.html \

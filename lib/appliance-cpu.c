@@ -38,6 +38,11 @@
  *
  * The literal string C<"host"> means use C<-cpu host>.
  *
+ * =item C<"max">
+ *
+ * The literal string C<"max"> means use C<-cpu max> (the best
+ * possible).  This requires awkward translation for libvirt.
+ *
  * =item some string
  *
  * Some string such as C<"cortex-a57"> means use C<-cpu cortex-a57>.
@@ -79,15 +84,12 @@ guestfs_int_get_cpu_model (int kvm)
 #elif defined(__powerpc64__)
   /* See discussion in https://bugzilla.redhat.com/show_bug.cgi?id=1605071 */
   return NULL;
+#elif defined(__riscv)
+  return "rv64";
 #else
-  /* On most architectures, it is faster to pass the CPU host model to
-   * the appliance, allowing maximum speed for things like checksums
-   * and encryption.  Only do this with KVM.  It is broken in subtle
-   * ways on TCG, and fairly pointless when you're emulating anyway.
+  /* On most architectures we can use "max" to get the best possible CPU.
+   * For recent qemu this should work even on TCG.
    */
-  if (kvm)
-    return "host";
-  else
-    return NULL;
+  return "max";
 #endif
 }

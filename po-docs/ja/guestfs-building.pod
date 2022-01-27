@@ -119,7 +119,7 @@ which are still written in Perl.
 
 I<Required>.  Part of Perl core.
 
-=item OCaml E<ge> 4.01
+=item OCaml E<ge> 4.04
 
 =item OCaml findlib
 
@@ -147,13 +147,13 @@ I<Required>.
 
 I<Required>.
 
-=item Perl-compatible Regular Expressions (PCRE) library
+=item Perl-compatible Regular Expressions (PCRE2) library
 
 I<Required>.
 
-=item genisoimage
+=item xorriso, genisoimage or mkisofs
 
-I<Required>.
+One of these is I<Required>.
 
 =item libxml2
 
@@ -208,11 +208,6 @@ eg. F</etc/libguestfs-tools.conf>.
 Optional.  Used by the L<libvirt backend|guestfs(3)/BACKEND> to securely
 confine the appliance (sVirt).
 
-=item Berkeley DB utils (db_dump, db_load, etc)
-
-Optional.  Usually found in a package called C<db-utils>, C<db4-utils>,
-C<db4.X-utils> etc.
-
 =item systemtap
 
 Optional.  For userspace probes.
@@ -248,6 +243,10 @@ Optional.  Render icons from guests.
 =item icoutils
 
 Optional.  Render icons from Windows guests.
+
+=item librpm
+
+Optional.  To parse the list of applications from RPM-based guests.
 
 =item Perl C<Expect>
 
@@ -368,21 +367,9 @@ Optional.  Used to build the Go bindings.
 
 Optional.  For testing memory problems.
 
-=item Perl C<Sys::Virt>
-
-Optional.
-
 =item libvirt-python
 
 Optional.  For testing Python libvirt/libguestfs interactions.
-
-=item Perl C<Win::Hivex>
-
-Optional.  Used by the L<virt-win-reg(1)> tool.
-
-=item Perl C<Pod::Usage>
-
-Optional.  Used by some Perl virt tools.
 
 =item Perl C<libintl>
 
@@ -396,7 +383,7 @@ Optional.  For tab-completion of commands in bash.
 
 Optional.  Library for filesystem forensics analysis.
 
-=item yara
+=item yara E<ge> 4.0.0
 
 Optional.  Tool for categorizing files based on their content.
 
@@ -410,7 +397,8 @@ C<gettext>, OCaml findlib and po4a when building from git.
  git clone https://github.com/libguestfs/libguestfs
  cd libguestfs
  git submodule update --init
- CFLAGS=-fPIC ./autogen.sh
+ autoreconf -i
+ ./configure CFLAGS=-fPIC
  make
 
 =head1 BUILDING FROM TARBALLS
@@ -501,11 +489,11 @@ ignored by git.  These files can contain local configuration or scripts that
 you need to build libguestfs.
 
 I have a file called F<localconfigure> which is a simple wrapper around
-F<autogen.sh> containing local configure customizations that I need.  It
+F<configure> containing local configure customizations that I need.  It
 looks like this:
 
  . localenv
- ./autogen.sh \
+ ./configure.sh \
      -C \
      --enable-werror \
      "$@"
@@ -572,11 +560,6 @@ tools.
 =item B<--disable-fuse>
 
 Disable FUSE support in the API and the L<guestmount(1)> tool.
-
-=item B<--disable-gnulib-tests>
-
-On some platforms the GNUlib test suite can be flaky.  This disables it,
-since errors in the GNUlib test suite are often not important.
 
 =item B<--disable-static>
 

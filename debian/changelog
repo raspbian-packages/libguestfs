@@ -1,11 +1,63 @@
-libguestfs (1:1.44.1-5+rpi1) bookworm-staging; urgency=medium
+libguestfs (1:1.46.2-4+rpi1) bookworm-staging; urgency=medium
 
   [changes brought forward from 1:1.42.0-11+rpi1 by Peter Michael Green <plugwash@raspbian.org> at Thu, 12 Nov 2020 16:03:00 +0000]
   * Add raspbian to the list of distros with dpkg.
   * Disable dh_missing
   * Partiall fix clean target.
 
- -- Raspbian forward porter <root@raspbian.org>  Tue, 28 Sep 2021 22:01:51 +0000
+ -- Raspbian forward porter <root@raspbian.org>  Wed, 26 Jan 2022 06:35:33 +0000
+
+libguestfs (1:1.46.2-4) unstable; urgency=medium
+
+  * Bump Standards-Version, DH compat level, don't require root for build
+  * Remove grub-pc build-dependency (=libguestfs0 runtime dependency)
+    Closes: #1002893
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 01 Jan 2022 18:32:00 +0100
+
+libguestfs (1:1.46.2-3) unstable; urgency=medium
+
+  * Add: grub-pc build-dependency
+  * Add patch to set CPU type on riscv64
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 30 Dec 2021 21:07:04 +0100
+
+libguestfs (1:1.46.2-2) unstable; urgency=medium
+
+  * Switch to exfatprogs (Closes: #992286)
+  * Update build dependencies for appliance
+  * Rework patches
+  * Determine Python3 versions using py3versions --supported (Lintian)
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 27 Dec 2021 01:55:09 +0100
+
+libguestfs (1:1.46.2-1) unstable; urgency=medium
+
+  * New upstream version 1.46.2
+  * Some virt-* programs are now part of guestfs-tools (different soruce
+    package)
+  * Update patches
+  * Update build-dependencies, replace genisoimage with xorriso
+    (Closes: #982234)
+  * Put guestfish, guestmount into separate packages again
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 25 Dec 2021 02:17:59 +0100
+
+libguestfs (1:1.44.2-1.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * debian/rules: use the appropriate way to get the Ruby versions to build
+    for (Closes: #998636)
+
+ -- Antonio Terceiro <terceiro@debian.org>  Sat, 04 Dec 2021 12:11:35 -0300
+
+libguestfs (1:1.44.2-1) unstable; urgency=medium
+
+  * New upstream version 1.44.2
+  * Use PCRE2 instead of PCRE
+  * Update patches, drop number prefixes
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 25 Sep 2021 17:51:52 +0200
 
 libguestfs (1:1.44.1-5) unstable; urgency=medium
 

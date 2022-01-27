@@ -424,6 +424,7 @@ extern int do_internal_hot_add_drive (const char *label);
 extern int do_internal_hot_remove_drive (const char *label);
 extern int do_internal_hot_remove_drive_precheck (const char *label);
 extern int do_internal_journal_get (void);
+extern guestfs_int_application2_list *do_internal_list_rpm_applications (void);
 extern guestfs_int_statns_list *do_internal_lstatnslist (const char *path, char *const *names);
 extern guestfs_int_xattr_list *do_internal_lxattrlist (const char *path, char *const *names);
 extern guestfs_int_internal_mountable *do_internal_parse_mountable (const mountable_t *mountable);

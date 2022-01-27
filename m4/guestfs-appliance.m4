@@ -105,7 +105,8 @@ AC_ARG_WITH([distro],
             ( . /etc/os-release && echo $ID | tr '@<:@:lower:@:>@' '@<:@:upper:@:>@' ) >&AS_MESSAGE_LOG_FD
             DISTRO="`. /etc/os-release && echo $ID | tr '@<:@:lower:@:>@' '@<:@:upper:@:>@'`"
             AS_CASE([$DISTRO],
-                    [FEDORA | RHEL | CENTOS],[DISTRO=REDHAT],
+                    [FEDORA | RHEL | CENTOS | ALMALINUX | CLOUDLINUX],
+                        [DISTRO=REDHAT],
                     [OPENSUSE* | SLED | SLES],[DISTRO=SUSE],
                     [ARCH | MANJARO],[DISTRO=ARCHLINUX],
                     [OPENMANDRIVA],[DISTRO=OPENMANDRIVA])
@@ -114,16 +115,16 @@ AC_ARG_WITH([distro],
             AC_MSG_ERROR([/etc/os-release not available, please specify the distro using --with-distro=DISTRO])
         fi
     ]
-    AM_CONDITIONAL([HAVE_RPM],
-        [AS_CASE([$DISTRO], [REDHAT | SUSE | OPENMANDRIVA | MAGEIA ], [true],
-                            [*], [false])])
-    AM_CONDITIONAL([HAVE_DPKG],
-        [AS_CASE([$DISTRO], [DEBIAN | UBUNTU | RASPBIAN ], [true],
-                            [*], [false])])
-    AM_CONDITIONAL([HAVE_PACMAN],
-        [AS_CASE([$DISTRO], [ARCHLINUX | FRUGALWARE ], [true],
-                            [*], [false])])
 )
+AM_CONDITIONAL([HAVE_RPM],
+    [AS_CASE([$DISTRO], [REDHAT | SUSE | OPENMANDRIVA | MAGEIA ], [true],
+                        [*], [false])])
+AM_CONDITIONAL([HAVE_DPKG],
+    [AS_CASE([$DISTRO], [DEBIAN | UBUNTU | RASPBIAN ], [true],
+                        [*], [false])])
+AM_CONDITIONAL([HAVE_PACMAN],
+    [AS_CASE([$DISTRO], [ARCHLINUX | FRUGALWARE ], [true],
+                        [*], [false])])
 AC_SUBST([DISTRO])
 
 dnl Add extra packages to the appliance.

@@ -33,8 +33,6 @@
 #include "guestfs-internal-actions.h"
 #include "guestfs_protocol.h"
 
-#include "intprops.h"
-
 int
 guestfs_impl_internal_test_set_output (guestfs_h *g, const char *filename)
 {
@@ -715,8 +713,8 @@ guestfs_impl_internal_test_rstringlist (guestfs_h *g,
   }
   strs = safe_malloc (g, (n+1) * sizeof (char *));
   for (i = 0; i < n; ++i) {
-    strs[i] = safe_malloc (g, INT_BUFSIZE_BOUND (i));
-    snprintf (strs[i], INT_BUFSIZE_BOUND (i), "%zu", i);
+    strs[i] = safe_malloc (g, 32);
+    snprintf (strs[i], 32, "%zu", i);
   }
   strs[n] = NULL;
   return strs;
@@ -789,10 +787,10 @@ guestfs_impl_internal_test_rhashtable (guestfs_h *g,
   }
   strs = safe_malloc (g, (n*2+1) * sizeof (*strs));
   for (i = 0; i < n; ++i) {
-    strs[i*2] = safe_malloc (g, INT_BUFSIZE_BOUND (i));
-    strs[i*2+1] = safe_malloc (g, INT_BUFSIZE_BOUND (i));
-    snprintf (strs[i*2], INT_BUFSIZE_BOUND (i), "%zu", i);
-    snprintf (strs[i*2+1], INT_BUFSIZE_BOUND (i), "%zu", i);
+    strs[i*2] = safe_malloc (g, 32);
+    strs[i*2+1] = safe_malloc (g, 32);
+    snprintf (strs[i*2], 32, "%zu", i);
+    snprintf (strs[i*2+1], 32, "%zu", i);
   }
   strs[n*2] = NULL;
   return strs;

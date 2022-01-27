@@ -69,19 +69,19 @@ external event_to_string : event list -> string
 external last_errno : t -> int = "guestfs_int_ocaml_last_errno"
 
 module Errno = struct
-  external einval : unit -> int = "guestfs_int_ocaml_get_EINVAL" "noalloc"
+  external einval : unit -> int = "guestfs_int_ocaml_get_EINVAL" [@@noalloc]
   let errno_EINVAL = einval ()
-  external enotsup : unit -> int = "guestfs_int_ocaml_get_ENOTSUP" "noalloc"
+  external enotsup : unit -> int = "guestfs_int_ocaml_get_ENOTSUP" [@@noalloc]
   let errno_ENOTSUP = enotsup ()
-  external eperm : unit -> int = "guestfs_int_ocaml_get_EPERM" "noalloc"
+  external eperm : unit -> int = "guestfs_int_ocaml_get_EPERM" [@@noalloc]
   let errno_EPERM = eperm ()
-  external esrch : unit -> int = "guestfs_int_ocaml_get_ESRCH" "noalloc"
+  external esrch : unit -> int = "guestfs_int_ocaml_get_ESRCH" [@@noalloc]
   let errno_ESRCH = esrch ()
-  external enoent : unit -> int = "guestfs_int_ocaml_get_ENOENT" "noalloc"
+  external enoent : unit -> int = "guestfs_int_ocaml_get_ENOENT" [@@noalloc]
   let errno_ENOENT = enoent ()
-  external erofs : unit -> int = "guestfs_int_ocaml_get_EROFS" "noalloc"
+  external erofs : unit -> int = "guestfs_int_ocaml_get_EROFS" [@@noalloc]
   let errno_EROFS = erofs ()
-  external enospc : unit -> int = "guestfs_int_ocaml_get_ENOSPC" "noalloc"
+  external enospc : unit -> int = "guestfs_int_ocaml_get_ENOSPC" [@@noalloc]
   let errno_ENOSPC = enospc ()
 end
 

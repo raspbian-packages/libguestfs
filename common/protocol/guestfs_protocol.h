@@ -2229,6 +2229,11 @@ struct guestfs_internal_hot_remove_drive_precheck_args {
 };
 typedef struct guestfs_internal_hot_remove_drive_precheck_args guestfs_internal_hot_remove_drive_precheck_args;
 
+struct guestfs_internal_list_rpm_applications_ret {
+	guestfs_int_application2_list applications2;
+};
+typedef struct guestfs_internal_list_rpm_applications_ret guestfs_internal_list_rpm_applications_ret;
+
 struct guestfs_internal_lstatnslist_args {
 	char *path;
 	struct {
@@ -4719,6 +4724,7 @@ enum guestfs_procedure {
 	GUESTFS_PROC_INTERNAL_HOT_REMOVE_DRIVE = 372,
 	GUESTFS_PROC_INTERNAL_HOT_REMOVE_DRIVE_PRECHECK = 371,
 	GUESTFS_PROC_INTERNAL_JOURNAL_GET = 408,
+	GUESTFS_PROC_INTERNAL_LIST_RPM_APPLICATIONS = 510,
 	GUESTFS_PROC_INTERNAL_LSTATNSLIST = 423,
 	GUESTFS_PROC_INTERNAL_LXATTRLIST = 205,
 	GUESTFS_PROC_INTERNAL_PARSE_MOUNTABLE = 396,
@@ -5005,7 +5011,7 @@ enum guestfs_procedure {
 	GUESTFS_PROC_ZGREPI = 160,
 };
 typedef enum guestfs_procedure guestfs_procedure;
-#define GUESTFS_MAX_PROC_NR 509
+#define GUESTFS_MAX_PROC_NR 510
 #define GUESTFS_MESSAGE_MAX 4194304
 #define GUESTFS_PROGRAM 0x2000F5F5
 #define GUESTFS_PROTOCOL_VERSION 4
@@ -5416,6 +5422,7 @@ extern  bool_t xdr_guestfs_internal_find_inode_args (XDR *, guestfs_internal_fin
 extern  bool_t xdr_guestfs_internal_hot_add_drive_args (XDR *, guestfs_internal_hot_add_drive_args*);
 extern  bool_t xdr_guestfs_internal_hot_remove_drive_args (XDR *, guestfs_internal_hot_remove_drive_args*);
 extern  bool_t xdr_guestfs_internal_hot_remove_drive_precheck_args (XDR *, guestfs_internal_hot_remove_drive_precheck_args*);
+extern  bool_t xdr_guestfs_internal_list_rpm_applications_ret (XDR *, guestfs_internal_list_rpm_applications_ret*);
 extern  bool_t xdr_guestfs_internal_lstatnslist_args (XDR *, guestfs_internal_lstatnslist_args*);
 extern  bool_t xdr_guestfs_internal_lstatnslist_ret (XDR *, guestfs_internal_lstatnslist_ret*);
 extern  bool_t xdr_guestfs_internal_lxattrlist_args (XDR *, guestfs_internal_lxattrlist_args*);
@@ -6138,6 +6145,7 @@ extern bool_t xdr_guestfs_internal_find_inode_args ();
 extern bool_t xdr_guestfs_internal_hot_add_drive_args ();
 extern bool_t xdr_guestfs_internal_hot_remove_drive_args ();
 extern bool_t xdr_guestfs_internal_hot_remove_drive_precheck_args ();
+extern bool_t xdr_guestfs_internal_list_rpm_applications_ret ();
 extern bool_t xdr_guestfs_internal_lstatnslist_args ();
 extern bool_t xdr_guestfs_internal_lstatnslist_ret ();
 extern bool_t xdr_guestfs_internal_lxattrlist_args ();

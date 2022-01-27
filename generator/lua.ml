@@ -67,6 +67,8 @@ let generate_lua_c () =
 #endif
 #endif
 
+#include \"ignore-value.h\"
+
 #include <guestfs.h>
 #include \"guestfs-utils.h\"
 
@@ -162,10 +164,9 @@ guestfs_int_lua_create (lua_State *L)
     return luaL_error (L, \"Guestfs.create: too many arguments\");
 
   g = guestfs_create_flags (flags);
-  if (!g) {
-    strerror_r (errno, err, sizeof err);
-    return luaL_error (L, \"Guestfs.create: cannot create handle: %%s\", err);
-  }
+  if (!g)
+    return luaL_error (L, \"Guestfs.create: cannot create handle: %%s\",
+                       guestfs_int_strerror (errno, err, sizeof err));
 
   guestfs_set_error_handler (g, NULL, NULL);
 
@@ -241,10 +242,9 @@ error__tostring (lua_State *L)
   lua_gettable (L, 1);
   msg = luaL_checkstring (L, -1);
 
-  if (code) {
-    strerror_r (code, err, sizeof err);
-    lua_pushfstring (L, \"%%s: %%s\", msg, err);
-  }
+  if (code)
+    lua_pushfstring (L, \"%%s: %%s\", msg,
+                     guestfs_int_strerror (code, err, sizeof err));
   else
     lua_pushstring (L, msg);
 
@@ -653,8 +653,8 @@ get_string_list (lua_State *L, int index)
 
   strs = malloc ((len+1) * sizeof (char *));
   if (strs == NULL) {
-    strerror_r (errno, err, sizeof err);
-    luaL_error (L, \"get_string_list: malloc failed: %%s\", err);
+    luaL_error (L, \"get_string_list: malloc failed: %%s\",
+                guestfs_int_strerror (errno, err, sizeof err));
     /*NOTREACHED*/
     return NULL;
   }

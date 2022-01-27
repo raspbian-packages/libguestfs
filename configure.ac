@@ -19,8 +19,8 @@
 # add extra information using --with-extra="..." which may be any
 # freeform string.
 m4_define([libguestfs_major],   [1])
-m4_define([libguestfs_minor],   [44])
-m4_define([libguestfs_release], [1])
+m4_define([libguestfs_minor],   [46])
+m4_define([libguestfs_release], [2])
 
 AC_INIT([libguestfs],libguestfs_major.libguestfs_minor.libguestfs_release)
 
@@ -84,11 +84,6 @@ AC_DEFINE_UNQUOTED([PACKAGE_VERSION_EXTRA],["$libguestfs_extra"],[Extra version 
 PACKAGE_VERSION_FULL="libguestfs_major.libguestfs_minor.libguestfs_release${libguestfs_extra}"
 AC_DEFINE_UNQUOTED([PACKAGE_VERSION_FULL],["$PACKAGE_VERSION_FULL"],[Full version string.])
 AC_SUBST([PACKAGE_VERSION_FULL])
-
-dnl Early gnulib initialization.
-HEADING([Configuring Gnulib])
-gl_EARLY
-gl_INIT
 
 dnl Check for external programs required to either build or run
 dnl libguestfs.
@@ -205,38 +200,22 @@ AC_CONFIG_FILES([ocaml-link.sh],
                 [chmod +x,-w ocaml-link.sh])
 AC_CONFIG_FILES([php/extension/php-for-tests.sh],
                 [chmod +x,-w php/extension/php-for-tests.sh])
-AC_CONFIG_FILES([pick-guests.pl],
-                [chmod +x,-w pick-guests.pl])
 AC_CONFIG_FILES([podwrapper.pl],
                 [chmod +x,-w podwrapper.pl])
 AC_CONFIG_FILES([run],
                 [chmod +x,-w run])
 
 AC_CONFIG_FILES([Makefile
-                 align/Makefile
                  appliance/Makefile
                  bash/Makefile
-                 builder/Makefile
-                 builder/libguestfs.conf
-                 builder/opensuse.conf
-                 builder/templates/Makefile
-                 builder/test-config/virt-builder/repos.d/test-index.conf
-                 builder/test-simplestreams/virt-builder/repos.d/cirros.conf
-                 builder/test-website/virt-builder/repos.d/libguestfs.conf
                  bundled/ocaml-augeas/Makefile
-                 cat/Makefile
                  common/errnostring/Makefile
                  common/edit/Makefile
-                 common/mlcustomize/Makefile
                  common/mlgettext/Makefile
                  common/mlpcre/Makefile
-                 common/mlprogress/Makefile
                  common/mlstdutils/Makefile
                  common/mlstdutils/guestfs_config.ml
-                 common/mltools/Makefile
                  common/mlutils/Makefile
-                 common/mlvisit/Makefile
-                 common/mlxml/Makefile
                  common/options/Makefile
                  common/parallel/Makefile
                  common/progress/Makefile
@@ -248,31 +227,22 @@ AC_CONFIG_FILES([Makefile
                  common/windows/Makefile
                  config.sh
                  csharp/Makefile
-                 customize/Makefile
                  daemon/daemon_config.ml
                  daemon/Makefile
-                 df/Makefile
-                 dib/Makefile
-                 diff/Makefile
                  docs/Makefile
-                 edit/Makefile
                  erlang/Makefile
                  erlang/examples/Makefile
                  examples/Makefile
                  fish/Makefile
-                 format/Makefile
                  fuse/Makefile
                  generator/Makefile
-                 get-kernel/Makefile
                  gnulib/lib/Makefile
-                 gnulib/tests/Makefile
                  gobject/libguestfs-gobject-1.0.pc
                  gobject/Makefile
                  golang/Makefile
                  golang/examples/Makefile
                  haskell/Makefile
                  include/Makefile
-                 inspector/Makefile
                  java/Makefile
                  java/examples/Makefile
                  lib/Makefile
@@ -280,7 +250,6 @@ AC_CONFIG_FILES([Makefile
                  lib/local/libguestfs.pc
                  lua/Makefile
                  lua/examples/Makefile
-                 make-fs/Makefile
                  ocaml/META
                  ocaml/Makefile
                  ocaml/examples/Makefile
@@ -297,15 +266,12 @@ AC_CONFIG_FILES([Makefile
                  python/setup.py
                  python/t/tests_helper.py
                  rescue/Makefile
-                 resize/Makefile
                  ruby/Makefile
                  ruby/Rakefile
                  ruby/examples/Makefile
                  ruby/ext/guestfs/extconf.rb
                  rust/Makefile
                  rust/Cargo.toml
-                 sparsify/Makefile
-                 sysprep/Makefile
                  test-data/Makefile
                  test-data/binaries/Makefile
                  test-data/blank-disks/Makefile
@@ -313,46 +279,9 @@ AC_CONFIG_FILES([Makefile
                  test-data/phony-guests/Makefile
                  test-data/phony-guests/guests.xml
                  test-tool/Makefile
-                 tests/9p/Makefile
-                 tests/bigdirs/Makefile
-                 tests/btrfs/Makefile
-                 tests/c-api/Makefile
-                 tests/charsets/Makefile
-                 tests/create/Makefile
-                 tests/daemon/Makefile
+                 tests/Makefile
                  tests/daemon/captive-daemon.pm
-                 tests/discard/Makefile
-                 tests/disks/Makefile
                  tests/disks/test-qemu-drive-libvirt.xml
-                 tests/disk-labels/Makefile
-                 tests/events/Makefile
-                 tests/gdisk/Makefile
-                 tests/hotplug/Makefile
-                 tests/http/Makefile
-                 tests/journal/Makefile
-                 tests/luks/Makefile
-                 tests/lvm/Makefile
-                 tests/md/Makefile
-                 tests/mount-local/Makefile
-                 tests/mountable/Makefile
-                 tests/nbd/Makefile
-                 tests/network/Makefile
-                 tests/ntfs/Makefile
-                 tests/parallel/Makefile
-                 tests/protocol/Makefile
-                 tests/qemu/Makefile
-                 tests/regressions/Makefile
-                 tests/relabel/Makefile
-                 tests/relative-paths/Makefile
-                 tests/rsync/Makefile
-                 tests/selinux/Makefile
-                 tests/syslinux/Makefile
-                 tests/tmpdirs/Makefile
-                 tests/tsk/Makefile
-                 tests/xfs/Makefile
-                 tests/xml/Makefile
-                 tests/yara/Makefile
-                 tools/Makefile
                  website/index.html])
 
 AC_CONFIG_LINKS([common/mlstdutils/guestfs_config.mli:common/mlstdutils/guestfs_config.mli
@@ -371,19 +300,15 @@ echo
 echo       "Daemon .............................. $enable_daemon"
 echo       "Appliance ........................... $ENABLE_APPLIANCE"
 echo       "QEMU ................................ $QEMU"
-echo       "guestfish and C-based virt tools .... yes"
+echo       "guestfish ........................... yes"
 echo       "FUSE filesystem ..................... $enable_fuse"
 echo       "Default backend ..................... $DEFAULT_BACKEND"
 AS_ECHO_N(["GNU gettext for i18n ................ "])
 if test "x$HAVE_GNU_GETTEXT_TRUE" = "x"; then echo "yes"; else echo "no"; fi
 AS_ECHO_N(["OCaml bindings ...................... "])
 if test "x$HAVE_OCAML_TRUE" = "x"; then echo "yes"; else echo "no"; fi
-AS_ECHO_N(["OCaml-based virt tools .............. "])
-if test "x$HAVE_OCAML_TRUE" = "x"; then echo "yes"; else echo "no"; fi
 AS_ECHO_N(["Perl bindings ....................... "])
 if test "x$HAVE_PERL_TRUE" = "x"; then echo "yes"; else echo "no"; fi
-AS_ECHO_N(["Perl-based virt tools ............... "])
-if test "x$HAVE_TOOLS_TRUE" = "x"; then echo "yes"; else echo "no"; fi
 AS_ECHO_N(["Python bindings ..................... "])
 if test "x$HAVE_PYTHON_TRUE" = "x"; then echo "yes"; else echo "no"; fi
 AS_ECHO_N(["Ruby bindings ....................... "])

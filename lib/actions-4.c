@@ -45,7 +45,7 @@ GUESTFS_DLL_PUBLIC int
 guestfs_add_cdrom (guestfs_h *g,
                    const char *filename)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   int trace_flag = g->trace;
   struct trace_buffer trace_buffer;
   int r;
@@ -94,7 +94,7 @@ guestfs_add_libvirt_dom_argv (guestfs_h *g,
                               void * /* really virDomainPtr */ dom,
                               const struct guestfs_add_libvirt_dom_argv *optargs)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_add_libvirt_dom_argv optargs_null;
   if (!optargs) {
     optargs_null.bitmask = 0;
@@ -199,7 +199,7 @@ GUESTFS_DLL_PUBLIC char *
 guestfs_canonical_device_name (guestfs_h *g,
                                const char *device)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   int trace_flag = g->trace;
   struct trace_buffer trace_buffer;
   char *r;
@@ -243,7 +243,7 @@ guestfs_find_inode (guestfs_h *g,
                     const char *device,
                     int64_t inode)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   int trace_flag = g->trace;
   struct trace_buffer trace_buffer;
   struct guestfs_tsk_dirent_list *r;
@@ -298,7 +298,7 @@ guestfs_find_inode (guestfs_h *g,
 GUESTFS_DLL_PUBLIC int
 guestfs_get_autosync (guestfs_h *g)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   int trace_flag = g->trace;
   struct trace_buffer trace_buffer;
   int r;
@@ -334,7 +334,7 @@ GUESTFS_DLL_PUBLIC char *
 guestfs_get_libvirt_requested_credential_challenge (guestfs_h *g,
                                                     int index)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   int trace_flag = g->trace;
   struct trace_buffer trace_buffer;
   char *r;
@@ -370,7 +370,7 @@ guestfs_get_libvirt_requested_credential_challenge (guestfs_h *g,
 GUESTFS_DLL_PUBLIC int
 guestfs_get_pid (guestfs_h *g)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   int trace_flag = g->trace;
   struct trace_buffer trace_buffer;
   int r;
@@ -405,7 +405,7 @@ guestfs_get_pid (guestfs_h *g)
 GUESTFS_DLL_PUBLIC int
 guestfs_get_selinux (guestfs_h *g)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   int trace_flag = g->trace;
   struct trace_buffer trace_buffer;
   int r;
@@ -441,7 +441,7 @@ GUESTFS_DLL_PUBLIC int
 guestfs_internal_test_rbool (guestfs_h *g,
                              const char *val)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   int trace_flag = g->trace;
   struct trace_buffer trace_buffer;
   int r;
@@ -484,7 +484,7 @@ GUESTFS_DLL_PUBLIC char **
 guestfs_internal_test_rhashtable (guestfs_h *g,
                                   const char *val)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   int trace_flag = g->trace;
   struct trace_buffer trace_buffer;
   char **r;
@@ -536,7 +536,7 @@ GUESTFS_DLL_PUBLIC char **
 guestfs_internal_test_rstringlist (guestfs_h *g,
                                    const char *val)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   int trace_flag = g->trace;
   struct trace_buffer trace_buffer;
   char **r;
@@ -587,7 +587,7 @@ guestfs_internal_test_rstringlist (guestfs_h *g,
 GUESTFS_DLL_PUBLIC char **
 guestfs_internal_test_rstringlisterr (guestfs_h *g)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   int trace_flag = g->trace;
   struct trace_buffer trace_buffer;
   char **r;
@@ -631,7 +631,7 @@ guestfs_internal_test_rstringlisterr (guestfs_h *g)
 GUESTFS_DLL_PUBLIC int
 guestfs_is_busy (guestfs_h *g)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   int trace_flag = g->trace;
   struct trace_buffer trace_buffer;
   int r;
@@ -666,7 +666,7 @@ guestfs_is_busy (guestfs_h *g)
 GUESTFS_DLL_PUBLIC int
 guestfs_is_ready (guestfs_h *g)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   int trace_flag = g->trace;
   struct trace_buffer trace_buffer;
   int r;
@@ -703,7 +703,7 @@ guestfs_readlinklist (guestfs_h *g,
                       const char *path,
                       char *const *names)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   int trace_flag = g->trace;
   struct trace_buffer trace_buffer;
   char **r;
@@ -780,7 +780,7 @@ GUESTFS_DLL_PUBLIC int
 guestfs_set_cachedir (guestfs_h *g,
                       const char *cachedir)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   int trace_flag = g->trace;
   struct trace_buffer trace_buffer;
   int r;
@@ -824,7 +824,7 @@ guestfs_set_cachedir (guestfs_h *g,
 GUESTFS_DLL_PUBLIC int
 guestfs_shutdown (guestfs_h *g)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   int trace_flag = g->trace;
   struct trace_buffer trace_buffer;
   int r;
@@ -861,7 +861,7 @@ guestfs_aug_init (guestfs_h *g,
                   const char *root,
                   int flags)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_aug_init_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -961,7 +961,7 @@ guestfs_aug_insert (guestfs_h *g,
                     const char *label,
                     int before)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_aug_insert_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -1065,7 +1065,7 @@ guestfs_aug_insert (guestfs_h *g,
 GUESTFS_DLL_PUBLIC int
 guestfs_aug_load (guestfs_h *g)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   guestfs_message_header hdr;
   guestfs_message_error err;
   int serial;
@@ -1151,7 +1151,7 @@ GUESTFS_DLL_PUBLIC int
 guestfs_aug_rm (guestfs_h *g,
                 const char *augpath)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_aug_rm_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -1250,7 +1250,7 @@ guestfs_aug_set (guestfs_h *g,
                  const char *augpath,
                  const char *val)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_aug_set_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -1353,7 +1353,7 @@ GUESTFS_DLL_PUBLIC char **
 guestfs_blkid (guestfs_h *g,
                const char *device)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_blkid_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -1466,7 +1466,7 @@ guestfs_blockdev_setra (guestfs_h *g,
                         const char *device,
                         int sectors)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_blockdev_setra_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -1564,7 +1564,7 @@ GUESTFS_DLL_PUBLIC int
 guestfs_btrfs_scrub_start (guestfs_h *g,
                            const char *path)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_btrfs_scrub_start_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -1660,7 +1660,7 @@ GUESTFS_DLL_PUBLIC struct guestfs_btrfsscrub *
 guestfs_btrfs_scrub_status (guestfs_h *g,
                             const char *path)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_btrfs_scrub_status_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -1762,7 +1762,7 @@ guestfs_btrfs_subvolume_create_opts_argv (guestfs_h *g,
                                           const char *dest,
                                           const struct guestfs_btrfs_subvolume_create_opts_argv *optargs)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_btrfs_subvolume_create_opts_argv optargs_null;
   if (!optargs) {
     optargs_null.bitmask = 0;
@@ -1885,7 +1885,7 @@ guestfs_btrfs_subvolume_set_default (guestfs_h *g,
                                      int64_t id,
                                      const char *fs)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_btrfs_subvolume_set_default_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -1985,7 +1985,7 @@ guestfs_btrfs_subvolume_snapshot_opts_argv (guestfs_h *g,
                                             const char *dest,
                                             const struct guestfs_btrfs_subvolume_snapshot_opts_argv *optargs)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_btrfs_subvolume_snapshot_opts_argv optargs_null;
   if (!optargs) {
     optargs_null.bitmask = 0;
@@ -2122,7 +2122,7 @@ GUESTFS_DLL_PUBLIC char *
 guestfs_case_sensitive_path (guestfs_h *g,
                              const char *path)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_case_sensitive_path_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -2222,7 +2222,7 @@ guestfs_copy_size (guestfs_h *g,
                    const char *dest,
                    int64_t size)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_copy_size_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -2329,7 +2329,7 @@ guestfs_debug_upload (guestfs_h *g,
                       const char *tmpname,
                       int mode)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_debug_upload_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -2454,7 +2454,7 @@ guestfs_download_offset (guestfs_h *g,
                          int64_t offset,
                          int64_t size)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_download_offset_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -2567,7 +2567,7 @@ GUESTFS_DLL_PUBLIC char *
 guestfs_findfs_uuid (guestfs_h *g,
                      const char *uuid)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_findfs_uuid_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -2666,7 +2666,7 @@ guestfs_fstrim_argv (guestfs_h *g,
                      const char *mountpoint,
                      const struct guestfs_fstrim_argv *optargs)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_fstrim_argv optargs_null;
   if (!optargs) {
     optargs_null.bitmask = 0;
@@ -2798,7 +2798,7 @@ GUESTFS_DLL_PUBLIC char *
 guestfs_get_e2uuid (guestfs_h *g,
                     const char *device)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_get_e2uuid_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -2897,7 +2897,7 @@ guestfs_grepi (guestfs_h *g,
                const char *regex,
                const char *path)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_grepi_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -3016,7 +3016,7 @@ GUESTFS_DLL_PUBLIC char *
 guestfs_hexdump (guestfs_h *g,
                  const char *path)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_hexdump_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -3114,7 +3114,7 @@ GUESTFS_DLL_PUBLIC struct guestfs_hivex_node_list *
 guestfs_hivex_node_children (guestfs_h *g,
                              int64_t nodeh)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_hivex_node_children_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -3219,7 +3219,7 @@ GUESTFS_DLL_PUBLIC char *
 guestfs_inspect_get_format (guestfs_h *g,
                             const char *root)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_inspect_get_format_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -3317,7 +3317,7 @@ GUESTFS_DLL_PUBLIC char *
 guestfs_inspect_get_hostname (guestfs_h *g,
                               const char *root)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_inspect_get_hostname_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -3415,7 +3415,7 @@ GUESTFS_DLL_PUBLIC int
 guestfs_inspect_is_multipart (guestfs_h *g,
                               const char *root)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_inspect_is_multipart_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -3513,7 +3513,7 @@ GUESTFS_DLL_PUBLIC int
 guestfs_internal_hot_remove_drive (guestfs_h *g,
                                    const char *label)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_internal_hot_remove_drive_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -3610,7 +3610,7 @@ guestfs_internal_lstatnslist (guestfs_h *g,
                               const char *path,
                               char *const *names)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_internal_lstatnslist_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -3749,7 +3749,7 @@ guestfs_internal_lxattrlist (guestfs_h *g,
                              const char *path,
                              char *const *names)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_internal_lxattrlist_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -3888,7 +3888,7 @@ guestfs_internal_rhbz914931 (guestfs_h *g,
                              const char *filename,
                              int count)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_internal_rhbz914931_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -4002,7 +4002,7 @@ guestfs_internal_rhbz914931 (guestfs_h *g,
 GUESTFS_DLL_PUBLIC char **
 guestfs_ldmtool_scan (guestfs_h *g)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   guestfs_message_header hdr;
   guestfs_message_error err;
   struct guestfs_ldmtool_scan_ret ret;
@@ -4104,7 +4104,7 @@ GUESTFS_DLL_PUBLIC struct guestfs_xattr_list *
 guestfs_lgetxattrs (guestfs_h *g,
                     const char *path)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_lgetxattrs_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -4214,7 +4214,7 @@ guestfs_lgetxattrs (guestfs_h *g,
 GUESTFS_DLL_PUBLIC char **
 guestfs_list_dm_devices (guestfs_h *g)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   guestfs_message_header hdr;
   guestfs_message_error err;
   struct guestfs_list_dm_devices_ret ret;
@@ -4315,7 +4315,7 @@ guestfs_list_dm_devices (guestfs_h *g)
 GUESTFS_DLL_PUBLIC char **
 guestfs_list_ldm_volumes (guestfs_h *g)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   guestfs_message_header hdr;
   guestfs_message_error err;
   struct guestfs_list_ldm_volumes_ret ret;
@@ -4419,7 +4419,7 @@ guestfs_luks_format (guestfs_h *g,
                      const char *key,
                      int keyslot)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_luks_format_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -4524,7 +4524,7 @@ GUESTFS_DLL_PUBLIC char *
 guestfs_lvm_canonical_lv_name (guestfs_h *g,
                                const char *lvname)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_lvm_canonical_lv_name_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -4623,7 +4623,7 @@ guestfs_lvrename (guestfs_h *g,
                   const char *logvol,
                   const char *newlogvol)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_lvrename_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -4727,7 +4727,7 @@ guestfs_lvresize (guestfs_h *g,
                   const char *device,
                   int mbytes)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_lvresize_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -4825,7 +4825,7 @@ GUESTFS_DLL_PUBLIC char *
 guestfs_lvuuid (guestfs_h *g,
                 const char *device)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_lvuuid_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -4926,7 +4926,7 @@ guestfs_mke2fs_J (guestfs_h *g,
                   const char *device,
                   const char *journal)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_mke2fs_J_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -5040,7 +5040,7 @@ guestfs_mke2journal_U (guestfs_h *g,
                        const char *uuid,
                        const char *device)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_mke2journal_U_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -5148,7 +5148,7 @@ guestfs_mknod_c (guestfs_h *g,
                  int devminor,
                  const char *path)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_mknod_c_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -5252,7 +5252,7 @@ guestfs_mount_options (guestfs_h *g,
                        const char *mountable,
                        const char *mountpoint)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_mount_options_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -5363,7 +5363,7 @@ guestfs_ntfsfix_argv (guestfs_h *g,
                       const char *device,
                       const struct guestfs_ntfsfix_argv *optargs)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_ntfsfix_argv optargs_null;
   if (!optargs) {
     optargs_null.bitmask = 0;
@@ -5482,7 +5482,7 @@ guestfs_part_add (guestfs_h *g,
                   int64_t startsect,
                   int64_t endsect)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_part_add_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -5590,7 +5590,7 @@ guestfs_part_get_gpt_guid (guestfs_h *g,
                            const char *device,
                            int partnum)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_part_get_gpt_guid_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -5691,7 +5691,7 @@ guestfs_part_get_mbr_id (guestfs_h *g,
                          const char *device,
                          int partnum)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_part_get_mbr_id_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -5792,7 +5792,7 @@ guestfs_part_get_mbr_part_type (guestfs_h *g,
                                 const char *device,
                                 int partnum)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_part_get_mbr_part_type_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -5893,7 +5893,7 @@ guestfs_part_get_name (guestfs_h *g,
                        const char *device,
                        int partnum)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_part_get_name_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -5994,7 +5994,7 @@ guestfs_part_init (guestfs_h *g,
                    const char *device,
                    const char *parttype)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_part_init_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -6097,7 +6097,7 @@ GUESTFS_DLL_PUBLIC int
 guestfs_part_to_partnum (guestfs_h *g,
                          const char *partition)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_part_to_partnum_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -6195,7 +6195,7 @@ GUESTFS_DLL_PUBLIC char *
 guestfs_pvuuid (guestfs_h *g,
                 const char *device)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_pvuuid_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -6293,7 +6293,7 @@ GUESTFS_DLL_PUBLIC int
 guestfs_rmmountpoint (guestfs_h *g,
                       const char *exemptpath)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_rmmountpoint_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -6389,7 +6389,7 @@ GUESTFS_DLL_PUBLIC int
 guestfs_scrub_device (guestfs_h *g,
                       const char *device)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_scrub_device_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -6487,7 +6487,7 @@ guestfs_set_e2attrs_argv (guestfs_h *g,
                           const char *attrs,
                           const struct guestfs_set_e2attrs_argv *optargs)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_set_e2attrs_argv optargs_null;
   if (!optargs) {
     optargs_null.bitmask = 0;
@@ -6611,7 +6611,7 @@ guestfs_set_e2label (guestfs_h *g,
                      const char *device,
                      const char *label)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_set_e2label_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -6714,7 +6714,7 @@ GUESTFS_DLL_PUBLIC char **
 guestfs_sh_lines (guestfs_h *g,
                   const char *command)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_sh_lines_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -6826,7 +6826,7 @@ GUESTFS_DLL_PUBLIC int
 guestfs_swapon_file (guestfs_h *g,
                      const char *file)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_swapon_file_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -6923,7 +6923,7 @@ guestfs_tgz_out (guestfs_h *g,
                  const char *directory,
                  const char *tarball)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_tgz_out_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -7032,7 +7032,7 @@ GUESTFS_DLL_PUBLIC int
 guestfs_umask (guestfs_h *g,
                int mask)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_umask_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
@@ -7124,7 +7124,7 @@ GUESTFS_DLL_PUBLIC int
 guestfs_wipefs (guestfs_h *g,
                 const char *device)
 {
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (g);
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
   struct guestfs_wipefs_args args;
   guestfs_message_header hdr;
   guestfs_message_error err;
