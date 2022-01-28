@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# Workaround for Ubuntu's strict kernel permissions
+
+dpkg-statoverride --quiet --force-all --remove "$1"
