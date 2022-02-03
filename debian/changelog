@@ -1,11 +1,60 @@
-libguestfs (1:1.46.2-4+rpi1) bookworm-staging; urgency=medium
+libguestfs (1:1.46.2-11+rpi1) bookworm-staging; urgency=medium
 
   [changes brought forward from 1:1.42.0-11+rpi1 by Peter Michael Green <plugwash@raspbian.org> at Thu, 12 Nov 2020 16:03:00 +0000]
   * Add raspbian to the list of distros with dpkg.
   * Disable dh_missing
   * Partiall fix clean target.
 
- -- Peter Michael Green <plugwash@raspbian.org>  Wed, 26 Jan 2022 06:35:33 +0000
+ -- Raspbian forward porter <root@raspbian.org>  Thu, 03 Feb 2022 18:25:46 +0000
+
+libguestfs (1:1.46.2-11) unstable; urgency=medium
+
+  * audopkgtest: add yet another missing dependency
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 28 Jan 2022 16:05:15 +0100
+
+libguestfs (1:1.46.2-10) unstable; urgency=medium
+
+  * audopkgtest: add yet another missing dependency
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 27 Jan 2022 00:16:49 +0100
+
+libguestfs (1:1.46.2-9) unstable; urgency=medium
+
+  * audopkgtest: add missing dependency
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 26 Jan 2022 13:26:04 +0100
+
+libguestfs (1:1.46.2-8) unstable; urgency=medium
+
+  * autopkgtest: remove --mode=root
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 26 Jan 2022 00:02:23 +0100
+
+libguestfs (1:1.46.2-7) unstable; urgency=medium
+
+  * Use correct version in removing conffiles (Closes: #1004076, again)
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 23 Jan 2022 16:47:27 +0100
+
+libguestfs (1:1.46.2-6) unstable; urgency=medium
+
+  [ Hilko Bengen ]
+  * Fix typo (Closes: #1004127)
+  * Remove virt-builder conffiles (Closes: #1004076)
+  * Fix quickcheck architecture check
+
+  [ Johannes 'josch' Schauer ]
+  * Add autopkgtest (Closes: #944729)
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 23 Jan 2022 01:48:11 +0100
+
+libguestfs (1:1.46.2-5) unstable; urgency=medium
+
+  * Edit patch: Don't pass -cpu argument to qemu on mips*
+  * Run make quickcheck on more architectures
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 23 Jan 2022 00:50:43 +0100
 
 libguestfs (1:1.46.2-4) unstable; urgency=medium
 

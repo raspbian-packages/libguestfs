@@ -1,17 +1,21 @@
 From: Hilko Bengen <bengen@debian.org>
 Date: Thu, 30 Dec 2021 21:05:43 +0100
-Subject: Set special CPU type on RISCV64
+Subject: Set special CPU type on RISCV64, don't set CPU type on mips*
 
 ---
- lib/appliance-cpu.c | 2 ++
- 1 file changed, 2 insertions(+)
+ lib/appliance-cpu.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/lib/appliance-cpu.c b/lib/appliance-cpu.c
-index 54ac6e2..1f50ffa 100644
+index 54ac6e2..5de0301 100644
 --- a/lib/appliance-cpu.c
 +++ b/lib/appliance-cpu.c
-@@ -84,6 +84,8 @@ guestfs_int_get_cpu_model (int kvm)
- #elif defined(__powerpc64__)
+@@ -81,9 +81,11 @@ guestfs_int_get_cpu_model (int kvm)
+     return "host";
+   else
+     return "cortex-a57";
+-#elif defined(__powerpc64__)
++#elif defined(__powerpc64__) || defined(__mips) || defined(__mips64)
    /* See discussion in https://bugzilla.redhat.com/show_bug.cgi?id=1605071 */
    return NULL;
 +#elif defined(__riscv)

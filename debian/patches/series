@@ -16,5 +16,5 @@ Make-sure-that-generated-ocaml-link.sh-is-used-in-out-of-.patch
 Fix-out-of-tree-build-for-po.patch
 Update-packagelist-as-haxdump-has-been-moved-to-bsdextrau.patch
 Fix-golang-bindtest-and-check-mli.sh-for-out-of-tree-buil.patch
-Set-special-CPU-type-on-RISCV64.patch
+Set-special-CPU-type-on-RISCV64-don-t-set-CPU-type-on-mip.patch
 recognise-raspbian.diff

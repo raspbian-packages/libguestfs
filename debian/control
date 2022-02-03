@@ -51,9 +51,12 @@ Build-Depends: debhelper-compat (= 13),
   dh-php, php-all-dev | php5-dev,
 # for testing (make quickcheck)
   linux-image-amd64 [amd64] <!nocheck>,
+  linux-image-armmp [armhf] <!nocheck>,
   linux-image-arm64 [arm64] <!nocheck>,
   linux-image-686-pae [i386] <!nocheck> | linux-image-586 [i386] <!nocheck> | linux-image-486 [i386] <!nocheck>,
+  linux-image-powerpc64le [ppc64el] <!nocheck>,
   linux-image-riscv64 [riscv64] <!nocheck>,
+  linux-image-s390x [s390x] <!nocheck>,
 #-# appliance start
   acl,
   attr,
@@ -380,7 +383,7 @@ Description: guest disk image management system - tools
  The libguestfs library allows accessing and modifying guest disk
  images.
  .
- This package contains the libguestfs-teest-tool and
+ This package contains the libguestfs-test-tool and
  libguestfs-make-fixed-appliance programs.
 
 Package: python3-guestfs
