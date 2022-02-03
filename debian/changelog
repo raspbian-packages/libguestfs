@@ -5,7 +5,11 @@ libguestfs (1:1.46.2-11+rpi1) bookworm-staging; urgency=medium
   * Disable dh_missing
   * Partiall fix clean target.
 
- -- Raspbian forward porter <root@raspbian.org>  Thu, 03 Feb 2022 18:25:46 +0000
+  [changes introduced in 1:1.46.2-11+rpi1 by Peter Michael Green]
+  * Remove testsuite-specific build-dependencies.
+  * Disable testsuite.
+
+ -- Peter Michael Green <plugwash@raspbian.org>  Thu, 03 Feb 2022 18:25:46 +0000
 
 libguestfs (1:1.46.2-11) unstable; urgency=medium
 

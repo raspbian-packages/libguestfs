@@ -49,7 +49,7 @@ QEMU_CPU := $(shell echo $(DEB_HOST_GNU_CPU) \
 			-e 's,arm.*,arm,')
 
 # Run "make quickcheck" only on these architectures
-QUICKCHECK_ARCHITECTURES := i386 amd64 armhf arm64 riscv64 ppc64el s390x
+QUICKCHECK_ARCHITECTURES := 
 
 # Template for generating dh_{clean,configure,build,test} overrides.
 # $1 is replaced with the build number.
