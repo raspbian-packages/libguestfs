@@ -1,0 +1,58 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Tue, 10 Mar 2020 20:06:39 +0100
+Subject: Make sure that generated ocaml-link.sh is used in out-of-tree builds
+
+---
+ common/mlpcre/Makefile.am     | 4 ++--
+ common/mlstdutils/Makefile.am | 4 ++--
+ common/mlutils/Makefile.am    | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/common/mlpcre/Makefile.am b/common/mlpcre/Makefile.am
+index a1d8b02..3636a46 100644
+--- a/common/mlpcre/Makefile.am
++++ b/common/mlpcre/Makefile.am
+@@ -106,9 +106,9 @@ OCAMLLINKFLAGS = $(LINK_CUSTOM_OCAMLC_ONLY)
+ pcre_tests_DEPENDENCIES = \
+ 	$(pcre_tests_THEOBJECTS) \
+ 	$(MLPCRE_CMA) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ pcre_tests_LINK = \
+-	$(top_srcdir)/ocaml-link.sh \
++	$(top_builddir)/ocaml-link.sh \
+ 	  -cclib '-pthread -lpthread -lutils -lpcre2-8 -lgnu' -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
+ 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
+diff --git a/common/mlstdutils/Makefile.am b/common/mlstdutils/Makefile.am
+index ea314e4..7fd8c06 100644
+--- a/common/mlstdutils/Makefile.am
++++ b/common/mlstdutils/Makefile.am
+@@ -117,9 +117,9 @@ OCAMLLINKFLAGS = $(LINK_CUSTOM_OCAMLC_ONLY)
+ std_utils_tests_DEPENDENCIES = \
+ 	$(std_utils_tests_THEOBJECTS) \
+ 	$(MLSTDUTILS_CMA) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ std_utils_tests_LINK = \
+-	$(top_srcdir)/ocaml-link.sh -- \
++	$(top_builddir)/ocaml-link.sh -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) $(OCAMLLINKFLAGS) \
+ 	  $(OCAMLPACKAGES) $(OCAMLPACKAGES_TESTS) \
+ 	  $(std_utils_tests_THEOBJECTS) -o $@
+diff --git a/common/mlutils/Makefile.am b/common/mlutils/Makefile.am
+index 17dfac3..2f58123 100644
+--- a/common/mlutils/Makefile.am
++++ b/common/mlutils/Makefile.am
+@@ -127,9 +127,9 @@ c_utils_unit_tests_DEPENDENCIES = \
+ 	$(c_utils_unit_tests_THEOBJECTS) \
+ 	../mlstdutils/mlstdutils.$(MLARCHIVE) \
+ 	mlcutils.$(MLARCHIVE) \
+-	$(top_srcdir)/ocaml-link.sh
++	$(top_builddir)/ocaml-link.sh
+ c_utils_unit_tests_LINK = \
+-	$(top_srcdir)/ocaml-link.sh -cclib '-lutils -lgnu' -- \
++	$(top_builddir)/ocaml-link.sh -cclib '-lutils -lgnu' -- \
+ 	  $(OCAMLFIND) $(BEST) $(OCAMLFLAGS) \
+ 	  $(OCAMLPACKAGES) -package ounit2 \
+ 	  $(OCAMLLINKFLAGS) \
