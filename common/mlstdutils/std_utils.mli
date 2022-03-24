@@ -56,7 +56,6 @@ module String : sig
     val concat : string -> string list -> string
     val contains : string -> char -> bool
     val contains_from : string -> int -> char -> bool
-    val copy : string -> string
     val escaped : string -> string
     val get : string -> int -> char
     val index : string -> char -> int
@@ -316,9 +315,6 @@ val be64_of_int : int64 -> string
     On the OCaml side, 64 bit integers are always used so that you
     can use the [.^] operators on them for bit manipulation. *)
 
-val wrap : ?chan:out_channel -> ?indent:int -> string -> unit
-(** Wrap text. *)
-
 val output_spaces : out_channel -> int -> unit
 (** Write [n] spaces to [out_channel]. *)
 
@@ -380,8 +376,10 @@ val set_trace : unit -> unit
 val trace : unit -> bool
 val set_verbose : unit -> unit
 val verbose : unit -> bool
-(** Stores the colours ([--colours]), quiet ([--quiet]), trace ([-x]) and
-    verbose ([-v]) flags in global variables. *)
+val set_wrap : unit -> unit
+val wrap : unit -> bool
+(** Stores the colours ([--colours]), quiet ([--quiet]), trace ([-x]), verbose
+    ([-v]) and wrap ([--wrap]) flags in global variables. *)
 
 val with_open_in : string -> (in_channel -> 'a) -> 'a
 (** [with_open_in filename f] calls function [f] with [filename]

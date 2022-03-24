@@ -14,20 +14,15 @@ guestfs-lua - How to use libguestfs from Lua
 
 =head1 説明
 
-This manual page documents how to call libguestfs from the Lua programming
-language.  This page just documents the differences from the C API and gives
-some examples.  If you are not familiar with using libguestfs, you also need
-to read L<guestfs(3)>.
+This manual page documents how to call libguestfs from the Lua programming language.  This page just documents the differences from the C API and gives some examples.  If you are not familiar with using libguestfs, you also need to read L<guestfs(3)>.
 
 =head2 REQUIRING THE MODULE
 
-C<require "guestfs"> returns the module, so you have to assign it to a local
-variable.  Typical usage is:
+C<require "guestfs"> returns the module, so you have to assign it to a local variable.  Typical usage is:
 
  local G = require "guestfs"
 
-(you can use any name you want instead of C<G>, but in the examples in this
-man page we always use C<G>).
+(you can use any name you want instead of C<G>, but in the examples in this man page we always use C<G>).
 
 =head2 ハンドルのオープン方法およびクローズ方法
 
@@ -39,26 +34,21 @@ You can also use the optional arguments:
 
  g = G.create { environment = 0, close_on_exit = 0 }
 
-to set the flags C<GUESTFS_CREATE_NO_ENVIRONMENT> and/or
-C<GUESTFS_CREATE_NO_CLOSE_ON_EXIT>.
+to set the flags C<GUESTFS_CREATE_NO_ENVIRONMENT> and/or C<GUESTFS_CREATE_NO_CLOSE_ON_EXIT>.
 
-The handle will be closed by the garbage collector, but you can also close
-it explicitly by doing:
+The handle will be closed by the garbage collector, but you can also close it explicitly by doing:
 
  g:close ()
 
 =head2 CALLING METHODS
 
-Use the ordinary Lua convention for calling methods on the handle.  For
-example:
+Use the ordinary Lua convention for calling methods on the handle.  For example:
 
  g:set_verbose (true)
 
 =head2 オプション引数を用いた機能
 
-For functions that take optional arguments, the first arguments are the
-non-optional ones.  The optional final argument is a table supplying the
-optional arguments.
+For functions that take optional arguments, the first arguments are the non-optional ones.  The optional final argument is a table supplying the optional arguments.
 
  g:add_drive ("test.img")
 
@@ -68,14 +58,11 @@ optional arguments.
 
 =head2 64 BIT VALUES
 
-Currently 64 bit values must be passed as strings, and are returned as
-strings.  This is because 32 bit Lua cannot handle 64 bit integers
-properly.  We hope to come up with a better solution later.
+Currently 64 bit values must be passed as strings, and are returned as strings.  This is because 32 bit Lua cannot handle 64 bit integers properly.  We hope to come up with a better solution later.
 
 =head2 エラー
 
-Most (but not all) errors are converted into objects (ie. tables)
-containing the following fields:
+Most (but not all) errors are converted into objects (ie. tables) containing the following fields:
 
 =over 4
 
@@ -89,12 +76,9 @@ The C<errno> (corresponding to L<guestfs(3)/guestfs_last_errno>).
 
 =back
 
-These objects also have C<__tostring> functions attached to them so you can
-use C<tostring> (or implicit conversion) to convert them into printable
-strings.
+These objects also have C<__tostring> functions attached to them so you can use C<tostring> (or implicit conversion) to convert them into printable strings.
 
-Note that the library also throws some errors as plain strings.  You may
-need to check the type.
+Note that the library also throws some errors as plain strings.  You may need to check the type.
 
 =head2 イベント
 
@@ -102,13 +86,11 @@ Events can be registered by calling C<set_event_callback>:
 
  eh = g:set_event_callback (cb, "close")
 
-or to register a single callback for multiple events make the second
-argument a list:
+or to register a single callback for multiple events make the second argument a list:
 
  eh = g:set_event_callback (cb, { "appliance", "library", "trace" })
 
-A list of all valid event types (strings) is in the global variable
-C<G.event_all>.
+A list of all valid event types (strings) is in the global variable C<G.event_all>.
 
 The callback (C<cb>) is called with the following parameters:
 
@@ -121,8 +103,7 @@ The callback (C<cb>) is called with the following parameters:
    ...
  end
 
-You can also remove a callback using the event handle (C<eh>) that was
-returned when you registered the callback:
+You can also remove a callback using the event handle (C<eh>) that was returned when you registered the callback:
 
  g:delete_event_callback (eh)
 
@@ -136,11 +117,7 @@ returned when you registered the callback:
 
 =head1 関連項目
 
-L<guestfs(3)>, L<guestfs-examples(3)>, L<guestfs-erlang(3)>,
-L<guestfs-gobject(3)>, L<guestfs-golang(3)>, L<guestfs-java(3)>,
-L<guestfs-ocaml(3)>, L<guestfs-perl(3)>, L<guestfs-python(3)>,
-L<guestfs-recipes(1)>, L<guestfs-ruby(3)>, L<http://www.lua.org/>,
-L<http://libguestfs.org/>.
+L<guestfs(3)>, L<guestfs-examples(3)>, L<guestfs-erlang(3)>, L<guestfs-gobject(3)>, L<guestfs-golang(3)>, L<guestfs-java(3)>, L<guestfs-ocaml(3)>, L<guestfs-perl(3)>, L<guestfs-python(3)>, L<guestfs-recipes(1)>, L<guestfs-ruby(3)>, L<http://www.lua.org/>, L<http://libguestfs.org/>.
 
 =head1 著者
 

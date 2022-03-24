@@ -6600,6 +6600,8 @@ PREINIT:
       char **r;
       size_t i, n;
  PPCODE:
+      Perl_ck_warner (aTHX_ packWARN(WARN_DEPRECATED),
+        "Sys::Guestfs::list_9p is deprecated");
       r = guestfs_list_9p (g);
       if (r == NULL)
         croak ("%s", guestfs_last_error (g));
@@ -8242,6 +8244,8 @@ PREINIT:
       struct guestfs_mount_9p_argv *optargs = &optargs_s;
       size_t items_i;
  PPCODE:
+      Perl_ck_warner (aTHX_ packWARN(WARN_DEPRECATED),
+        "Sys::Guestfs::mount_9p is deprecated");
       if (((items - 3) & 1) != 0)
         croak ("expecting an even number of extra parameters");
       for (items_i = 3; items_i < items; items_i += 2) {
@@ -9377,6 +9381,8 @@ remove_drive (g, label)
 PREINIT:
       int r;
  PPCODE:
+      Perl_ck_warner (aTHX_ packWARN(WARN_DEPRECATED),
+        "Sys::Guestfs::remove_drive is deprecated");
       r = guestfs_remove_drive (g, label);
       if (r == -1)
         croak ("%s", guestfs_last_error (g));

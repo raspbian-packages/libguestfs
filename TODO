@@ -161,16 +161,6 @@ Could we make guestfish interactive if commands are used without params?
 Image name? disk.img
 Size of image? 10M
 
-Better support for encrypted devices
-------------------------------------
-
-Currently LUKS support only works if the device contains volume
-groups.  If it contains, eg., partitions, you cannot access them.
-We would like to add:
-
-  - Direct access to the /dev/mapper device (eg. if it contains
-    anything apart from VGs).
-
 Display image as PS
 -------------------
 
@@ -541,11 +531,6 @@ virt-builder
 
  - /etc/resolv.conf handling works but is best described as a hack:
    https://github.com/libguestfs/libguestfs/commit/9521422ce60578f7196cc8b7977d998159238c19
-
- - let's make UML work
-   + SLIRP is insecure, but we could allow just a bare web proxy which
-     gets proxied over virtio-serial to the outside world (except
-     virtio-serial can't be multiplexed)
 
  - sometimes (not always) aug_init takes ages, why?
 

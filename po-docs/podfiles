@@ -31,9 +31,10 @@ docs/guestfs-release-notes-1.40.pod
 docs/guestfs-release-notes-1.42.pod
 docs/guestfs-release-notes-1.44.pod
 docs/guestfs-release-notes-1.46.pod
+docs/guestfs-release-notes-1.48.pod
 docs/guestfs-release-notes-1.6.pod
 docs/guestfs-release-notes-1.8.pod
-docs/guestfs-release-notes-historical.pod
+docs/guestfs-release-notes.pod
 docs/guestfs-security.pod
 docs/guestfs-testing.pod
 docs/internal-documentation.pod

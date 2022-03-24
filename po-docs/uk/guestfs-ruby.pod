@@ -13,16 +13,11 @@ guestfs-ruby — як використовувати libguestfs з Ruby
 
 =head1 ОПИС
 
-На цій сторінці підручника наведено документацію щодо викликів libguestfs з
-коду мовою програмування Ruby. На сторінці задокументовано відмінності від
-програмного інтерфейсу C та подано декілька прикладів. Якщо ви не дуже
-знайомі із користуванням libguestfs, вам також слід прочитати підручник з
-L<guestfs(3)>.
+На цій сторінці підручника наведено документацію щодо викликів libguestfs з коду мовою програмування Ruby. На сторінці задокументовано відмінності від програмного інтерфейсу C та подано декілька прикладів. Якщо ви не дуже знайомі із користуванням libguestfs, вам також слід прочитати підручник з L<guestfs(3)>.
 
 =head2 ВИНЯТКИ
 
-Помилки функцій libguestfs пов'язуються із виключенням C<Error>. Це
-виключення має єдиний параметр, яким є повідомлення щодо помилки (рядок).
+Помилки функцій libguestfs пов'язуються із виключенням C<Error>. Це виключення має єдиний параметр, яким є повідомлення щодо помилки (рядок).
 
 =head1 ПРИКЛАД 1. СТВОРЕННЯ ОБРАЗУ ДИСКА
 
@@ -34,10 +29,7 @@ L<guestfs(3)>.
 
 =head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
 
-L<guestfs(3)>, L<guestfs-examples(3)>, L<guestfs-erlang(3)>,
-L<guestfs-gobject(3)>, L<guestfs-golang(3)>, L<guestfs-java(3)>,
-L<guestfs-lua(3)>, L<guestfs-ocaml(3)>, L<guestfs-perl(3)>,
-L<guestfs-python(3)>, L<guestfs-recipes(1)>, L<http://libguestfs.org/>.
+L<guestfs(3)>, L<guestfs-examples(3)>, L<guestfs-erlang(3)>, L<guestfs-gobject(3)>, L<guestfs-golang(3)>, L<guestfs-java(3)>, L<guestfs-lua(3)>, L<guestfs-ocaml(3)>, L<guestfs-perl(3)>, L<guestfs-python(3)>, L<guestfs-recipes(1)>, L<http://libguestfs.org/>.
 
 =head1 АВТОРИ
 

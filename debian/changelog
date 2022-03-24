@@ -1,4 +1,4 @@
-libguestfs (1:1.46.2-11+rpi1) bookworm-staging; urgency=medium
+libguestfs (1:1.48.0-4+rpi1) bookworm-staging; urgency=medium
 
   [changes brought forward from 1:1.42.0-11+rpi1 by Peter Michael Green <plugwash@raspbian.org> at Thu, 12 Nov 2020 16:03:00 +0000]
   * Add raspbian to the list of distros with dpkg.
@@ -9,7 +9,34 @@ libguestfs (1:1.46.2-11+rpi1) bookworm-staging; urgency=medium
   * Remove testsuite-specific build-dependencies.
   * Disable testsuite.
 
- -- Peter Michael Green <plugwash@raspbian.org>  Thu, 03 Feb 2022 18:25:46 +0000
+ -- Raspbian forward porter <root@raspbian.org>  Thu, 24 Mar 2022 23:46:34 +0000
+
+libguestfs (1:1.48.0-4) unstable; urgency=medium
+
+  * autopkgtest: Fix QEMU_FLAVOR (dumb mistake)
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 21 Mar 2022 15:53:46 +0100
+
+libguestfs (1:1.48.0-3) unstable; urgency=medium
+
+  * autokpkgtest: Cleanup, add i386 support
+  * Add libguestfs-test-tool-based autopkgtest
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 19 Mar 2022 23:00:15 +0100
+
+libguestfs (1:1.48.0-2) unstable; urgency=medium
+
+  * Add needs-root to autopkgtetst restrictions
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 18 Mar 2022 15:26:57 +0100
+
+libguestfs (1:1.48.0-1) unstable; urgency=medium
+
+  * New upstream version 1.48.0
+  * Rebase patches
+  * autopkgtest: use stable image, make VM bootable, limit test to amd64
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 18 Mar 2022 01:25:59 +0100
 
 libguestfs (1:1.46.2-11) unstable; urgency=medium
 

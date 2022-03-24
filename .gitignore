@@ -125,7 +125,8 @@ Makefile.in
 /docs/guestfs-internals.1
 /docs/guestfs-performance.1
 /docs/guestfs-recipes.1
-/docs/guestfs-release-notes-*.1
+/docs/guestfs-release-notes-1.*.1
+/docs/guestfs-release-notes.1
 /docs/guestfs-security.1
 /docs/guestfs-testing.1
 /docs/internal-documentation.pod
@@ -135,7 +136,8 @@ Makefile.in
 /docs/stamp-guestfs-internals.pod
 /docs/stamp-guestfs-performance.pod
 /docs/stamp-guestfs-recipes.pod
-/docs/stamp-guestfs-release-notes-*.pod
+/docs/stamp-guestfs-release-notes-1.*.pod
+/docs/stamp-guestfs-release-notes.pod
 /docs/stamp-guestfs-security.pod
 /docs/stamp-guestfs-testing.pod
 /erlang/actions-?.c
@@ -452,7 +454,8 @@ Makefile.in
 /test-data/phony-guests/debian.img
 /test-data/phony-guests/fedora.img
 /test-data/phony-guests/fedora-btrfs.img
-/test-data/phony-guests/fedora-luks.img
+/test-data/phony-guests/fedora-luks-on-lvm.img
+/test-data/phony-guests/fedora-lvm-on-luks.img
 /test-data/phony-guests/fedora-md1.img
 /test-data/phony-guests/fedora-md2.img
 /test-data/phony-guests/fedora.db

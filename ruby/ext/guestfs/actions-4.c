@@ -107,12 +107,8 @@ guestfs_int_ruby_add_cdrom (VALUE gv, VALUE filenamev)
  * those disks are accessible via the same device path
  * locally too.
  * 
- * The optional "live" flag controls whether this call will
- * try to connect to a running virtual machine "guestfsd"
- * process if it sees a suitable <channel> element in the
- * libvirt XML definition. The default (if the flag is
- * omitted) is never to try. See "ATTACHING TO RUNNING
- * DAEMONS" in guestfs(3) for more information.
+ * The optional "live" flag is ignored in libguestfs ≥
+ * 1.48.
  * 
  * The optional "readonlydisk" parameter controls what we
  * do for disks which are marked <readonly/> in the libvirt

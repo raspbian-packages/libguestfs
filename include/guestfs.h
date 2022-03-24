@@ -2485,7 +2485,10 @@ extern GUESTFS_DLL_PUBLIC char *guestfs_lgetxattr (guestfs_h *g, const char *pat
 extern GUESTFS_DLL_PUBLIC struct guestfs_xattr_list *guestfs_lgetxattrs (guestfs_h *g, const char *path);
 
 #define GUESTFS_HAVE_LIST_9P 1
-extern GUESTFS_DLL_PUBLIC char **guestfs_list_9p (guestfs_h *g);
+#ifndef GUESTFS_NO_DEPRECATED
+extern GUESTFS_DLL_PUBLIC char **guestfs_list_9p (guestfs_h *g)
+  GUESTFS_DEPRECATED_NO_REPLACEMENT;
+#endif /* !GUESTFS_NO_DEPRECATED */
 
 #define GUESTFS_HAVE_LIST_DEVICES 1
 extern GUESTFS_DLL_PUBLIC char **guestfs_list_devices (guestfs_h *g);
@@ -3006,7 +3009,10 @@ extern GUESTFS_DLL_PUBLIC int guestfs_mount (guestfs_h *g, const char *mountable
 
 #define GUESTFS_HAVE_MOUNT_9P 1
 #define GUESTFS_MOUNT_9P_OPTIONS 0
-extern GUESTFS_DLL_PUBLIC int guestfs_mount_9p (guestfs_h *g, const char *mounttag, const char *mountpoint, ...);
+#ifndef GUESTFS_NO_DEPRECATED
+extern GUESTFS_DLL_PUBLIC int guestfs_mount_9p (guestfs_h *g, const char *mounttag, const char *mountpoint, ...)
+  GUESTFS_DEPRECATED_NO_REPLACEMENT;
+#endif /* !GUESTFS_NO_DEPRECATED */
 extern GUESTFS_DLL_PUBLIC int guestfs_mount_9p_va (guestfs_h *g, const char *mounttag, const char *mountpoint, va_list args);
 
 struct guestfs_mount_9p_argv {
@@ -3302,7 +3308,10 @@ struct guestfs_remount_argv {
 extern GUESTFS_DLL_PUBLIC int guestfs_remount_argv (guestfs_h *g, const char *mountpoint, const struct guestfs_remount_argv *optargs);
 
 #define GUESTFS_HAVE_REMOVE_DRIVE 1
-extern GUESTFS_DLL_PUBLIC int guestfs_remove_drive (guestfs_h *g, const char *label);
+#ifndef GUESTFS_NO_DEPRECATED
+extern GUESTFS_DLL_PUBLIC int guestfs_remove_drive (guestfs_h *g, const char *label)
+  GUESTFS_DEPRECATED_NO_REPLACEMENT;
+#endif /* !GUESTFS_NO_DEPRECATED */
 
 #define GUESTFS_HAVE_REMOVEXATTR 1
 extern GUESTFS_DLL_PUBLIC int guestfs_removexattr (guestfs_h *g, const char *xattr, const char *path);
@@ -4108,15 +4117,6 @@ extern GUESTFS_DLL_PUBLIC int guestfs_internal_find_inode (guestfs_h *g, const c
 
 #define GUESTFS_HAVE_INTERNAL_GET_CONSOLE_SOCKET 1
 extern GUESTFS_DLL_PUBLIC int guestfs_internal_get_console_socket (guestfs_h *g);
-
-#define GUESTFS_HAVE_INTERNAL_HOT_ADD_DRIVE 1
-extern GUESTFS_DLL_PUBLIC int guestfs_internal_hot_add_drive (guestfs_h *g, const char *label);
-
-#define GUESTFS_HAVE_INTERNAL_HOT_REMOVE_DRIVE 1
-extern GUESTFS_DLL_PUBLIC int guestfs_internal_hot_remove_drive (guestfs_h *g, const char *label);
-
-#define GUESTFS_HAVE_INTERNAL_HOT_REMOVE_DRIVE_PRECHECK 1
-extern GUESTFS_DLL_PUBLIC int guestfs_internal_hot_remove_drive_precheck (guestfs_h *g, const char *label);
 
 #define GUESTFS_HAVE_INTERNAL_JOURNAL_GET 1
 extern GUESTFS_DLL_PUBLIC int guestfs_internal_journal_get (guestfs_h *g, const char *filename);

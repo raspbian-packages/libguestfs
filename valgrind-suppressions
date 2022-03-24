@@ -167,6 +167,7 @@
    caml_executable_name
    Memcheck:Leak
    fun:malloc
+   ...
    fun:caml_executable_name
    fun:caml_main
 }
@@ -214,6 +215,15 @@
    ...
    fun:__add_to_environ
    fun:setenv
+}
+
+# These appeared in glibc 2.35.
+# See also nbdkit commit f6409b4137c1aeb97d01eef5753f22033d64bfd4
+{
+   glibc_leak_4
+   Memcheck:Leak
+   ...
+   fun:dlopen@@*
 }
 
 # libvirt calls gnutls_global_init but doesn't call the
@@ -297,6 +307,7 @@
    ...
    fun:g_malloc0
    fun:virClassNew
+   ...
    fun:virDataTypesOnce
 }
 

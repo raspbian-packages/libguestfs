@@ -5,9 +5,7 @@ guestfs-release-notes - libguestfs リリースノート
 
 =head1 RELEASE NOTES FOR LIBGUESTFS 1.14
 
-These release notes only cover the differences from the previous stable/dev
-branch split (1.12.0).  For detailed changelogs, please see the git
-repository, or the ChangeLog file distributed in the tarball.
+These release notes only cover the differences from the previous stable/dev branch split (1.12.0).  For detailed changelogs, please see the git repository, or the ChangeLog file distributed in the tarball.
 
 =head2 New features
 
@@ -172,9 +170,7 @@ repository, or the ChangeLog file distributed in the tarball.
 
 =head1 関連項目
 
-L<guestfs-examples(1)>, L<guestfs-faq(1)>, L<guestfs-performance(1)>,
-L<guestfs-recipes(1)>, L<guestfs-testing(1)>, L<guestfs(3)>,
-L<guestfish(1)>, L<http://libguestfs.org/>
+L<guestfs-examples(1)>, L<guestfs-faq(1)>, L<guestfs-performance(1)>, L<guestfs-recipes(1)>, L<guestfs-testing(1)>, L<guestfs(3)>, L<guestfish(1)>, L<http://libguestfs.org/>
 
 =head1 著者
 

@@ -1,8 +1,7 @@
 
 =begin コメント
 
-We break with tradition here and don’t use ALL CAPS for the section
-headings, as this makes them much easier to read.
+We break with tradition here and don’t use ALL CAPS for the section headings, as this makes them much easier to read.
 
 =end コメント
 
@@ -16,10 +15,7 @@ guestfs-recipes - libguestfs, guestfish および仮想化ツールのレシピ
 
 =head1 Access a remote disk image using guestfish
 
-If the disk image is on a remote server which is accessible using SSH, HTTP,
-FTP, NBD, iSCSI, or similar, then you can open it directly.  See
-L<guestfish(1)/ADDING REMOTE STORAGE> for several examples.  This requires
-libguestfs E<ge> 1.22 and qemu E<ge> 1.5.
+If the disk image is on a remote server which is accessible using SSH, HTTP, FTP, NBD, iSCSI, or similar, then you can open it directly.  See L<guestfish(1)/ADDING REMOTE STORAGE> for several examples.  This requires libguestfs E<ge> 1.22 and qemu E<ge> 1.5.
 
 =head1 仮想マシンの setuid ファイルを監査します
 
@@ -27,16 +23,13 @@ libguestfs E<ge> 1.22 and qemu E<ge> 1.5.
 
 =head1 Audit a virtual machine for vulnerabilities and security problems
 
-See:
-L<https://rwmj.wordpress.com/2013/05/16/scanning-offline-guests-using-openscap-and-guestmount/#content>
+See: L<https://rwmj.wordpress.com/2013/05/16/scanning-offline-guests-using-openscap-and-guestmount/#content>
 
 =head1 Windows XP 仮想マシンの背景画像を変更します
 
-以下のリンクは、Windows XP 仮想マシンのユーザーの背景画像を変更するために L<guestfish(1)>
-を使用する方法について説明しています。残念ながら、このテクニックは Windows のバージョンによりわずかに異なります。
+以下のリンクは、Windows XP 仮想マシンのユーザーの背景画像を変更するために L<guestfish(1)> を使用する方法について説明しています。残念ながら、このテクニックは Windows のバージョンによりわずかに異なります。
 
-L<https://lists.fedoraproject.org/pipermail/virt/2011-May/002655.html>
-L<https://lists.fedoraproject.org/pipermail/virt/2011-May/002658.html>
+L<https://lists.fedoraproject.org/pipermail/virt/2011-May/002655.html> L<https://lists.fedoraproject.org/pipermail/virt/2011-May/002658.html>
 
 =head1 ディスクイメージの中にあるファイルまたはデバイスのチェックサム
 
@@ -44,12 +37,9 @@ L<https://lists.fedoraproject.org/pipermail/virt/2011-May/002658.html>
 
  guestfish --ro -a disk.img run : checksum-device md5 /dev/sda1
 
-Replace C<md5> with the type of checksum you want.  See
-L<guestfs(3)/guestfs_checksum_device> for a list of supported types.
+Replace C<md5> with the type of checksum you want.  See L<guestfs(3)/guestfs_checksum_device> for a list of supported types.
 
-F</dev/sda1> means "the first partition".  You could use F</dev/sda> to
-checksum the whole disk image, or the name of a logical volume or RAID
-device.
+F</dev/sda1> means "the first partition".  You could use F</dev/sda> to checksum the whole disk image, or the name of a logical volume or RAID device.
 
 単一サポートをチェックサムするには:
 
@@ -62,8 +52,7 @@ device.
 
 =head1 仮想マシンのクローン方法
 
-L<cp(1)>, L<dd(1)>, and virt tools like L<virt-sysprep(1)>,
-L<virt-sparsify(1)> および L<virt-resize(1)> のようなツールの組み合わせを使用します。
+L<cp(1)>, L<dd(1)>, and virt tools like L<virt-sysprep(1)>, L<virt-sparsify(1)> および L<virt-resize(1)> のようなツールの組み合わせを使用します。
 
 詳細は次を参照してください: L<virt-sysprep(1)/コピー方法およびクローン方法>。
 
@@ -79,21 +68,16 @@ To export just a subdirectory, eg. F</files>, do:
 
 =head1 Convert from one format/filesystem to another
 
-If you have a data disk in one format / filesystem / partition / volume
-manager, you can convert it another using this technique.
+If you have a data disk in one format / filesystem / partition / volume manager, you can convert it another using this technique.
 
-In this example, we start with a data disk that has a single partition
-containing a filesystem, and we want to create another disk that contains
-the same files but on an ext3 filesystem embedded in a logical volume on a
-sparse raw-format disk.
+In this example, we start with a data disk that has a single partition containing a filesystem, and we want to create another disk that contains the same files but on an ext3 filesystem embedded in a logical volume on a sparse raw-format disk.
 
 First create the formatted-but-empty target disk:
 
  truncate -s 10G target.img
  virt-format -a target.img --partition=mbr --lvm --filesystem=ext3
 
-Now, pipe two guestfish instances together to transfer the old data to the
-new disk:
+Now, pipe two guestfish instances together to transfer the old data to the new disk:
 
  guestfish --ro -a source.img -m /dev/sda1  -- tar-out / - | \
  guestfish --rw -a target.img -m /dev/VG/LV -- tar-in - /
@@ -103,11 +87,9 @@ To browse the final disk image, do:
  guestfish --ro -a target.img -m /dev/VG/LV
  ><fs> ll /
 
-This technique is quite powerful, allowing you for example to split up
-source directories over the target filesystems.
+This technique is quite powerful, allowing you for example to split up source directories over the target filesystems.
 
-Note this won’t work (at least, not directly) for bootable virtual machine
-disks because it doesn't copy over the boot loader.
+Note this won’t work (at least, not directly) for bootable virtual machine disks because it doesn't copy over the boot loader.
 
 =head1 Convert Windows DVD to bootable USB key
 
@@ -115,11 +97,7 @@ L<http://rwmj.wordpress.com/2013/05/09/tip-convert-a-windows-dvd-iso-to-a-bootab
 
 =head1 Convert Xen-style partitionless image to partitioned disk image
 
-Xen disk images are often partitionless, meaning that the filesystem starts
-directly at the beginning of the disk with no partition table.  You can in
-fact use these directly in KVM (provided the guest isn't Windows), but some
-people like to convert them to regular partitioned disk images, and this is
-required for Windows guests.  Here is how to use guestfish to do this:
+Xen disk images are often partitionless, meaning that the filesystem starts directly at the beginning of the disk with no partition table.  You can in fact use these directly in KVM (provided the guest isn't Windows), but some people like to convert them to regular partitioned disk images, and this is required for Windows guests.  Here is how to use guestfish to do this:
 
  guestfish
  ><fs> add-ro input.img
@@ -134,19 +112,15 @@ required for Windows guests.  Here is how to use guestfish to do this:
  # for Windows guests:
  ><fs> resize2fs /dev/sdb1
 
-Such a disk image won’t be directly bootable.  You may need to boot it with
-an external kernel and initramfs (see below).  Or you can use the guestfish
-commands C<syslinux> or C<extlinux> to install a SYSLINUX bootloader.
+Such a disk image won’t be directly bootable.  You may need to boot it with an external kernel and initramfs (see below).  Or you can use the guestfish commands C<syslinux> or C<extlinux> to install a SYSLINUX bootloader.
 
 =head1 空のディスクイメージを作成します
 
 L<virt-format(1)> ツールは直接これを実行できます。
 
-中身のあるディスクイメージを作成するには L<virt-make-fs(1)> を使用します。仮想フロッピーディスク (VFD)
-のような、いくつかの標準的なディスクイメージを作成することもできます。
+中身のあるディスクイメージを作成するには L<virt-make-fs(1)> を使用します。仮想フロッピーディスク (VFD) のような、いくつかの標準的なディスクイメージを作成することもできます。
 
-空のディスクイメージを作成するには L<guestfish(1)> の I<-N>
-オプションを使用することもできます。以下の有用なガイドが利用可能なオプションを説明しています。
+空のディスクイメージを作成するには L<guestfish(1)> の I<-N> オプションを使用することもできます。以下の有用なガイドが利用可能なオプションを説明しています。
 
 L<https://rwmj.wordpress.com/2010/09/08/new-guestfish-n-options-in-1-5-9/#content>
 
@@ -162,25 +136,19 @@ guestfish を使用します。ファイルを削除するには:
 
  guestfish -a disk.img -i touch /file/to/touch
 
-To stat a file.  Since this is a read-only operation, we can make it safer
-by adding the I<--ro> flag.
+To stat a file.  Since this is a read-only operation, we can make it safer by adding the I<--ro> flag.
 
  guestfish --ro -a disk.img -i stat /file/to/stat
 
-There are dozens of these commands.  See L<guestfish(1)> or the output of
-C<guestfish -h>
+There are dozens of these commands.  See L<guestfish(1)> or the output of C<guestfish -h>
 
 =head1 Diff two guests; compare a snapshot to the current version
 
-Since libguestfs E<ge> 1.26, use L<virt-diff(1)> to look for differences
-between two guests (for example if they were originally cloned from the same
-source), or between two snapshots from the same guest.  In earlier versions
-of libguestfs, use L<virt-ls(1)>.
+Since libguestfs E<ge> 1.26, use L<virt-diff(1)> to look for differences between two guests (for example if they were originally cloned from the same source), or between two snapshots from the same guest.  In earlier versions of libguestfs, use L<virt-ls(1)>.
 
 =head1 Disable a systemd service
 
-The following is the equivalent of C<systemctl mask ...>. To disable the
-C<cloud-init> service so it doesn't start at next boot:
+The following is the equivalent of C<systemctl mask ...>. To disable the C<cloud-init> service so it doesn't start at next boot:
 
  guestfish -a disk.img -i \
      ln-sf /dev/null /etc/systemd/system/cloud-init.service
@@ -190,17 +158,13 @@ To disable tmp-on-tmpfs:
  guestfish -a disk.img -i \
      ln-sf /dev/null /etc/systemd/system/tmp.mount
 
-One problem with the commands above is there is no feedback if you get the
-name of the service you are trying to mask wrong.  But you can use
-L<virt-ls(1)> to list the available systemd services like this:
+One problem with the commands above is there is no feedback if you get the name of the service you are trying to mask wrong.  But you can use L<virt-ls(1)> to list the available systemd services like this:
 
  virt-ls -a /tmp/fedora-19.img -R /lib/systemd/system
 
 =head1 Drive letters over FUSE
 
-You have a Windows guest, and you want to expose the drive letters as FUSE
-mountpoints (F</C/...>, F</D/...> etc).  Instead of L<guestmount(1)>, use
-this Perl script:
+You have a Windows guest, and you want to expose the drive letters as FUSE mountpoints (F</C/...>, F</D/...> etc).  Instead of L<guestmount(1)>, use this Perl script:
 
  #!/usr/bin/perl -w
  use strict;
@@ -249,9 +213,7 @@ In another window:
 
 =head1 ディスクイメージまたは仮想マシンの中にあるファイルシステムの内容をそのままダンプします
 
-You can use the L<guestfish(1)> C<download> command to extract the raw
-filesystem content from any filesystem in a disk image or a VM (even one
-which is encrypted or buried inside an LV or RAID device):
+You can use the L<guestfish(1)> C<download> command to extract the raw filesystem content from any filesystem in a disk image or a VM (even one which is encrypted or buried inside an LV or RAID device):
 
  guestfish --ro -a disk.img run : download /dev/sda1 sda1.img
 
@@ -313,8 +275,7 @@ To export F</home> from a VM into a local directory use L<virt-copy-out(1)>:
 
 =back
 
-仮想マシンが Windows ならば、ドライブレターとバックスラッシュを使用できます。しかし、パスを C<win:>
-で始める必要があり、シェルから保護するために引用符でくくる必要があります。このようにします:
+仮想マシンが Windows ならば、ドライブレターとバックスラッシュを使用できます。しかし、パスを C<win:> で始める必要があり、シェルから保護するために引用符でくくる必要があります。このようにします:
 
  virt-copy-out -d WinGuest 'win:c:\windows\system32\config' .
 
@@ -322,20 +283,13 @@ To export F</home> from a VM into a local directory use L<virt-copy-out(1)>:
 
  virt-tar-out -d Guest /home - | gzip --best > home.tar.gz
 
-Although it sounds tempting, this is usually not a reliable way to get a
-backup from a running guest.  See the entry in the FAQ:
-L<http://libguestfs.org/FAQ.html#backup>
+Although it sounds tempting, this is usually not a reliable way to get a backup from a running guest.  See the entry in the FAQ: L<http://libguestfs.org/FAQ.html#backup>
 
 =head1 Export external kernel and initramfs (initrd)
 
-If a Linux guest doesn't have a boot loader or it is broken, then you can
-usually boot it using an external kernel and initramfs.  In this
-configuration, the hypervisor acts like a bootloader, loading the kernel
-from the host disk into guest memory and jumping straight into the kernel.
+If a Linux guest doesn't have a boot loader or it is broken, then you can usually boot it using an external kernel and initramfs.  In this configuration, the hypervisor acts like a bootloader, loading the kernel from the host disk into guest memory and jumping straight into the kernel.
 
-However you may wonder how to get the right kernel corresponding to the disk
-image you have.  Since libguestfs E<ge> 1.24 L<virt-builder(1)> can get the
-latest kernel and corresponding initramfs for you:
+However you may wonder how to get the right kernel corresponding to the disk image you have.  Since libguestfs E<ge> 1.24 L<virt-builder(1)> can get the latest kernel and corresponding initramfs for you:
 
  mkdir outputdir
  virt-builder --get-kernel disk.img -o outputdir
@@ -368,8 +322,7 @@ latest kernel and corresponding initramfs for you:
 
 L<https://rwmj.wordpress.com/2011/03/31/tip-code-for-getting-dhcp-address-from-a-virtual-machine-disk-image/#content>
 
-In the libguestfs source examples directory you will find the latest version
-of the F<virt-dhcp-address.c> program.
+In the libguestfs source examples directory you will find the latest version of the F<virt-dhcp-address.c> program.
 
 =head1 オペレーティングシステムの製品名を取得します
 
@@ -387,8 +340,7 @@ Save the following script into a file called F<product-name.sh>:
  # product-name.sh RHEL60x64
  Red Hat Enterprise Linux Server release 6.0 (Santiago)
 
-C<xpath> コマンドラインツールを使用して、またはお気に入りのプログラミング言語から、L<virt-inspector(1)> XML において
-XPath クエリーを使用することもできます:
+C<xpath> コマンドラインツールを使用して、またはお気に入りのプログラミング言語から、L<virt-inspector(1)> XML において XPath クエリーを使用することもできます:
 
  # virt-inspector RHEL60x64 > xml
  # xpath '//product_name' < xml
@@ -432,8 +384,7 @@ L<http://augeas.net/>
 
 =head1 Hanging guests
 
-There are various ways to use libguestfs to find out why a guest is hanging
-or unresponsive:
+There are various ways to use libguestfs to find out why a guest is hanging or unresponsive:
 
 =over 4
 
@@ -468,8 +419,7 @@ Hex-dump the boot partition (Master Boot Record / first sector):
 
 (C<0x200> = 512 bytes which is the size of traditional PC sectors)
 
-To hexdump the N'th partition, substitute a number for C<N> in the following
-command:
+To hexdump the N'th partition, substitute a number for C<N> in the following command:
 
  guestfish --ro -a disk.img \
      run : pread-device /dev/sda 0x200 $((N*0x200)) |
@@ -483,10 +433,7 @@ Hex-edit the boot partition (Master Boot Record / first sector):
 
 =head1 Install packages (RPMs, Debian packages) in a guest
 
-Since libguestfs 1.26, L<virt-builder(1)>, L<virt-customize(1)> and
-L<virt-sysprep(1)> have an I<--install> option for installing packages in
-Linux guests.  (Use virt-customize if you have an existing guest, or
-virt-builder if you want to create a guest from scratch).
+Since libguestfs 1.26, L<virt-builder(1)>, L<virt-customize(1)> and L<virt-sysprep(1)> have an I<--install> option for installing packages in Linux guests.  (Use virt-customize if you have an existing guest, or virt-builder if you want to create a guest from scratch).
 
 例:
 
@@ -494,12 +441,9 @@ virt-builder if you want to create a guest from scratch).
 
 =head1 Install packages from an alternate repository
 
-Since libguestfs 1.26, you can use L<virt-builder(1)>, L<virt-customize(1)>
-or L<virt-sysprep(1)> I<--edit> option to edit repository metadata before
-installing packages
+Since libguestfs 1.26, you can use L<virt-builder(1)>, L<virt-customize(1)> or L<virt-sysprep(1)> I<--edit> option to edit repository metadata before installing packages
 
-For example this would install packages from the updates-testing repository
-in Fedora:
+For example this would install packages from the updates-testing repository in Fedora:
 
  virt-builder fedora-20 \
    --edit '/etc/yum.repos.d/fedora-updates-testing.repo:
@@ -508,19 +452,11 @@ in Fedora:
 
 =head1 Install SYSLINUX bootloader in a guest
 
-SYSLINUX is a small, easy to configure bootloader for Linux and Windows
-guests.  If your guest is not bootable, you can install the SYSLINUX
-bootloader using either the guestfish commands C<syslinux> (for FAT-based
-guests) or C<extlinux> (for ext2/3/4 and btrfs-based guests).
+SYSLINUX is a small, easy to configure bootloader for Linux and Windows guests.  If your guest is not bootable, you can install the SYSLINUX bootloader using either the guestfish commands C<syslinux> (for FAT-based guests) or C<extlinux> (for ext2/3/4 and btrfs-based guests).
 
-This guide assumes a Linux guest where F</dev/sda1> is F</boot>,
-F</boot/vmlinuz> is the guest kernel, and F</dev/sda3> is the root
-partition.  For a Windows guest you would need a FAT-formatted boot
-partition and you would need to use the C<syslinux> command instead.
+This guide assumes a Linux guest where F</dev/sda1> is F</boot>, F</boot/vmlinuz> is the guest kernel, and F</dev/sda3> is the root partition.  For a Windows guest you would need a FAT-formatted boot partition and you would need to use the C<syslinux> command instead.
 
-Create a F<syslinux.cfg> configuration file.  You should check the SYSLINUX
-documentation at L<http://www.syslinux.org> but it may look something like
-this:
+Create a F<syslinux.cfg> configuration file.  You should check the SYSLINUX documentation at L<http://www.syslinux.org> but it may look something like this:
 
  DEFAULT linux
  LABEL linux
@@ -529,8 +465,7 @@ this:
    INITRD initrd
    APPEND ro root=/dev/sda3
 
-Locate the syslinux master boot record (a file called something like
-F</usr/share/syslinux/mbr.bin>).
+Locate the syslinux master boot record (a file called something like F</usr/share/syslinux/mbr.bin>).
 
  guestfish -a disk.img -i
  # Upload the master boot record and configuration file:
@@ -543,8 +478,7 @@ F</usr/share/syslinux/mbr.bin>).
  # Set the first partition as bootable:
  ><fs> part-set-bootable /dev/sda 1 true
 
-See also:
-L<http://rwmj.wordpress.com/2013/04/04/new-in-libguestfs-use-syslinux-or-extlinux-to-make-bootable-guests/#content>
+See also: L<http://rwmj.wordpress.com/2013/04/04/new-in-libguestfs-use-syslinux-or-extlinux-to-make-bootable-guests/#content>
 
 =head1 仮想マシンにインストールされているアプリケーションを一覧表示します
 
@@ -589,8 +523,7 @@ Save the following to a file F<list-apps.sh>:
    app_description:
  }
 
-（libvirt 仮想マシンの代わりに）ディスクイメージにおいてスクリプトを実行したいならば、C<-d "$1"> を C<-a "$1">
-に変更します。L<virt-inspector(1)> 参照。
+（libvirt 仮想マシンの代わりに）ディスクイメージにおいてスクリプトを実行したいならば、C<-d "$1"> を C<-a "$1"> に変更します。L<virt-inspector(1)> 参照。
 
 =head1 仮想マシンのファイルおよびディレクトリを一覧表示します
 
@@ -598,8 +531,7 @@ L<virt-ls(1)> を使用します。
 
 =head1 Windows 仮想マシンのサービスを一覧表示します
 
-以下のリンクは、Windows
-仮想マシンからサービスを、およびそれらのサービスが起動時に実行されるか必要に応じて読み込まれるかを一覧化するために使用できるスクリプトがあります。
+以下のリンクは、Windows 仮想マシンからサービスを、およびそれらのサービスが起動時に実行されるか必要に応じて読み込まれるかを一覧化するために使用できるスクリプトがあります。
 
 L<https://rwmj.wordpress.com/2010/12/10/tip-list-services-in-a-windows-guest/#content>
 
@@ -615,15 +547,13 @@ L<http://web.archive.org/web/20130214073726/http://virt-tools.org/learning/advan
 
 =head1 Windows Vista （またそれ以降）から Windows のイベントログを読み出します
 
-L<guestfish(1)> に加えて以下のリンクに示されるツールは、実行中の Windows Vista およびそれ以降のあらゆる仮想マシンから
-Windows イベントログを読み出すために使用できます。
+L<guestfish(1)> に加えて以下のリンクに示されるツールは、実行中の Windows Vista およびそれ以降のあらゆる仮想マシンから Windows イベントログを読み出すために使用できます。
 
 L<https://rwmj.wordpress.com/2011/04/17/decoding-the-windows-event-log-using-guestfish/#content>
 
 =head1 root のパスワードを削除します (Linux)
 
-L<virt-edit(1)> I<-e> を使用することにより、ファイルの内容を簡単に置き換えることができます。一つの使用方法は Linux
-仮想マシンから root パスワードを削除することです。
+L<virt-edit(1)> I<-e> を使用することにより、ファイルの内容を簡単に置き換えることができます。一つの使用方法は Linux 仮想マシンから root パスワードを削除することです。
 
  virt-edit -d domname /etc/passwd -e 's/^root:.*?:/root::/'
 
@@ -631,26 +561,19 @@ L<virt-edit(1)> I<-e> を使用することにより、ファイルの内容を�
 
 =head1 Administrator のパスワードを削除します (Windows)
 
-以下のリンクは、Windows
-仮想マシンから管理者パスワードを削除するためのテクニックを含みます。または、より精細にするために、セキュリティを迂回するために使用でき、次回ログイン時にコマンドプロンプトを出します:
+以下のリンクは、Windows 仮想マシンから管理者パスワードを削除するためのテクニックを含みます。または、より精細にするために、セキュリティを迂回するために使用でき、次回ログイン時にコマンドプロンプトを出します:
 
 L<https://mdbooth.wordpress.com/2010/10/18/resetting-a-windows-guests-administrator-password-with-guestfish/>
 
 =head1 仮想マシンの sysprep 方法 (Windows)
 
-It is possible to do a "sysprep" using libguestfs alone, although not
-straightforward.  Currently there is code in the Aeolus Oz project which
-does this (using libguestfs).  It is likely we will add this to
-L<virt-sysprep(1)> in future.
+It is possible to do a "sysprep" using libguestfs alone, although not straightforward.  Currently there is code in the Aeolus Oz project which does this (using libguestfs).  It is likely we will add this to L<virt-sysprep(1)> in future.
 
-L<https://github.com/clalancette/oz>
-L<https://www.redhat.com/archives/virt-tools-list/2011-May/msg00019.html>
+L<https://github.com/clalancette/oz> L<https://www.redhat.com/archives/virt-tools-list/2011-May/msg00019.html>
 
 =head1 Live CD を展開します
 
-Linux live CD
-は、ロシア人形のように覆われた複数の層のディスクイメージを含みます。以下のガイドに概要が示されたように、これらの複数の層の内側を見るために
-L<guestfish(1)> を使用できます。
+Linux live CD は、ロシア人形のように覆われた複数の層のディスクイメージを含みます。以下のガイドに概要が示されたように、これらの複数の層の内側を見るために L<guestfish(1)> を使用できます。
 
 L<https://rwmj.wordpress.com/2009/07/15/unpack-the-russian-doll-of-a-f11-live-cd/#content>
 
@@ -662,18 +585,13 @@ L<https://rwmj.wordpress.com/2010/12/02/tip-uploading-and-downloading/#content>
 
 =head1 Uploading raw filesystem content
 
-You can use L<guestfish(1)> to upload whole filesystems into a VM, even into
-a filesystem which is encrypted or buried inside an LV or RAID device:
+You can use L<guestfish(1)> to upload whole filesystems into a VM, even into a filesystem which is encrypted or buried inside an LV or RAID device:
 
  guestfish --rw -a disk.img run : upload sda1.img /dev/sda1
 
  guestfish --rw -d Guest run : upload lv.img /dev/vg_guest/lv_root
 
-One common problem is that the filesystem isn't the right size for the
-target.  If it is too large, there’s not much you can do with libguestfs -
-you have to prepare the filesystem differently.  But if the filesystem needs
-to expand into the target, you can use guestfish to resize it to the right
-size:
+One common problem is that the filesystem isn't the right size for the target.  If it is too large, there’s not much you can do with libguestfs - you have to prepare the filesystem differently.  But if the filesystem needs to expand into the target, you can use guestfish to resize it to the right size:
 
  guestfish --rw -d Guest run : \
    upload lv.img /dev/vg_guest/lv_root : \
@@ -683,18 +601,13 @@ size:
 
 =head1 VMware ESX 仮想マシンにおいて libguestfs ツールを使用します
 
-以下のリンクは、まず最初に sshfs 経由で VMware VMFS を共有することにより、VMware ESX 仮想マシンにおいて
-libguestfs, L<guestfish(1)> および virt ツールを使用する方法を説明しています。
+以下のリンクは、まず最初に sshfs 経由で VMware VMFS を共有することにより、VMware ESX 仮想マシンにおいて libguestfs, L<guestfish(1)> および virt ツールを使用する方法を説明しています。
 
 L<https://rwmj.wordpress.com/2011/05/10/tip-use-libguestfs-on-vmware-esx-guests/#content>
 
 =head1 関連項目
 
-L<guestfs(3)>, L<guestfish(1)>, L<guestfs-examples(3)>,
-L<guestfs-erlang(3)>, L<guestfs-gobject(3)>, L<guestfs-golang(3)>,
-L<guestfs-java(3)>, L<guestfs-lua(3)>, L<guestfs-ocaml(3)>,
-L<guestfs-perl(3)>, L<guestfs-python(3)>, L<guestfs-ruby(3)>,
-L<http://libguestfs.org/>.
+L<guestfs(3)>, L<guestfish(1)>, L<guestfs-examples(3)>, L<guestfs-erlang(3)>, L<guestfs-gobject(3)>, L<guestfs-golang(3)>, L<guestfs-java(3)>, L<guestfs-lua(3)>, L<guestfs-ocaml(3)>, L<guestfs-perl(3)>, L<guestfs-python(3)>, L<guestfs-ruby(3)>, L<http://libguestfs.org/>.
 
 =head1 著者
 

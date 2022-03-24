@@ -1,6 +1,6 @@
 #!/bin/bash -
 # bugs-in-changelog.sh
-# Copyright (C) 2009-2021 Red Hat Inc.
+# Copyright (C) 2009-2020 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,29 +16,38 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-# Used when preparing the guestfs-release-notes(1) man page.  This
-# script looks at the bugs noted in the git changelog since the last
-# stable release (or any release).  To use it, the only parameter
-# should be the git commit range, eg:
+# Used when preparing the release notes.  This script looks at the
+# bugs noted in the git changelog since the last stable release (or
+# any release).  To use it, the only parameter should be the git
+# commit range, eg:
 #
-#   ./bugs-in-changelog.sh "v1.44.0.."
+#   ./bugs-in-changelog.sh "1.0.89.."
 
 if [ -z "$1" ]; then
     echo "$0 git-commit-range"
     exit 1
 fi
 
-# Grep the log for Bugzilla IDs in various formats.
-rhbzs="$( git log "$1" | egrep -o 'RHBZ#[0-9]+' | sed 's/RHBZ#//' )"
-bzurls="$( git log "$1" | egrep -o 'https?://bugzilla.redhat[_./?=a-z0-9]*[/=][0-9]+\b' | sed 's/.*[/=]\([0-9]\+\)$/\1/' )"
-
-# Uniq and format as comma-separated list of ids.
-bugids=$( for b in $rhbzs $bzurls ; do echo $b; done | sort -u | tr '\n' ',' | sed 's/,$//' )
+# Comma-separated list of Bugzilla IDs.
+bugids=$(
+    git log "$1" |
+    egrep -io 'RHBZ#[0-9]+|https?://bugzilla.redhat.com/[a-z\.\?/_=]*[0-9]+' |
+    sed 's/^[^0-9]*//' |
+    sort -u |
+    tr '\n' ',' |
+    sed 's/,$//'
+)
 
 #echo bugids "$bugids"
 
-# Filter out any bugs which may still be in NEW or ASSIGNED:
-bugzilla query -b "$bugids" \
+# Filter out any bugs which may still be in NEW or ASSIGNED.
+#
+# Ensure user is logged in, otherwise bugzilla will silently truncate
+# the number of responses.  To log in, see "API KEYS" in bugzilla(1).
+bugzilla \
+    --ensure-logged-in \
+    query \
+    -b "$bugids" \
     -s MODIFIED,POST,ON_QA,PASSES_QA,VERIFIED,RELEASE_PENDING,CLOSED \
     --component libguestfs \
     --outputformat='%{bug_id} %{short_desc}' |

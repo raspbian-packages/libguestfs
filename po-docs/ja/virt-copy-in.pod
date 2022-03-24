@@ -11,13 +11,9 @@ virt-copy-in - ファイルおよびディレクトリを仮想マシンのデ�
 
 =head1 説明
 
-C<virt-copy-in> copies files and directories from the local disk into a
-virtual machine disk image or named libvirt domain.
+C<virt-copy-in> copies files and directories from the local disk into a virtual machine disk image or named libvirt domain.
 
-You can give one or more filenames and directories on the command line.
-Directories are copied in recursively.  The final parameter must be the
-destination directory in the disk image which must be an absolute path
-starting with a F</> character.
+You can give one or more filenames and directories on the command line. Directories are copied in recursively.  The final parameter must be the destination directory in the disk image which must be an absolute path starting with a F</> character.
 
 =head1 例
 
@@ -31,19 +27,15 @@ Update F</etc/resolv.conf> in a guest:
 
 =head1 JUST A SHELL SCRIPT WRAPPER AROUND GUESTFISH
 
-This command is just a simple shell script wrapper around the
-L<guestfish(1)> C<copy-in> command.  For anything more complex than a
-trivial copy, you are probably better off using guestfish directly.
+This command is just a simple shell script wrapper around the L<guestfish(1)> C<copy-in> command.  For anything more complex than a trivial copy, you are probably better off using guestfish directly.
 
 =head1 オプション
 
-Since the shell script just passes options straight to guestfish, read
-L<guestfish(1)> to see the full list of options.
+Since the shell script just passes options straight to guestfish, read L<guestfish(1)> to see the full list of options.
 
 =head1 関連項目
 
-L<guestfish(1)>, L<virt-cat(1)>, L<virt-copy-out(1)>, L<virt-edit(1)>,
-L<virt-tar-in(1)>, L<virt-tar-out(1)>, L<http://libguestfs.org/>.
+L<guestfish(1)>, L<virt-cat(1)>, L<virt-copy-out(1)>, L<virt-edit(1)>, L<virt-tar-in(1)>, L<virt-tar-out(1)>, L<http://libguestfs.org/>.
 
 =head1 著者
 

@@ -2578,9 +2578,7 @@ guestfs_int_ruby_lchown (VALUE gv, VALUE ownerv, VALUE groupv, VALUE pathv)
  * 
  * Note that you don't normally need to call this
  * explicitly, since it is done automatically at "g.launch"
- * time. However you might want to call this function if
- * you have hotplugged disks or have just created a Windows
- * dynamic disk.
+ * time.
  *
  *
  * [Since] Added in version 1.20.0.
@@ -3109,6 +3107,10 @@ guestfs_int_ruby_lvresize_free (VALUE gv, VALUE lvv, VALUE percentv)
  * 
  * "chunk"
  * The chunk size in bytes.
+ * 
+ * The "chunk" parameter does not make sense, and
+ * should not be specified, when "level" is "raid1"
+ * (which is the default; see below).
  * 
  * "level"
  * The RAID level, which can be one of: "linear",

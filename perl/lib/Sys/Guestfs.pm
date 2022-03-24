@@ -409,12 +409,7 @@ we connect to the default libvirt URI (or one set through an
 environment variable, see the libvirt documentation for full
 details).
 
-The optional C<live> flag controls whether this call will try
-to connect to a running virtual machine C<guestfsd> process if
-it sees a suitable E<lt>channelE<gt> element in the libvirt
-XML definition.  The default (if the flag is omitted) is never
-to try.  See L<guestfs(3)/ATTACHING TO RUNNING DAEMONS> for more
-information.
+The optional C<live> flag is ignored in libguestfs E<ge> 1.48.
 
 If the C<allowuuid> flag is true (default is false) then a UUID
 I<may> be passed instead of the domain name.  The C<dom> string is
@@ -483,12 +478,6 @@ When this function is called before C<$g-E<gt>launch> (the
 usual case) then the first time you call this function,
 the disk appears in the API as F</dev/sda>, the second time
 as F</dev/sdb>, and so on.
-
-In libguestfs E<ge> 1.20 you can also call this function
-after launch (with some restrictions).  This is called
-"hotplugging".  When hotplugging, you must specify a
-C<label> so that the new disk gets a predictable name.
-For more information see L<guestfs(3)/HOTPLUGGING>.
 
 You don't necessarily need to be root when using libguestfs.  However
 you obviously do need sufficient permissions to access the filename
@@ -815,12 +804,7 @@ from a remote libvirt connection (see L<https://libvirt.org/remote.html>)
 will fail unless those disks are accessible via the same device path
 locally too.
 
-The optional C<live> flag controls whether this call will try
-to connect to a running virtual machine C<guestfsd> process if
-it sees a suitable E<lt>channelE<gt> element in the libvirt
-XML definition.  The default (if the flag is omitted) is never
-to try.  See L<guestfs(3)/ATTACHING TO RUNNING DAEMONS> for more
-information.
+The optional C<live> flag is ignored in libguestfs E<ge> 1.48.
 
 The optional C<readonlydisk> parameter controls what we do for
 disks which are marked E<lt>readonly/E<gt> in the libvirt XML.
@@ -3974,6 +3958,10 @@ Gentoo.
 
 Kali Linux.
 
+=item "kylin"
+
+Kylin.
+
 =item "linuxmint"
 
 Linux Mint.
@@ -4033,6 +4021,10 @@ Some Red Hat-derived distro.
 =item "rhel"
 
 Red Hat Enterprise Linux.
+
+=item "rocky"
+
+Rocky Linux.
 
 =item "scientificlinux"
 
@@ -5122,8 +5114,6 @@ to return all devices.
 
 Note that you B<don't> normally need to call this explicitly,
 since it is done automatically at C<$g-E<gt>launch> time.
-However you might want to call this function if you have
-hotplugged disks or have just created a Windows dynamic disk.
 
 This function depends on the feature C<ldm>.  See also
 C<$g-E<gt>feature-available>.
@@ -5250,8 +5240,15 @@ C<$g-E<gt>feature-available>.
 
 =item @mounttags = $g->list_9p ();
 
-List all 9p filesystems attached to the guest.  A list of
-mount tags is returned.
+This call does nothing and returns an error.
+
+I<This function is deprecated.>
+There is no replacement.  Consult the API documentation in
+L<guestfs(3)> for further information.
+
+Deprecated functions will not be removed from the API, but the
+fact that they are deprecated indicates that there are problems
+with correct use of these functions.
 
 =item @devices = $g->list_devices ();
 
@@ -5834,6 +5831,9 @@ If not set, this defaults to C<0>.
 
 The chunk size in bytes.
 
+The C<chunk> parameter does not make sense, and should not be specified,
+when C<level> is C<raid1> (which is the default; see below).
+
 =item C<level>
 
 The RAID level, which can be one of:
@@ -6412,12 +6412,15 @@ first parameter if you don't want any options).
 
 =item $g->mount_9p ($mounttag, $mountpoint [, options => $options]);
 
-Mount the virtio-9p filesystem with the tag C<mounttag> on the
-directory C<mountpoint>.
+This call does nothing and returns an error.
 
-If required, C<trans=virtio> will be automatically added to the options.
-Any other options required can be passed in the optional C<options>
-parameter.
+I<This function is deprecated.>
+There is no replacement.  Consult the API documentation in
+L<guestfs(3)> for further information.
+
+Deprecated functions will not be removed from the API, but the
+fact that they are deprecated indicates that there are problems
+with correct use of these functions.
 
 =item $g->mount_local ($localmountpoint [, readonly => $readonly] [, options => $options] [, cachetimeout => $cachetimeout] [, debugcalls => $debugcalls]);
 
@@ -7293,18 +7296,15 @@ parameter.  In future we may allow other flags to be adjusted.
 
 =item $g->remove_drive ($label);
 
-This function is conceptually the opposite of C<$g-E<gt>add_drive_opts>.
-It removes the drive that was previously added with label C<label>.
+This call does nothing and returns an error.
 
-Note that in order to remove drives, you have to add them with
-labels (see the optional C<label> argument to C<$g-E<gt>add_drive_opts>).
-If you didn't use a label, then they cannot be removed.
+I<This function is deprecated.>
+There is no replacement.  Consult the API documentation in
+L<guestfs(3)> for further information.
 
-You can call this function before or after launching the handle.
-If called after launch, if the backend supports it, we try to hot
-unplug the drive: see L<guestfs(3)/HOTPLUGGING>.  The disk B<must not>
-be in use (eg. mounted) when you do this.  We try to detect if the
-disk is in use and stop you from doing this.
+Deprecated functions will not be removed from the API, but the
+fact that they are deprecated indicates that there are problems
+with correct use of these functions.
 
 =item $g->removexattr ($xattr, $path);
 
@@ -7689,8 +7689,7 @@ with correct use of these functions.
 
 Set the hypervisor binary that we will use.  The hypervisor
 depends on the backend, but is usually the location of the
-qemu/KVM hypervisor.  For the uml backend, it is the location
-of the C<linux> or C<vmlinux> binary.
+qemu/KVM hypervisor.
 
 The default is chosen when the library was compiled by the
 configure script.

@@ -224,12 +224,6 @@ usual case) then the first time you call this function,
 the disk appears in the API as F</dev/sda>, the second time
 as F</dev/sdb>, and so on.
 
-In libguestfs E<ge> 1.20 you can also call this function
-after launch (with some restrictions).  This is called
-\"hotplugging\".  When hotplugging, you must specify a
-C<label> so that the new disk gets a predictable name.
-For more information see L<guestfs(3)/HOTPLUGGING>.
-
 You don't necessarily need to be root when using libguestfs.  However
 you obviously do need sufficient permissions to access the filename
 for whatever operations you want to perform (ie. read access if you
@@ -510,12 +504,7 @@ we connect to the default libvirt URI (or one set through an
 environment variable, see the libvirt documentation for full
 details).
 
-The optional C<live> flag controls whether this call will try
-to connect to a running virtual machine C<guestfsd> process if
-it sees a suitable E<lt>channelE<gt> element in the libvirt
-XML definition.  The default (if the flag is omitted) is never
-to try.  See L<guestfs(3)/ATTACHING TO RUNNING DAEMONS> for more
-information.
+The optional C<live> flag is ignored in libguestfs E<ge> 1.48.
 
 If the C<allowuuid> flag is true (default is false) then a UUID
 I<may> be passed instead of the domain name.  The C<dom> string is
@@ -600,12 +589,7 @@ from a remote libvirt connection (see L<https://libvirt.org/remote.html>)
 will fail unless those disks are accessible via the same device path
 locally too.
 
-The optional C<live> flag controls whether this call will try
-to connect to a running virtual machine C<guestfsd> process if
-it sees a suitable E<lt>channelE<gt> element in the libvirt
-XML definition.  The default (if the flag is omitted) is never
-to try.  See L<guestfs(3)/ATTACHING TO RUNNING DAEMONS> for more
-information.
+The optional C<live> flag is ignored in libguestfs E<ge> 1.48.
 
 The optional C<readonlydisk> parameter controls what we do for
 disks which are marked E<lt>readonly/E<gt> in the libvirt XML.
@@ -1126,25 +1110,6 @@ backing file.
 
 Note that detecting disk features can be insecure under some
 circumstances.  See L<guestfs(3)/CVE-2010-3851>." };
-
-  { defaults with
-    name = "remove_drive"; added = (1, 19, 49);
-    style = RErr, [String (PlainString, "label")], [];
-    blocking = false;
-    shortdesc = "remove a disk image";
-    longdesc = "\
-This function is conceptually the opposite of C<guestfs_add_drive_opts>.
-It removes the drive that was previously added with label C<label>.
-
-Note that in order to remove drives, you have to add them with
-labels (see the optional C<label> argument to C<guestfs_add_drive_opts>).
-If you didn't use a label, then they cannot be removed.
-
-You can call this function before or after launching the handle.
-If called after launch, if the backend supports it, we try to hot
-unplug the drive: see L<guestfs(3)/HOTPLUGGING>.  The disk B<must not>
-be in use (eg. mounted) when you do this.  We try to detect if the
-disk is in use and stop you from doing this." };
 
   { defaults with
     name = "set_libvirt_supported_credentials"; added = (1, 19, 52);
@@ -6158,27 +6123,6 @@ This returns true iff the device exists and contains all zero bytes.
 Note that for large devices this can take a long time to run." };
 
   { defaults with
-    name = "list_9p"; added = (1, 11, 12);
-    style = RStringList (RPlainString, "mounttags"), [], [];
-    shortdesc = "list 9p filesystems";
-    longdesc = "\
-List all 9p filesystems attached to the guest.  A list of
-mount tags is returned." };
-
-  { defaults with
-    name = "mount_9p"; added = (1, 11, 12);
-    style = RErr, [String (PlainString, "mounttag"); String (PlainString, "mountpoint")], [OString "options"];
-    camel_name = "Mount9P";
-    shortdesc = "mount 9p filesystem";
-    longdesc = "\
-Mount the virtio-9p filesystem with the tag C<mounttag> on the
-directory C<mountpoint>.
-
-If required, C<trans=virtio> will be automatically added to the options.
-Any other options required can be passed in the optional C<options>
-parameter." };
-
-  { defaults with
     name = "list_dm_devices"; added = (1, 11, 15);
     style = RStringList (RDevice, "devices"), [], [];
     impl = OCaml "Lvm_dm.list_dm_devices";
@@ -6565,6 +6509,9 @@ If not set, this defaults to C<0>.
 =item C<chunk>
 
 The chunk size in bytes.
+
+The C<chunk> parameter does not make sense, and should not be specified,
+when C<level> is C<raid1> (which is the default; see below).
 
 =item C<level>
 
@@ -7836,30 +7783,6 @@ are the full raw block device and partition names
 (eg. F</dev/sda> and F</dev/sda1>)." };
 
   { defaults with
-    name = "internal_hot_add_drive"; added = (1, 19, 49);
-    style = RErr, [String (PlainString, "label")], [];
-    visibility = VInternal;
-    shortdesc = "internal hotplugging operation";
-    longdesc = "\
-This function is used internally when hotplugging drives." };
-
-  { defaults with
-    name = "internal_hot_remove_drive_precheck"; added = (1, 19, 49);
-    style = RErr, [String (PlainString, "label")], [];
-    visibility = VInternal;
-    shortdesc = "internal hotplugging operation";
-    longdesc = "\
-This function is used internally when hotplugging drives." };
-
-  { defaults with
-    name = "internal_hot_remove_drive"; added = (1, 19, 49);
-    style = RErr, [String (PlainString, "label")], [];
-    visibility = VInternal;
-    shortdesc = "internal hotplugging operation";
-    longdesc = "\
-This function is used internally when hotplugging drives." };
-
-  { defaults with
     name = "mktemp"; added = (1, 19, 53);
     style = RString (RPlainString, "path"), [String (Pathname, "tmpl")], [OString "suffix"];
     tests = [
@@ -8081,9 +8004,7 @@ Call C<guestfs_list_ldm_volumes> and C<guestfs_list_ldm_partitions>
 to return all devices.
 
 Note that you B<don't> normally need to call this explicitly,
-since it is done automatically at C<guestfs_launch> time.
-However you might want to call this function if you have
-hotplugged disks or have just created a Windows dynamic disk." };
+since it is done automatically at C<guestfs_launch> time." };
 
   { defaults with
     name = "ldmtool_remove_all"; added = (1, 20, 0);

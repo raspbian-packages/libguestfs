@@ -51,12 +51,6 @@
  * the disk appears in the API as /dev/sda, the second time
  * as /dev/sdb, and so on.
  * 
- * In libguestfs ≥ 1.20 you can also call this function
- * after launch (with some restrictions). This is called
- * "hotplugging". When hotplugging, you must specify a
- * "label" so that the new disk gets a predictable name.
- * For more information see "HOTPLUGGING" in guestfs(3).
- * 
  * You don't necessarily need to be root when using
  * libguestfs. However you obviously do need sufficient
  * permissions to access the filename for whatever

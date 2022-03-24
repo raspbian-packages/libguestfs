@@ -30,6 +30,7 @@
 #include <libintl.h>
 #include <error.h>
 #include <assert.h>
+#include <errno.h>
 
 #include "c-ctype.h"
 
@@ -37,32 +38,144 @@
 
 #include "options.h"
 
-/**
- * Make a LUKS map name from the partition name,
- * eg. C<"/dev/vda2" =E<gt> "cryptvda2">
- */
 static void
-make_mapname (const char *device, char *mapname, size_t len)
+append_char (size_t *idx, char *buffer, char c)
 {
-  size_t i = 0;
+  /* bail out if the size of the string (including the terminating NUL, if any
+   * cannot be expressed as a size_t
+   */
+  if (*idx == (size_t)-1)
+    error (EXIT_FAILURE, 0, _("string size overflow"));
 
-  if (len < 6)
-    abort ();
-  strcpy (mapname, "crypt");
-  mapname += 5;
-  len -= 5;
+  /* if we're not just counting, then actually write the character */
+  if (buffer != NULL)
+    buffer[*idx] = c;
 
-  if (STRPREFIX (device, "/dev/"))
-    i = 5;
+  /* advance */
+  ++*idx;
+}
 
-  for (; device[i] != '\0' && len >= 1; ++i) {
-    if (c_isalnum (device[i])) {
-      *mapname++ = device[i];
-      len--;
+/**
+ * Make a LUKS map name from the partition or logical volume name, eg.
+ * C<"/dev/vda2" =E<gt> "cryptvda2">, or C<"/dev/vg-ssd/lv-root7" =E<gt>
+ * "cryptvgssdlvroot7">.  Note that, in logical volume device names,
+ * c_isalnum() eliminates the "/" separator from between the VG and the LV, so
+ * this mapping is not unique; but for our purposes, it will do.
+ */
+static char *
+make_mapname (const char *device)
+{
+  bool strip_iprefix;
+  static const char iprefix[] = "/dev/";
+  char *mapname;
+  enum { COUNT, WRITE, DONE } mode;
+
+  strip_iprefix = STRPREFIX (device, iprefix);
+
+  /* set to NULL in COUNT mode, flipped to non-NULL for WRITE mode */
+  mapname = NULL;
+
+  for (mode = COUNT; mode < DONE; ++mode) {
+    size_t ipos;
+    static const size_t iprefixlen = sizeof iprefix - 1;
+    size_t opos;
+    static const char oprefix[] = "crypt";
+    static const size_t oprefixlen = sizeof oprefix - 1;
+    char ichar;
+
+    /* skip the input prefix, if any */
+    ipos = strip_iprefix ? iprefixlen : 0;
+    /* start producing characters after the output prefix */
+    opos = oprefixlen;
+
+    /* filter & copy */
+    while ((ichar = device[ipos]) != '\0') {
+      if (c_isalnum (ichar))
+        append_char (&opos, mapname, ichar);
+      ++ipos;
+    }
+
+    /* terminate */
+    append_char (&opos, mapname, '\0');
+
+    /* allocate the output buffer when flipping from COUNT to WRITE mode */
+    if (mode == COUNT) {
+      assert (opos >= sizeof oprefix);
+      mapname = malloc (opos);
+      if (mapname == NULL)
+        error (EXIT_FAILURE, errno, "malloc");
+
+      /* populate the output prefix -- note: not NUL-terminated yet */
+      memcpy (mapname, oprefix, oprefixlen);
     }
   }
 
-  *mapname = '\0';
+  return mapname;
+}
+
+static bool
+decrypt_mountables (guestfs_h *g, const char * const *mountables,
+                    struct key_store *ks, bool name_decrypted_by_uuid)
+{
+  bool decrypted_some = false;
+  const char * const *mnt_scan = mountables;
+  const char *mountable;
+
+  while ((mountable = *mnt_scan++) != NULL) {
+    CLEANUP_FREE char *type = NULL;
+    CLEANUP_FREE char *uuid = NULL;
+    CLEANUP_FREE_STRING_LIST char **keys = NULL;
+    CLEANUP_FREE char *mapname = NULL;
+    const char * const *key_scan;
+    const char *key;
+
+    type = guestfs_vfs_type (g, mountable);
+    if (type == NULL)
+      continue;
+
+    /* "cryptsetup luksUUID" cannot read a UUID on Windows BitLocker disks
+     * (unclear if this is a limitation of the format or cryptsetup).
+     */
+    if (STREQ (type, "crypto_LUKS")) {
+      uuid = guestfs_luks_uuid (g, mountable);
+    } else if (STRNEQ (type, "BitLocker"))
+      continue;
+
+    /* Grab the keys that we should try with this device, based on device name,
+     * or UUID (if any).
+     */
+    keys = get_keys (ks, mountable, uuid);
+    assert (keys[0] != NULL);
+
+    /* Generate a node name for the plaintext (decrypted) device node. */
+    if (!name_decrypted_by_uuid || uuid == NULL ||
+        asprintf (&mapname, "luks-%s", uuid) == -1)
+      mapname = make_mapname (mountable);
+
+    /* Try each key in turn. */
+    key_scan = (const char * const *)keys;
+    while ((key = *key_scan++) != NULL) {
+      int r;
+
+      guestfs_push_error_handler (g, NULL, NULL);
+      r = guestfs_cryptsetup_open (g, mountable, key, mapname, -1);
+      guestfs_pop_error_handler (g);
+
+      if (r == 0)
+        break;
+    }
+
+    if (key == NULL)
+      error (EXIT_FAILURE, 0,
+             _("could not find key to open LUKS encrypted %s.\n\n"
+               "Try using --key on the command line.\n\n"
+               "Original error: %s (%d)"),
+             mountable, guestfs_last_error (g), guestfs_last_errno (g));
+
+    decrypted_some = true;
+  }
+
+  return decrypted_some;
 }
 
 /**
@@ -73,65 +186,22 @@ void
 inspect_do_decrypt (guestfs_h *g, struct key_store *ks)
 {
   CLEANUP_FREE_STRING_LIST char **partitions = guestfs_list_partitions (g);
+  CLEANUP_FREE_STRING_LIST char **lvs = NULL;
+  bool need_rescan;
+
   if (partitions == NULL)
     exit (EXIT_FAILURE);
 
-  int need_rescan = 0, r;
-  size_t i, j;
-
-  for (i = 0; partitions[i] != NULL; ++i) {
-    CLEANUP_FREE char *type = guestfs_vfs_type (g, partitions[i]);
-    if (type &&
-        (STREQ (type, "crypto_LUKS") || STREQ (type, "BitLocker"))) {
-      bool is_bitlocker = STREQ (type, "BitLocker");
-      char mapname[32];
-      make_mapname (partitions[i], mapname, sizeof mapname);
-
-#ifdef GUESTFS_HAVE_LUKS_UUID
-      CLEANUP_FREE char *uuid = NULL;
-
-      /* This fails for Windows BitLocker disks because cryptsetup
-       * luksUUID cannot read a UUID (unclear if this is a limitation
-       * of the format or cryptsetup).
-       */
-      if (!is_bitlocker)
-        uuid = guestfs_luks_uuid (g, partitions[i]);
-#else
-      const char *uuid = NULL;
-#endif
-
-      CLEANUP_FREE_STRING_LIST char **keys = get_keys (ks, partitions[i], uuid);
-      assert (guestfs_int_count_strings (keys) > 0);
-
-      /* Try each key in turn. */
-      for (j = 0; keys[j] != NULL; ++j) {
-        /* XXX Should we set GUESTFS_CRYPTSETUP_OPEN_READONLY if readonly
-         * is set?  This might break 'mount_ro'.
-         */
-        guestfs_push_error_handler (g, NULL, NULL);
-#ifdef GUESTFS_HAVE_CRYPTSETUP_OPEN
-        r = guestfs_cryptsetup_open (g, partitions[i], keys[j], mapname, -1);
-#else
-        r = guestfs_luks_open (g, partitions[i], keys[j], mapname);
-#endif
-        guestfs_pop_error_handler (g);
-        if (r == 0)
-          goto opened;
-      }
-      error (EXIT_FAILURE, 0,
-             _("could not find key to open LUKS encrypted %s.\n\n"
-               "Try using --key on the command line.\n\n"
-               "Original error: %s (%d)"),
-             partitions[i], guestfs_last_error (g),
-             guestfs_last_errno (g));
-
-    opened:
-      need_rescan = 1;
-    }
-  }
+  need_rescan = decrypt_mountables (g, (const char * const *)partitions, ks,
+                                    false);
 
   if (need_rescan) {
     if (guestfs_lvm_scan (g, 1) == -1)
       exit (EXIT_FAILURE);
   }
+
+  lvs = guestfs_lvs (g);
+  if (lvs == NULL)
+    exit (EXIT_FAILURE);
+  decrypt_mountables (g, (const char * const *)lvs, ks, true);
 }

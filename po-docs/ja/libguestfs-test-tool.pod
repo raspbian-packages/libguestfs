@@ -9,11 +9,7 @@ libguestfs-test-tool - libguestfs の診断
 
 =head1 説明
 
-libguestfs-test-tool is a test program shipped with libguestfs to allow you
-to check basic libguestfs functionality is working.  This is needed because
-libguestfs occasionally breaks for reasons beyond our control: usually
-because of changes in the underlying qemu or kernel packages, or the host
-environment.
+libguestfs-test-tool is a test program shipped with libguestfs to allow you to check basic libguestfs functionality is working.  This is needed because libguestfs occasionally breaks for reasons beyond our control: usually because of changes in the underlying qemu or kernel packages, or the host environment.
 
 If you suspect a problem in libguestfs, then just run:
 
@@ -27,10 +23,7 @@ If it runs to completion successfully, you will see this near the end:
 
 and the test tool will exit with code 0.
 
-If it fails (and/or exits with non-zero error code), please paste the
-I<complete, unedited> output of the test tool into a bug report.  More
-information about reporting bugs can be found on the
-L<http://libguestfs.org/> website.
+If it fails (and/or exits with non-zero error code), please paste the I<complete, unedited> output of the test tool into a bug report.  More information about reporting bugs can be found on the L<http://libguestfs.org/> website.
 
 =head1 オプション
 
@@ -42,20 +35,17 @@ L<http://libguestfs.org/> website.
 
 =item B<--qemu> qemu_binary
 
-If you have downloaded another qemu binary, point this option at the full
-path of the binary to try it.
+If you have downloaded another qemu binary, point this option at the full path of the binary to try it.
 
 =item B<--qemudir> qemu_source_dir
 
-If you have compiled qemu from source, point this option at the source
-directory to try it.
+If you have compiled qemu from source, point this option at the source directory to try it.
 
 =item B<-t> N
 
 =item B<--timeout> N
 
-Set the launch timeout to C<N> seconds.  The default is 600 seconds (10
-minutes) which does not usually need to be adjusted.
+Set the launch timeout to C<N> seconds.  The default is 600 seconds (10 minutes) which does not usually need to be adjusted.
 
 =item B<-V>
 
@@ -67,22 +57,15 @@ libguestfs のバージョン番号を表示して、終了します。
 
 =head1 TRYING OUT A DIFFERENT VERSION OF QEMU
 
-If you have compiled another version of qemu from source and would like to
-try that, then you can use the I<--qemudir> option to point to the qemu
-source directory.
+If you have compiled another version of qemu from source and would like to try that, then you can use the I<--qemudir> option to point to the qemu source directory.
 
-If you have downloaded a qemu binary from somewhere, use the I<--qemu>
-option to point to the binary.
+If you have downloaded a qemu binary from somewhere, use the I<--qemu> option to point to the binary.
 
-Note when using these options, you can ignore the business of qemu wrapper
-scripts (L<guestfs(3)/QEMU WRAPPERS>), since libguestfs-test-tool writes a
-wrapper script for you if one is needed.
+Note when using these options, you can ignore the business of qemu wrapper scripts (L<guestfs(3)/QEMU WRAPPERS>), since libguestfs-test-tool writes a wrapper script for you if one is needed.
 
 =head1 TRYING OUT A DIFFERENT KERNEL
 
-You can tell supermin to try a different kernel.  You do this by setting the
-environment variables C<SUPERMIN_KERNEL>, C<SUPERMIN_KERNEL_VERSION> and/or
-C<SUPERMIN_MODULES>.
+You can tell supermin to try a different kernel.  You do this by setting the environment variables C<SUPERMIN_KERNEL>, C<SUPERMIN_KERNEL_VERSION> and/or C<SUPERMIN_MODULES>.
 
 Refer to L<supermin(1)/ENVIRONMENT VARIABLES> for further information.
 
@@ -93,17 +76,12 @@ To find out which backend is the default in your libguestfs package, do:
  unset LIBGUESTFS_BACKEND
  guestfish get-backend
 
-If you are using the libvirt backend, then you can try out a different
-(eg. upstream) version of libvirt by running these commands (I<not> as
-root):
+If you are using the libvirt backend, then you can try out a different (eg. upstream) version of libvirt by running these commands (I<not> as root):
 
  killall libvirtd lt-libvirtd
  ~/path/to/libvirt/run libguestfs-test-tool
 
-The first command kills any session C<libvirtd> process(es) that may be
-running on the machine.  The second command uses libvirt’s C<run> script (in
-the top-level libvirt build directory) to set some environment variables so
-that the alternate version of libvirt is used to run the program.
+The first command kills any session C<libvirtd> process(es) that may be running on the machine.  The second command uses libvirt’s C<run> script (in the top-level libvirt build directory) to set some environment variables so that the alternate version of libvirt is used to run the program.
 
 =head1 TRYING OUT WITH / WITHOUT LIBVIRT
 
@@ -112,8 +90,7 @@ To find out which backend is the default in your libguestfs package, do:
  unset LIBGUESTFS_BACKEND
  guestfish get-backend
 
-If you are using the libvirt backend, you can try without (ie. libguestfs
-directly launching qemu) by doing:
+If you are using the libvirt backend, you can try without (ie. libguestfs directly launching qemu) by doing:
 
  export LIBGUESTFS_BACKEND=direct
 
@@ -136,20 +113,15 @@ To find out if SELinux is being used, do:
 
  getenforce
 
-If you are using libvirt, SELinux and sVirt, then you can try to see if
-changing SELinux to "permissive" mode makes any difference.  Use this
-command as root:
+If you are using libvirt, SELinux and sVirt, then you can try to see if changing SELinux to "permissive" mode makes any difference.  Use this command as root:
 
  setenforce Permissive
 
-If this makes a difference, look in the audit logs for recent failures
-("AVCs"):
+If this makes a difference, look in the audit logs for recent failures ("AVCs"):
 
  ausearch -m avc -ts recent
 
-You can convert AVCs into suggested SELinux policy rules using tools like
-L<audit2allow(1)>.  For more information, see the "Security Enhanced Linux
-User Guide".
+You can convert AVCs into suggested SELinux policy rules using tools like L<audit2allow(1)>.  For more information, see the "Security Enhanced Linux User Guide".
 
 To reenable SELinux and sVirt, do:
 
@@ -157,13 +129,11 @@ To reenable SELinux and sVirt, do:
 
 =head1 自己診断
 
-libguestfs-test-tool および/または起こりうるエラーにより生成されるメッセージを理解するには
-L<guestfs(3)/アプライアンス起動プロセス> を参照してください。
+libguestfs-test-tool および/または起こりうるエラーにより生成されるメッセージを理解するには L<guestfs(3)/アプライアンス起動プロセス> を参照してください。
 
 =head1 終了ステータス
 
-libguestfs-test-tool returns I<0> if the tests completed without error, or
-I<1> if there was an error.
+libguestfs-test-tool returns I<0> if the tests completed without error, or I<1> if there was an error.
 
 =head1 環境変数
 

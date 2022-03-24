@@ -3966,24 +3966,12 @@ guestfs_int_ruby_ping_daemon (VALUE gv)
  *
  * remove a disk image
  *
- * This function is conceptually the opposite of
- * "g.add_drive_opts". It removes the drive that was
- * previously added with label "label".
- * 
- * Note that in order to remove drives, you have to add
- * them with labels (see the optional "label" argument to
- * "g.add_drive_opts"). If you didn't use a label, then
- * they cannot be removed.
- * 
- * You can call this function before or after launching the
- * handle. If called after launch, if the backend supports
- * it, we try to hot unplug the drive: see "HOTPLUGGING" in
- * guestfs(3). The disk must not be in use (eg. mounted)
- * when you do this. We try to detect if the disk is in use
- * and stop you from doing this.
+ * This call does nothing and returns an error.
  *
  *
  * [Since] Added in version 1.19.49.
+ *
+ * [Deprecated] There is no documented replacement
  *
  * [C API] For the C API documentation for this function, see
  *         {guestfs_remove_drive}[http://libguestfs.org/guestfs.3.html#guestfs_remove_drive].
@@ -3995,6 +3983,8 @@ guestfs_int_ruby_remove_drive (VALUE gv, VALUE labelv)
   Data_Get_Struct (gv, guestfs_h, g);
   if (!g)
     rb_raise (rb_eArgError, "%s: used handle after closing it", "remove_drive");
+
+  rb_warn ("Guestfs#remove_drive is deprecated");
 
   const char *label = StringValueCStr (labelv);
 
@@ -4220,9 +4210,7 @@ guestfs_int_ruby_set_backend_settings (VALUE gv, VALUE settingsv)
  *
  * Set the hypervisor binary that we will use. The
  * hypervisor depends on the backend, but is usually the
- * location of the qemu/KVM hypervisor. For the uml
- * backend, it is the location of the "linux" or "vmlinux"
- * binary.
+ * location of the qemu/KVM hypervisor.
  * 
  * The default is chosen when the library was compiled by
  * the configure script.

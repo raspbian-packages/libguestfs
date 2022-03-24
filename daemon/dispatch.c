@@ -660,15 +660,6 @@ dispatch_incoming_message (XDR *xdr_in)
     case GUESTFS_PROC_INTERNAL_FIND_INODE:
       internal_find_inode_stub (xdr_in);
       break;
-    case GUESTFS_PROC_INTERNAL_HOT_ADD_DRIVE:
-      internal_hot_add_drive_stub (xdr_in);
-      break;
-    case GUESTFS_PROC_INTERNAL_HOT_REMOVE_DRIVE:
-      internal_hot_remove_drive_stub (xdr_in);
-      break;
-    case GUESTFS_PROC_INTERNAL_HOT_REMOVE_DRIVE_PRECHECK:
-      internal_hot_remove_drive_precheck_stub (xdr_in);
-      break;
     case GUESTFS_PROC_INTERNAL_JOURNAL_GET:
       internal_journal_get_stub (xdr_in);
       break;

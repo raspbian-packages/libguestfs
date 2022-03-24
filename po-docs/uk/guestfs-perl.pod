@@ -17,17 +17,11 @@ guestfs-perl — як використовувати libguestfs з Perl
 
 =head1 ОПИС
 
-На цій сторінці підручника наведено документацію щодо викликів libguestfs з
-коду мовою програмування Perl. На сторінці задокументовано відмінності від
-програмного інтерфейсу C та подано декілька прикладів. Якщо ви не дуже
-знайомі із користуванням libguestfs, вам також слід прочитати підручник з
-L<guestfs(3)>. Повністю програмний інтерфейс Perl описану на сторінці
-L<Sys::Guestfs(3)>.
+На цій сторінці підручника наведено документацію щодо викликів libguestfs з коду мовою програмування Perl. На сторінці задокументовано відмінності від програмного інтерфейсу C та подано декілька прикладів. Якщо ви не дуже знайомі із користуванням libguestfs, вам також слід прочитати підручник з L<guestfs(3)>. Повністю програмний інтерфейс Perl описану на сторінці L<Sys::Guestfs(3)>.
 
 =head2 ПОМИЛКИ
 
-Помилки від функцій libguestfs перетворюються на виклики C<croak>
-(див. L<Carp(3)>).
+Помилки від функцій libguestfs перетворюються на виклики C<croak> (див. L<Carp(3)>).
 
 =head1 ПРИКЛАД 1. СТВОРЕННЯ ОБРАЗУ ДИСКА
 
@@ -39,11 +33,7 @@ L<Sys::Guestfs(3)>.
 
 =head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
 
-L<Sys::Guestfs(3)>, L<guestfs(3)>, L<guestfs-examples(3)>,
-L<guestfs-erlang(3)>, L<guestfs-gobject(3)>, L<guestfs-golang(3)>,
-L<guestfs-java(3)>, L<guestfs-lua(3)>, L<guestfs-ocaml(3)>,
-L<guestfs-python(3)>, L<guestfs-recipes(1)>, L<guestfs-ruby(3)>,
-L<http://libguestfs.org/>.
+L<Sys::Guestfs(3)>, L<guestfs(3)>, L<guestfs-examples(3)>, L<guestfs-erlang(3)>, L<guestfs-gobject(3)>, L<guestfs-golang(3)>, L<guestfs-java(3)>, L<guestfs-lua(3)>, L<guestfs-ocaml(3)>, L<guestfs-python(3)>, L<guestfs-recipes(1)>, L<guestfs-ruby(3)>, L<http://libguestfs.org/>.
 
 =head1 АВТОРИ
 

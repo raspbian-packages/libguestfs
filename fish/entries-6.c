@@ -857,8 +857,14 @@ struct command_entry list_9p_cmd_entry = {
           "     list-9p\n"
           "\n"
           "DESCRIPTION\n"
-          "    List all 9p filesystems attached to the guest. A list of mount tags is\n"
-          "    returned.\n"
+          "    This call does nothing and returns an error.\n"
+          "\n"
+          "    *This function is deprecated.* There is no replacement. Consult the API\n"
+          "    documentation in guestfs(3) for further information.\n"
+          "\n"
+          "    Deprecated functions will not be removed from the API, but the fact that\n"
+          "    they are deprecated indicates that there are problems with correct use\n"
+          "    of these functions.\n"
           "\n"
           "",
   .synopsis = "list-9p",

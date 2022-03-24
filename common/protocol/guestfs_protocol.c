@@ -4664,36 +4664,6 @@ xdr_guestfs_internal_find_inode_args (XDR *xdrs, guestfs_internal_find_inode_arg
 }
 
 bool_t
-xdr_guestfs_internal_hot_add_drive_args (XDR *xdrs, guestfs_internal_hot_add_drive_args *objp)
-{
-	register int32_t *buf;
-
-	 if (!xdr_string (xdrs, &objp->label, ~0))
-		 return FALSE;
-	return TRUE;
-}
-
-bool_t
-xdr_guestfs_internal_hot_remove_drive_args (XDR *xdrs, guestfs_internal_hot_remove_drive_args *objp)
-{
-	register int32_t *buf;
-
-	 if (!xdr_string (xdrs, &objp->label, ~0))
-		 return FALSE;
-	return TRUE;
-}
-
-bool_t
-xdr_guestfs_internal_hot_remove_drive_precheck_args (XDR *xdrs, guestfs_internal_hot_remove_drive_precheck_args *objp)
-{
-	register int32_t *buf;
-
-	 if (!xdr_string (xdrs, &objp->label, ~0))
-		 return FALSE;
-	return TRUE;
-}
-
-bool_t
 xdr_guestfs_internal_list_rpm_applications_ret (XDR *xdrs, guestfs_internal_list_rpm_applications_ret *objp)
 {
 	register int32_t *buf;

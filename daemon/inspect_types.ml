@@ -79,6 +79,7 @@ and distro =
   | DISTRO_FRUGALWARE
   | DISTRO_GENTOO
   | DISTRO_KALI_LINUX
+  | DISTRO_KYLIN
   | DISTRO_LINUX_MINT
   | DISTRO_MAGEIA
   | DISTRO_MANDRIVA
@@ -94,6 +95,7 @@ and distro =
   | DISTRO_PLD_LINUX
   | DISTRO_REDHAT_BASED
   | DISTRO_RHEL
+  | DISTRO_ROCKY
   | DISTRO_SCIENTIFIC_LINUX
   | DISTRO_SLACKWARE
   | DISTRO_SLES
@@ -211,6 +213,7 @@ and string_of_distro = function
   | DISTRO_FRUGALWARE -> "frugalware"
   | DISTRO_GENTOO -> "gentoo"
   | DISTRO_KALI_LINUX -> "kalilinux"
+  | DISTRO_KYLIN -> "kylin"
   | DISTRO_LINUX_MINT -> "linuxmint"
   | DISTRO_MAGEIA -> "mageia"
   | DISTRO_MANDRIVA -> "mandriva"
@@ -226,6 +229,7 @@ and string_of_distro = function
   | DISTRO_PLD_LINUX -> "pldlinux"
   | DISTRO_REDHAT_BASED -> "redhat-based"
   | DISTRO_RHEL -> "rhel"
+  | DISTRO_ROCKY -> "rocky"
   | DISTRO_SCIENTIFIC_LINUX -> "scientificlinux"
   | DISTRO_SLACKWARE -> "slackware"
   | DISTRO_SLES -> "sles"

@@ -23,10 +23,10 @@ index 2b73bc6..ea314e4 100644
  -include .depend
  
 diff --git a/daemon/Makefile.am b/daemon/Makefile.am
-index d85f5c9..09f3b8f 100644
+index ab4a7af..079d5a0 100644
 --- a/daemon/Makefile.am
 +++ b/daemon/Makefile.am
-@@ -394,7 +394,7 @@ camldaemon.o: $(OBJECTS)
+@@ -393,7 +393,7 @@ camldaemon.o: $(OBJECTS)
  	    $(OBJECTS)
  
  # OCaml dependencies.

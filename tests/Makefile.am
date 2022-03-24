@@ -43,9 +43,6 @@ check-slow:
 check-valgrind:
 	$(MAKE) VG="@VG@" check
 
-TESTS += 9p/test-9p.sh
-EXTRA_DIST += 9p/test-9p.sh
-
 SLOW_TESTS += bigdirs/test-big-dirs.pl
 EXTRA_DIST += bigdirs/test-big-dirs.pl
 
@@ -326,15 +323,6 @@ charsets_test_charset_fidelity_LDADD = \
 TESTS += create/test-disk-create.sh
 EXTRA_DIST += create/test-disk-create.sh
 
-check_DATA = daemon/captive-daemon.pm
-
-TESTS += \
-	daemon/test-daemon-start.pl \
-	daemon/test-btrfs.pl
-EXTRA_DIST += \
-	daemon/test-daemon-start.pl \
-	daemon/test-btrfs.pl
-
 TESTS += \
 	discard/test-blkdiscard.pl \
 	discard/test-discard.pl \
@@ -427,14 +415,6 @@ endif
 TESTS += gdisk/test-expand-gpt.pl
 EXTRA_DIST += gdisk/test-expand-gpt.pl
 
-TESTS += \
-	hotplug/test-hot-add.pl \
-	hotplug/test-hot-remove.pl
-EXTRA_DIST += \
-	hotplug/test-hot-add.pl \
-	hotplug/test-hot-remove.pl \
-	hotplug/test-hotplug-repeated.pl
-
 # Test uses the Python SimpleHTTPServer module which is
 # conveniently part of Python core.
 
@@ -464,12 +444,14 @@ TESTS += \
 	luks/test-luks.sh \
 	luks/test-luks-list.sh \
 	luks/test-key-option.sh \
-	luks/test-key-option-inspect.sh
+	luks/test-key-option-inspect-luks-on-lvm.sh \
+	luks/test-key-option-inspect-lvm-on-luks.sh
 EXTRA_DIST += \
 	luks/test-luks.sh \
 	luks/test-luks-list.sh \
 	luks/test-key-option.sh \
-	luks/test-key-option-inspect.sh
+	luks/test-key-option-inspect-luks-on-lvm.sh \
+	luks/test-key-option-inspect-lvm-on-luks.sh
 
 TESTS += \
 	lvm/test-lvm-filtering.sh \
@@ -497,11 +479,8 @@ EXTRA_DIST += \
 	md/test-mdadm.sh \
 	md/test-partitioned-md-devices.sh
 
-EXTRA_DIST += \
-	mountable/test-mountable-inspect.sh
-
 TESTS += \
-	mountable/test-internal-parse-mountable
+	mountable/test-internal-parse-mountable \
 	mountable/test-mountable-inspect.sh
 EXTRA_DIST += \
 	mountable/test-mountable-inspect.sh

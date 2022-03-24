@@ -137,6 +137,15 @@ refers to.
 
 This is the same as the L<lstat(2)> system call." };
 
+  { defaults with
+    name = "remove_drive"; added = (1, 19, 49);
+    style = RErr, [String (PlainString, "label")], [];
+    deprecated_by = Deprecated_no_replacement;
+    blocking = false;
+    shortdesc = "remove a disk image";
+    longdesc = "\
+This call does nothing and returns an error." };
+
 ]
 
 let daemon_functions = [
@@ -898,5 +907,22 @@ C<guestfs_luks_open> or C<guestfs_luks_open_ro>.  The
 C<device> parameter must be the name of the LUKS mapping
 device (ie. F</dev/mapper/mapname>) and I<not> the name
 of the underlying block device." };
+
+  { defaults with
+    name = "list_9p"; added = (1, 11, 12);
+    style = RStringList (RPlainString, "mounttags"), [], [];
+    shortdesc = "list 9p filesystems";
+    deprecated_by = Deprecated_no_replacement;
+    longdesc = "\
+This call does nothing and returns an error." };
+
+  { defaults with
+    name = "mount_9p"; added = (1, 11, 12);
+    style = RErr, [String (PlainString, "mounttag"); String (PlainString, "mountpoint")], [OString "options"];
+    camel_name = "Mount9P";
+    deprecated_by = Deprecated_no_replacement;
+    shortdesc = "mount 9p filesystem";
+    longdesc = "\
+This call does nothing and returns an error." };
 
 ]

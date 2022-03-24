@@ -1197,9 +1197,7 @@ struct command_entry ldmtool_create_all_cmd_entry = {
           "    Call \"list_ldm_volumes\" and \"list_ldm_partitions\" to return all devices.\n"
           "\n"
           "    Note that you don't normally need to call this explicitly, since it is\n"
-          "    done automatically at \"launch\" time. However you might want to call this\n"
-          "    function if you have hotplugged disks or have just created a Windows\n"
-          "    dynamic disk.\n"
+          "    done automatically at \"launch\" time.\n"
           "\n"
           "",
   .synopsis = "ldmtool-create-all",
@@ -1485,6 +1483,10 @@ struct command_entry md_create_cmd_entry = {
           "\n"
           "    \"chunk\"\n"
           "        The chunk size in bytes.\n"
+          "\n"
+          "        The \"chunk\" parameter does not make sense, and should not be\n"
+          "        specified, when \"level\" is \"raid1\" (which is the default; see\n"
+          "        below).\n"
           "\n"
           "    \"level\"\n"
           "        The RAID level, which can be one of: \"linear\", \"raid0\", 0, \"stripe\",\n"

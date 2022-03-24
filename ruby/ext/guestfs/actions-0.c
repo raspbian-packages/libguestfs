@@ -105,12 +105,8 @@ guestfs_int_ruby_acl_delete_def_file (VALUE gv, VALUE dirv)
  * through an environment variable, see the libvirt
  * documentation for full details).
  * 
- * The optional "live" flag controls whether this call will
- * try to connect to a running virtual machine "guestfsd"
- * process if it sees a suitable <channel> element in the
- * libvirt XML definition. The default (if the flag is
- * omitted) is never to try. See "ATTACHING TO RUNNING
- * DAEMONS" in guestfs(3) for more information.
+ * The optional "live" flag is ignored in libguestfs ≥
+ * 1.48.
  * 
  * If the "allowuuid" flag is true (default is false) then
  * a UUID *may* be passed instead of the domain name. The
@@ -1652,6 +1648,9 @@ guestfs_int_ruby_hivex_value_type (VALUE gv, VALUE valuehv)
  * "kalilinux"
  * Kali Linux.
  * 
+ * "kylin"
+ * Kylin.
+ * 
  * "linuxmint"
  * Linux Mint.
  * 
@@ -1696,6 +1695,9 @@ guestfs_int_ruby_hivex_value_type (VALUE gv, VALUE valuehv)
  * 
  * "rhel"
  * Red Hat Enterprise Linux.
+ * 
+ * "rocky"
+ * Rocky Linux.
  * 
  * "scientificlinux"
  * Scientific Linux.
@@ -3108,12 +3110,7 @@ guestfs_int_ruby_mkswap_file (VALUE gv, VALUE pathv)
  *
  * mount 9p filesystem
  *
- * Mount the virtio-9p filesystem with the tag "mounttag"
- * on the directory "mountpoint".
- * 
- * If required, "trans=virtio" will be automatically added
- * to the options. Any other options required can be passed
- * in the optional "options" parameter.
+ * This call does nothing and returns an error.
  * 
  * Optional arguments are supplied in the final hash
  * parameter, which is a hash of the argument name to its
@@ -3121,6 +3118,8 @@ guestfs_int_ruby_mkswap_file (VALUE gv, VALUE pathv)
  *
  *
  * [Since] Added in version 1.11.12.
+ *
+ * [Deprecated] There is no documented replacement
  *
  * [C API] For the C API documentation for this function, see
  *         {guestfs_mount_9p}[http://libguestfs.org/guestfs.3.html#guestfs_mount_9p].
@@ -3139,6 +3138,8 @@ guestfs_int_ruby_mount_9p (int argc, VALUE *argv, VALUE gv)
   volatile VALUE mounttagv = argv[0];
   volatile VALUE mountpointv = argv[1];
   volatile VALUE optargsv = argc > 2 ? argv[2] : rb_hash_new ();
+
+  rb_warn ("Guestfs#mount_9p is deprecated");
 
   const char *mounttag = StringValueCStr (mounttagv);
   const char *mountpoint = StringValueCStr (mountpointv);

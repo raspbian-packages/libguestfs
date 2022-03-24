@@ -5,10 +5,7 @@ guestfs-release-notes - нотатки щодо випусків libguestfs
 
 =head1 НОТАТКИ ЩОДО ВИПУСКУ LIBGUESTFS 1.6
 
-Ці нотатки щодо випуску стосуються лише відмінностей від попереднього
-стабільного випуску (1.4.0). Докладний журнал змін є частиною журналу змін
-сховища git. Його також наведено у файлі ChangeLog, який є частиною архіву
-tar із кодом бібліотеки.
+Ці нотатки щодо випуску стосуються лише відмінностей від попереднього стабільного випуску (1.4.0). Докладний журнал змін є частиною журналу змін сховища git. Його також наведено у файлі ChangeLog, який є частиною архіву tar із кодом бібліотеки.
 
 =head2 Нові можливості
 
@@ -151,9 +148,7 @@ https://www.redhat.com/archives/libguestfs/2010-October/msg00036.html
 
 =head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
 
-L<guestfs-examples(1)>, L<guestfs-faq(1)>, L<guestfs-performance(1)>,
-L<guestfs-recipes(1)>, L<guestfs-testing(1)>, L<guestfs(3)>,
-L<guestfish(1)>, L<http://libguestfs.org/>
+L<guestfs-examples(1)>, L<guestfs-faq(1)>, L<guestfs-performance(1)>, L<guestfs-recipes(1)>, L<guestfs-testing(1)>, L<guestfs(3)>, L<guestfish(1)>, L<http://libguestfs.org/>
 
 =head1 АВТОР
 

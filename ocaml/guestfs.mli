@@ -2700,6 +2700,8 @@ val lgetxattrs : t -> string -> xattr array
 val list_9p : t -> string array
 (** list 9p filesystems
 
+    @deprecated There is no documented replacement
+
     @since 1.11.12
  *)
 
@@ -3288,6 +3290,8 @@ val mount : t -> string -> string -> unit
 val mount_9p : t -> ?options:string -> string -> string -> unit
 (** mount 9p filesystem
 
+    @deprecated There is no documented replacement
+
     @since 1.11.12
  *)
 
@@ -3759,6 +3763,8 @@ val remount : t -> ?rw:bool -> string -> unit
 
 val remove_drive : t -> string -> unit
 (** remove a disk image
+
+    @deprecated There is no documented replacement
 
     @since 1.19.49
  *)
@@ -6684,6 +6690,8 @@ class guestfs : ?environment:bool -> ?close_on_exit:bool -> unit -> object
   method list_9p : unit -> string array
   (** list 9p filesystems
 
+    @deprecated There is no documented replacement
+
     @since 1.11.12
    *)
   method list_devices : unit -> string array
@@ -7191,6 +7199,8 @@ class guestfs : ?environment:bool -> ?close_on_exit:bool -> unit -> object
   method mount_9p : ?options:string -> string -> string -> unit
   (** mount 9p filesystem
 
+    @deprecated There is no documented replacement
+
     @since 1.11.12
    *)
   method mount_local : ?readonly:bool -> ?options:string -> ?cachetimeout:int -> ?debugcalls:bool -> string -> unit
@@ -7592,6 +7602,8 @@ class guestfs : ?environment:bool -> ?close_on_exit:bool -> unit -> object
    *)
   method remove_drive : string -> unit
   (** remove a disk image
+
+    @deprecated There is no documented replacement
 
     @since 1.19.49
    *)

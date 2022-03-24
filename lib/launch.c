@@ -284,14 +284,6 @@ guestfs_impl_config (guestfs_h *g,
 {
   struct hv_param *hp;
 
-  /*
-    XXX For qemu this made sense, but not for uml.
-    if (hv_param[0] != '-') {
-    error (g, _("parameter must begin with '-' character"));
-    return -1;
-    }
-  */
-
   /* A bit fascist, but the user will probably break the extra
    * parameters that we add if they try to set any of these.
    */
@@ -325,15 +317,20 @@ int
 guestfs_int_create_socketname (guestfs_h *g, const char *filename,
                                char (*sockpath)[UNIX_PATH_MAX])
 {
+  int r;
+
   if (guestfs_int_lazy_make_sockdir (g) == -1)
     return -1;
 
-  if (strlen (g->sockdir) + 1 + strlen (filename) > UNIX_PATH_MAX-1) {
+  r = snprintf (*sockpath, UNIX_PATH_MAX, "%s/%s", g->sockdir, filename);
+  if (r >= UNIX_PATH_MAX) {
     error (g, _("socket path too long: %s/%s"), g->sockdir, filename);
     return -1;
   }
-
-  snprintf (*sockpath, UNIX_PATH_MAX, "%s/%s", g->sockdir, filename);
+  if (r < 0) {
+    perrorf (g, _("%s"), g->sockdir);
+    return -1;
+  }
 
   return 0;
 }
@@ -426,6 +423,4 @@ guestfs_int_force_load_backends[] = {
 #ifdef HAVE_LIBVIRT_BACKEND
   guestfs_int_init_libvirt_backend,
 #endif
-  guestfs_int_init_uml_backend,
-  guestfs_int_init_unix_backend,
 };

@@ -1745,11 +1745,12 @@ guestfs_int_ruby_lgetxattr (VALUE gv, VALUE pathv, VALUE namev)
  *
  * list 9p filesystems
  *
- * List all 9p filesystems attached to the guest. A list of
- * mount tags is returned.
+ * This call does nothing and returns an error.
  *
  *
  * [Since] Added in version 1.11.12.
+ *
+ * [Deprecated] There is no documented replacement
  *
  * [C API] For the C API documentation for this function, see
  *         {guestfs_list_9p}[http://libguestfs.org/guestfs.3.html#guestfs_list_9p].
@@ -1761,6 +1762,8 @@ guestfs_int_ruby_list_9p (VALUE gv)
   Data_Get_Struct (gv, guestfs_h, g);
   if (!g)
     rb_raise (rb_eArgError, "%s: used handle after closing it", "list_9p");
+
+  rb_warn ("Guestfs#list_9p is deprecated");
 
 
   char **r;

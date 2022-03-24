@@ -17,13 +17,9 @@ virt-rescue - 仮想マシンにおいてレスキューシェルを実行しま
 
 =head1 説明
 
-virt-rescue is like a Rescue CD, but for virtual machines, and without the
-need for a CD.  virt-rescue gives you a rescue shell and some simple
-recovery tools which you can use to examine or rescue a virtual machine or
-disk image.
+virt-rescue is like a Rescue CD, but for virtual machines, and without the need for a CD.  virt-rescue gives you a rescue shell and some simple recovery tools which you can use to examine or rescue a virtual machine or disk image.
 
-You can run virt-rescue on any virtual machine known to libvirt, or directly
-on disk image(s):
+You can run virt-rescue on any virtual machine known to libvirt, or directly on disk image(s):
 
  virt-rescue -d GuestName -i
 
@@ -33,19 +29,11 @@ on disk image(s):
 
 For live VMs you I<must> use the I<--ro> option.
 
-When you run virt-rescue on a virtual machine or disk image, you are placed
-in an interactive bash shell where you can use many ordinary Linux
-commands.  What you see in F</> (F</bin>, F</lib> etc) is the rescue
-appliance.  You must mount the virtual machine’s filesystems.  There is an
-empty directory called F</sysroot> where you can mount filesystems.
+When you run virt-rescue on a virtual machine or disk image, you are placed in an interactive bash shell where you can use many ordinary Linux commands.  What you see in F</> (F</bin>, F</lib> etc) is the rescue appliance.  You must mount the virtual machine’s filesystems.  There is an empty directory called F</sysroot> where you can mount filesystems.
 
-To automatically mount the virtual machine’s filesystems under F</sysroot>
-use the I<-i> option.  This uses libguestfs inspection to find the
-filesystems and mount them in the right place.  You can also mount
-filesystems individually using the I<-m> option.
+To automatically mount the virtual machine’s filesystems under F</sysroot> use the I<-i> option.  This uses libguestfs inspection to find the filesystems and mount them in the right place.  You can also mount filesystems individually using the I<-m> option.
 
-Another way is to list the logical volumes (with L<lvs(8)>) and partitions
-(with L<parted(8)>) and mount them by hand:
+Another way is to list the logical volumes (with L<lvs(8)>) and partitions (with L<parted(8)>) and mount them by hand:
 
  ><rescue> lvs
  LV      VG        Attr   LSize   Origin Snap%  Move Log Copy%  Convert
@@ -57,29 +45,19 @@ Another way is to list the logical volumes (with L<lvs(8)>) and partitions
 
 利用可能なファイルシステムを一覧表示するためのもう 1 つのコマンドは L<virt-filesystems(1)> です。
 
-Linux 仮想マシンにおいてコマンド（たとえば、grub）を実行するには、まず /sysroot ディレクトリーの中に chroot
-する必要があります:
+Linux 仮想マシンにおいてコマンド（たとえば、grub）を実行するには、まず /sysroot ディレクトリーの中に chroot する必要があります:
 
  ><rescue> chroot /sysroot
 
 =head2 注記
 
-Virt-rescue can be used on I<any> disk image file or device, not just a
-virtual machine.  For example you can use it on a blank file if you want to
-partition that file (although we would recommend using L<guestfish(1)>
-instead as it is more suitable for this purpose).  You can even use
-virt-rescue on things like USB drives, SD cards and hard disks.
+Virt-rescue can be used on I<any> disk image file or device, not just a virtual machine.  For example you can use it on a blank file if you want to partition that file (although we would recommend using L<guestfish(1)> instead as it is more suitable for this purpose).  You can even use virt-rescue on things like USB drives, SD cards and hard disks.
 
-You can get virt-rescue to give you scratch disk(s) to play with.  This is
-useful for testing out Linux utilities (see I<--scratch>).
+You can get virt-rescue to give you scratch disk(s) to play with.  This is useful for testing out Linux utilities (see I<--scratch>).
 
-Virt-rescue does not require root.  You only need to run it as root if you
-need root to open the disk image.
+Virt-rescue does not require root.  You only need to run it as root if you need root to open the disk image.
 
-This tool is just designed for quick interactive hacking on a virtual
-machine.  For more structured access to a virtual machine disk image, you
-should use L<guestfs(3)>.  To get a structured shell that you can use to
-make scripted changes to guests, use L<guestfish(1)>.
+This tool is just designed for quick interactive hacking on a virtual machine.  For more structured access to a virtual machine disk image, you should use L<guestfs(3)>.  To get a structured shell that you can use to make scripted changes to guests, use L<guestfish(1)>.
 
 =head1 オプション
 
@@ -93,9 +71,7 @@ make scripted changes to guests, use L<guestfish(1)>.
 
 =item B<--add> FILE
 
-Add C<FILE> which should be a disk image from a virtual machine.  If the
-virtual machine has multiple block devices, you must supply all of them with
-separate I<-a> options.
+Add C<FILE> which should be a disk image from a virtual machine.  If the virtual machine has multiple block devices, you must supply all of them with separate I<-a> options.
 
 ディスクイメージの形式は自動検知されます。 これを上書きして強制的に特定の形式を使用する場合、 I<--format=..> オプションを使用します。
 
@@ -131,8 +107,7 @@ Disable the escape key.
 
 =item B<-e> KEY
 
-Set the escape key to the given key sequence.  The default is C<^]>.  To
-specify the escape key you can use:
+Set the escape key to the given key sequence.  The default is C<^]>.  To specify the escape key you can use:
 
 =over 4
 
@@ -152,9 +127,7 @@ See L</ESCAPE KEY> below for further information.
 
 =item B<--format>
 
-I<-a> オプションは標準状態でディスクイメージの形式を自動検知します。 これを使用することにより、コマンドラインで後続の I<-a>
-オプションのディスク形式を強制的に指定できます。 引数なしで I<--format> を使用することにより、 後続の I<-a>
-オプションに対して自動検知に戻せます。
+I<-a> オプションは標準状態でディスクイメージの形式を自動検知します。 これを使用することにより、コマンドラインで後続の I<-a> オプションのディスク形式を強制的に指定できます。 引数なしで I<--format> を使用することにより、 後続の I<-a> オプションに対して自動検知に戻せます。
 
 例:
 
@@ -164,49 +137,37 @@ forces raw format (no auto-detection) for F<disk.img>.
 
  virt-rescue --format=raw -a disk.img --format -a another.img
 
-forces raw format (no auto-detection) for F<disk.img> and reverts to
-auto-detection for F<another.img>.
+forces raw format (no auto-detection) for F<disk.img> and reverts to auto-detection for F<another.img>.
 
-仮想マシンのディスクイメージが信頼できない raw 形式である場合、 ディスク形式を指定するためにこのオプションを使用すべきです。
-これにより、悪意のある仮想マシンにより起こり得る セキュリティ問題を回避できます (CVE-2010-3851)。
+仮想マシンのディスクイメージが信頼できない raw 形式である場合、 ディスク形式を指定するためにこのオプションを使用すべきです。 これにより、悪意のある仮想マシンにより起こり得る セキュリティ問題を回避できます (CVE-2010-3851)。
 
 =item B<-i>
 
 =item B<--inspector>
 
-L<virt-inspector(1)> コードを使用すると、 オペレーティングシステムを判定するためにディスクを検査します。
-また、実際の仮想マシンにマウントすることと同じように ファイルシステムをマウントします。
+L<virt-inspector(1)> コードを使用すると、 オペレーティングシステムを判定するためにディスクを検査します。 また、実際の仮想マシンにマウントすることと同じように ファイルシステムをマウントします。
 
 The filesystems are mounted on F</sysroot> in the rescue environment.
 
 =item B<--memsize> MB
 
-Change the amount of memory allocated to the rescue system.  The default is
-set by libguestfs and is small but adequate for running system tools.  The
-occasional program might need more memory.  The parameter is specified in
-megabytes.
+Change the amount of memory allocated to the rescue system.  The default is set by libguestfs and is small but adequate for running system tools.  The occasional program might need more memory.  The parameter is specified in megabytes.
 
 =item B<-m> dev[:mountpoint[:options[:fstype]]]
 
 =item B<--mount> dev[:mountpoint[:options[:fstype]]]
 
-Mount the named partition or logical volume on the given mountpoint B<in the
-guest> (this has nothing to do with mountpoints in the host).
+Mount the named partition or logical volume on the given mountpoint B<in the guest> (this has nothing to do with mountpoints in the host).
 
-If the mountpoint is omitted, it defaults to F</>.  You have to mount
-something on F</>.
+If the mountpoint is omitted, it defaults to F</>.  You have to mount something on F</>.
 
 The filesystems are mounted under F</sysroot> in the rescue environment.
 
-マウントパラメーターの三番目の (ほとんど使用されない) 項目は、 バックエンドのファイルシステムをマウントするために使用される
-マウントオプションの一覧です。 これが指定されていない場合、 マウントオプションは空文字列または C<ro> (I<--ro>
-フラグが使用されている場合) になります。
+マウントパラメーターの三番目の (ほとんど使用されない) 項目は、 バックエンドのファイルシステムをマウントするために使用される マウントオプションの一覧です。 これが指定されていない場合、 マウントオプションは空文字列または C<ro> (I<--ro> フラグが使用されている場合) になります。
 
  -m /dev/sda1:/:acl,user_xattr
 
-パラメーターの四番目の項目は使用するファイルシステムドライバー (C<ext3> や C<ntfs> など) です。 これはほとんど必要ありません。
-しかし、複数のドライバーがファイルシステムに対して有効である場合 (例: C<ext2> と C<ext3>)、 または libguestfs
-がファイルシステムを誤検知している場合、 これは有用です。
+パラメーターの四番目の項目は使用するファイルシステムドライバー (C<ext3> や C<ntfs> など) です。 これはほとんど必要ありません。 しかし、複数のドライバーがファイルシステムに対して有効である場合 (例: C<ext2> と C<ext3>)、 または libguestfs がファイルシステムを誤検知している場合、 これは有用です。
 
 =item B<--network>
 
@@ -218,8 +179,7 @@ The filesystems are mounted under F</sysroot> in the rescue environment.
 
 イメージを読み込み専用で開きます。
 
-ディスクイメージまたは仮想マシンが使用中の場合、 必ずこのオプションを使用する必要があります。 また、ディスクへの書き込みアクセスが不要な場合、
-このオプションが一般的に推奨されます。
+ディスクイメージまたは仮想マシンが使用中の場合、 必ずこのオプションを使用する必要があります。 また、ディスクへの書き込みアクセスが不要な場合、 このオプションが一般的に推奨されます。
 
 L<guestfish(1)/OPENING DISKS FOR READ AND WRITE> 参照。
 
@@ -227,11 +187,9 @@ L<guestfish(1)/OPENING DISKS FOR READ AND WRITE> 参照。
 
 =item B<--scratch=N>
 
-I<--scratch> オプションにより、大きなスクラッチディスクをレスキュー・アプライアンスに追加できます。I<--scratch=N>
-により、C<N> 個のスクラッチディスクを追加できます。virt-rescue が終了するとき、スクラッチディスクは自動的に削除されます。
+I<--scratch> オプションにより、大きなスクラッチディスクをレスキュー・アプライアンスに追加できます。I<--scratch=N> により、C<N> 個のスクラッチディスクを追加できます。virt-rescue が終了するとき、スクラッチディスクは自動的に削除されます。
 
-I<-a>, I<-d> および I<--scratch>
-オプションは混在できます。スクラッチディスクは、これらがコマンドラインに現れる順番で、アプライアンスに追加されます。
+I<-a>, I<-d> および I<--scratch> オプションは混在できます。スクラッチディスクは、これらがコマンドラインに現れる順番で、アプライアンスに追加されます。
 
 =item B<--selinux>
 
@@ -243,10 +201,7 @@ This option is provided for backwards compatibility and does nothing.
 
 =item B<--suggest>
 
-This option was used in older versions of virt-rescue to suggest what
-commands you could use to mount filesystems under F</sysroot>.  For the
-current version of virt-rescue, it is easier to use the I<-i> option
-instead.
+This option was used in older versions of virt-rescue to suggest what commands you could use to mount filesystems under F</sysroot>.  For the current version of virt-rescue, it is easier to use the I<-i> option instead.
 
 このオプションは I<--ro> を意味します。仮想マシンが起動していたり、他の virt-rescue を実行しているときでも安全です。
 
@@ -286,27 +241,19 @@ Previous versions of virt-rescue allowed you to write either:
 
  virt-rescue guestname
 
-whereas in this version you should use I<-a> or I<-d> respectively to avoid
-the confusing case where a disk image might have the same name as a guest.
+whereas in this version you should use I<-a> or I<-d> respectively to avoid the confusing case where a disk image might have the same name as a guest.
 
 互換性のため古い形式がまだサポートされています。
 
 =head1 ネットワーク
 
-Adding the I<--network> option enables QEMU user networking in the rescue
-appliance.  There are some differences between user networking and ordinary
-networking:
+Adding the I<--network> option enables QEMU user networking in the rescue appliance.  There are some differences between user networking and ordinary networking:
 
 =over 4
 
 =item ping does not work
 
-Because the ICMP ECHO_REQUEST protocol generally requires root in order to
-send the ping packets, and because virt-rescue must be able to run as
-non-root, QEMU user networking is not able to emulate the L<ping(8)>
-command.  The ping command will appear to resolve addresses but will not be
-able to send or receive any packets.  This does not mean that the network is
-not working.
+Because the ICMP ECHO_REQUEST protocol generally requires root in order to send the ping packets, and because virt-rescue must be able to run as non-root, QEMU user networking is not able to emulate the L<ping(8)> command.  The ping command will appear to resolve addresses but will not be able to send or receive any packets.  This does not mean that the network is not working.
 
 =item cannot receive connections
 
@@ -314,10 +261,7 @@ QEMU user networking cannot receive incoming connections.
 
 =item TCP 接続の作成法
 
-The virt-rescue appliance needs to be small and so does not include many
-network tools.  In particular there is no L<telnet(1)> command.  You can
-make TCP connections from the shell using the magical
-F</dev/tcp/E<lt>hostnameE<gt>/E<lt>portE<gt>> syntax:
+The virt-rescue appliance needs to be small and so does not include many network tools.  In particular there is no L<telnet(1)> command.  You can make TCP connections from the shell using the magical F</dev/tcp/E<lt>hostnameE<gt>/E<lt>portE<gt>> syntax:
 
  exec 3<>/dev/tcp/redhat.com/80
  echo "GET /" >&3
@@ -329,12 +273,9 @@ F</dev/tcp/E<lt>hostnameE<gt>/E<lt>portE<gt>> syntax:
 
 =head1 ESCAPE KEY
 
-Virt-rescue supports various keyboard escape sequences which are entered by
-pressing C<^]> (Control key + C<]> key).
+Virt-rescue supports various keyboard escape sequences which are entered by pressing C<^]> (Control key + C<]> key).
 
-You can change the escape key using the I<-e> option on the command line
-(see above), and you can disable escapes completely using I<-e none>.  The
-rest of this section assumes the default escape key.
+You can change the escape key using the I<-e> option on the command line (see above), and you can disable escapes completely using I<-e none>.  The rest of this section assumes the default escape key.
 
 The following escapes can be used:
 
@@ -348,8 +289,7 @@ Prints a brief help text about escape sequences.
 
 =item C<^] i>
 
-Prints brief libguestfs inspection information for the guest.  This only
-works if you used I<-i> on the virt-rescue command line.
+Prints brief libguestfs inspection information for the guest.  This only works if you used I<-i> on the virt-rescue command line.
 
 =item C<^] q>
 
@@ -367,8 +307,7 @@ Unmounts all the filesystems, except for the root (appliance)  filesystems.
 
 =item C<^] z>
 
-Suspend virt-rescue (like pressing C<^Z> except that it affects virt-rescue
-rather than the program inside the rescue shell).
+Suspend virt-rescue (like pressing C<^Z> except that it affects virt-rescue rather than the program inside the rescue shell).
 
 =item C<^] ^]>
 
@@ -378,9 +317,7 @@ Sends the literal character C<^]> (ASCII 0x1d) through to the rescue shell.
 
 =head1 CAPTURING CORE DUMPS
 
-If you are testing a tool inside virt-rescue and the tool (B<not>
-virt-rescue) segfaults, it can be tricky to capture the core dump outside
-virt-rescue for later analysis.  This section describes one way to do this.
+If you are testing a tool inside virt-rescue and the tool (B<not> virt-rescue) segfaults, it can be tricky to capture the core dump outside virt-rescue for later analysis.  This section describes one way to do this.
 
 =over 4
 
@@ -398,14 +335,11 @@ When starting virt-rescue, attach the core files disk last:
 
  virt-rescue --rw [-a ...] -a /tmp/corefiles
 
-B<NB.> If you use the I<--ro> option, then virt-rescue will silently not
-write any core files to F</tmp/corefiles>.
+B<NB.> If you use the I<--ro> option, then virt-rescue will silently not write any core files to F</tmp/corefiles>.
 
 =item 3.
 
-Inside virt-rescue, mount the core files disk.  Note replace F</dev/sdb1>
-with the last disk index.  For example if the core files disk is the last of
-four disks, you would use F</dev/sdd1>.
+Inside virt-rescue, mount the core files disk.  Note replace F</dev/sdb1> with the last disk index.  For example if the core files disk is the last of four disks, you would use F</dev/sdd1>.
 
  ><rescue> mkdir /tmp/mnt
  ><rescue> mount /dev/sdb1 /tmp/mnt
@@ -420,8 +354,7 @@ Enable core dumps in the rescue kernel:
 
 =item 5.
 
-Run the tool that caused the core dump.  The core dump will be written to
-F</tmp/mnt/core.I<PID>>.
+Run the tool that caused the core dump.  The core dump will be written to F</tmp/mnt/core.I<PID>>.
 
  ><rescue> ls -l /tmp/mnt
  total 1628
@@ -437,8 +370,7 @@ Before exiting virt-rescue, unmount (or at least sync) the disks:
 
 =item 7.
 
-Outside virt-rescue, the core dump(s) can be removed from the disk using
-L<guestfish(1)>.  For example:
+Outside virt-rescue, the core dump(s) can be removed from the disk using L<guestfish(1)>.  For example:
 
  guestfish --ro -a /tmp/corefiles -m /dev/sda1
  ><fs> ll /
@@ -448,8 +380,7 @@ L<guestfish(1)>.  For example:
 
 =head1 環境変数
 
-Several environment variables affect virt-rescue.  See
-L<guestfs(3)/ENVIRONMENT VARIABLES> for the complete list.
+Several environment variables affect virt-rescue.  See L<guestfs(3)/ENVIRONMENT VARIABLES> for the complete list.
 
 =head1 ファイル
 
@@ -463,8 +394,7 @@ L<guestfs(3)/ENVIRONMENT VARIABLES> for the complete list.
 
 =item /etc/libguestfs-tools.conf
 
-This configuration file controls the default read-only or read-write mode
-(I<--ro> or I<--rw>).
+This configuration file controls the default read-only or read-write mode (I<--ro> or I<--rw>).
 
 See L<libguestfs-tools.conf(5)>.
 
@@ -472,9 +402,7 @@ See L<libguestfs-tools.conf(5)>.
 
 =head1 関連項目
 
-L<guestfs(3)>, L<guestfish(1)>, L<virt-cat(1)>, L<virt-edit(1)>,
-L<virt-filesystems(1)>, L<libguestfs-tools.conf(5)>,
-L<http://libguestfs.org/>.
+L<guestfs(3)>, L<guestfish(1)>, L<virt-cat(1)>, L<virt-edit(1)>, L<virt-filesystems(1)>, L<libguestfs-tools.conf(5)>, L<http://libguestfs.org/>.
 
 =head1 著者
 

@@ -188,9 +188,6 @@ You can call L</guestfs_list_devices> to get a list of the device
 names, in the order that you added them.
 See also L</BLOCK DEVICE NAMING> below.
 
-There are slightly different rules when hotplugging disks (in
-libguestfs E<ge> 1.20).  See L</HOTPLUGGING> below.
-
 =head2 MOUNTING
 
 Before you can read or write files, create directories and so on in a
@@ -658,39 +655,6 @@ L</guestfs_last_errno>).
 Libguestfs on top of FUSE performs quite poorly.  For best performance
 do not use it.  Use ordinary libguestfs filesystem calls, upload,
 download etc. instead.
-
-=head2 HOTPLUGGING
-
-In libguestfs E<ge> 1.20, you may add drives and remove after calling
-L</guestfs_launch>.  There are some restrictions, see below.  This is
-called I<hotplugging>.
-
-Only a subset of the backends support hotplugging (currently only the
-libvirt backend has support).  It also requires that you use libvirt
-E<ge> 0.10.3 and qemu E<ge> 1.2.
-
-To hot-add a disk, simply call L</guestfs_add_drive_opts> after
-L</guestfs_launch>.  It is mandatory to specify the C<label> parameter
-so that the newly added disk has a predictable name.  For example:
-
- if (guestfs_launch (g) == -1)
-   error ("launch failed");
- 
- if (guestfs_add_drive_opts (g, filename,
-                             GUESTFS_ADD_DRIVE_OPTS_LABEL, "newdisk",
-                             -1) == -1)
-   error ("hot-add of disk failed");
- 
- if (guestfs_part_disk ("/dev/disk/guestfs/newdisk", "mbr") == -1)
-   error ("partitioning of hot-added disk failed");
-
-To hot-remove a disk, call L</guestfs_remove_drive>.  You can call
-this before or after L</guestfs_launch>.  You can only remove disks
-that were previously added with a label.
-
-Backends that support hotplugging do not require that you add
-E<ge> 1 disk before calling launch.  When hotplugging is supported
-you don't need to add any disks.
 
 =head2 REMOTE STORAGE
 
@@ -1478,27 +1442,7 @@ C<libvirt:I<URI>> uses I<URI> as the libvirt connection URI (see
 L<http://libvirt.org/uri.html>).  The typical libvirt backend with a
 URI would be C<libvirt:qemu:///session>
 
-The libvirt backend supports more features, including
-hotplugging (see L</HOTPLUGGING>) and sVirt.
-
-=item C<uml>
-
-Run the User-Mode Linux kernel.  The location of the kernel is set
-using C<$LIBGUESTFS_HV> or using the L</guestfs_set_qemu> API (note
-that qemu is not involved, we just reuse the same variable in the
-handle for convenience).
-
-User-Mode Linux can be much faster, simpler and more lightweight than
-using a full-blown virtual machine, but it also has some shortcomings.
-See L</USER-MODE LINUX BACKEND> below.
-
-=item C<unix:I<path>>
-
-Connect to the Unix domain socket I<path>.
-
-This method lets you connect to an existing daemon or (using
-virtio-serial) to a live guest.  For more information, see
-L</ATTACHING TO RUNNING DAEMONS>.
+The libvirt backend supports more features, including sVirt.
 
 =back
 
@@ -1560,142 +1504,6 @@ tip: look in the kernel C<log_buf>).
 On Fedora, install C<kernel-debuginfo> for the C<vmlinux> file
 (containing symbols).  Make sure the symbols precisely match the
 kernel being used.
-
-=head2 ATTACHING TO RUNNING DAEMONS
-
-I<Note (1):> This is B<highly experimental> and has a tendency to eat
-babies.  Use with caution.
-
-I<Note (2):> This section explains how to attach to a running daemon
-from a low level perspective.  For most users, simply using virt tools
-such as L<guestfish(1)> with the I<--live> option will "just work".
-
-=head3 Using guestfs_set_backend
-
-By calling L</guestfs_set_backend> you can change how the library
-connects to the C<guestfsd> daemon in L</guestfs_launch> (read
-L<guestfs-internals(1)/ARCHITECTURE> for some background).
-
-The normal backend is C<direct>, where a small appliance is created
-containing the daemon, and then the library connects to this.
-C<libvirt> or C<libvirt:I<URI>> are alternatives that use libvirt to
-start the appliance.
-
-Setting the backend to C<unix:I<path>> (where I<path> is the path of a
-Unix domain socket) causes L</guestfs_launch> to connect to an
-existing daemon over the Unix domain socket.
-
-The normal use for this is to connect to a running virtual machine
-that contains a C<guestfsd> daemon, and send commands so you can read
-and write files inside the live virtual machine.
-
-=head3 Using guestfs_add_domain with live flag
-
-L</guestfs_add_domain> provides some help for getting the correct
-backend.  If you pass the C<live> option to this function, then (if
-the virtual machine is running) it will examine the libvirt XML
-looking for a virtio-serial channel to connect to:
-
- <domain>
-   ...
-   <devices>
-     ...
-     <channel type='unix'>
-       <source mode='bind' path='/path/to/socket'/>
-       <target type='virtio' name='org.libguestfs.channel.0'/>
-     </channel>
-     ...
-   </devices>
- </domain>
-
-L</guestfs_add_domain> extracts F</path/to/socket> and sets the
-backend to C<unix:/path/to/socket>.
-
-Some of the libguestfs tools (including guestfish) support a I<--live>
-option which is passed through to L</guestfs_add_domain> thus allowing
-you to attach to and modify live virtual machines.
-
-The virtual machine needs to have been set up beforehand so that it
-has the virtio-serial channel and so that guestfsd is running inside
-it.
-
-=head2 USER-MODE LINUX BACKEND
-
-Setting the following environment variables (or the equivalent in the
-API) selects the User-Mode Linux backend:
-
- export LIBGUESTFS_BACKEND=uml
- export LIBGUESTFS_HV=/path/to/vmlinux
-
-C<vmlinux> (or it may be called C<linux>) is the Linux binary,
-compiled to run as a userspace process.  Note that we reuse the qemu
-variable in the handle for convenience; qemu is not involved.
-
-User-Mode Linux can be faster and more lightweight than running a
-full-blown virtual machine as the backend (especially if you are
-already running libguestfs in a virtual machine or cloud instance),
-but it also has some shortcomings compared to the usual qemu/KVM-based
-backend.
-
-=head3 BUILDING USER-MODE LINUX FROM SOURCE
-
-Your Linux distro may provide UML in which case you can ignore this
-section.
-
-These instructions are adapted from:
-L<http://user-mode-linux.sourceforge.net/source.html>
-
-=over 4
-
-=item 1. Check out Linux sources
-
-Clone the Linux git repository or download the Linux source tarball.
-
-=item 2. Configure the kernel
-
-B<Note:> All ‘make’ commands must have C<ARCH=um> added.
-
- make menuconfig ARCH=um
-
-Make sure any filesystem drivers that you need are compiled into the
-kernel.
-
-B<Currently, it needs a large amount of extra work to get modules
-working>.  It’s recommended that you disable module support in the
-kernel configuration, which will cause everything to be compiled into
-the image.
-
-=item 3. Build the kernel
-
- make ARCH=um
-
-This will leave a file called C<linux> or C<vmlinux> in the top-level
-directory.  This is the UML kernel.  You should set C<LIBGUESTFS_HV>
-to point to this file.
-
-=back
-
-=head3 USER-MODE LINUX DIFFERENCES FROM KVM
-
-=over 4
-
-=item UML only supports raw-format images
-
-Only plain raw-format images will work.  No qcow2, no backing files.
-
-=item UML does not support any remote drives
-
-No NBD, etc.
-
-=item UML only works on ix86 and x86-64
-
-=item UML is experimental
-
-In particular, support for UML in libguestfs depends on support for
-UML in the upstream kernel.  If UML was ever removed from the upstream
-Linux kernel, then we might remove it from libguestfs too.
-
-=back
 
 =head2 ABI GUARANTEE
 
@@ -3221,9 +3029,6 @@ Before libguestfs 1.19.7, disk names had to be a single character
 (eg. F</dev/sda> through F</dev/sdz>), and since one disk is reserved,
 that meant the limit was 25.  This has been fixed in more recent
 versions.
-
-In libguestfs E<ge> 1.20 it is possible to hot plug disks.  See
-L</HOTPLUGGING>.
 
 =head2 MAXIMUM NUMBER OF PARTITIONS PER DISK
 

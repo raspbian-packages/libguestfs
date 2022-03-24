@@ -14,16 +14,11 @@ guestfs-erlang - Erlang から libguestfs を使用する方法
 
 =head1 説明
 
-This manual page documents how to call libguestfs from the Erlang
-programming language.  This page just documents the differences from the C
-API and gives some examples.  If you are not familiar with using libguestfs,
-you also need to read L<guestfs(3)>.
+This manual page documents how to call libguestfs from the Erlang programming language.  This page just documents the differences from the C API and gives some examples.  If you are not familiar with using libguestfs, you also need to read L<guestfs(3)>.
 
 =head2 ハンドルのオープン方法およびクローズ方法
 
-The Erlang bindings are implemented using an external program called
-C<erl-guestfs>.  This program must be on the current PATH, or else you
-should specify the full path to the program:
+The Erlang bindings are implemented using an external program called C<erl-guestfs>.  This program must be on the current PATH, or else you should specify the full path to the program:
 
  {ok, G} = guestfs:create().
 
@@ -37,9 +32,7 @@ C<G> は他の関数に渡す libguestfs ハンドルです。
 
 =head2 オプション引数を用いた機能
 
-For functions that take optional arguments, the first arguments are the
-non-optional ones.  The last argument is a list of tuples supplying the
-remaining optional arguments.
+For functions that take optional arguments, the first arguments are the non-optional ones.  The last argument is a list of tuples supplying the remaining optional arguments.
 
  ok = guestfs:add_drive_opts(G, Disk,
                              [{format, "raw"}, {readonly, true}]).
@@ -50,9 +43,7 @@ remaining optional arguments.
 
 =head2 返り値およびエラー
 
-On success, most functions return a C<Result> term (which could be a list,
-string, tuple etc.).  If there is nothing for the function to return, then
-the atom C<ok> is returned.
+On success, most functions return a C<Result> term (which could be a list, string, tuple etc.).  If there is nothing for the function to return, then the atom C<ok> is returned.
 
 エラーが発生すると、以下の組のどれかが表示されます:
 
@@ -68,16 +59,13 @@ C<Errno> は 0 の可能性があります。 L<guestfs(3)/guestfs_last_errno> �
 
 =item C<{unknown, Function}>
 
-This indicates that the function you called is not known.  Generally this
-means you are mixing C<erl-guestfs> from another version of libguestfs,
-which you should not do.
+This indicates that the function you called is not known.  Generally this means you are mixing C<erl-guestfs> from another version of libguestfs, which you should not do.
 
 C<Function> は未知の関数の名前です。
 
 =item C<{unknownarg, Arg}>
 
-This indicates that you called a function with optional arguments, with an
-unknown argument name.
+This indicates that you called a function with optional arguments, with an unknown argument name.
 
 C<Arg> は未知の引数の名前です。
 
@@ -93,11 +81,7 @@ C<Arg> は未知の引数の名前です。
 
 =head1 関連項目
 
-L<guestfs(3)>, L<guestfs-examples(3)>, L<guestfs-gobject(3)>,
-L<guestfs-golang(3)>, L<guestfs-java(3)>, L<guestfs-lua(3)>,
-L<guestfs-ocaml(3)>, L<guestfs-perl(3)>, L<guestfs-python(3)>,
-L<guestfs-recipes(1)>, L<guestfs-ruby(3)>, L<http://www.erlang.org/>.
-L<http://libguestfs.org/>.
+L<guestfs(3)>, L<guestfs-examples(3)>, L<guestfs-gobject(3)>, L<guestfs-golang(3)>, L<guestfs-java(3)>, L<guestfs-lua(3)>, L<guestfs-ocaml(3)>, L<guestfs-perl(3)>, L<guestfs-python(3)>, L<guestfs-recipes(1)>, L<guestfs-ruby(3)>, L<http://www.erlang.org/>. L<http://libguestfs.org/>.
 
 =head1 著者
 

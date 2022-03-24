@@ -313,12 +313,8 @@ class GuestFS(object):
         through an environment variable, see the libvirt
         documentation for full details).
 
-        The optional "live" flag controls whether this call will
-        try to connect to a running virtual machine "guestfsd"
-        process if it sees a suitable <channel> element in the
-        libvirt XML definition. The default (if the flag is
-        omitted) is never to try. See "ATTACHING TO RUNNING
-        DAEMONS" in guestfs(3) for more information.
+        The optional "live" flag is ignored in libguestfs ≥
+        1.48.
 
         If the "allowuuid" flag is true (default is false) then
         a UUID *may* be passed instead of the domain name. The
@@ -396,12 +392,6 @@ class GuestFS(object):
         usual case) then the first time you call this function,
         the disk appears in the API as /dev/sda, the second time
         as /dev/sdb, and so on.
-
-        In libguestfs ≥ 1.20 you can also call this function
-        after launch (with some restrictions). This is called
-        "hotplugging". When hotplugging, you must specify a
-        "label" so that the new disk gets a predictable name.
-        For more information see "HOTPLUGGING" in guestfs(3).
 
         You don't necessarily need to be root when using
         libguestfs. However you obviously do need sufficient
@@ -744,12 +734,8 @@ class GuestFS(object):
         those disks are accessible via the same device path
         locally too.
 
-        The optional "live" flag controls whether this call will
-        try to connect to a running virtual machine "guestfsd"
-        process if it sees a suitable <channel> element in the
-        libvirt XML definition. The default (if the flag is
-        omitted) is never to try. See "ATTACHING TO RUNNING
-        DAEMONS" in guestfs(3) for more information.
+        The optional "live" flag is ignored in libguestfs ≥
+        1.48.
 
         The optional "readonlydisk" parameter controls what we
         do for disks which are marked <readonly/> in the libvirt
@@ -4689,6 +4675,9 @@ class GuestFS(object):
         "kalilinux"
         Kali Linux.
 
+        "kylin"
+        Kylin.
+
         "linuxmint"
         Linux Mint.
 
@@ -4733,6 +4722,9 @@ class GuestFS(object):
 
         "rhel"
         Red Hat Enterprise Linux.
+
+        "rocky"
+        Rocky Linux.
 
         "scientificlinux"
         Scientific Linux.
@@ -6205,9 +6197,7 @@ class GuestFS(object):
 
         Note that you don't normally need to call this
         explicitly, since it is done automatically at "g.launch"
-        time. However you might want to call this function if
-        you have hotplugged disks or have just created a Windows
-        dynamic disk.
+        time.
 
         This function depends on the feature "ldm". See also
         "g.feature-available".
@@ -6394,12 +6384,22 @@ class GuestFS(object):
         return r
 
     def list_9p(self) -> List[str]:
-        """List all 9p filesystems attached to the guest. A list of
-        mount tags is returned.
+        """This call does nothing and returns an error.
 
         This function returns a list of strings.
+
+        *This function is deprecated.* There is no replacement.
+        Consult the API documentation in guestfs(3) for further
+        information.
+
+        Deprecated functions will not be removed from the API,
+        but the fact that they are deprecated indicates that
+        there are problems with correct use of these functions.
         """
         self._check_not_closed()
+        import warnings
+        warnings.warn("do not use GuestFS.list_9p()",
+                      DeprecationWarning, stacklevel=2)
         r = libguestfsmod.list_9p(self._o)
         return r
 
@@ -7222,6 +7222,10 @@ class GuestFS(object):
         "chunk"
         The chunk size in bytes.
 
+        The "chunk" parameter does not make sense, and
+        should not be specified, when "level" is "raid1"
+        (which is the default; see below).
+
         "level"
         The RAID level, which can be one of: "linear",
         "raid0", 0, "stripe", "raid1", 1, "mirror", "raid4",
@@ -7971,14 +7975,20 @@ class GuestFS(object):
 
     def mount_9p(self, mounttag: str, mountpoint: str,
                  options: Optional[str] = None) -> None:
-        """Mount the virtio-9p filesystem with the tag "mounttag"
-        on the directory "mountpoint".
+        """This call does nothing and returns an error.
 
-        If required, "trans=virtio" will be automatically added
-        to the options. Any other options required can be passed
-        in the optional "options" parameter.
+        *This function is deprecated.* There is no replacement.
+        Consult the API documentation in guestfs(3) for further
+        information.
+
+        Deprecated functions will not be removed from the API,
+        but the fact that they are deprecated indicates that
+        there are problems with correct use of these functions.
         """
         self._check_not_closed()
+        import warnings
+        warnings.warn("do not use GuestFS.mount_9p()",
+                      DeprecationWarning, stacklevel=2)
         r = libguestfsmod.mount_9p(self._o, mounttag, mountpoint, options)
         return r
 
@@ -9102,23 +9112,20 @@ class GuestFS(object):
         return r
 
     def remove_drive(self, label: str) -> None:
-        """This function is conceptually the opposite of
-        "g.add_drive_opts". It removes the drive that was
-        previously added with label "label".
+        """This call does nothing and returns an error.
 
-        Note that in order to remove drives, you have to add
-        them with labels (see the optional "label" argument to
-        "g.add_drive_opts"). If you didn't use a label, then
-        they cannot be removed.
+        *This function is deprecated.* There is no replacement.
+        Consult the API documentation in guestfs(3) for further
+        information.
 
-        You can call this function before or after launching the
-        handle. If called after launch, if the backend supports
-        it, we try to hot unplug the drive: see "HOTPLUGGING" in
-        guestfs(3). The disk must not be in use (eg. mounted)
-        when you do this. We try to detect if the disk is in use
-        and stop you from doing this.
+        Deprecated functions will not be removed from the API,
+        but the fact that they are deprecated indicates that
+        there are problems with correct use of these functions.
         """
         self._check_not_closed()
+        import warnings
+        warnings.warn("do not use GuestFS.remove_drive()",
+                      DeprecationWarning, stacklevel=2)
         r = libguestfsmod.remove_drive(self._o, label)
         return r
 
@@ -9624,9 +9631,7 @@ class GuestFS(object):
     def set_hv(self, hv: str) -> None:
         """Set the hypervisor binary that we will use. The
         hypervisor depends on the backend, but is usually the
-        location of the qemu/KVM hypervisor. For the uml
-        backend, it is the location of the "linux" or "vmlinux"
-        binary.
+        location of the qemu/KVM hypervisor.
 
         The default is chosen when the library was compiled by
         the configure script.

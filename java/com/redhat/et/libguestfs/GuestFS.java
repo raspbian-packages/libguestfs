@@ -452,12 +452,8 @@ public class GuestFS {
    * through an environment variable, see the libvirt
    * documentation for full details).
    * </p><p>
-   * The optional "live" flag controls whether this call will
-   * try to connect to a running virtual machine "guestfsd"
-   * process if it sees a suitable &lt;channel&gt; element in the
-   * libvirt XML definition. The default (if the flag is
-   * omitted) is never to try. See "ATTACHING TO RUNNING
-   * DAEMONS" in guestfs(3) for more information.
+   * The optional "live" flag is ignored in libguestfs ≥
+   * 1.48.
    * </p><p>
    * If the "allowuuid" flag is true (default is false) then
    * a UUID *may* be passed instead of the domain name. The
@@ -625,12 +621,6 @@ public class GuestFS {
    * usual case) then the first time you call this function,
    * the disk appears in the API as /dev/sda, the second time
    * as /dev/sdb, and so on.
-   * </p><p>
-   * In libguestfs ≥ 1.20 you can also call this function
-   * after launch (with some restrictions). This is called
-   * "hotplugging". When hotplugging, you must specify a
-   * "label" so that the new disk gets a predictable name.
-   * For more information see "HOTPLUGGING" in guestfs(3).
    * </p><p>
    * You don't necessarily need to be root when using
    * libguestfs. However you obviously do need sufficient
@@ -1179,12 +1169,8 @@ public class GuestFS {
    * those disks are accessible via the same device path
    * locally too.
    * </p><p>
-   * The optional "live" flag controls whether this call will
-   * try to connect to a running virtual machine "guestfsd"
-   * process if it sees a suitable &lt;channel&gt; element in the
-   * libvirt XML definition. The default (if the flag is
-   * omitted) is never to try. See "ATTACHING TO RUNNING
-   * DAEMONS" in guestfs(3) for more information.
+   * The optional "live" flag is ignored in libguestfs ≥
+   * 1.48.
    * </p><p>
    * The optional "readonlydisk" parameter controls what we
    * do for disks which are marked &lt;readonly/&gt; in the libvirt
@@ -8740,6 +8726,9 @@ public class GuestFS {
    * "kalilinux"
    * Kali Linux.
    * </p><p>
+   * "kylin"
+   * Kylin.
+   * </p><p>
    * "linuxmint"
    * Linux Mint.
    * </p><p>
@@ -8784,6 +8773,9 @@ public class GuestFS {
    * </p><p>
    * "rhel"
    * Red Hat Enterprise Linux.
+   * </p><p>
+   * "rocky"
+   * Rocky Linux.
    * </p><p>
    * "scientificlinux"
    * Scientific Linux.
@@ -11835,9 +11827,7 @@ public class GuestFS {
    * </p><p>
    * Note that you don't normally need to call this
    * explicitly, since it is done automatically at "g.launch"
-   * time. However you might want to call this function if
-   * you have hotplugged disks or have just created a Windows
-   * dynamic disk.
+   * time.
    * </p><p>
    * This function depends on the feature "ldm".  See also {@link #feature_available}.
    * </p>
@@ -12165,13 +12155,13 @@ public class GuestFS {
    * <p>
    * list 9p filesystems
    * </p><p>
-   * List all 9p filesystems attached to the guest. A list of
-   * mount tags is returned.
+   * This call does nothing and returns an error.
    * </p>
    * @since 1.11.12
+   * @deprecated There is no documented replacement
    * @throws LibGuestFSException If there is a libguestfs error.
    */
-  public String[] list_9p ()
+  @Deprecated public String[] list_9p ()
     throws LibGuestFSException
   {
     if (g == 0)
@@ -13517,6 +13507,10 @@ public class GuestFS {
    * </p><p>
    * "chunk"
    * The chunk size in bytes.
+   * </p><p>
+   * The "chunk" parameter does not make sense, and
+   * should not be specified, when "level" is "raid1"
+   * (which is the default; see below).
    * </p><p>
    * "level"
    * The RAID level, which can be one of: "linear",
@@ -15152,12 +15146,7 @@ public class GuestFS {
    * <p>
    * mount 9p filesystem
    * </p><p>
-   * Mount the virtio-9p filesystem with the tag "mounttag"
-   * on the directory "mountpoint".
-   * </p><p>
-   * If required, "trans=virtio" will be automatically added
-   * to the options. Any other options required can be passed
-   * in the optional "options" parameter.
+   * This call does nothing and returns an error.
    * </p><p>
    * Optional arguments are supplied in the final
    * Map&lt;String,Object&gt; parameter, which is a hash of the
@@ -15165,9 +15154,10 @@ public class GuestFS {
    * empty Map or null for no optional arguments.
    * </p>
    * @since 1.11.12
+   * @deprecated There is no documented replacement
    * @throws LibGuestFSException If there is a libguestfs error.
    */
-  public void mount_9p (String mounttag, String mountpoint, Map<String, Object> optargs)
+  @Deprecated public void mount_9p (String mounttag, String mountpoint, Map<String, Object> optargs)
     throws LibGuestFSException
   {
     if (g == 0)
@@ -17383,26 +17373,13 @@ public class GuestFS {
    * <p>
    * remove a disk image
    * </p><p>
-   * This function is conceptually the opposite of
-   * "g.add_drive_opts". It removes the drive that was
-   * previously added with label "label".
-   * </p><p>
-   * Note that in order to remove drives, you have to add
-   * them with labels (see the optional "label" argument to
-   * "g.add_drive_opts"). If you didn't use a label, then
-   * they cannot be removed.
-   * </p><p>
-   * You can call this function before or after launching the
-   * handle. If called after launch, if the backend supports
-   * it, we try to hot unplug the drive: see "HOTPLUGGING" in
-   * guestfs(3). The disk must not be in use (eg. mounted)
-   * when you do this. We try to detect if the disk is in use
-   * and stop you from doing this.
+   * This call does nothing and returns an error.
    * </p>
    * @since 1.19.49
+   * @deprecated There is no documented replacement
    * @throws LibGuestFSException If there is a libguestfs error.
    */
-  public void remove_drive (String label)
+  @Deprecated public void remove_drive (String label)
     throws LibGuestFSException
   {
     if (g == 0)
@@ -18410,9 +18387,7 @@ public class GuestFS {
    * </p><p>
    * Set the hypervisor binary that we will use. The
    * hypervisor depends on the backend, but is usually the
-   * location of the qemu/KVM hypervisor. For the uml
-   * backend, it is the location of the "linux" or "vmlinux"
-   * binary.
+   * location of the qemu/KVM hypervisor.
    * </p><p>
    * The default is chosen when the library was compiled by
    * the configure script.

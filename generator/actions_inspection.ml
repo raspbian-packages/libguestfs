@@ -214,6 +214,10 @@ Gentoo.
 
 Kali Linux.
 
+=item \"kylin\"
+
+Kylin.
+
 =item \"linuxmint\"
 
 Linux Mint.
@@ -273,6 +277,10 @@ Some Red Hat-derived distro.
 =item \"rhel\"
 
 Red Hat Enterprise Linux.
+
+=item \"rocky\"
+
+Rocky Linux.
 
 =item \"scientificlinux\"
 

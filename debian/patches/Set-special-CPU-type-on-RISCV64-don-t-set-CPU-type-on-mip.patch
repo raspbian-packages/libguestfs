@@ -7,7 +7,7 @@ Subject: Set special CPU type on RISCV64, don't set CPU type on mips*
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/lib/appliance-cpu.c b/lib/appliance-cpu.c
-index 54ac6e2..5de0301 100644
+index 54ac6e2..214d8cf 100644
 --- a/lib/appliance-cpu.c
 +++ b/lib/appliance-cpu.c
 @@ -81,9 +81,11 @@ guestfs_int_get_cpu_model (int kvm)

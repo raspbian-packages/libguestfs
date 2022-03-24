@@ -1727,18 +1727,6 @@ struct guestfs_internal_find_inode_args {
   int64_t inode;
 };
 
-struct guestfs_internal_hot_add_drive_args {
-  string label<>;
-};
-
-struct guestfs_internal_hot_remove_drive_args {
-  string label<>;
-};
-
-struct guestfs_internal_hot_remove_drive_precheck_args {
-  string label<>;
-};
-
 struct guestfs_internal_list_rpm_applications_ret {
   guestfs_int_application2_list applications2;
 };
@@ -3700,9 +3688,6 @@ enum guestfs_procedure {
   GUESTFS_PROC_INTERNAL_FEATURE_AVAILABLE = 458,
   GUESTFS_PROC_INTERNAL_FILESYSTEM_WALK = 466,
   GUESTFS_PROC_INTERNAL_FIND_INODE = 470,
-  GUESTFS_PROC_INTERNAL_HOT_ADD_DRIVE = 370,
-  GUESTFS_PROC_INTERNAL_HOT_REMOVE_DRIVE = 372,
-  GUESTFS_PROC_INTERNAL_HOT_REMOVE_DRIVE_PRECHECK = 371,
   GUESTFS_PROC_INTERNAL_JOURNAL_GET = 408,
   GUESTFS_PROC_INTERNAL_LIST_RPM_APPLICATIONS = 510,
   GUESTFS_PROC_INTERNAL_LSTATNSLIST = 423,

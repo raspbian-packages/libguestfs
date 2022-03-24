@@ -520,9 +520,6 @@
         guestfs_internal_filesystem_walk;
         guestfs_internal_find_inode;
         guestfs_internal_get_console_socket;
-        guestfs_internal_hot_add_drive;
-        guestfs_internal_hot_remove_drive;
-        guestfs_internal_hot_remove_drive_precheck;
         guestfs_internal_journal_get;
         guestfs_internal_list_rpm_applications;
         guestfs_internal_lstatnslist;

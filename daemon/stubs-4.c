@@ -1206,48 +1206,6 @@ inspect_is_multipart_stub (XDR *xdr_in)
 
 #ifdef HAVE_ATTRIBUTE_CLEANUP
 
-#define CLEANUP_XDR_FREE_INTERNAL_HOT_REMOVE_DRIVE_ARGS \
-    __attribute__((cleanup(cleanup_xdr_free_internal_hot_remove_drive_args)))
-
-static void
-cleanup_xdr_free_internal_hot_remove_drive_args (struct guestfs_internal_hot_remove_drive_args *argsp)
-{
-  xdr_free ((xdrproc_t) xdr_guestfs_internal_hot_remove_drive_args, (char *) argsp);
-}
-
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_INTERNAL_HOT_REMOVE_DRIVE_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
-
-void
-internal_hot_remove_drive_stub (XDR *xdr_in)
-{
-  int r;
-  CLEANUP_XDR_FREE_INTERNAL_HOT_REMOVE_DRIVE_ARGS struct guestfs_internal_hot_remove_drive_args args;
-  memset (&args, 0, sizeof args);
-  const char *label;
-
-  if (optargs_bitmask != 0) {
-    reply_with_error ("header optargs_bitmask field must be passed as 0 for calls that don't take optional arguments");
-    return;
-  }
-
-  if (!xdr_guestfs_internal_hot_remove_drive_args (xdr_in, &args)) {
-    reply_with_error ("daemon failed to decode procedure arguments");
-    return;
-  }
-  label = args.label;
-
-  r = do_internal_hot_remove_drive (label);
-  if (r == -1)
-    /* do_internal_hot_remove_drive has already called reply_with_error */
-    return;
-
-  reply (NULL, NULL);
-}
-
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_INTERNAL_LSTATNSLIST_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_internal_lstatnslist_args)))
 
