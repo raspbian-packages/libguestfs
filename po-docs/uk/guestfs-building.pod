@@ -280,7 +280,7 @@ Optional.  To parse the list of applications from RPM-based guests.
 
 =item Python E<ge> 3.6
 
-Optional.  Used to build the Python bindings.  S<Python 2> support was removed in S<libguestfs 1.42.1>.
+Необов'язкове. Використовується для збирання прив'язок до Python. Підтримку S<Python 2> було вилучено у S<libguestfs 1.42.1>.
 
 =item Python C<unittest>
 
@@ -320,7 +320,7 @@ Optional.  Used to build the Python bindings.  S<Python 2> support was removed i
 
 =item vala
 
-Optional.  Used to build the Vala bindings.
+Необов’язкове. Використовується для збирання прив’язок до Vala.
 
 =item LUA
 
@@ -330,7 +330,7 @@ Optional.  Used to build the Vala bindings.
 
 =item ei
 
-Optional.  Used to build the Erlang bindings.  Note that Erlang E<le> 22 will not work unless you use libguestfs E<le> 1.42.
+Необов’язкове. Використовується для збирання прив’язок до Erlang. Зауважте, що Erlang E<le> 22 не працюватиме, якщо ви не використовуватимете libguestfs E<le> 1.42.
 
 =item golang E<ge> 1.1.1
 
@@ -459,7 +459,7 @@ I have a file called F<localconfigure> which is a simple wrapper around F<config
 
 Якщо у кореневому каталозі збирання буде файл із назвою F<localenv>, C<make> обробить його вміст. У цьому файлі можуть міститися усі потрібні змінні середовища, наприклад змінні для пропускання тестів:
 
- # Skip this test, it is broken.
+ # Пропустити цю перевірку, вона не працює.
  export SKIP_TEST_BTRFS_FSCK=1
 
 Зауважте, що F<localenv> включається до Makefile верхнього рівня (стає частиною Makefile). Але, якщо цей файл обробляється також вашим скриптом F<localconfigure>, його буде використано як скрипт оболонки.
@@ -564,7 +564,7 @@ Libguestfs потребує відомостей, який дистрибути�
 
 =item B<PYTHON>
 
-This environment variable may be set to point to a python binary (eg. C<python3>).  When C<./configure> runs, it inspects this python binary to find the version of Python, the location of Python libraries and so on.
+Цією змінною середовища можна скористатися для того, щоб вказати виконуваний файл python (наприклад, C<python3>). Під час запуску C<./configure> програма виконує визначення версії цього виконуваного файла Python, розташування бібліотек Python тощо.
 
 =item B<SUPERMIN>
 
@@ -651,5 +651,5 @@ Richard W.M. Jones (C<rjones at redhat dot com>)
 
 =head1 АВТОРСЬКІ ПРАВА
 
-Copyright (C) 2009-2020 Red Hat Inc.
+© Red Hat Inc., 2009–2020
 

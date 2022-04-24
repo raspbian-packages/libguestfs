@@ -1,15 +1,15 @@
 
 =item B<--key> ВАРІАНТ
 
-Specify a key for LUKS, to automatically open a LUKS device when using the inspection.  C<ID> can be either the libguestfs device name, or the UUID of the LUKS device.
+Вказати ключ для LUKS для автоматичного відкриття пристрою LUKS при використанні інспектування. Значенням C<ІДЕНТИФІКАТОР> може бути або назва пристрою libguestfs, або UUID пристрою LUKS.
 
 =over 4
 
-=item B<--key> C<ID>:key:KEY_STRING
+=item B<--key> C<ІДЕНТИФІКАТОР>:key:РЯДОК_КЛЮЧА
 
 Використовувати вказаний C<РЯДОК_КЛЮЧА> як пароль.
 
-=item B<--key> C<ID>:file:FILENAME
+=item B<--key> C<ІДЕНТИФІКАТОР>:file:НАЗВА_ФАЙЛА
 
 Прочитати пароль з файла F<НАЗВА_ФАЙЛА>.
 

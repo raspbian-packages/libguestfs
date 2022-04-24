@@ -21,7 +21,7 @@ guestfs-performance — керування libguestfs з метою отрима
 
 Віддайте цю команду декілька разів послідовно і відкиньте результати перших декількох запусків, щоб виміряти типовий випадок із «гарячим кешем».
 
-I<Side note for developers:> There is a program called F<boot-benchmark> in L<https://github.com/libguestfs/libguestfs-analysis-tools> which does the same thing, but performs multiple runs and prints the mean and standard deviation.
+I<Примітка для розробників:> у <https://github.com/libguestfs/libguestfs-analysis-tools> можна знайти програму із назвою F<boot-benchmark>, яка виконує те саме, але виконує декілька запусків і виводить математичне сподівання та стандартне відхилення.
 
 =head3 Пояснення
 
@@ -290,7 +290,7 @@ L<http://rwmj.wordpress.com/2013/02/25/multiple-libguestfs-appliances-in-paralle
 
 =head2 Аналіз завантаження
 
-In L<https://github.com/libguestfs/libguestfs-analysis-tools> is a program called C<boot-analysis>.  This program is able to produce a very detailed breakdown of the boot steps (eg. qemu, BIOS, kernel, libguestfs init script), and can measure how long it takes to perform each step.
+У L<https://github.com/libguestfs/libguestfs-analysis-tools> можна знайти програму, яка називається C<boot-analysis>. Ця програма може виводити дуже докладні дані щодо кроків завантаження (наприклад, qemu, BIOS, ядра, скрипту ініціалізації libguestfs) і вимірювати тривалість виконання кожного з кроків.
 
 =head2 Докладний таймінг з використанням ts
 
@@ -411,7 +411,7 @@ In L<https://github.com/libguestfs/libguestfs-analysis-tools> is a program calle
 
 Іноді регресії у швидкодії трапляються у інших програмах (наприклад, у qemu або ядрі системи), що спричиняє проблеми і у libguestfs.
 
-In L<https://github.com/libguestfs/libguestfs-analysis-tools> F<boot-benchmark/boot-benchmark-range.pl> is a script which can be used to benchmark libguestfs across a range of git commits in another project to find out if any commit is causing a slowdown (or speedup).
+У L<https://github.com/libguestfs/libguestfs-analysis-tools> F<boot-benchmark/boot-benchmark-range.pl> є скриптом, яким можна скористатися для вимірювання параметрів роботи libguestfs на діапазоні внесків git у іншому проєкті, щоб визначити внесок, який спричинив уповільнення роботи (або її пришвидшення).
 
 Щоб дізнатися більше про те, як користуватися цим скриптом, зверніться до підручника:
 
@@ -427,5 +427,5 @@ Richard W.M. Jones (C<rjones at redhat dot com>)
 
 =head1 АВТОРСЬКІ ПРАВА
 
-Copyright (C) 2012-2020 Red Hat Inc.
+© Red Hat Inc., 2012–2020
 

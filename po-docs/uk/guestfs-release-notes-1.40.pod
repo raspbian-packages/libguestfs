@@ -3,83 +3,83 @@
 
 guestfs-release-notes - нотатки щодо випусків libguestfs
 
-=head1 RELEASE NOTES FOR LIBGUESTFS 1.40
+=head1 НОТАТКИ ЩОДО ВИПУСКУ LIBGUESTFS 1.40
 
-These release notes only cover the differences from the previous stable/dev branch split (1.38.0).  For detailed changelogs, please see the git repository, or the ChangeLog file distributed in the tarball.
+Ці нотатки щодо випуску стосуються лише відмінностей від попереднього стабільного випуску (1.38.0). Докладний журнал змін є частиною журналу змін сховища git. Його також наведено у файлі ChangeLog, який є частиною архіву tar із кодом бібліотеки.
 
 =head2 Нові можливості
 
 =head3 Нові можливості у наявних інструментах
 
-Virt-inspector now displays the libosinfo short ID for guests (Pino Toscano).
+У новій версії virt-inspector показує короткий ідентифікатор libosinfo для гостьових систем (Pino Toscano).
 
-Guestfish I<-N> will now generate 1G disks instead of 100M disks by default.
+У новій версії guestfish I<-N> типово створює диски у 1 ГБ замість 100 МБ.
 
-Virt-resize supports f2fs filesystems (Pino Toscano).
+У virt-resize реалізовано підтримку файлових систем f2fs (Pino Toscano).
 
-libguestfs-test-tool now supports bash tab completion (Pino Toscano).
+У новій версії libguestfs-test-tool реалізовано підтримку завершення команд bash натисканням клавіші Tab (Pino Toscano).
 
-The I<--machine-readable> option now supports sending output to files or stdout/stderr.  This works uniformly across most OCaml-based virt tools, specifically: virt-builder, virt-builder-repository, virt-dib, virt-get-kernel, virt-resize, virt-sparsify, and virt-v2v (Pino Toscano).
+Для параметра I<--machine-readable> у новій версії передбачено підтримку надсилання до файлів або stdout/stderr. Це однаково працює для більшості заснованих на OCaml інструментів віртуалізації, зокрема: virt-builder, virt-builder-repository, virt-dib, virt-get-kernel, virt-resize, virt-sparsify і virt-v2v (Pino Toscano).
 
-Virt-builder I<--uninstall> option now works on SUSE (Sebastian Meyer).
+Параметр I<--uninstall> virt-builder у новій версії працює і у SUSE (Sebastian Meyer).
 
 Virt-builder now supports Windows.  We are not able to ship Windows templates in the public repository for obvious licensing reasons, but if you are an MSDN subscriber you may build your own.  See L<https://rwmj.wordpress.com/2018/09/13/creating-windows-templates-for-virt-builder/>
 
-Many tools now support a I<--key> option allowing you to pass in decryption keys for filesystems stored in local files on the host rather than having to feed them in over stdin (Pino Toscano).
+У новій версії для багатьох інструментів передбачено параметр I<--key>, що уможливлює передавання ключів розшифровування для файлових систем, які зберігаються у локальних файлах на основній системі, замість передавання ключів за допомогою stdin (Pino Toscano).
 
 =head3 virt-v2v і virt-p2v
 
-New I<-o rhv-upload> mode for directly uploading images to RHV, bypassing the Export Storage Domain (Tomáš Golembiovský, Nir Soffer, Daniel Erez, Pino Toscano).
+Новий режим I<-o rhv-upload> для безпосереднього вивантаження образів до RHV, з обходом Export Storage Domain (Tomáš Golembiovský, Nir Soffer, Daniel Erez, Pino Toscano).
 
-New I<-o openstack> mode for directly uploading images to OpenStack and Cinder using OpenStack APIs.
+Новий режим I<-o openstack> для безпосереднього вивантаження образів до OpenStack і Cinder із використанням програмних інтерфейсів OpenStack.
 
-Virt-v2v now has a general mechanism for input and output options: I<-io> and I<-oo>.
+У новій версії virt-v2v передбачено загальний механізм для параметрів вхідних даних і виведення: I<-io> і I<-oo>.
 
-Virt-v2v can now install the RHV tools or QEMU GA in guests (Tomáš Golembiovský).
+Нова версія virt-v2v здатна встановлювати інструменти RHV або QEMU GA у гостьових системах (Tomáš Golembiovský).
 
-The huge manual has now been split into several smaller documents and is more focused on helping users to accomplish specific v2v tasks.
+Величезний підручник у новій версії поділено на декілька менших документів — акцент у ньому зроблено на тому, щоб допомогти користувачам виконувати певні завдання v2v.
 
-Multiple improvements to the OVF metadata when converting to RHV (Tomáš Golembiovský, Pino Toscano, Arik Hadas).
+Декілька удосконалень метаданих OVF при перетворенні до RHV (Tomáš Golembiovský, Pino Toscano, Arik Hadas).
 
-Virt-v2v can now convert Linux guests with split kernel packages, especially Ubuntu 18.04 (Pino Toscano).
+Нова версія virt-v2v може перетворювати гостьові системи Linux із розділеними пакунками ядра, особливо Ubuntu 18.04 (Pino Toscano).
 
-Virt-v2v old I<--password-file> option has been replaced by I<-ip> (the old option remains for backwards compatibility).
+Застарілий параметр virt-v2v I<--password-file> було замінено на I<-ip> (старий варіант залишено для зворотної сумісності).
 
-Virt-v2v now preserves the VM Generation ID.
+Нова версія virt-v2v зберігає ідентифікатор створення віртуальної машини.
 
-Virt-v2v has a new I<--mac> option allowing specific NICs to be mapped precisely to networks or bridges on the target.
+У virt-v2v передбачено новий параметр I<--mac>, за допомогою якого певні NIC може бути пов'язано точно із мережами або містками у системі призначення.
 
-New virt-v2v I<--print-estimate> option to estimate the size of data that virt-v2v will copy.
+Новий параметр virt-v2v I<--print-estimate> для оцінки розміру даних, які virt-v2v скопіює.
 
-Virt-v2v is now usually able to remove open-vm-tools and VMware Tools from the Linux guest during conversion (Pino Toscano).
+Нова версія virt-v2v, зазвичай, здатна вилучати open-vm-tools і VMware Tools з гостьових систем Linux під час перетворення (Pino Toscano).
 
-Virt-v2v can now support UEFI conversions to RHV (Tomáš Golembiovský).
+У новій версії virt-v2v передбачено підтримку перетворень UEFI до RHV (Tomáš Golembiovský).
 
-Virt-p2v now prefers you to shut down instead of rebooting the machine after conversion has finished (Pino Toscano).
+Нова версія virt-p2v надає перевагу вимиканню, а не перезавантаженню машини після завершення перетворення (Pino Toscano).
 
-Virt-v2v now writes the libosinfo short ID to the libvirt metadata when using I<-o local> and I<-o libvirt> output modes (Martin Kletzander).
+Нова версія virt-v2v записує короткий ідентифікатор libosinfo до метаданих libvirt при використанні режимів виведення I<-o local> і I<-o libvirt> (Martin Kletzander).
 
 =head3 Прив’язки до мов програмування
 
-OpenJDK 10+ is supported (Pino Toscano).
+Реалізовано підтримку OpenJDK 10+ (Pino Toscano).
 
-Java bindings fixed for Gentoo host (Martin Kletzander).
+Виправлено прив'язки Java для основної системи Gentoo (Martin Kletzander).
 
 =head3 Перевірка
 
-Support Kali Linux (Pino Toscano).
+Підтримка Kali Linux (Pino Toscano).
 
-When inspecting mountpoints, look for F</etc/mdadm/mdadm.conf> as well as F</etc/mdadm.conf> (Nikolay Ivanets).
+При вивченні точой мнтування реалізовано пошук F</etc/mdadm/mdadm.conf>, окрім F</etc/mdadm.conf> (Nikolay Ivanets).
 
-Improved support for OpenSUSE Tumbleweed (Pino Toscano).
+Удосконалено підтримку OpenSUSE Tumbleweed (Pino Toscano).
 
 =head3 Архітектури і платформи
 
-Miscellaneous macOS build fixes (Adam Robinson).
+Різноманітні виправлення збирання у macOS (Adam Robinson).
 
 =head3 Інше
 
-Multiple documentation typos fixed (Yuri Chornoivan).
+Виправлено декілька друкарських помилок у документації (Юрій Чорноіван).
 
 =head2 Безпека
 
@@ -87,7 +87,7 @@ Multiple documentation typos fixed (Yuri Chornoivan).
 
 =head3 CVE-2018-11806
 
-Qemu's slirp (userspace networking) had several buffer overflows which could be triggered from the guest or network side.
+Slirp (робота у мережі з простору користувача) у Qemu містив декілька переповнень буфера, якими можна було скористатися з гостьової системи або мережі.
 
 =head2 API
 
@@ -97,61 +97,61 @@ Qemu's slirp (userspace networking) had several buffer overflows which could be 
 
 =item C<f2fs_expand>
 
-Expand an f2fs filesystem (Pino Toscano).
+Розширено підтримку файлової системи f2fs (Pino Toscano).
 
 =item C<inspect_get_osinfo>
 
-Get the libosinfo short ID for the inspected guest (Pino Toscano).
+Реалізовано отримання короткого ідентифікатора libosinfo для інспектованої гостьової системи (Pino Toscano).
 
 =item C<lvm_scan>
 
-This rescans all PVs, VGs and LVs, optionally activating them.
+Ця команда виконує сканування усіх фізичних томів, груп томів та логічних томів, якщо потрібно, активуючи їх.
 
 =back
 
 =head3 Інші зміни у програмному інтерфейсі
 
-C<part_get_mbr_part_type> was reimplemented in OCaml (Nikolay Ivanets).
+C<part_get_mbr_part_type> було повторно реалізовано на OCaml (Nikolay Ivanets).
 
-C<list_filesystems> now filters out MBR extended partitions (Nikolay Ivanets).
+У новій версії C<list_filesystems> відфільтровує розширені розділи MBR (Nikolay Ivanets).
 
-C<vgscan> has been deprecated.  Use the new C<lvm_scan> API in preference.
+C<vgscan> було визнано застарілим. Тепер варто користуватися новим програмним інтерфейсом C<lvm_scan>.
 
 =head2 Зміни у збиранні
 
-The JSON library switched from yajl to Jansson E<ge> 2.7 (Pino Toscano).
+Бібліотеку JSON перемкнуто з yajl на Jansson E<ge> 2.7 (Pino Toscano).
 
-Support for The Sleuth Kit 4.5 (Pino Toscano).
+Реалізовано підтримку Sleuth Kit 4.5 (Pino Toscano).
 
-Multiple improvements in the C<./configure> script (Lin Ma).
+Декілька удосконалень у скрипті C<./configure> (Lin Ma).
 
-More out-of-tree build fixes (Hilko Bengen).
+Додаткові виправлення збирання поза ієрархією коду (Hilko Bengen).
 
-Some work on reproducible builds (Bernhard M. Wiedemann).
+Певна робота із відтворюваності збирання (Bernhard M. Wiedemann).
 
 =head2 Внутрішня частина роботи програми
 
-lvmetad is now used unconditionally, and is started much earlier in the appliance boot process.  This fixes support for certain PV types.
+lvmetad у новій версії використовується безумовно і запускається набагато раніше у процесі завантаження базової системи. Це виправляє підтримку певних типів фізичних томів.
 
-On Debian, dash is installed inside the appliance and in virt-rescue (Pino Toscano).
+У Debian dash встановлюється у базовій системі і у virt-rescue (Pino Toscano).
 
-The amount of RAM assigned to the appliance has been increased from 500M to 768M (on x86_64, other architectures have different limits).  This enables use of up to 255 disks when using recent Linux kernels.
+Об'єм пам'яті, який призначається для базової системи було збільшено з 500 МБ до 768 МБ (на x86_64, у інших архітектур інші обмеження). Це уможливлює використання до 255 дисків при використанні нещодавніх ядер Linux.
 
-Virt-v2v now models the source machine type (eg. i440FX, Q35 or virt).
+У новій версії virt-v2v моделює тип машини джерела (наприклад i440FX, Q35 або virt).
 
-Virt-p2v now generates configuration code automatically, also code for parsing the kernel command line.
+У новій версії virt-p2v створює код налаштовування автоматично, також автоматично створюється код для обробки командного рядка ядра.
 
-Use C<LT_INIT> instead of C<AC_PROG_LIBTOOL>.
+Реалізовано використання C<LT_INIT> замість C<AC_PROG_LIBTOOL>.
 
-The OCaml C<JSON> code for parsing and serializing has been unified into a single abstract data type.
+Код C<JSON> OCaml для обробки і перетворення у послідовну форму було уніфіковано до одного абстрактного типу даних.
 
-Most OCaml tools are now built using the PIC runtime.  This has a performance penalty on i686, but is relatively free on other architectures and has security benefits.
+Більшість інструментів OCaml у новій версії збирається за допомогою середовища PIC. Це уповільнює збирання на i686, але відносно безвартісним на інших архітектурах, а також дає переваги у захисті системи.
 
-The direct backend now queries the qemu binary for availability of KVM, instead of using a heuristic based on F</dev/kvm> (Andrea Bolognani).
+Безпосередній модуль обробки (direct) у новій версії опитує виконуваний файл qemu щодо доступності KVM, замість використання евристики на основі F</dev/kvm> (Andrea Bolognani).
 
-Our "clever" libxml2 writer macros are now used consistently across all parts of the code base.
+Наш «кмітливий» макрос запису libxml2 у новій версії використовується послідовно для усіх частин кодової бази.
 
-Qemu dropped I<-nodefconfig> without telling us.  The equivalent I<-no-user-config> option is now used instead.  Qemu also moved the C<serial> option from I<-drive> to I<-device>, again without any notice, and this is also fixed.
+З Qemu було викинуто I<-nodefconfig> без повідомлення для нашої команди. Замість цього параметра тепер використовується I<-no-user-config>. Крім того, Qemu було пересунуто параметр C<serial> з I<-drive> до I<-device>, знову ж без повідомлення. Цю проблему також виправлено.
 
 =head2 Виправлені вади
 
@@ -165,175 +165,175 @@ https_proxy= ./bugs-in-changelog.sh v1.38.0..
 
 =item L<https://bugzilla.redhat.com/1664310>
 
-[RHEL 7.6 LP] openstack output leaks passwords
+[RHEL 7.6 LP] У виведених даних openstack були паролі
 
 =item L<https://bugzilla.redhat.com/1661038>
 
-virt-inspector fails with "error: int_of_string" on a Linux image when /etc/fstab contains a partionless device
+virt-inspector завершувала роботу з повідомленням «error: int_of_string» для образів Linux, якщо у /etc/fstab містився пристрій без розділів
 
 =item L<https://bugzilla.redhat.com/1651432>
 
-v2v - support for -insecure option to support OSP SSL connection for VM migrations
+v2v — реалізовано підтримку параметра -insecure для забезпечення підтримки з'єднань SSL OSP для перенесення віртуальних машин
 
 =item L<https://bugzilla.redhat.com/1642044>
 
-[RFE] virt-p2v UI should give the option to shutdown after conversion is finished
+[RFE] Інтерфейс virt-p2v має надавати можливість вимикати систему після завершення перетворення
 
 =item L<https://bugzilla.redhat.com/1634248>
 
-virt-v2v cannot convert opensuse15 guest
+virt-v2v не може перетворити гостьову систему opensuse15
 
 =item L<https://bugzilla.redhat.com/1624902>
 
-Fix rhev-apt command that virt-v2v runs in Windows guests on first boot
+Виправлення команди rhev-apt, яку virt-v2v запускає у гостьових системах Windows при першому завантаженні
 
 =item L<https://bugzilla.redhat.com/1624878>
 
-Update v2v docs to describe support for SHA 2 certs required for converting Windows 7 and 2008 R2 guests
+Оновлено документацію до v2v — додано опис підтримки сертифікатів SHA 2, які потрібні для перетворення гостьових систем Windows 7 і 2008 R2
 
 =item L<https://bugzilla.redhat.com/1615885>
 
-Minor log issue of virt-v2v
+Невеличка вада у журналі virt-v2v
 
 =item L<https://bugzilla.redhat.com/1614276>
 
-VixDiskLib: VixDiskLib_Read: Read 4096 sectors at 57516160 failed. Error 2 (Memory allocation failed. Out of memory.) (DiskLib error 802: NBD_ERR_INSUFFICIENT_RESOURCES) at 5240.
+VixDiskLib: VixDiskLib_Read: помилка читання 4096 секторів у 57516160. Помилка 2 (Не вдалося розподілити пам'ять. Не вистачає пам'яті.) (Помилка DiskLib 802: NBD_ERR_INSUFFICIENT_RESOURCES) у 5240.
 
 =item L<https://bugzilla.redhat.com/1612785>
 
-"warning: <target dev='sr0'> was ignored because the device name could not be recognized" should be hidden since convert cdrom is supported by virt-v2v
+«попередження: <target dev='sr0'> було проігноровано, оскільки не вдалося визначити назву пристрою» має бути приховано, оскільки підтримку перетворення компакт-дисків передбачено у virt-v2v
 
 =item L<https://bugzilla.redhat.com/1611690>
 
-part_to_dev "/dev/sdp1" returns "/dev/sd" instead of "/dev/sdp"
+part_to_dev "/dev/sdp1" повертає "/dev/sd" замість "/dev/sdp"
 
 =item L<https://bugzilla.redhat.com/1608131>
 
-inspection fails when swap partition in /etc/fstab has incorrect UUID compared to actual swap partition
+Помилка інспектування, якщо розділ резервної пам'яті у /etc/fstab має некоректний UUID відносно реального розділу резервної пам'яті
 
 =item L<https://bugzilla.redhat.com/1605071>
 
-On machines where /dev/kvm exists but KVM doesn't work, libguestfs will not fall back to TCG
+На машинах, де існує /dev/kvm, але не працює KVM, libguestfs не повертається до резервного TCG
 
 =item L<https://bugzilla.redhat.com/1602353>
 
-virt-inspector can't inspect LUKS-encrypted RHEL7 guest image
+virt-inspector не може інспектувати зашифрований LUKS образ гостьової системи RHEL7
 
 =item L<https://bugzilla.redhat.com/1601943>
 
-Improve error "No module named ovirtsdk4" in v2v rhv-upload conversion
+Удосконалення повідомлення «Немає модуля із назвою ovirtsdk4» при перетворенні v2v rhv-upload
 
 =item L<https://bugzilla.redhat.com/1598715>
 
-Adding QXL device in OVF causes Cirrus Logic device to be added to guest
+Додавання пристрою QXL у OVF спричиняє додавання до гостьової системи пристрою Cirrus Logic
 
 =item L<https://bugzilla.redhat.com/1598350>
 
-RFE: virt-v2v should preserve <genid>
+RFE: virt-v2v має зберігати <genid>
 
 =item L<https://bugzilla.redhat.com/1596851>
 
-Transfer fails if local host is in maintenance mode
+Помилка передавання, якщо локальна основна система перебуває у режимі супроводу
 
 =item L<https://bugzilla.redhat.com/1596810>
 
-Transfer fails if local host belongs to another DC
+Помилка передавання, якщо локальна основна система належить до іншого DC
 
 =item L<https://bugzilla.redhat.com/1592468>
 
-v2v to RHV transfer fails with: error: [empty name]: cannot read '//*/disksection' with value: null
+Помилка передавання v2v до RHV із повідомленням: помилка: [порожня назва]: не вдалося прочитати '//*/disksection' зі заначенням: null
 
 =item L<https://bugzilla.redhat.com/1592061>
 
-virt-v2v convert rhel5.3 failure when executing rpm -ql kernel-2.6.18-128.el5 command
+Помилка перетворення virt-v2v rhel5.3 при виконанні команди rpm -ql kernel-2.6.18-128.el5
 
 =item L<https://bugzilla.redhat.com/1591789>
 
-p2v: error: XML error: CPU vendor specified without CPU model
+p2v: помилка: помилка XML: вказано виробника процесора, але не вказано моделі
 
 =item L<https://bugzilla.redhat.com/1590220>
 
-Hide rhv-upload option in virt-p2v client
+Приховування параметра rhv-upload у клієнті virt-p2v
 
 =item L<https://bugzilla.redhat.com/1588451>
 
-Don't use relative socket paths for NBD
+Усування використання відносних шляхів до сокета для NBD
 
 =item L<https://bugzilla.redhat.com/1588088>
 
-RFE: Support for -o rhv-upload via Unix domain socket
+RFE: підтримка -o rhv-upload крізь сокет домену Unix
 
 =item L<https://bugzilla.redhat.com/1586198>
 
-ovirt-imageio-daemon times out during migration
+Під час перенесення вичерпується час очікування на дані від ovirt-imageio-daemon
 
 =item L<https://bugzilla.redhat.com/1580309>
 
-virt-v2v rhel7.6 build can't convert guest to null with qemu-kvm rhel7.5.z build
+Збірка virt-v2v для rhel7.6 не може перетворити гостьову систему до null зі збіркою qemu-kvm rhel7.5.z
 
 =item L<https://bugzilla.redhat.com/1580292>
 
-Virt-v2v rhel7.6 build can't convert guest with qemu-kvm rhel7.5.z build
+Збірка virt-v2v для rhel7.6 не може перетворити гостьову систему зі збіркою qemu-kvm rhel7.5.z
 
 =item L<https://bugzilla.redhat.com/1579047>
 
-virt-builder: ubuntu-18.04 template has stray HTTP proxy configured for apt
+virt-builder: шаблон ubuntu-18.04 містить неправильні налаштування HTTP-проксі для apt
 
 =item L<https://bugzilla.redhat.com/1575640>
 
-virt-builder: error: host cpu (x86_64) and guest arch (unknown) are not compatible
+virt-builder: помилка: несумісність процесора основної системи (x86_64) і архітектури гостьової системи (невідома)
 
 =item L<https://bugzilla.redhat.com/1570407>
 
-virt-v2v -i ova gives checksum error when missing files are mentioned in .mf
+virt-v2v -i ova повідомляє про помилку обчислення контрольної суми, якщо пропущені файли згадано у .mf
 
 =item L<https://bugzilla.redhat.com/1567763>
 
-guestfsd: error: /Windows/Drivers/VirtIO: Read-only file system
+guestfsd: помилка: /Windows/Drivers/VirtIO: придатна лише для читання файлова система
 
 =item L<https://bugzilla.redhat.com/1564983>
 
-The mount-vfs failed to mount the logical volume
+Помилка mount-vfs при монтуванні логічного тому
 
 =item L<https://bugzilla.redhat.com/1561828>
 
-RHV tools not properly installed in migrated Windows VM's causing boot failure
+Інструменти RHV встановлено неналежним чином у перенесеній віртуальній машині Windows, що спричиняє неможливість завантаження
 
 =item L<https://bugzilla.redhat.com/1559027>
 
-virt-v2v does not honor --network with -o rhv-upload
+virt-v2v не бере до уваги --network з -o rhv-upload
 
 =item L<https://bugzilla.redhat.com/1557273>
 
-[RFE] Upload images directly to oVirt (virt-v2v -o rhv-upload)
+[RFE] Вивантаження образів безпосередньо до oVirt (virt-v2v -o rhv-upload)
 
 =item L<https://bugzilla.redhat.com/1544842>
 
-[RFE] Add libosinfo short-id to virt-inspector output
+[RFE] Додавання libosinfo short-id до виведення virt-inspector
 
 =item L<https://bugzilla.redhat.com/1544674>
 
-virt-inspector --help differs from manpage
+virt-inspector --help відрізняється від сторінки підручника
 
 =item L<https://bugzilla.redhat.com/1544227>
 
-RFE: recognize the Kali Linux distribution
+RFE: розпізнавання дистрибутива Kali Linux
 
 =item L<https://bugzilla.redhat.com/1532224>
 
-Resume=/dev/sdaX can't be updated to resume=/dev/vdaX in rhel7 guest's grub file after v2v conversion
+Resume=/dev/sdaX не може бути оновлено до resume=/dev/vdaX у файлі grub гостьової системи rhel7 після перетворення v2v
 
 =item L<https://bugzilla.redhat.com/1530967>
 
-Change categories of "Guest Operating system management by VIX API" in v2v man page
+Зміна категорій «Керування гостьовими операційними системами за допомогою програмного інтерфейсу VIX» на сторінці підручника v2v
 
 =item L<https://bugzilla.redhat.com/1527334>
 
-Various -it vddk -io vddk* options should be documented, removed or fixed
+Деякі параметри -it vddk -io vddk* має бути документовано, вилучено або виправлено
 
 =item L<https://bugzilla.redhat.com/1148012>
 
-B<Reverted:> RFE: Allow qemu-bridge-helper to be used to implement guestfs_set_network
+B<Відкинуто:> RFE: Allow qemu-bridge-helper to be used to implement guestfs_set_network
 
 =back
 
@@ -347,5 +347,5 @@ Richard W.M. Jones
 
 =head1 АВТОРСЬКІ ПРАВА
 
-Copyright (C) 2009-2020 Red Hat Inc.
+© Red Hat Inc., 2009–2020
 

@@ -76,7 +76,7 @@ Read the first 256k bytes of the in_file with L<qemu-img(1)> command and write t
 
 The function returns zero if successful, otherwise -1.
 
-=head4 Function C<lib/appliance-kcmdline.c:get_root_uuid>
+=head4 Функція C<lib/appliance-kcmdline.c:get_root_uuid>
 
  static char *
  get_root_uuid (guestfs_h *g, const char *appliance)
@@ -92,7 +92,7 @@ Get the UUID from the appliance disk image.
 
 Будує рядок команди Linux, який буде передано базовій системі. Використовується у модулях C<direct> і C<libvirt> і просто зберігається у цьому файлі, оскільки він є зручним місцем для цього загального коду.
 
-The C<appliance> parameter is the filename of the appliance (could be NULL) from which we obtain the root UUID.
+Параметр C<appliance> є назвою файла базової системи (може бути NULL), з якої ми отримуємо кореневий UUID.
 
 Параметр C<flags> може містити такі прапорці, які поєднано між собою логічним АБО (або 0):
 
@@ -121,17 +121,17 @@ The C<appliance> parameter is the filename of the appliance (could be NULL) from
 
 Повертає розташування мікропрограми, потрібної для завантаження базової системи. У поточній версії призначено лише для aarch64, оскільки це єдина архітектура, для якої UEFI є обов'язковою (і лише для RHEL).
 
-C<firmwares> is an optional list of allowed values for the firmware autoselection of libvirt. It is C<NULL> to indicate it is not supported. C<*firmware> is set to one of the strings in C<firmwares> in case one can be used.
+C<firmwares> є необов'язковим списком дозволених значень для автоматичного вибору мікропрограми у libvirt. Значення C<NULL> вказує на те, що такої підтримки такої можливості не передбачено. C<*firmware> встановлюється у значення одного з рядків у C<firmwares>, якщо мікропрограму може бути використано.
 
 C<*code> ініціалізується значенням шляху до придатного лише до читання файла коду UEFI. C<*vars> ініціалізується значенням шляху до копії файла vars UEFI (який автоматично спорожняється під час виходу).
 
 In case a UEFI firmware is available, either C<*firmware> is set to a non-C<NULL> value, or C<*code> and C<*vars> are.
 
-C<*code> and C<*vars> should be freed by the caller, and C<*firmware> B<must> not.
+C<*code> і C<*vars> має бути вивільнено функцією виклику, а C<*firmware> — B<ні>.
 
 Якщо функція повертає C<-1>, сталася суттєва помилка, якам має спричинити помилку при збиранні базової системи (незнайдена мікропрограма UEFI не вважається помилкою).
 
-See also F<virt-v2v.git/v2v/utils.ml>:find_uefi_firmware
+Див. також F<virt-v2v.git/v2v/utils.ml>:find_uefi_firmware
 
 =head3 Файл F<lib/appliance.c>
 
@@ -616,19 +616,19 @@ XXX Має уможливити надсилання одинарних деск
 
 Перевірити, чи є значення номеру порту прийнятним.
 
-=head4 Function C<lib/drives.c:valid_blocksize>
+=head4 Функція C<lib/drives.c:valid_blocksize>
 
  static int
  valid_blocksize (int blocksize)
 
-Check the block size is reasonable.  It can't be other then 512 or 4096.
+Перевірка того, чи є розмір блоку природним. Розмір може мати лише два значення — 512 або 4096.
 
 =head4 Функція C<lib/drives.c:guestfs_int_checkpoint_drives>
 
  size_t
  guestfs_int_checkpoint_drives (guestfs_h *g)
 
-Checkpoint and roll back drives, so that groups of drives can be added atomically.  Only used by L<guestfs(3)/guestfs_add_domain>.
+Створити контрольну точку і відновити до неї диски, щоб групи дисків можна було додавати атомарно. Використовується лише у L<guestfs(3)/guestfs_add_domain>.
 
 =head4 Функція C<lib/drives.c:guestfs_impl_debug_drives>
 
@@ -792,7 +792,7 @@ C<status> — код стану команди (наприклад, поверн
     */
    char *overlay;
  
-   /* Various per-drive flags. */
+   /* Різноманітні прапорці диска. */
    bool readonly;
    char *iface;
    char *name;
@@ -1096,7 +1096,7 @@ C<check_for_errors> є підказкою модулю обробки щодо �
 
 Реалізація модуля обробки C<direct>.
 
-Докладніше про це тут: L<guestfs(3)/МОДУЛІ>
+Докладніше про це тут: L<guestfs(3)/МОДУЛІ>.
 
 =head4 Функція C<lib/launch-direct.c:add_drive_standard_params>
 
@@ -1107,13 +1107,13 @@ C<check_for_errors> є підказкою модулю обробки щодо �
 
 Додати стандартні елементи параметра C<-drive>.
 
-=head4 Function C<lib/launch-direct.c:add_device_blocksize_params>
+=head4 Функція C<lib/launch-direct.c:add_device_blocksize_params>
 
  static int
  add_device_blocksize_params (guestfs_h *g, struct qemuopts *qopts,
                             struct drive *drv)
 
-Add the physical_block_size and logical_block_size elements of the C<-device> parameter.
+Додає елементи physical_block_size і logical_block_size параметра C<-device>.
 
 =head3 Файл F<lib/launch-libvirt.c>
 
@@ -1826,7 +1826,7 @@ XXX Я хотів зробити так, щоб цей тест запускав
  static void
  test_timeval_diff (void)
 
-Перевірка C<guestfs_int_timeval_diff>
+Перевірка C<guestfs_int_timeval_diff>.
 
 =head3 Файл F<lib/version.c>
 
@@ -2613,13 +2613,13 @@ C<attribute_ns (prefix, key, namespace_uri, value)> визначає атриб�
 
   comment ("number of items = %d", nr_items);
 
-=head3 File F<common/utils/stringlists-utils.c>
+=head3 Файл F<common/utils/stringlists-utils.c>
 
 Допоміжні функції, які використовуються бібліотекою, засобами віртуалізації та прив'язками до мов програмування.
 
 Ці функції I<не повинні> викликати вбудовані бібліотечні функції, зокрема C<safe_*>, C<error> або C<perrorf> чи будь-які функції C<guestfs_int_*>.
 
-=head4 Function C<common/utils/stringlists-utils.c:guestfs_int_split_string>
+=head4 Функція C<common/utils/stringlists-utils.c:guestfs_int_split_string>
 
  char **
  guestfs_int_split_string (char sep, const char *str)
@@ -2654,18 +2654,18 @@ aborts
 
 Ці функції I<не повинні> викликати вбудовані бібліотечні функції, зокрема C<safe_*>, C<error> або C<perrorf> чи будь-які функції C<guestfs_int_*>.
 
-=head4 Function C<common/utils/utils.c:guestfs_int_replace_string>
+=head4 Функція C<common/utils/utils.c:guestfs_int_replace_string>
 
  char *
  guestfs_int_replace_string (const char *str, const char *s1, const char *s2)
 
-Replace every instance of C<s1> appearing in C<str> with C<s2>.  A newly allocated string is returned which must be freed by the caller.  If allocation fails this can return C<NULL>.
+Замінити усі екземпляри C<s1> у C<str> на C<s2>. Буде повернуто новий розміщений рядок, який має бути звільнено функцією виклику. Якщо розміщення рядка не вдасться, функція може повернути C<NULL>.
 
 Приклад:
 
  replace_string ("abcabb", "ab", "a");
 
-would return C<"acab">.
+повертає C<"acab">.
 
 =head4 Функція C<common/utils/utils.c:guestfs_int_exit_status_to_string>
 
@@ -2832,7 +2832,7 @@ C<extra> — набір додаткових дозволених символі
 
 Цю функцію можна викликати і об'єктів, які не є файлами, оскільки ми ігноруємо помилки, бо це лише підказка.
 
-=head4 Функція CЕ 
+=head4 Функція C<common/utils/utils.c:guestfs_int_shell_unquote>
 
  char *
  guestfs_int_shell_unquote (const char *str)
@@ -2980,7 +2980,7 @@ C<root> має бути кореневим каталогом встановле
 
 =item *
 
-покладається на вже виконану інтроспекцію.
+покладається на вже виконану інтроспекцію
 
 =item *
 
@@ -3064,14 +3064,14 @@ C<root> має бути кореневим каталогом встановле
 
 =head3 Файл F<daemon/device-name-translation.c>
 
-=head4 Function C<daemon/device-name-translation.c:device_name_translation_init>
+=head4 Функція C<daemon/device-name-translation.c:device_name_translation_init>
 
  void
  device_name_translation_init (void)
 
-Cache daemon disk mapping.
+Прив'язка до дисків фонової служби кешування.
 
-When the daemon starts up, populate a cache with the contents of /dev/disk/by-path.  It's easiest to use C<ls -lv> here since the names are sorted awkwardly.
+Коли запускається фонова служба, заповнити кеш вмістом /dev/disk/by-path. Найпростішим тут є використання C<ls -lv>, оскільки назви упорядковано незручним чином.
 
 =head4 Функція C<daemon/device-name-translation.c:device_name_translation>
 
@@ -3080,7 +3080,7 @@ When the daemon starts up, populate a cache with the contents of /dev/disk/by-pa
 
 Виконати переклад назв пристроїв.
 
-Libguestfs defines a few standard formats for device names.  (see also L<guestfs(3)/BLOCK DEVICE NAMING> and L<guestfs(3)/guestfs_canonical_device_name>).  They are:
+Libguestfs визначає декілька стандартних форматів для назв пристроїв. (Див. також L<guestfs(3)/ІМЕНУВАННЯ БЛОКОВИХ ПРИСТРОЇВ> and L<guestfs(3)/guestfs_canonical_device_name>). Стандартними форматами є такі:
 
 =over 4
 
@@ -3090,7 +3090,7 @@ Libguestfs defines a few standard formats for device names.  (see also L<guestfs
 
 =item F</dev/vdX[N]>
 
-These mean the Nth partition on the Xth device.  Because Linux no longer enumerates devices in the order they are passed to qemu, we must translate these by looking up the actual device using /dev/disk/by-path/
+Ці означають N-ий розділ X-го пристрою. Оскільки Linux більше не нумерує пристрої за порядком, у якому їх передають до qemu, нам слід транслювати їх пошуком реального пристрою за допомогою /dev/disk/by-path/
 
 =item F</dev/mdX>
 
@@ -3100,7 +3100,7 @@ These mean the Nth partition on the Xth device.  Because Linux no longer enumera
 
 =item F</dev/dm-N>
 
-These are not translated here.
+Ці пристрої тут не транслюються.
 
 =back
 
@@ -3223,14 +3223,14 @@ These are not translated here.
 
 C<argv> у C<struct stringsbuf> дорівнюватиме C<NULL>, якщо стануться помилки.
 
-=head4 Function C<daemon/utils.c:filter_list>
+=head4 Функція C<daemon/utils.c:filter_list>
 
  char **
  filter_list (bool (*p) (const char *str), char **strs)
 
-Filter a list of strings.  Returns a newly allocated list of only the strings where C<p (str) == true>.
+Фільтрувати список рядків. Повертає новорозміщений список лише рядків, де C<p (str) == true>.
 
-B<Note> it does not copy the strings, be careful not to double-free them.
+B<Зауваження>: функція не копіює рядки — будьте обережні із подвійним їх звільненням.
 
 =head4 Функція C<daemon/utils.c:trim>
 
@@ -3301,25 +3301,25 @@ LVM та інші команди не є синхронними, особлив�
 
 C<function> — функція, яка викликала цю допоміжну функцію, використовується здебільшого для повідомлення про помилки та діагностики.
 
-=head4 Function C<daemon/utils.c:read_whole_file>
+=head4 Функція C<daemon/utils.c:read_whole_file>
 
  char *
  read_whole_file (const char *filename, size_t *size_r)
 
-Read whole file into dynamically allocated array.  If there is an error, DON'T call reply_with_perror, just return NULL.  Returns a C<\0>-terminated string.  C<size_r> can be specified to get the size of the returned data.
+Прочитати увесь файл до динамічно розміщеного у пам'яті масиву. Якщо станеться помилка НЕ викликати reply_with_perror, просто повернути NULL. Повертає завершений C<\0> рядок. Можна вказати C<size_r> для отримання розміру повернути даних.
 
-=head3 File F<daemon/xattr.c>
+=head3 Файл F<daemon/xattr.c>
 
-=head4 Function C<daemon/xattr.c:split_attr_names>
+=head4 Функція C<daemon/xattr.c:split_attr_names>
 
  static char **
  split_attr_names (char *buf, size_t len)
 
-L<listxattr(2)> returns the string C<"foo\0bar\0baz"> of length C<len>. (The last string in the list is \0-terminated but the \0 is not included in C<len>).
+L<listxattr(2)> повертає рядок C<"щось\0десь\0якось"> довжини C<len>. (Останній рядок у списку є завершеним \0, але \0 не буде включено до обчислення C<len>).
 
-This function splits it into a regular list of strings.
+Ця функція ділить його на звичайний список рядків.
 
-B<Note> that the returned list contains pointers to the original strings in C<buf> so be careful that you do not double-free them.
+B<Зауваження>: повернутий список міститиме вказівник на початкові рядки у C<buf>, тому будьте обережні, щоб не звільнити це рядок двічі.
 
 =head2 Підкаталог F<fish>
 

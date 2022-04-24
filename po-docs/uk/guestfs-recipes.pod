@@ -441,7 +441,7 @@ L<https://rwmj.wordpress.com/2012/02/27/using-libguestfs-to-find-out-why-a-windo
 
 =head1 Встановлення пакунків із альтернативного сховища
 
-Починаючи з libguestfs 1.26, ви можете скористатися параметром I<--edit> L<virt-builder(1)>, L<virt-customize(1)> або L<virt-sysprep(1)>  для редагування метаданих сховища до встановлення пакунків.
+Починаючи з libguestfs 1.26, ви можете скористатися параметром I<--edit> L<virt-builder(1)>, L<virt-customize(1)> або L<virt-sysprep(1)> для редагування метаданих сховища до встановлення пакунків.
 
 Наприклад, вказана нижче команда встановить пакунки зі сховища updates-testing у Fedora:
 
@@ -616,5 +616,5 @@ Richard W.M. Jones (C<rjones at redhat dot com>)
 
 =head1 АВТОРСЬКІ ПРАВА
 
-Copyright (C) 2009-2020 Red Hat Inc.
+© Red Hat Inc., 2009–2020
 

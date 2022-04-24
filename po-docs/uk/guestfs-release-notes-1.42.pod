@@ -3,9 +3,9 @@
 
 guestfs-release-notes - нотатки щодо випусків libguestfs
 
-=head1 RELEASE NOTES FOR LIBGUESTFS 1.42
+=head1 НОТАТКИ ЩОДО ВИПУСКУ LIBGUESTFS 1.42
 
-Please note that virt-v2v, virt-p2v and the boot analysis tools were moved out of the libguestfs package / repository into separate projects.  See:
+Будь ласка, зауважте, що virt-v2v, virt-p2v та інструменти аналізу завантаження було пересунуто поза межі пакунка і сховища libguestfs до окремих проєктів. Див.:
 
 =over 4
 
@@ -23,75 +23,75 @@ L<https://github.com/libguestfs/libguestfs-analysis-tools>
 
 =back
 
-Those projects are now on a separate release cycle.  Release notes are published separately.
+У цих проєктів тепер окремий цикл випуску. Нотатки щодо їхніх випусків також оприлюднюються окремо.
 
 =head2 Нові можливості
 
-Add support for the Vala language (Corentin Noël).
+Додано підтримку мови Vala (Corentin Noël).
 
-Add support for the Rust language (Hiroyuki Katsura, sponsored by Google Summer of Code).
+Додано підтримку мови Rust (Hiroyuki Katsura, фінансова підтримка від Google Summer of Code).
 
-Reproducible builds (Chris Lamb).
+Відтворювальне збирання (Chris Lamb).
 
-Advanced Format disks (which use 4K sectors) can now be processed by libguestfs.  Use the new optional C<blocksize> parameter to C<guestfs_add_drive_opts>, and the I<--blocksize> option added to several tools (Nikolay Ivanets).
+Диски у форматі Advanced Format (де використовуються сектори у 4 кБ) у новій версії можуть оброблятися libguestfs. Скористайтеся новим необов'язковим параметром C<blocksize> C<guestfs_add_drive_opts>. Додано параметр I<--blocksize> для декількох інструментів (Nikolay Ivanets).
 
-Windows CompactOS (NTFS file compression) is now supported.
+У новій версії передбачено підтримку Windows CompactOS (стискання файлів у NTFS).
 
 =head3 Нові можливості у наявних інструментах
 
-Advanced machine readable output in various virt tools now supports JSON output, and writing logs to a numbered file descriptor (Pino Toscano).
+Розширене виведення для обробки комп'ютером у різних засобах віртуалізації у новій версії підтримує виведення даних у форматі JSON і запис журналів до нумерованого файлового дескриптора (Pino Toscano).
 
-virt-filesystems tool now more accurately reports filesystem total size, in the case where for example the filesystem does not occupy the whole of its containing device (Pino Toscano).
+Інструмент virt-filesystems у новій версії точніше повідомляє загальний розмір файлової системи у випадку, коли, наприклад, файлова система не займає увесь пристрій, на якому її розташовано (Pino Toscano).
 
 =head3 Прив’язки до мов програмування
 
-Python E<ge> 2.7 is required.
+Потрібен Python E<ge> 2.7.
 
-Python bindings are now more extensively tested (Hiroyuki Katsura).
+Розширено тестування прив'язок до Python (Hiroyuki Katsura).
 
-Python bindings should now work with Python E<ge> 3.8.
+Прив'язки Python нової версії мають працювати із Python E<ge> 3.8.
 
-Multiple fixes to avoid crashes in the Python bindings (Sam Eiderman).
+Декілька виправлень для уникнення аварійних завершень роботи у прив'язках до Python (Sam Eiderman).
 
-OCaml bindings are compiled with C<-DCAML_NAME_SPACE> to ensure no non-caml_-namespaced symbols are used (Pino Toscano).
+Прив'язки до OCaml зібрано із C<-DCAML_NAME_SPACE> для забезпечення виключення символів із простору назв non-caml_ (Pino Toscano).
 
-OCaml bindings should now work with OCaml 4.09 and 4.10.
+Прив'язки до OCaml нової версії мають працювати з OCaml 4.09 і 4.10.
 
-Erlang has deprecated the old C<erl_interface> library which we use for Erlang bindings.  It will be removed in OTP 22, which will permanently break Erlang support unless someone steps forward to update the Erlang bindings in libguestfs.
+У Erlang визнано застарілою стару бібліотеку C<erl_interface>, якою ми користувалися для прив'язок до Erlang. Бібліотеку буде вилучено у OTP 22, що остаточно зруйнує підтримку Erlang, якщо хтось не зголоситься оновити прив'язки до Erlang у libguestfs.
 
-Fix compatibility with newer cgo for Go bindings (Tomáš Golembiovský).
+Виправлено сумісність із новішою cgo для прив'язок до Go (Tomáš Golembiovský).
 
-Go API error handling is now more idiomatic (Csaba Henk).
+Посилено ідіоматичність обробки помилок програмного інтерфейсу Go (Csaba Henk).
 
-Update documentation about how to handle boolean parameters in Ruby bindings (Csaba Henk).
+Оновлено документацію щодо того, як обробляти булеві параметри у прив'язках до Ruby (Csaba Henk).
 
 =head3 Перевірка
 
-Libguestfs can now extract icons for Gentoo, newer SUSE and OpenMandriva guests.  Improved extraction of RHEL icons.  (Pino Toscano).
+Нова версія libguestfs здатна видобувати піктограми для гостьових систем Gentoo, нових систем SUSE і OpenMandriva. Удосконалено видобування піктограм RHEL. (Pino Toscano).
 
-Inspection returns the osinfo IDs of newer Windows versions, and rolling Linux distros (Pino Toscano).
+Інспектування повертає ідентифікатори osinfo нових версій Windows і дистрибутивів Linux із неперервним процесом розробки (Pino Toscano).
 
-OpenMandriva is now detected (Bernhard Rosenkränzer).
+Реалізовано виявлення OpenMandriva (Bernhard Rosenkränzer).
 
-Arch Linux detection improvements (Pino Toscano).
+Удосконалено виявлення Arch Linux (Pino Toscano).
 
 =head3 Архітектури і платформи
 
-Libguestfs can now be compiled on OpenMandriva (Bernhard Rosenkränzer).
+Нову версію libguestfs можна зібрати на OpenMandriva (Bernhard Rosenkränzer).
 
-Ubuntu fix for enabling network support (Ioanna Alifieraki).
+Виправлення для вмикання підтримки мережі в Ubuntu (Ioanna Alifieraki).
 
 =head3 Інше
 
-Use of deprecated libguestfs APIs will now cause compiler deprecation warnings by default, whereas previously you have to enable these warnings. To turn off these warnings use C<-DGUESTFS_NO_WARN_DEPRECATED=1>.  A new feature is that you can now disable deprecated APIs completely if you want, using C<-DGUESTFS_NO_DEPRECATED=1> (Pino Toscano).
+Використання застарілих програмних інтерфейсів libguestfs у новій версії типово спричинятиме попередження від компілятора. Раніше ж такі попередження слід було додатково вмикати. Щоб вимкнути попередження, скористайтеся параметром C<-DGUESTFS_NO_WARN_DEPRECATED=1>. Новою можливістю є повне вимикання застарілих інтерфейсів за допомогою параметра C<-DGUESTFS_NO_DEPRECATED=1> (Pino Toscano).
 
-Fix hostname in virt-builder templates (Pino Toscano).
+Виправлено назву основної системи у шаблонах virt-builder (Pino Toscano).
 
-The single large release notes file is now split into multiple documents organized by version.
+Один великий файл нотаток щодо випуску було поділено на декілька документів, які упорядковано за версіями.
 
-The C<--key> option of several tools was broken, especially if you tried to use the option to pass multiple keys.  This has been fixed and a regression test added.
+Роботу параметра C<--key> для деяких інструментів було поламано, особливо якщо ви намагалися скористатися параметром для передавання декількох ключів. Цю помилку виправлено і додано тестування регресій.
 
-Augeas exceptions occurring in daemon (eg. during inspection) will now produced detailed errors (Pino Toscano).
+Для виключень Augeas, які траплялися у фоновій службі (наприклад, під час інспектування) у новій версії передбачено докладні повідомлення про помилки (Pino Toscano).
 
 =head2 Безпека
 
@@ -101,41 +101,41 @@ Augeas exceptions occurring in daemon (eg. during inspection) will now produced 
 
 =head3 Нові програмні інтерфейси
 
-C<luks_uuid> returns the UUID of a LUKS device (Pino Toscano).
+C<luks_uuid> повертає UUID пристрою LUKS (Pino Toscano).
 
 =head3 Інші зміни у програмному інтерфейсі
 
-Cope with new output from the C<btrfs scrub> command.  There is no visible change at the API level.
+Реалізовано обробку нового виведення команди C<btrfs scrub>. Видимих змін на рівні програмного інтерфейсу немає.
 
-New optional parameter C<blocksize> added to C<guestfs_add_drive_opts> to support Advanced Format disks (Nikolay Ivanets).
+Додано новий необов'язкових параметр C<blocksize> до C<guestfs_add_drive_opts> для підтримки дисків у Advanced Format (Nikolay Ivanets).
 
 =head2 Зміни у збиранні
 
-Minimum version of Augeas required is 1.2.0 (Pino Toscano).
+Мінімальною версією Augeas є 1.2.0 (Pino Toscano).
 
-C<common/> subdirectory is now a git submodule shared with the virt-v2v project.
+Підкаталог C<common/> тепер є підмодулем git, який є спільним із проєктом virt-v2v.
 
-Supermin E<ge> 5.1.18 is required.
+Потрібен Supermin E<ge> 5.1.18.
 
-There were several bugs in libvirt 5.10.0 and 6.0 which affected libguestfs.  It is highly advisable to use libvirt 6.1 where these bugs are fixed (versions of libvirt E<lt> 5.10.0 are also fine).
+Було виявлено декілька вад у libvirt 5.10.0 і 6.0, які впливали на роботу libguestfs. Наполегливо рекомендуємо скористатися libvirt 6.1, де ці вади було виправлено (версії libvirt E<lt> 5.10.0 також працюють як слід).
 
-Many gnulib modules which we were not using or which we used in only a few places have been removed (Pino Toscano).
+Вилучено багато модулів gnulib, якими ми не користувалися або користувалися лише у декількох місцях (Pino Toscano).
 
-Multiple fixes for builddir != sourcedir builds (Pino Toscano).
+Декілька виправлень для збирання за умови builddir != sourcedir (Pino Toscano).
 
-A new C<bundled/> subdirectory contains one bundled library that we currently use, C<ocaml-augeas> (Pino Toscano).
+У новому підкаталозі C<bundled/> міститься пакет бібліотеки, якою ми користуємося, C<ocaml-augeas> (Pino Toscano).
 
-Fix compatibility issues when being compiled with GCC 10.
+Виправлено вади сумісності при збиранні за допомогою GCC 10.
 
 =head2 Внутрішня частина роботи програми
 
-When linking OCaml programs, automake silent rules and the C<V=1> flag are both now obeyed (Pino Toscano).
+При компонуванні програм на OCaml передбачено врахування типових правил automake та прапорця C<V=1> (Pino Toscano).
 
-The C<guestfs_device_index> API was reimplemented in library code instead of in the daemon.  There should be no observable effect of this change.
+Повторно реалізовано програмний інтерфейс C<guestfs_device_index> у коді бібліотеки замість фонової служби. Ця зміна не має призвести до якихось видимих для розробника наслідків.
 
-Since Linux 5.6 enumerates C</dev/sdX> devices in parallel, libguestfs was changed to map API device names to appliance device names, and then do the reverse mapping when returning names from the appliance.  Hopefully this should have no observable effect, but can produce somewhat confusing debugging messages since device names in the debug might not match device names passed in to APIs.  Furthermore the C<root=UUID=...> option is always passed to the appliance (instead of naming the device containing the root filesystem).
+Починаючи з версії 5.6 Linux нумерує пристрої C</dev/sdX> у паралельному режимі. До libguestfs було внесено зміни для прив'язки назв пристрої у програмному інтерфейсі до назв пристроїв у базовій системі і наступної зворотної прив'язки повернутих назв з базової системи. Сподіваємося, така прив'язка відбуватиметься прозоро, але вона може спричинити деякі діагностичні повідомлення, які вводять в оману, оскільки назви пристроїв у діагностичних повідомленнях не відповідатимуть назвам пристроїв, які передано крізь програмний інтерфейс. Крім того, базовій системі завжди передаватиметься параметр C<root=UUID=...> (замість іменування пристрою, який містить кореневу файлову систему).
 
-We expect to move from the Zanata service to the Weblate service for translated strings.  For more information see L<https://bugzilla.redhat.com/1787301>
+Ми сповідаємося перейти зі служби Zanata на Weblate для перекладу рядків. Докладніша документація: L<https://bugzilla.redhat.com/1787301>
 
 =head2 Виправлені вади
 
@@ -149,71 +149,71 @@ https_proxy= ./bugs-in-changelog.sh v1.40.0..
 
 =item L<https://bugzilla.redhat.com/1773520>
 
-Segfault in python bindings for guestfs_int_py_event_callback_wrapper
+Помилка адресування у прив'язках до python guestfs_int_py_event_callback_wrapper
 
 =item L<https://bugzilla.redhat.com/1746699>
 
-Can't import guest from export domain to data domain on rhv4.3 due to error "Invalid parameter: 'DiskType=1'"
+Неможливо імпортувати гостьову систему з експортованого домену до домену даних на rhv4.3 через помилку «Invalid parameter: 'DiskType=1'»
 
 =item L<https://bugzilla.redhat.com/1733168>
 
-virt-v2v: Use scp -T in -i vmx -it ssh mode
+virt-v2v: використання scp -T у режимі -i vmx -it ssh
 
 =item L<https://bugzilla.redhat.com/1723305>
 
-Delete info"export PATH=/path/to/nbdkit-1.1.x:$PATH" in virt-v2v-input-vmware manual page
+Вилучено дані щодо «export PATH=/шлях/до/nbdkit-1.1.x:$PATH» зі сторінки підручника virt-v2v-input-vmware
 
 =item L<https://bugzilla.redhat.com/1705482>
 
-python 3.8 requires using -embed variant of pkgconf file, causing libguestfs to fail to build Python 3.8 bindings
+python 3.8 потребує використання варіанта -embed файла pkgconf, що спричиняє неможливість збирання прив'язок до Python libguestfs у Python 3.8
 
 =item L<https://bugzilla.redhat.com/1703463>
 
-libguestfs cannot inspect disks using WIndows 10 NTFS compression, error "unsupported reparse point"
+libguestfs не може інспектувати диски, де використовується стискання NTFS Windows 10 — помилка «unsupported reparse point»
 
 =item L<https://bugzilla.redhat.com/1694268>
 
-[PATCH] Add OpenMandriva support
+[PATCH] Додавання підтримки OpenMandriva
 
 =item L<https://bugzilla.redhat.com/1691659>
 
-virt-v2v should show a message when qemu-guest-agent is installed in guest successfully during conversion
+virt-v2v має показувати повідомлення, якщо у гостьовій системі успішно встановлено qemu-guest-agent під час перетворення
 
 =item L<https://bugzilla.redhat.com/1690574>
 
-virt-v2v fails to import a guest while cannot find `file_architecture` for a file
+virt-v2v не може імпортувати гостьову систему, оскільки не може знайти `file_architecture` для файла
 
 =item L<https://bugzilla.redhat.com/1680361>
 
-[v2v][RHV][Scale] v2v Migration to RHV failed on timed out waiting for transfer to finalize
+[v2v][RHV][Scale] v2v Перенесення на RHV завершувалося помилкою щодо перевищення часу очікування при очікуванні завершення передавання даних
 
 =item L<https://bugzilla.redhat.com/1661871>
 
-python bindings wrongly using str for APIs with RBufferOut/FBuffer on Python 3
+У прив'язках до python помилково використовується str для програмних інтерфейсів із RBufferOut/FBuffer на Python 3
 
 =item L<https://bugzilla.redhat.com/1626503>
 
-Unable to maintain static IP address configuration post VM migration
+Неможливо використовувати конфігурацію із статичною IP-адресою після перенесення віртуальної машини
 
 =item L<https://bugzilla.redhat.com/1612653>
 
-Guest has no disk after rhv-upload converting if target data domain has similar name with other data domain on rhv4.2
+Гостьова система не має дисків після перетворення rhv-upload, якщо домен даних призначення має подібну назву із іншим доменом даних у rhv4.2
 
 =item L<https://bugzilla.redhat.com/1605242>
 
-Update nbdkit info for vddk in v2v man page
+Оновлено відомості щодо nbdkit для vddk на сторінці підручника щодо v2v
 
 =item L<https://bugzilla.redhat.com/1584678>
 
-On W2K12r2 rhev-apt does not run non-interactively, causing race when starting rhev-apt service from the command line
+На W2K12r2 rhev-apt не запускається у неінтерактивному режимі, що спричиняє конкуренцію при запуску служби rhev-apt з командного рядка
 
 =item L<https://bugzilla.redhat.com/1518539>
 
-Macvtap network will be lost during v2v conversion
+Мережу Macvtap буде втрачено під час перетворення v2v
 
 =item L<https://bugzilla.redhat.com/1351000>
 
-virt-customize --commands-from-file will fail if there is an extra blank in the file
+Виконання virt-customize --commands-from-file завершиться помилкою, якщо у файлі буде виявлено зайву прогалину
 
 =back
 
@@ -247,5 +247,5 @@ Pino Toscano
 
 =head1 АВТОРСЬКІ ПРАВА
 
-Copyright (C) 2009-2020 Red Hat Inc.
+© Red Hat Inc., 2009–2020
 

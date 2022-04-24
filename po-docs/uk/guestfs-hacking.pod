@@ -23,7 +23,7 @@ Large amounts of boilerplate code in libguestfs (RPC, bindings, documentation) a
 
 =head2 ПІДКАТАЛОГИ ПОЧАТКОВОГО КОДУ
 
-There are a lot of subdirectories in the source tree! Which ones should you concentrate on first? F<lib> and F<daemon> which contain the source code of the core library.  F<generator> is the code generator described above, so that is important.  The F<Makefile.am> in the root directory will tell you in which order the subdirectories get built.  And then if you are looking at a particular tool (eg. F<customize>) or language binding (eg. F<python>), go straight to that subdirectory, but remember that if you didn't run the generator yet, then you may find files which appear to be missing.
+У ієрархії початкового коду багато підкаталогів! На яких слід зосередити увагу передусім? На каталогах F<lib> та F<daemon>, у яких міститься початковий код основи бібліотеки. F<generator> містить код генератора, описаного вище, тому цей підкаталог також є важливим. Файл F<Makefile.am> у кореневому каталозі містить цінні дані щодо порядку збирання коду у підкаталогах. І нарешті, якщо ви шукаєте код певного інструмента (наприклад F<customize>) або прив'язки до мови (наприклад F<python>), зверніться безпосередньо до відповідного підкаталогу, але пам'ятайте, що якщо ще не було запущено генератор, вам може здатися, що у початковому коді не вистачає багатьох файлів.
 
 =over 4
 
@@ -49,7 +49,7 @@ There are a lot of subdirectories in the source tree! Which ones should you conc
 
 =item F<bundled>
 
-Embedded copies of other libraries, mostly for convenience (and the embedded library is not widespread enough).
+Вбудовані копії інших бібліотек, здебільшого для зручності (і випадків, коли вбудована бібліотека не є достатньо поширеною).
 
 =over 4
 
@@ -79,7 +79,7 @@ Embedded copies of other libraries, mostly for convenience (and the embedded lib
 
 =item F<common/mlcustomize>
 
-Library code associated with C<virt-customize> but also used in other tools.
+Код бібліотек, пов'язаних із C<virt-customize>, але використовується і в інших інструментах.
 
 =item F<common/mlgettext>
 
@@ -99,7 +99,7 @@ Library code associated with C<virt-customize> but also used in other tools.
 
 =item F<common/mltools>
 
-OCaml utility functions only used by the OCaml virt tools (like C<virt-sysprep>, C<virt-customize> etc.)
+Допоміжні функції OCaml, які використовуються лише інструментами віртуалізації мовою OCaml (зокрема C<virt-sysprep>, C<virt-customize> тощо)
 
 =item F<common/mlutils>
 
@@ -277,7 +277,7 @@ L<virt-inspector(1)> — засіб інспектування образів в
 
 =item F<v2v>
 
-Up to libguestfs E<gt> 1.42 this contained the L<virt-v2v(1)> tool, but this has now moved into a separate repository: L<https://github.com/libguestfs/virt-v2v>
+Аж до libguestfs E<gt> 1.42 тут містився код інструмента L<virt-v2v(1)>, але цей код тепер переміщено до окремого сховища: L<https://github.com/libguestfs/virt-v2v>
 
 =item F<website>
 
@@ -734,7 +734,7 @@ I<Зауваження:> I<не> використовуйте ці замінн�
  virt_customize_LINK = \
      $(top_builddir)/ocaml-link.sh -cclib '-lutils' -- ...
 
-The actual rules, which you can examine in F<customize/Makefile.am>, are a little bit more complicated than this because they have to handle:
+Справжні правила, із якими ви можете ознайомитися у файлі F<customize/Makefile.am> є дещо складнішими за ці, оскільки у них ще треба обробити:
 
 =over 4
 
@@ -878,5 +878,5 @@ Richard W.M. Jones (C<rjones at redhat dot com>)
 
 =head1 АВТОРСЬКІ ПРАВА
 
-Copyright (C) 2009-2020 Red Hat Inc.
+© Red Hat Inc., 2009–2020
 
