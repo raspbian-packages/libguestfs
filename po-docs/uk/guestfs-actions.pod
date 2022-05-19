@@ -295,7 +295,7 @@ F<filename> може бути спеціальним рядком C<"/dev/null">
 
 =item C<name>
 
-Назва, яку диск має у початковій гостьовій системі, наприклад, F</dev/sdb>. Використовується як підказка для процесу інспектування гостьової системи, якщо така назва наявна.
+This field used to be passed as a hint for guest inspection, but it is no longer used.
 
 =item C<label>
 

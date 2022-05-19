@@ -660,9 +660,8 @@ public class GuestFS {
    * call (q.v.)
    * </p><p>
    * "name"
-   * The name the drive had in the original guest, e.g.
-   * /dev/sdb. This is used as a hint to the guest
-   * inspection process if it is available.
+   * This field used to be passed as a hint for guest
+   * inspection, but it is no longer used.
    * </p><p>
    * "label"
    * Give the disk a label. The label should be a unique,

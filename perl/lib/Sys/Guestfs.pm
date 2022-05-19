@@ -518,9 +518,8 @@ deprecated C<$g-E<gt>add_drive_with_if> call (q.v.)
 
 =item C<name>
 
-The name the drive had in the original guest, e.g. F</dev/sdb>.
-This is used as a hint to the guest inspection process if
-it is available.
+This field used to be passed as a hint for guest inspection, but
+it is no longer used.
 
 =item C<label>
 
