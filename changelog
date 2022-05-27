@@ -1,0 +1,2179 @@
+libguestfs (1:1.48.3-1) unstable; urgency=medium
+
+  * New upstream version 1.48.3
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 27 May 2022 13:48:39 +0200
+
+libguestfs (1:1.48.2-1) unstable; urgency=medium
+
+  * New upstream version 1.48.2
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 16 May 2022 15:15:28 +0200
+
+libguestfs (1:1.48.1-1) unstable; urgency=medium
+
+  * New upstream version 1.48.1
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 15 Apr 2022 23:41:51 +0200
+
+libguestfs (1:1.48.0-4) unstable; urgency=medium
+
+  * autopkgtest: Fix QEMU_FLAVOR (dumb mistake)
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 21 Mar 2022 15:53:46 +0100
+
+libguestfs (1:1.48.0-3) unstable; urgency=medium
+
+  * autokpkgtest: Cleanup, add i386 support
+  * Add libguestfs-test-tool-based autopkgtest
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 19 Mar 2022 23:00:15 +0100
+
+libguestfs (1:1.48.0-2) unstable; urgency=medium
+
+  * Add needs-root to autopkgtetst restrictions
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 18 Mar 2022 15:26:57 +0100
+
+libguestfs (1:1.48.0-1) unstable; urgency=medium
+
+  * New upstream version 1.48.0
+  * Rebase patches
+  * autopkgtest: use stable image, make VM bootable, limit test to amd64
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 18 Mar 2022 01:25:59 +0100
+
+libguestfs (1:1.46.2-11) unstable; urgency=medium
+
+  * audopkgtest: add yet another missing dependency
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 28 Jan 2022 16:05:15 +0100
+
+libguestfs (1:1.46.2-10) unstable; urgency=medium
+
+  * audopkgtest: add yet another missing dependency
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 27 Jan 2022 00:16:49 +0100
+
+libguestfs (1:1.46.2-9) unstable; urgency=medium
+
+  * audopkgtest: add missing dependency
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 26 Jan 2022 13:26:04 +0100
+
+libguestfs (1:1.46.2-8) unstable; urgency=medium
+
+  * autopkgtest: remove --mode=root
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 26 Jan 2022 00:02:23 +0100
+
+libguestfs (1:1.46.2-7) unstable; urgency=medium
+
+  * Use correct version in removing conffiles (Closes: #1004076, again)
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 23 Jan 2022 16:47:27 +0100
+
+libguestfs (1:1.46.2-6) unstable; urgency=medium
+
+  [ Hilko Bengen ]
+  * Fix typo (Closes: #1004127)
+  * Remove virt-builder conffiles (Closes: #1004076)
+  * Fix quickcheck architecture check
+
+  [ Johannes 'josch' Schauer ]
+  * Add autopkgtest (Closes: #944729)
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 23 Jan 2022 01:48:11 +0100
+
+libguestfs (1:1.46.2-5) unstable; urgency=medium
+
+  * Edit patch: Don't pass -cpu argument to qemu on mips*
+  * Run make quickcheck on more architectures
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 23 Jan 2022 00:50:43 +0100
+
+libguestfs (1:1.46.2-4) unstable; urgency=medium
+
+  * Bump Standards-Version, DH compat level, don't require root for build
+  * Remove grub-pc build-dependency (=libguestfs0 runtime dependency)
+    Closes: #1002893
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 01 Jan 2022 18:32:00 +0100
+
+libguestfs (1:1.46.2-3) unstable; urgency=medium
+
+  * Add: grub-pc build-dependency
+  * Add patch to set CPU type on riscv64
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 30 Dec 2021 21:07:04 +0100
+
+libguestfs (1:1.46.2-2) unstable; urgency=medium
+
+  * Switch to exfatprogs (Closes: #992286)
+  * Update build dependencies for appliance
+  * Rework patches
+  * Determine Python3 versions using py3versions --supported (Lintian)
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 27 Dec 2021 01:55:09 +0100
+
+libguestfs (1:1.46.2-1) unstable; urgency=medium
+
+  * New upstream version 1.46.2
+  * Some virt-* programs are now part of guestfs-tools (different soruce
+    package)
+  * Update patches
+  * Update build-dependencies, replace genisoimage with xorriso
+    (Closes: #982234)
+  * Put guestfish, guestmount into separate packages again
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 25 Dec 2021 02:17:59 +0100
+
+libguestfs (1:1.44.2-1.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * debian/rules: use the appropriate way to get the Ruby versions to build
+    for (Closes: #998636)
+
+ -- Antonio Terceiro <terceiro@debian.org>  Sat, 04 Dec 2021 12:11:35 -0300
+
+libguestfs (1:1.44.2-1) unstable; urgency=medium
+
+  * New upstream version 1.44.2
+  * Use PCRE2 instead of PCRE
+  * Update patches, drop number prefixes
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 25 Sep 2021 17:51:52 +0200
+
+libguestfs (1:1.44.1-5) unstable; urgency=medium
+
+  * Attempt to fix running tests
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 20 Sep 2021 22:58:15 +0200
+
+libguestfs (1:1.44.1-4) unstable; urgency=medium
+
+  * Add upstream patch to fix FTBFS with Go 1.16 (Closes: #993833)
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 07 Sep 2021 13:11:19 +0200
+
+libguestfs (1:1.44.1-3) unstable; urgency=medium
+
+  * Add upstream patch to define board model for RISC-V
+  * Force use of QEMU TCG for tests in build environments where kvm is
+    not available
+  * Try running checks (make quickcheck) on arm64, riscv64
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 02 Sep 2021 23:43:11 +0200
+
+libguestfs (1:1.44.1-2) unstable; urgency=medium
+
+  * When building on/for Ubuntu, add code to call dpkg-statoverride to
+    lift restrictive permissions on kernel images
+  * Add patch to fix build in usr-merged environments
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 31 Aug 2021 17:02:19 +0200
+
+libguestfs (1:1.44.1-1) unstable; urgency=medium
+
+  * New upstream version 1.44.1
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 04 Apr 2021 17:06:49 +0200
+
+libguestfs (1:1.44.0-2) unstable; urgency=medium
+
+  * Replace bsdmainutils dependency (Closes: #964531, 964533)
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 01 Feb 2021 21:19:33 +0100
+
+libguestfs (1:1.44.0-1) unstable; urgency=medium
+
+  * New upstream version 1.44.0
+  * Rebase patches, drop patch integrated upstream
+  * Add Lintian overrides for source; simplify
+  * Update symbols file
+  * Remove compiled message catalogs so they are rebuilt and installed
+    from build directory
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 10 Jan 2021 13:25:43 +0100
+
+libguestfs (1:1.42.0-11) unstable; urgency=medium
+
+  * Fix syntax error in debian/rules
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 17 Oct 2020 20:47:38 +0200
+
+libguestfs (1:1.42.0-10) unstable; urgency=medium
+
+  * Build daemon, appliance only in last build
+  * Add patch to generate library list for appliance (Closes: #972241)
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 17 Oct 2020 17:43:17 +0200
+
+libguestfs (1:1.42.0-9) unstable; urgency=medium
+
+  * Drop sgabios dependency (Closes: #966596)
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 27 Sep 2020 13:56:59 +0200
+
+libguestfs (1:1.42.0-8) unstable; urgency=medium
+
+  * Drop 'false' that slipped into debian/rules
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 30 Aug 2020 23:34:05 +0200
+
+libguestfs (1:1.42.0-7) unstable; urgency=medium
+
+  * Don't dwz anything (Closes: #967099)
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 30 Aug 2020 22:46:12 +0200
+
+libguestfs (1:1.42.0-6) unstable; urgency=medium
+
+  * Provide qemu on riscv64
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 27 Jun 2020 02:41:59 +0200
+
+libguestfs (1:1.42.0-5) unstable; urgency=medium
+
+  * Another attempt at ignoring erlang-guestfs.3 (Closes: #961844)
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 30 May 2020 23:42:24 +0200
+
+libguestfs (1:1.42.0-4) unstable; urgency=medium
+
+  * dh_install: Ignore guestfs-erlang manpage, for real (Closes: #961844)
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 30 May 2020 15:15:25 +0200
+
+libguestfs (1:1.42.0-3) unstable; urgency=medium
+
+  * dh_install: Ignore guestfs-erlang manpage
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 30 May 2020 13:55:54 +0200
+
+libguestfs (1:1.42.0-2) unstable; urgency=medium
+
+  * Drop erlang-guestfs package (Closes: #961653)
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 29 May 2020 00:35:38 +0200
+
+libguestfs (1:1.42.0-1) unstable; urgency=medium
+
+  * New upstream version 1.42.0
+  * Clarify previous changelog entry
+  * Update symbols
+  * Update build dependencies for appliance, add check script
+  * Remove virt-p2v which has been split into a separate package
+  * Update patches
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 04 May 2020 22:15:03 +0200
+
+libguestfs (1:1.40.2-7) unstable; urgency=medium
+
+  * Add missing build-dependencies (and also install dependencies, by
+    means of build-time magic) required for building the Supermin
+    appliance (Closes: #949701)
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 23 Jan 2020 15:10:24 +0100
+
+libguestfs (1:1.40.2-6) unstable; urgency=medium
+
+  * Add buildsystem patch to avoid OCaml-related FTBFS
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 13 Jan 2020 21:02:32 +0100
+
+libguestfs (1:1.40.2-5) unstable; urgency=medium
+
+  * Add missing slash to debian/clean
+  * Add missing Breaks/Replaces for python3-guestfs (Closes: #947373)
+  * Add/bump build dependencies for virt-v2v
+  * Patch build system to ensure that Python 3.8+ modules are built (Closes: #948017)
+  * Attempt to fix FTBFS issues by updating handling of autogenerated OCaml config files
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 11 Jan 2020 01:13:06 +0100
+
+libguestfs (1:1.40.2-4) unstable; urgency=medium
+
+  * Use designated directory for Go build cache
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 23 Dec 2019 22:24:17 +0100
+
+libguestfs (1:1.40.2-3) unstable; urgency=medium
+
+  * Remove Python 2 bindings (Closes: 936872)
+  * Modify build to autogenerate config.ml files (Closes: #946594)
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 23 Dec 2019 13:00:28 +0100
+
+libguestfs (1:1.40.2-2) unstable; urgency=medium
+
+  * Adjust cryptsetup dependencies (Closes: #906234)
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 21 Apr 2019 22:17:19 +0200
+
+libguestfs (1:1.40.2-1) unstable; urgency=medium
+
+  * New upstream version 1.40.2
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 10 Feb 2019 22:09:07 +0100
+
+libguestfs (1:1.40.1-1) unstable; urgency=medium
+
+  * New upstream version 1.40.1
+  * Update patches
+  * Bump Debhelper compat level
+  * Bump Standards-Version
+  * Update .install
+  * Update .symbols
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 22 Jan 2019 12:20:24 +0100
+
+libguestfs (1:1.38.6-2) unstable; urgency=medium
+
+  [ Simon McVittie ]
+  * Don't build-depend on gjs on s390x or when not running tests
+    (Closes: #910287)
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 14 Oct 2018 22:50:00 +0200
+
+libguestfs (1:1.38.6-1) unstable; urgency=medium
+
+  * New upstream version 1.38.6
+  * Bump Standards-Version
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 23 Sep 2018 01:18:30 +0200
+
+libguestfs (1:1.38.4-1) unstable; urgency=medium
+
+  * New upstream version 1.38.4
+  * Bump Standards-Version
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 11 Aug 2018 16:20:40 +0200
+
+libguestfs (1:1.38.3-1) unstable; urgency=medium
+
+  * New upstream version 1.38.3
+  * Drop OpenJDK patch that has been integrated upstream
+  * Bump Standards-Version
+  * Add patch to fix perl shebang path in scripts
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 28 Jul 2018 19:00:34 +0200
+
+libguestfs (1:1.38.1-1) unstable; urgency=medium
+
+  * New upstream version 1.38.1
+  * Rebase patches
+  * Add patch to handle OpenJDK 10 (Closes: #897476)
+  * Bump Standards-Version
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 06 May 2018 14:35:30 +0200
+
+libguestfs (1:1.38.0-4) unstable; urgency=medium
+
+  * Add build dependencies: ounit, ocaml-libvirt
+  * Improve out-of-tree patches for Perl, PHP, OCaml
+  * Disable building v2v test harness
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 11 Apr 2018 09:53:14 +0200
+
+libguestfs (1:1.38.0-3) unstable; urgency=medium
+
+  * Specify default guestfs path (LIBGUESTFS_PATH) at build time
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 10 Apr 2018 09:45:34 +0200
+
+libguestfs (1:1.38.0-2) unstable; urgency=medium
+
+  * Attempt to fix armel, mips* FTBFS
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 09 Apr 2018 23:28:22 +0200
+
+libguestfs (1:1.38.0-1) unstable; urgency=medium
+
+  * New upstream version 1.38.0
+  * Add architectures for golang-go, zfs-fuse build-dependencies
+  * Update Vcs-* fields for salsa.debian.org
+  * Add build dependencies: yara, hivex-ocaml
+  * Update .symbols
+  * Rebase patches, add patches to fix out-of-tree builds
+  * Remove kernel package build dependency all architectures other than
+    i386, amd64 (Closes: #894742)
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 09 Apr 2018 12:21:32 +0200
+
+libguestfs (1:1.36.13-2) unstable; urgency=medium
+
+  * Add upstream patch adding dash to the supermin appliance (Closes: #889861)
+  * Add explanation for linux-image-* build-dependency (Closes: #819308)
+  * Remove unneeded dh --parallel argument
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 19 Feb 2018 18:16:29 +0100
+
+libguestfs (1:1.36.13-1) unstable; urgency=medium
+
+  * New upstream version 1.36.13
+  * Drop QEMU locking patch; a similar patch has been integrated upstream
+  * Add guestfs-gobject manpage
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 19 Feb 2018 18:11:23 +0100
+
+libguestfs (1:1.36.11-3) unstable; urgency=medium
+
+  * Add patch to omit passing locking parameters for non-file disks
+  * Bump Standards-Version
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 23 Jan 2018 09:36:18 +0100
+
+libguestfs (1:1.36.11-2) unstable; urgency=medium
+
+  * e2fsprogs: Add to Build-Depends, don't filter from appliance
+    dependencies (Closes: Closes: #887171, #887203, #887215, #887217,
+    #887220, #887219, #887244, #887259, #887268, #887269, #887271,
+    #887279, #887288, #887289, #887291, #887296, #887280, #887302)
+  * Catch errors in any of the "make install" runs
+  * Fix install target for php extension
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 15 Jan 2018 14:04:59 +0100
+
+libguestfs (1:1.36.11-1) unstable; urgency=medium
+
+  * New upstream version 1.36.11
+  * Bump Standards-Version
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 10 Dec 2017 01:44:17 +0100
+
+libguestfs (1:1.36.10-1) unstable; urgency=medium
+
+  * New upstream version 1.36.10
+  * Change Priority to optional
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 20 Oct 2017 21:08:12 +0200
+
+libguestfs (1:1.36.7-2) unstable; urgency=medium
+
+  [ Nicholas D Steeves ]
+  * Change Build-Depends: btrfs-tools to btrfs-progs (Closes: #878916)
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 17 Oct 2017 21:13:22 +0200
+
+libguestfs (1:1.36.7-1) unstable; urgency=medium
+
+  * New upstream version 1.36.7
+  * Drop buildsystem patches that have been integrated upstream
+  * Bump Standards-Version
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 04 Oct 2017 20:49:02 +0200
+
+libguestfs (1:1.36.6-4) unstable; urgency=medium
+
+  * Fix --disable-ocaml related FTBFS found on ppc64el autobuilder
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 26 Sep 2017 17:56:07 +0200
+
+libguestfs (1:1.36.6-3) unstable; urgency=medium
+
+  * Add patch to fix FTBFS because builddir != srcdir
+  * Remove gtk-doc from .install file
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 25 Sep 2017 21:08:04 +0200
+
+libguestfs (1:1.36.6-2) unstable; urgency=medium
+
+  * Fix rules syntax error
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 25 Sep 2017 19:54:47 +0200
+
+libguestfs (1:1.36.6-1) unstable; urgency=medium
+
+  * New upstream version 1.36.6
+  * Add more test blobs to source lintian overrides ("source-is-missing")
+  * Add QEMU options for powerpcspe
+  * Remove building gtk documentation becasue gtkdoc-mktmpl has
+    disappeared with gtk-doc-tools 1.26
+  * Rebase patches
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 25 Sep 2017 15:41:56 +0200
+
+libguestfs (1:1.36.5-1) unstable; urgency=medium
+
+  * New upstream version 1.36.5
+  * Rework debian/rules to reduce number of configure/make/install
+    cycles, drop -dbg package
+  * Rebase patches
+  * Update .symbols
+  * Update Build-Dependencies
+  * Add missing dependency to libguestfs-gobject-dev
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 07 Sep 2017 12:34:03 +0200
+
+libguestfs (1:1.34.6-7) unstable; urgency=medium
+
+  * Add missing build-dependencies
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 04 Sep 2017 22:07:15 +0200
+
+libguestfs (1:1.34.6-6) unstable; urgency=medium
+
+  * Fix qemu binary to be used on sparc64
+  * Really bump DH compat level
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 04 Sep 2017 14:36:15 +0200
+
+libguestfs (1:1.34.6-5) unstable; urgency=medium
+
+  * Adjust dependencies because *fdisk will be split out of util-linux
+    into its own package (Closes: #872101)
+  * Bump Debhelper compat level, Standards-Version
+  * Adjust Vcs-* headers
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 14 Aug 2017 22:32:14 +0200
+
+libguestfs (1:1.34.6-4) unstable; urgency=medium
+
+  * Fix i386 kernel build dependency (Closes: #869504)
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 24 Jul 2017 01:13:17 +0200
+
+libguestfs (1:1.34.6-3) unstable; urgency=medium
+
+  * Fix systemd/sysvinit dependency (Closes: #865398)
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 20 Jul 2017 23:39:36 +0200
+
+libguestfs (1:1.34.6-2) unstable; urgency=medium
+
+  * Re-enable building on mips. Thanks to Aurelien Jarno for pointing out
+    that #815409 was a kernel bug rather than a bug in qemu. (Closes:
+    #816610)
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 20 Apr 2017 23:08:05 +0200
+
+libguestfs (1:1.34.6-1) unstable; urgency=medium
+
+  * New upstream version
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 09 Mar 2017 10:14:14 +0100
+
+libguestfs (1:1.34.4-1) unstable; urgency=medium
+
+  * New upstream version
+  * Update patches; drop two patches integrated upstream
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 31 Jan 2017 23:53:16 +0100
+
+libguestfs (1:1.34.3-7) unstable; urgency=medium
+
+  * Introduce alternative kernel build-dependency (Closes: #851969)
+  * Add dh-python build-dependency
+  * Bump Standards-Version
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 22 Jan 2017 15:43:37 +0100
+
+libguestfs (1:1.34.3-6) unstable; urgency=medium
+
+  * Add mips64el architecture
+  * Add some dependencies to libguestfs0 (Closes: #849597)
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 08 Jan 2017 14:42:29 +0100
+
+libguestfs (1:1.34.3-5) unstable; urgency=medium
+
+  * Add db-util build dependency so applications on  rpm-based guests can be inspected
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 10 Nov 2016 12:13:56 +0100
+
+libguestfs (1:1.34.3-4) unstable; urgency=medium
+
+  * Unset XDG_RUNTIME_DIR when running make quickcheck
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 30 Oct 2016 12:11:37 +0100
+
+libguestfs (1:1.34.3-3) unstable; urgency=medium
+
+  * Print environment before running quickcheck
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 30 Oct 2016 10:06:28 +0100
+
+libguestfs (1:1.34.3-2) unstable; urgency=medium
+
+  * Explicitly set TMPDIR for make quickcheck
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 29 Oct 2016 23:50:53 +0200
+
+libguestfs (1:1.34.3-1) unstable; urgency=medium
+
+  * New upstream version
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 29 Oct 2016 20:41:07 +0200
+
+libguestfs (1:1.34.2-2) unstable; urgency=medium
+
+  * Add patch for quoting variables in run.in
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 27 Oct 2016 19:10:21 +0200
+
+libguestfs (1:1.34.2-1) unstable; urgency=medium
+
+  * New upstream version
+  * Add bash completion for guestunmount
+  * Rebase patches; add patches for documentation build failures
+  * Add build-dependencies for Sleuthkit support
+  * Update symbols file
+  * Add sgabios dependency for x86 architectures
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 26 Oct 2016 11:47:16 +0200
+
+libguestfs (1:1.32.7-1) unstable; urgency=medium
+
+  * New upstream version
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 10 Aug 2016 08:22:22 +0200
+
+libguestfs (1:1.32.6-1) unstable; urgency=medium
+
+  * New upstream version
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 13 Jul 2016 18:57:51 +0200
+
+libguestfs (1:1.32.5-1) unstable; urgency=medium
+
+  * New upstream version
+  * Drop PHP7 compatibility patch that has been integrated upstream
+  * Add version-specific GOROOT exclude rule
+  
+ -- Hilko Bengen <bengen@debian.org>  Wed, 13 Jul 2016 18:56:44 +0200
+
+libguestfs (1:1.32.4-2) unstable; urgency=medium
+
+  * Depend on systemtap on all architectures
+  * Correct, improve comments about build in debian/rules
+  * Run generator for source dir before building
+  * Add php-guestfs package (Closes: #823919)
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 14 May 2016 18:32:35 +0200
+
+libguestfs (1:1.32.4-1) unstable; urgency=medium
+
+  * Attempt building on ppc64 (without -el)
+  * Drop mips from build architectures; qemu is broken (see #815409)
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 10 Apr 2016 23:42:58 +0200
+
+libguestfs (1:1.32.2-4) unstable; urgency=medium
+
+  * Call "rubyX.Y -S rake" instead of rakeX.Y which is missing in ruby2.3
+    (Closes: #815764)
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 24 Feb 2016 23:32:35 +0100
+
+libguestfs (1:1.32.2-3) unstable; urgency=medium
+
+  * Add patch to fix Lintian error "gzip-file-is-not-multi-arch-same-safe"
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 09 Feb 2016 23:25:04 +0100
+
+libguestfs (1:1.32.2-2) unstable; urgency=medium
+
+  * Work around cryptsetup's missing busybox dependency
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 02 Feb 2016 00:27:09 +0100
+
+libguestfs (1:1.32.2-1) unstable; urgency=medium
+
+  * New upstream version
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 30 Jan 2016 13:37:22 +0100
+
+libguestfs (1:1.32.1-1) unstable; urgency=medium
+
+  * New upstream version
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 18 Jan 2016 08:50:15 +0100
+
+libguestfs (1:1.32.0-2) unstable; urgency=medium
+
+  * Add missing build-dependency for Perl bindings
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 10 Jan 2016 13:22:58 +0100
+
+libguestfs (1:1.32.0-1) unstable; urgency=medium
+
+  * New upstream version
+  * Adapt patch for building Perl bindings in separate build directory
+  * Update symbols file
+  * Adjust architecture list for some dependencies (Closes: #799965)
+  * Add lintian overrides for several test files
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 10 Jan 2016 03:18:00 +0100
+
+libguestfs (1:1.30.6-1) unstable; urgency=medium
+
+  * New upstream version
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 17 Dec 2015 00:02:45 +0100
+
+libguestfs (1:1.30.4-1) unstable; urgency=medium
+
+  * New upstream version
+  * Point debian/watch to stable branch
+  * Merge control, symbols from 1.28 series
+  * Rebase patches
+  * Remove direct multiarch-support pre-dependency
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 08 Dec 2015 13:33:23 +0100
+
+libguestfs (1:1.29.50-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 21 Jul 2015 15:48:05 +0200
+
+libguestfs (1:1.29.47-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Added linux-image-586 to Build-Dependencies as linux-image-486 has
+    been removed from unstable
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 18 Jun 2015 23:07:32 +0200
+
+libguestfs (1:1.29.46-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 08 Jun 2015 07:25:02 +0200
+
+libguestfs (1:1.29.44-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Added Depends/Recommends (curl, gnupg) for virt-builder
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 03 Jun 2015 20:03:18 +0200
+
+libguestfs (1:1.29.43-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 16 May 2015 13:20:32 +0200
+
+libguestfs (1:1.29.42-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 15 May 2015 08:15:25 +0200
+
+libguestfs (1:1.29.40-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 07 May 2015 08:38:14 +0200
+
+libguestfs (1:1.29.39-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Fixed substvars generation script to insert extra newline
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 03 May 2015 22:40:25 +0200
+
+libguestfs (1:1.29.38-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 28 Apr 2015 21:54:16 +0200
+
+libguestfs (1:1.29.37-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 25 Apr 2015 00:31:16 +0200
+
+libguestfs (1:1.29.36-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 16 Apr 2015 22:14:07 +0200
+
+libguestfs (1:1.29.34-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 12 Apr 2015 11:34:21 +0200
+
+libguestfs (1:1.29.33-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Updated Vcs-* fields
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 02 Apr 2015 18:45:52 +0200
+
+libguestfs (1:1.29.32-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Added mips64, mips64el
+  * Updated symbols file
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 28 Mar 2015 15:11:29 +0100
+
+libguestfs (1:1.29.30-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 12 Mar 2015 00:58:17 +0100
+
+libguestfs (1:1.29.29-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Updated symbols file
+  * Rebased patch queue
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 07 Mar 2015 20:42:08 +0100
+
+libguestfs (1:1.29.26-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Added patch to build appliance tarballs using reproducible timestamp
+  * Updated symbols file
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 28 Feb 2015 12:50:14 +0100
+
+libguestfs (1:1.29.25-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Updated symbols file
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 12 Feb 2015 17:16:48 +0100
+
+libguestfs (1:1.29.24-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Updated symbols file
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 05 Feb 2015 13:18:15 +0100
+
+libguestfs (1:1.29.23-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 28 Jan 2015 01:26:55 +0100
+
+libguestfs (1:1.29.22-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Added libncursesw5-dev to build dependencies
+  * Updated symbols file
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 23 Jan 2015 13:25:18 +0100
+
+libguestfs (1:1.29.14-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Updated symbols file
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 12 Dec 2014 09:35:44 +0100
+
+libguestfs (1:1.29.13-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 05 Dec 2014 20:15:22 +0100
+
+libguestfs (1:1.29.12-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 29 Nov 2014 12:21:54 +0100
+
+libguestfs (1:1.29.11-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Updated symbols file
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 28 Nov 2014 15:12:36 +0100
+
+libguestfs (1:1.29.10-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Updated symbols file
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 26 Nov 2014 00:35:15 +0100
+
+libguestfs (1:1.29.9-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 22 Nov 2014 10:59:07 +0100
+
+libguestfs (1:1.29.8-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 18 Nov 2014 23:13:56 +0100
+
+libguestfs (1:1.29.7-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 16 Nov 2014 18:36:43 +0100
+
+libguestfs (1:1.29.6-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 07 Nov 2014 21:09:14 +0100
+
+libguestfs (1:1.29.5-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Dropped patch that was integrated upstream
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 06 Nov 2014 15:13:11 +0100
+
+libguestfs (1:1.29.4-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 01 Nov 2014 19:49:52 +0100
+
+libguestfs (1:1.28.2-1) unstable; urgency=medium
+
+  * New upstream version
+  * Fixed guestfsd dependencies, stripped unnecessary build-dependencies
+  * Bumped Standards-Version
+  * Added patch for fixing build
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 31 Oct 2014 19:34:41 +0100
+
+libguestfs (1:1.28.1-1) unstable; urgency=medium
+
+  * New upstream version
+  * Updated watch file (development -> stable)
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 19 Oct 2014 15:07:52 +0200
+
+libguestfs (1:1.27.62-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Moved build dependency from libsystemd-<specific>-dev to
+    libsystemd-dev, removed build dependencies on specific libsystemd
+    library packages. (Closes: #763710, #763741)
+  * Moved package post-processing (appliance-splitting, appliance-specific
+    dependencies) from debian/rules to external shell scripts
+  * Added lintian override because sysvinit is no longer essential
+  * Fixed FTBFS on architectures without zfs-fuse
+  * Removed unused .install file
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 12 Oct 2014 13:29:45 +0200
+
+libguestfs (1:1.27.57-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 02 Oct 2014 08:07:46 +0200
+
+libguestfs (1:1.27.55-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 27 Sep 2014 22:31:13 +0200
+
+libguestfs (1:1.27.54-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Dropped patch that has been integrated upstream
+  * Updated symbols file; made guestfs_internal_* symbols (which are not
+    considered part of the API) optional
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 25 Sep 2014 21:11:41 +0200
+
+libguestfs (1:1.27.49-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Added systemd bits to appliance
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 19 Sep 2014 18:16:24 +0200
+
+libguestfs (1:1.27.46-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Removed upstream patches
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 15 Sep 2014 22:36:03 +0200
+
+libguestfs (1:1.27.45-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Added upstream patches that should fix FTBFS on architectures without
+    native OCaml compiler
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 14 Sep 2014 22:47:30 +0200
+
+libguestfs (1:1.27.44-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Added more architecture-specific dependencies for ppc64el
+  * Added zfs-fuse dependency for armel
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 13 Sep 2014 22:58:42 +0200
+
+libguestfs (1:1.27.41-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 09 Sep 2014 22:48:54 +0200
+
+libguestfs (1:1.27.39-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Added missing virt-p2v directory
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 09 Sep 2014 17:49:06 +0200
+
+libguestfs (1:1.27.35-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Added virt-p2v
+  * Updated symbols file
+  * Picked patches from unstable branch
+    - Removed dependency on legacy iproute package (Closes: #752017)
+    - Don't attempt to run make quickcheck on all architectures.
+      (Closes: #754615)
+    - Fixed the code that extracts dependencies from
+      .../guestfs/supermin.d/packages-* lists. This should also take care of
+      the iproute legacy package. (Closes: #752017)
+    - Don't hardcode /usr/lib/perl5 in libguestfs-perl.install
+      (Closes: #755109)
+    - Added patch that disables --dtb on armel
+    - Fix module-init-tools build-dependency
+    - Added architecture-specific dependencies for arm64, ppc64el
+    - Added libc-bin to essential packages expression
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 01 Sep 2014 18:25:38 +0200
+
+libguestfs (1:1.27.14-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 31 May 2014 12:59:23 +0200
+
+libguestfs (1:1.27.13-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Updated patch queue
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 25 May 2014 11:10:30 +0200
+
+libguestfs (1:1.27.12-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 23 May 2014 19:23:11 +0200
+
+libguestfs (1:1.27.11-1) experimental; urgency=medium
+
+  * New upstream development version
+  * On powerpc architecture, use qemu-system-ppc64 for -M pseries and
+    linux-image-powerpc64
+  * Split off specific dependencies from libguestfs0 (Closes: #648291,
+    #681889, #736597, #742944)
+  * Run "make quickcheck" only once
+  * Rebased patch queue
+  * Updated symbols file
+  
+ -- Hilko Bengen <bengen@debian.org>  Sat, 17 May 2014 21:29:58 +0200
+
+libguestfs (1:1.27.6-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Updated symbols file
+  * Split off ZFS-specific dependencies from libguestfs  (Closes: #648291)
+  * Added patch for building with qemu 2+
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 22 Apr 2014 23:19:06 +0200
+
+libguestfs (1:1.26.0-1) unstable; urgency=medium
+
+  * New upstream version
+  * Updated watch file
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 28 Mar 2014 12:38:04 +0100
+
+libguestfs (1:1.25.49-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 27 Mar 2014 15:07:14 +0100
+
+libguestfs (1:1.25.46-3) experimental; urgency=medium
+
+  * Added patch to relax grub dependency
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 25 Mar 2014 13:10:16 +0100
+
+libguestfs (1:1.25.46-2) experimental; urgency=medium
+
+  * Automatically add appliance dependencies to libguestfs0
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 24 Mar 2014 17:47:16 +0100
+
+libguestfs (1:1.25.46-1) experimental; urgency=medium
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 21 Mar 2014 00:07:38 +0100
+
+libguestfs (1:1.25.45-1) experimental; urgency=medium
+
+  * New upstream development version
+  * Fixed up build-dependencies so we can at least have a stab at building
+    on !x86
+  * Updated symbols file
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 17 Mar 2014 23:40:35 +0100
+
+libguestfs (1:1.25.43-3) experimental; urgency=medium
+
+  * Fixed build-dependencies for non-x86 architectures
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 16 Mar 2014 23:16:45 +0100
+
+libguestfs (1:1.25.43-2) experimental; urgency=medium
+
+  * Ship libguestfs0 with supermin 5 appliance in /usr/lib/<multiarch> --
+    no more update-libguestfs-appliance
+  * Thanks to Richard W.M. Jones for providing the initial patch for that
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 16 Mar 2014 15:52:46 +0100
+
+libguestfs (1:1.25.43-1) experimental; urgency=low
+
+  * New upstream development version
+  * Updated patch queue; upstream now makes it possible (not the default)
+    to disable the Gnulib tests.
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 08 Mar 2014 18:17:22 +0100
+
+libguestfs (1:1.25.42-1) experimental; urgency=low
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 07 Mar 2014 09:38:46 +0100
+
+libguestfs (1:1.25.41-1) experimental; urgency=low
+
+  * New upstream development version
+  * Updated dependencies; enabled building on more architectures
+  * Fixed installation
+  * Updated patch queue
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 04 Mar 2014 21:37:08 +0100
+
+libguestfs (1:1.25.37-1) experimental; urgency=low
+
+  * New upstream development version
+  * Rebased patch-queue; added patch to remove cruft from appliance
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 23 Feb 2014 13:23:23 +0100
+
+libguestfs (1:1.25.36-1) experimental; urgency=low
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 17 Feb 2014 20:18:57 +0100
+
+libguestfs (1:1.25.33-1) experimental; urgency=low
+
+  * New upstream development version
+  * Updated symbols file
+  * Rebased patch queue
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 13 Feb 2014 08:19:38 +0100
+
+libguestfs (1:1.25.26-1) experimental; urgency=low
+
+  * New upstream development version
+  * Replaced dependencies: module-init-tools -> kmod (Closes: #733698)
+  * Bumped Standards-Version
+  * Updated symbols file
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 23 Jan 2014 21:42:24 +0100
+
+libguestfs (1:1.25.19-1) experimental; urgency=low
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 03 Jan 2014 10:12:45 +0100
+
+libguestfs (1:1.25.18-1) experimental; urgency=low
+
+  * New upstream development version
+  * Moved golang-guestfs-dev to devel section
+  * Updated symbols file
+  * Enabled parallel builds
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 21 Dec 2013 12:45:00 +0100
+
+libguestfs (1:1.25.15-1) experimental; urgency=low
+
+  * New upstream development version
+  * Removed patches that have been integrated upstream; added patches to
+    fix Golang bindings
+  * Added dependency for libsystemd-journal-dev
+  * Simplified debian/rules
+  * Added Golang bindings package
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 12 Dec 2013 23:46:22 +0100
+
+libguestfs (1:1.25.13-1) experimental; urgency=low
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 09 Dec 2013 09:17:21 +0100
+
+libguestfs (1:1.24.2-1) unstable; urgency=low
+
+  * New upstream version
+  * Added fix for installing manpages
+  * Merged guestmount into libguestfs-tools package (Closes: #729156)
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 07 Dec 2013 18:00:59 +0100
+
+libguestfs (1:1.24.1-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 02 Nov 2013 21:19:10 +0100
+
+libguestfs (1:1.23.33-1) experimental; urgency=low
+
+  * New upstream development version
+  * Added patch to fix out-of-tree build
+  * Updated (build-)dependencies
+  * Integrated guestfish into libguestfs-tools package (Closes: #721938)
+  * Added option to generate Java 6 compatible bytecode
+  * Detect Ruby 2 if available
+  * Automatically detect available Lua versions
+  * Install shared object for Ruby bindings from multiarch directory
+  * Updated Javadoc install path
+  * Updated install rule for supermin image components
+  * Updated symbols file
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 16 Oct 2013 22:43:50 +0200
+
+libguestfs (1:1.23.7-1) experimental; urgency=low
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 06 Jul 2013 10:52:43 +0200
+
+libguestfs (1:1.23.6-1) experimental; urgency=low
+
+  * New upstream development version
+  * Rebased patch queue
+  * Since 1.23.5, Augeas >= 1.0.0 is required.
+  * Added symbols file for libguestfs0
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 30 Jun 2013 17:14:08 +0200
+
+libguestfs (1:1.22.3-1) unstable; urgency=low
+
+  * New upstream version
+  * Updated patch queue
+  * Fix dh_python3 call to generate correct dependencies for
+    python3-guestfs. Thanks to Scott Kitterman. (Closes: #711928)
+  * debian/watch: Do not consider development versions
+  * Removed support for parallel builds since it caused make 3.81 to hang
+    (#714072)
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 25 Jun 2013 23:12:28 +0200
+
+libguestfs (1:1.22.2-1) unstable; urgency=low
+
+  * New upstream version
+  * Updated patch queue
+    - Drop SELinux mountpoint fix (integrated upstream)
+    - revert to symlink-based hack for building Perl bindings
+    - Disable gnulib tests by default
+  * Avoid installing (Perl) bindtests
+  * Added separate package for Python 3 bindings
+  * Added parallel build support
+  * Changed dependencies to qemu-system-x86
+  * Updated exclude list for dh_makeshlibs
+  * Updated year in debian/copyright
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 03 Jun 2013 23:49:41 +0200
+
+libguestfs (1:1.21.40-1) experimental; urgency=low
+
+  * New upstream development version
+  * Updated patch queue
+  * Disabled unreliable test-utimens, test-futimens (gnulib)
+  * Added various fixes for building Perl and Python bindings
+    - Correct paths for building, testing Perl shared library
+    - Build Python3 extensions with PEP-3149-compliant suffix
+  * rules cleanup
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 25 May 2013 14:41:18 +0200
+
+libguestfs (1:1.21.39-1) experimental; urgency=low
+
+  * New upstream development version
+  * Updated patch queue
+    - Use pkg-config for Python (proper fix for #707141)
+    - Removed ntfsprogs from packagelist (Closes: #708520)
+    - Changed selinux mountpoint (CLoses: #707217)
+    - Fixed build with --disable-appliance
+  * Tighten ntfs-3g dependency, thanks to Bastien ROUCARIÈS (Closes:
+    #708520)
+  * Depend on qemu-system instead the obsolete qemu-kvm.
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 19 May 2013 19:24:35 +0200
+
+libguestfs (1:1.21.35-1) experimental; urgency=low
+
+  * New upstream development version
+  * febootstrap -> supermin transition
+  * Dropped patch for building the Perl bindings out-of-tree: A different
+    solution has been adopted upstream
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 01 May 2013 13:08:31 +0200
+
+libguestfs (1:1.21.33-1) experimental; urgency=low
+
+  * New upstream development version
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 27 Apr 2013 13:05:38 +0200
+
+libguestfs (1:1.21.32-1) experimental; urgency=low
+
+  * New upstream development version
+  * Adapted watch file for development versions
+  * Depend on "real" febootstrap 3 for now
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 23 Apr 2013 22:28:49 +0200
+
+libguestfs (1:1.21.31-1) experimental; urgency=low
+
+  * New upstream development version
+  * Added guestunmount, bash completion rules that have been split and
+    moved to /usr/share.
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 19 Apr 2013 08:13:15 +0200
+
+libguestfs (1:1.20.6-3) unstable; urgency=low
+
+  * Really enabled gtk-doc
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 18 Apr 2013 23:32:13 +0200
+
+libguestfs (1:1.20.6-2) unstable; urgency=low
+
+  * Cleaned up misplaced and duplicate bash completion conffiles
+    (Closes: #703396).
+
+    In 1:1.14.8-3, the dh_bash-completion file was moved to from
+    libguestfs-tools to guestfish. In 1:1.18.10-1, the dh_bash-completion
+    file was replaced with an entry in guestfish.install which caused the
+    installed file to be renamed.
+
+    Thanks to Paul Wise for spotting this.
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 17 Apr 2013 21:27:43 +0200
+
+libguestfs (1:1.20.6-1) unstable; urgency=low
+
+  * New upstream version
+  * Dropped patches that have been integrated upstream
+  * Set INSTALLDIRS for installing Ruby bindings
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 12 Apr 2013 08:28:47 +0200
+
+libguestfs (1:1.20.4-1) unstable; urgency=low
+
+  * New upstream version
+  * Dropped patches that have been integrated upstream. The removal of
+    -Werror for Ruby bindings seems no longer necessary.
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 13 Mar 2013 20:23:01 +0100
+
+libguestfs (1:1.20.3-2) unstable; urgency=low
+
+  * Added libguestfs-make-fixed-appliance to libguestfs-tools
+  * Added related udev rules to guestfsd
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 08 Mar 2013 20:41:41 +0100
+
+libguestfs (1:1.20.3-1) unstable; urgency=low
+
+  * New upstream version
+  * Dropped patches that were integrated upstream.
+  * Increased minimum version of febootstrap to 3.20 since earlier
+    versions did not support --copy-kernel
+  * Added localized manpages (po4a build-dependency, out-of-tree build fix)
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 07 Mar 2013 00:13:41 +0100
+
+libguestfs (1:1.20.2-1) unstable; urgency=low
+
+  * New upstream version
+  * Make sure that extconf.rb is generated
+  * Updated patch queue
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 19 Feb 2013 23:30:01 +0100
+
+libguestfs (1:1.20.1-2) unstable; urgency=low
+
+  * Fixed Build-Dependencies: The fuse-utils package is no longer
+    available (Closes: #698151)
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 14 Jan 2013 18:48:54 +0100
+
+libguestfs (1:1.20.1-1) unstable; urgency=low
+
+  * New upstream version
+  * Rebased patch queue: added fixes for tests, don't install Erlang
+    bindings to multiarch directory, fix appliance packagelist
+  * Added Lua bindings
+  * Updated Build-Depends
+  * Simplified dh_install target
+  * Install guestfsd manpage
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 05 Jan 2013 00:52:02 +0100
+
+libguestfs (1:1.18.11-1) unstable; urgency=low
+
+  * New upstream version
+  * [9d3debd] Rebased patch queue; upstream has picked up mode 644 for
+    installed message catalogs
+  * [7b05d06] Relaxed Build-Depends since no graphical OCaml
+    programs/libraries are built
+  * [0bfad2b] Don't install gobject-introspection files to multiarch
+    locations (Closes: #695339)
+  * [85bbca9] Imported Upstream version 1.18.11
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 12 Dec 2012 00:50:33 +0100
+
+libguestfs (1:1.18.10-1) unstable; urgency=low
+
+  * New upstream version
+  * [eb40dbf] Enabled gtk-doc
+  * [8776e09] Fixed JNI directory for dh_makeshlibs call (multiarch)
+  * [f081f2c] dh_install --fail-missing
+  * [abeca26] guestfish: Moved installation of bash-completion snippet to
+    .install file
+  * [7310675] ocaml: Removed .owner file so dh_install does not fall over
+    it
+  * [13f9195] libguestfs0: Added l18n files
+  * [a0b75b7] libguestfs-gobject-dev: Added missing header files
+  * [b88c45d] libguestfs-tools: Added example output files and schema for
+    virt-inspector
+  * [4d38639] Rebased patch queue, changed mode of message catalog files
+    (*.mo) to 0644
+  * [18d5bbe] Added Japanese debconf translation (Closes: #691944)
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 31 Oct 2012 21:02:51 +0100
+
+libguestfs (1:1.18.8-1) unstable; urgency=low
+
+  * New upstream version
+  * [fccad0e] Rebased patch queue: Disabling FUSE tests is not needed;
+    upstream has picked up the diff->diffutils change.
+  * [92a48b1] Renamed --with-java-home -> --with-java, following change in
+    configure
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 20 Sep 2012 13:08:32 +0200
+
+libguestfs (1:1.18.6-2) unstable; urgency=low
+
+  * [e39f17c] Added patch that reverts upstream sgabios change
+  * [1baf200] Added patch that replaces diff with diffutils in package list
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 18 Aug 2012 13:29:29 +0200
+
+libguestfs (1:1.18.6-1) unstable; urgency=low
+
+  * New upstream version
+  * [6e1f12c] Rebased patch queue
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 11 Aug 2012 20:57:40 +0200
+
+libguestfs (1:1.18.5-3) unstable; urgency=low
+
+  * [de8c07e] Added another multiarch fix: supermin appliance stays out of
+    multiarch directories
+  * [f66394b] Use dh-autoreconf
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 19 Jul 2012 23:13:47 +0200
+
+libguestfs (1:1.18.5-2) unstable; urgency=low
+
+  * [00d27da] Call dh_python2, dh_python3 with correct package name
+    (Closes: #681587)
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 15 Jul 2012 12:44:59 +0200
+
+libguestfs (1:1.18.5-1) unstable; urgency=low
+
+  * New upstream version
+  * [ba15957] Rebased patch queue
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 10 Jul 2012 23:56:02 +0200
+
+libguestfs (1:1.18.4-2) unstable; urgency=low
+
+  * [f0017a7] Added change to podwrapper.sh.in to pass a specific date to
+    pod2man which should avoid multiarch co-installability problems
+    (Closes: #680885, #680886)
+  * [3b4844a] Fixed versioned Breaks/Replaces statement to include epoch
+    (Closes: #678977)
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 09 Jul 2012 19:27:33 +0200
+
+libguestfs (1:1.18.4-1) unstable; urgency=low
+
+  * [3fc6f7c] Imported Upstream version 1.18.4
+  * [90f05f5] Rebased patch queue; dropped libruby detection fix which has
+    been picked up upstream
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 08 Jul 2012 00:04:46 +0200
+
+libguestfs (1:1.18.3-1) unstable; urgency=low
+
+  * New upstream version
+  * [9154622] Rebased patch queue; added libruby detection fix
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 29 Jun 2012 22:04:47 +0200
+
+libguestfs (1:1.18.2-2) unstable; urgency=low
+
+  * [f094ece] Added Replaces statement (Closes: #678977). One of these
+    days I will learn how to properly move files between packages.
+  * [1cde91e] Moved installation of default configuration to the last
+    position. This should fix the "libguestfs: error: FUSE not supported"
+    problem reported by SharkWipf on IRC.
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 25 Jun 2012 19:15:21 +0200
+
+libguestfs (1:1.18.2-1) unstable; urgency=low
+
+  * New upstream version
+  * [95e1b8e] Rebased and cleaned up patch queue
+  * [0d5c22c] Made watch file more flexible
+  * [c342e50] Bumped Debhelper compatibility level to 9
+  * [864d294] Disabled strict checking for format-security related errors
+    in test programs
+  * [a8d9101] Adjusted installation directories (multi-arch support)
+  * [042a7e2] Moved libguestfs-test-tool and supermin appliance handling
+    to libguestfs-tools package
+  * [1764d50] Added Multi-Arch headers
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 24 Jun 2012 12:58:19 +0200
+
+libguestfs (1:1.18.1-1) unstable; urgency=low
+
+  * New upstream version
+  * [9449d4e] Updated watch file
+  * [a8bb722] Added a method for determining available Ruby versions at
+    build time
+  * [9b63f09] rebased patch queue
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 11 Jun 2012 08:32:27 +0200
+
+libguestfs (1:1.18.0-1) unstable; urgency=low
+
+  * New upstream version
+  * [e839f2b] Added gettext-ocaml build dependency
+  * [8e29504] Rebased patch queue, added several patches
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 24 May 2012 00:21:37 +0200
+
+libguestfs (1:1.16.23-1) unstable; urgency=low
+
+  * New upstream version
+  * [33efe9d] Rebased patch queue
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 19 May 2012 15:16:38 +0200
+
+libguestfs (1:1.16.22-1) unstable; urgency=low
+
+  * New upstream version
+  * [8cc5ad4] Rebased patch queue
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 14 May 2012 22:58:16 +0200
+
+libguestfs (1:1.16.21-1) unstable; urgency=low
+
+  * New upstream version
+  * Rebased patch queue
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 07 May 2012 18:59:40 +0200
+
+libguestfs (1:1.16.20-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 25 Apr 2012 22:35:23 +0200
+
+libguestfs (1:1.16.19-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 18 Apr 2012 22:04:09 +0200
+
+libguestfs (1:1.16.18-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 13 Apr 2012 20:14:25 +0200
+
+libguestfs (1:1.16.17-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 12 Apr 2012 07:32:30 +0200
+
+libguestfs (1:1.16.16-1) unstable; urgency=low
+
+  * New upstream version
+  * [9e988bc] rebased patch queue
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 11 Apr 2012 21:36:46 +0200
+
+libguestfs (1:1.16.15-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 03 Apr 2012 23:30:34 +0200
+
+libguestfs (1:1.16.13-1) unstable; urgency=low
+
+  * New upstream version
+  * [007ca10] Rebased patch queue
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 31 Mar 2012 14:11:46 +0200
+
+libguestfs (1:1.16.12-1) unstable; urgency=low
+
+  * New upstream version
+  * [0e321b7] Added configure parameter for setting JNI installation
+    directory
+  * [8b63b64] Rebased patch queue, added out-of-tree build fix for
+    Java and appliance
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 27 Mar 2012 19:49:02 +0200
+
+libguestfs (1:1.16.10-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 13 Mar 2012 17:50:15 +0100
+
+libguestfs (1:1.16.9-1) unstable; urgency=low
+
+  * New upstream version
+  * [8a8b9d3] Added dependencies on netpbm, icoutils which are used to
+    generate guest icons in inspection output.
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 09 Mar 2012 17:37:31 +0100
+
+libguestfs (1:1.16.8-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 05 Mar 2012 22:42:32 +0100
+
+libguestfs (1:1.16.7-1) unstable; urgency=low
+
+  * New upstream version
+  * [ff29ecd] Rebased patch queue
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 04 Mar 2012 13:23:09 +0100
+
+libguestfs (1:1.16.6-1) unstable; urgency=low
+
+  * New upstream version
+  * [595a350] Bumped Standards-Version
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 01 Mar 2012 23:39:42 +0100
+
+libguestfs (1:1.16.5-1) unstable; urgency=low
+
+  * New upstream version
+  * [1aee45e] Rebased patch queue
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 13 Feb 2012 21:03:09 +0100
+
+libguestfs (1:1.16.4-1) unstable; urgency=low
+
+  * New upstream version
+  * [e47e59d] Rebased patch queue, disabled virt-format test
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 12 Feb 2012 17:37:36 +0100
+
+libguestfs (1:1.16.3-1) unstable; urgency=low
+
+  * New upstream version
+  * [1421212] Updated debian/.gitignore
+  * [80e9955] Rebased patch queue
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 08 Feb 2012 23:00:46 +0100
+
+libguestfs (1:1.16.2-1) unstable; urgency=low
+
+  * New upstream version
+  * [4a57faf] Rebased patch queue
+  * [a99c16a] Fixed dh call
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 31 Jan 2012 23:13:36 +0100
+
+libguestfs (1:1.16.1-1) unstable; urgency=low
+
+  * New upstream version
+  * [8347c84] Rebased patch queue
+  * [e70e31c] Added git:Depends to be filled by dh_girepository
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 25 Jan 2012 00:12:23 +0100
+
+libguestfs (1:1.16.0-1) unstable; urgency=low
+
+  * New upstream version
+  * [b4f8deb] Rebased patch queue
+  * [df8dd81] Updated watch file for 1.16.x
+  * [d766d82] Stripped redundant package descriptions
+  * [d044727] Added packages for GObject bindings and introspection
+  * [9c5fa98] Added configuration for git-buildpackage
+  * [12bedd8] Added workaround for
+    "{pre,post}inst-has-useless-call-to-ldconfig" Lintian warnings
+    (libguestfs-java)
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 24 Jan 2012 22:04:39 +0100
+
+libguestfs (1:1.14.9-2) unstable; urgency=low
+
+  * [4bf0ed5] Added ruby-guestfs package
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 15 Jan 2012 20:48:23 +0100
+
+libguestfs (1:1.14.9-1) unstable; urgency=low
+
+  * New upstream version
+  * [2f2da0e] Rebased patch queue
+  * [89e1a16] Added Conflicts to address the moved man-pages
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 10 Jan 2012 23:54:21 +0100
+
+libguestfs (1:1.14.8-3) unstable; urgency=low
+
+  * [0344ab5] Re-sorted which manpages go into what package. Added a few
+    missing manpages.
+  * [41e92c5] Moved bash-completion snippet for guestfish to the guestfish
+    package.
+  * [1184b62] Removed empty libguestfs-doc package.
+  * [1bec3c7] Added examples to libguestfs-dev and language bindings packages.
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 30 Dec 2011 18:39:01 +0100
+
+libguestfs (1:1.14.8-2) unstable; urgency=low
+
+  * [fd34116] Removed dependency on ntfsprogs since they are now packaged
+    along with ntfs-3g.
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 28 Dec 2011 10:57:52 +0100
+
+libguestfs (1:1.14.8-1) unstable; urgency=high
+
+  * New upstream version
+  * Mitigate possible privilege escalation via SG_IO ioctl (CVE-2011-4127,
+    RHBZ#757071)
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 22 Dec 2011 23:12:21 +0100
+
+libguestfs (1:1.14.7-1) unstable; urgency=low
+
+  * New upstream version
+  * [d7a96c1] Added fixes for building Python2 bindings on squeeze
+  * [565ae83] Added fixes for building Python3 bindings on squeeze
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 10 Dec 2011 21:36:00 +0100
+
+libguestfs (1:1.14.6-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 07 Dec 2011 00:24:43 +0100
+
+libguestfs (1:1.14.5-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 02 Dec 2011 21:16:54 +0100
+
+libguestfs (1:1.14.4-1) unstable; urgency=low
+
+  * New upstream version
+  * [9c1fed8] Rebased patch queue
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 25 Nov 2011 23:25:27 +0100
+
+libguestfs (1:1.14.3-1) unstable; urgency=low
+
+  * New upstream version
+  * [cacf69d] Ran debconf-updatepo as suggested by lintian
+  * [f3f7c4e] Rebased patch queue
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 23 Nov 2011 08:53:24 +0100
+
+libguestfs (1:1.14.2-4) unstable; urgency=low
+
+  * [f9c46d5] Added patch to install Java bindings to /usr/lib/jni. This
+    eliminates a file conflict between libguestfs-java and libguestfs-dev
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 20 Nov 2011 23:41:01 +0100
+
+libguestfs (1:1.14.2-3) unstable; urgency=low
+
+  * Added an epoch after uploading an 1.15 package to unstable instead of
+    experimental.
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 18 Nov 2011 17:10:30 +0100
+
+libguestfs (1.14.2-2) unstable; urgency=low
+
+  * [cf7da64] Updated .gitignore
+  * [ab7d4d9] Fixed copy&paste error in erlang-guestfs description
+  * [c6c5d54] Added configuration file and bash completion snippet to
+    libguestfs-tools
+  * [dbbf2f1] Added Java bindings
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 16 Nov 2011 09:47:47 +0100
+
+libguestfs (1.14.2-1) unstable; urgency=low
+
+  * New upstream version
+  * [c27fa27] Rebased patch queue, added fix for Erlang bindings build
+  * [a563153] Added package for Erlang bindings
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 10 Nov 2011 23:50:41 +0100
+
+libguestfs (1.14.1-2) unstable; urgency=low
+
+  * [44d13ed] Run tests in all build directories
+  * [fbfe97e] Added upstream's patches for Python 3.x support
+  * [4938eec] Re-enabled build of python3 bindings
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 03 Nov 2011 12:18:18 +0100
+
+libguestfs (1.14.1-1) unstable; urgency=low
+
+  * New upstream version
+  * [0dfbcaf] Enabled support for SELinux, Systemtap, updated build dependencies
+  * [0548ce6] Disabled building of Python bindings for Python 3.x. Many
+    warnings about undefined symbols are given, they would not work
+    anyhow. Thanks to Neil Wilson for bringing this to my attention.
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 02 Nov 2011 22:43:33 +0100
+
+libguestfs (1.14.0-1) unstable; urgency=low
+
+  * New upstream version
+  * [19863e1] Imported patch queue from 1.13.24-1 (experimental)
+  * [ad9d721] Disabled building of Erlang bindings until I figure out how to package those
+  * [d92329b] Re-enabled vmchannel test
+  * [08e806a] Updated watch file
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 29 Oct 2011 18:23:02 +0200
+
+libguestfs (1.12.8-2) unstable; urgency=low
+
+  * [5c40932] Added fix for qemu 0.15 -machine option
+  * [c45157d] Disabled vmchannel test (Closes: #646295)
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 24 Oct 2011 16:23:19 +0200
+
+libguestfs (1.12.8-1) unstable; urgency=low
+
+  * New upstream version 
+  * [e85ce09] Rebased patch queue; fixed bindtests and inspector tests
+  * [5294a7e] Got rid of a shortcut in building bindings for multiple
+    Python versions. This stopped working with Python 2.7 being the
+    default python.
+  * [689757d] Added Spanish debconf translations, thanks to SM Baby
+    Siabef. (Closes: #642068)
+  * [c09d3d5] Added Dutch debconf translations, thanks to Jeroen Schot.
+    (Closes: #642290)
+  * [48a726d] Added Czech debconf translation, thanks to Michal Simunek.
+    (Closes: #642437)
+  * [09c47b4] Removed grub-pc dependency, as suggested on IRC.
+    (Closes: #645119)
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 20 Oct 2011 13:13:00 +0200
+
+libguestfs (1.12.7-1) unstable; urgency=low
+
+  * New upstream version
+  * [96f89ea] Added Portuguese debconf translations, thanks to "Traduz".
+    (Closes: #641160)
+  * [509dc8d] Added French debconf translations, thanks to Julien
+    Patriarca. (Closes: #641407)
+  * [348682d] Added German debconf translations, thanks to Chris Leick.
+    (Closes: #641347)
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 18 Sep 2011 22:55:57 +0200
+
+libguestfs (1.12.6-2) unstable; urgency=low
+
+  * [00e96af] Applied changes to debconf templates and package
+    descriptions as suggested by Christian PERRIER on behalf of the
+    debian-l10n-english team. (Closes: #640470)
+  * [6ac64b9] Added Swedish debconf translations, thanks to Martin
+    Bagge. (Closes: #640831)
+  * [18b2e33] Added Danish debconf translations, thanks to Joe Dalton.
+    (Closes: #640832)
+  * [5bd6bb4] Added Russian debconf translations, thanks to Yuri
+    Kozlov. (Closes: #640945)
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 10 Sep 2011 14:33:45 +0200
+
+libguestfs (1.12.6-1) unstable; urgency=low
+
+  * New upstream version
+  * [dad2b57] Rebased patch queue
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 06 Sep 2011 20:03:23 +0200
+
+libguestfs (1.12.5-1) unstable; urgency=low
+
+  * New upstream version
+  * [38c612e] Added Vcs-* fields to debian/control
+  * [cdd4f34] Updated watch file
+  * [29c7217] Removed those patches that have made it into the upstream release
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 28 Aug 2011 14:52:21 +0200
+
+libguestfs (1.12.4-2) unstable; urgency=low
+
+  * [2d93cf5] Re-added supermin.d directory that was missing in -1.
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 21 Aug 2011 01:03:09 +0200
+
+libguestfs (1.12.4-1) unstable; urgency=low
+
+  * New upstream version
+  * [3168278] Added patches for the build scripts to allow for a separate
+    build directory
+  * [f5fac3a] Use separate build directory, build multiple versions of the
+    Python bindings
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 21 Aug 2011 00:25:59 +0200
+
+libguestfs (1.12.3-2) unstable; urgency=low
+
+  * Brown paper bag release
+  * [33f8362] Fixed update script.
+  * [d703c73] fixed guestfsd dependencies
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 13 Aug 2011 00:32:03 +0200
+
+libguestfs (1.12.3-1) unstable; urgency=low
+
+  * New upstream version
+  * [b61cb3c] Added umask-setting code to update-guestfs-appliance.
+    Closes: #637437
+  * [6a43d8f] Dropped dependency on Linux kernel package. Closes: #637438
+  * [52d2752] Added guestfsd package
+  * [4690370] Updated patches
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 12 Aug 2011 23:28:15 +0200
+
+libguestfs (1.10.7-3) unstable; urgency=low
+
+  * [c65e1bb] Fixed FTBFS by making fuse test depend on appliance. Thanks
+    to Guido Günther for spotting this.
+  * [fe797af] Added fix for systemd-based host. Thanks to Paul Wise for
+    testing.
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 11 Aug 2011 00:25:19 +0200
+
+libguestfs (1.10.7-2) unstable; urgency=low
+
+  * [3ec437d] Added missing dependencies (Closes: #608103)
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 10 Aug 2011 22:48:56 +0200
+
+libguestfs (1.10.7-1) unstable; urgency=low
+
+  * New upstream version
+  * First upload to unstable
+  * [5d22450] Adjusted some Section: and Architecture: fields
+  * [976c8b8] Removed pre-setting answer to Debconf question
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 08 Aug 2011 20:43:50 +0200
+
+libguestfs (1.10.6-3) experimental; urgency=low
+
+  * [f1217be] Fixed building of Python binding
+  * [6a5de14] Added update-guestfs-appliance
+  * [e6743be] Integrated update-guestfs-appliance using debconf.
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 07 Aug 2011 19:00:18 +0200
+
+libguestfs (1.10.6-2) experimental; urgency=low
+
+  * [3de1b06] Added missing dependency for libguestfs-ocaml-dev, thanks to
+    Stéphane Glondu
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 01 Aug 2011 16:59:25 +0200
+
+libguestfs (1.10.6-1) experimental; urgency=low
+
+  * New upstream version
+  * Updated copyright file
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 31 Jul 2011 23:25:48 +0200
+
+libguestfs (1.10.5-1) experimental; urgency=low
+
+  * New upstream version
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 29 Jul 2011 23:42:50 +0200
+
+libguestfs (1.0.84-4) unstable; urgency=low
+
+  * [2c44147] Build-depend on aptitude since Ubuntu needs it.
+  * [d50fd25] New patch 0005-Check-for-service-and-use-it-if-it-s- there.patch
+    Check for service and use it if it's there
+  * [40dc6b0] New patch 0006-Check-for-grub-menu.lst-if-etc-grub.conf-
+    can-t-be-fo.patch Check for grub/menu.lst if /etc/grub.conf can't be found
+  * [465def2] New patch 0007-Debina-package-format-is-called-deb-not-
+    dpkg.patch Debina package format is called 'deb' not 'dpkg'
+  * [1b7efb4] New patch 0008-Add-application-listing-for-Debian.patch Add
+    application listing for Debian
+  * [5dd34c9] Add series file
+  * [647fd84] Don't remove gmo files (Closes: #571117)
+
+ -- Guido Günther <agx@sigxcpu.org>  Wed, 24 Feb 2010 18:22:58 +0100
+
+libguestfs (1.0.84-3) unstable; urgency=low
+
+  * [307bd4e] Add hivex commands.
+  * [7fac596] Build and install fuse helper
+  * [09ea683] Include all virt-* tools including virt-win-reg
+  * [ae3ee70] New patch 0004-Disable-fuser-tests-if-dev-fuse-doesn-t-
+    exist.patch Disable fuse tests if /dev/fuse doesn't exist
+
+ -- Guido Günther <agx@sigxcpu.org>  Sun, 21 Feb 2010 19:40:43 +0100
+
+libguestfs (1.0.84-2) unstable; urgency=low
+
+  * [0195df4] Add vendor detection for Ubuntu
+  * [2fa535e] {Build-,}Depend on bochsbios and vgabios These are only
+    recommends but needed to run qemu during the tests.
+  * [ee483bf] Reenable tests
+  * [67fd975] New patch 0003-scrub-now-available-on-Debian.patch scrub now
+    available on Debian
+  * [2e9c89d] New patch 0004-Adjust-error-output-for-regressions-
+    rhbz557655.patch Adjust error output for regressions/rhbz557655
+  * [c5d5f9e] Adjust install-kernel to new debirf version
+  * [9c1fbdf] Drop Hardcode-kernel-version.patch - superflous due to previous
+    commit.
+
+ -- Guido Günther <agx@sigxcpu.org>  Sun, 21 Feb 2010 13:24:01 +0100
+
+libguestfs (1.0.84-1) unstable; urgency=low
+
+  [ Guido Günther ]
+  * [1149b4a] add missing modules for vfat
+
+  [ Laurent Léonard ]
+  * [397dbf3] Imported Upstream version 1.0.80
+  * [ca95c7a] Drop patch 0001-add-nls_base.ko-and-nls_cp437.ko-for-
+    vfat.patch. Fixed upstream.
+  * [344c7e6] Add dependency on mkisofs.
+
+  [ Guido Günther ]
+  * [5aa8061] Add missing build-deps needed for ./configure
+  * [f8a682d] Imported Upstream version 1.0.84
+  * [e35175c] No need to manually install virt-inspector anymore
+  * [de6ddf1] Depend on python-all-dev since libguestfs handles python
+    2.6 too
+  * [a2be87e] don't use the host's MAC address
+  * [88b70ef] New patch 0001-Disable-checks-for-now.patch Disable checks for
+    now
+  * [2b59394] New patch 0002-Run-debirf-as-root.patch Run debirf as root
+  * [e798002] New patch 0003-Hardcode-kernel-version.patch Hardcode kernel
+    version
+  * [602fab3] reenable patch system
+
+ -- Guido Günther <agx@sigxcpu.org>  Sat, 20 Feb 2010 14:11:50 +0100
+
+libguestfs (1.0.61-1) unstable; urgency=low
+
+  * [831bc5f] Imported Upstream version 1.0.61
+  * [b85412e] run checks but disable currently failing tests
+  * [21d7e00] add missing qemu build-dep
+  * [0636bb4] add missing build-dep for perl bindings
+  * [5585a82] add missing build-deps for perl based tools
+  * [e09005c] install virt-df and virt-cat
+  * [342f8e4] install Lib.pm for perl bindings
+
+ -- Guido Günther <agx@sigxcpu.org>  Fri, 17 Jul 2009 22:32:07 +0200
+
+libguestfs (1.0.56-1) unstable; urgency=low
+
+  * [1b77dc8] Imported Upstream version 1.0.56
+  * [0ca461d] drop a all patches merged upstream or superfluous since
+    we're building from a released version now.
+  * [474dc39] no need to call autogen.sh
+  * [32c3d61] amke sure the symlinks get created in time
+
+ -- Guido Günther <agx@sigxcpu.org>  Thu, 09 Jul 2009 16:44:21 +0200
+
+libguestfs (1.0.54+44git127ad3-3) unstable; urgency=low
+
+  * [a6e6cc7] add virt-inspector
+  * [1446178] build-dep on libaugeas-dev for augeas support in guestfsd
+  * [b3769ed] select kernel by architecture
+  * [103069f] speed up appliance startup
+  * [aa02c11] document changes and release 1.0.54+44git127ad3-3
+
+ -- Guido Günther <agx@sigxcpu.org>  Sat, 04 Jul 2009 17:58:04 +0200
+
+libguestfs (1.0.54+44git127ad3-2) unstable; urgency=low
+
+  * [8f1cea9] add missing shlibs dependency
+  * [35663fe] shorten long descriptions a bit
+  * [1631e0e] add watch file
+  * [adebbd1] drop lib from python package name
+  * [a24e6b9] add perl bindings
+  * [cc2117e] don't run dh_makeshlibs on python lib to avoid ldconfig call
+  * [d361e06] add missing ${misc:Depends}, {perl:Depends} and tighten
+    dependency on libguestfs
+
+ -- Guido Günther <agx@sigxcpu.org>  Fri, 03 Jul 2009 12:03:14 +0200
+
+libguestfs (1.0.54+44git127ad3-1) unstable; urgency=low
+
+  * [4cea8bd] Imported Upstream version 1.0.54+44git127ad3
+  * [c01721f] switch to cdbs:
+        * add doc package
+        * add debug package
+        * add python bindings
+        * drop README.Debian
+        * set maintainer to pkg-libvirt team
+  * [91fafca] don't call configure, leave this to cdbs and make autoconf copy
+    files instead of symlinking so dpkg-source can create a proper .diff.gz
+  * [13207b9] drop .gitignore
+  * [967d228] touch fakeroot.log to indicate the appliance has been built
+  * [3477d95] use AM_MAINTAINER_MODE
+
+ -- Guido Günther <agx@sigxcpu.org>  Thu, 02 Jul 2009 21:49:44 +0200
+
+libguestfs (1.0.41-1) unstable; urgency=low
+
+  * New upstream release 1.0.41.
+
+ -- Richard Jones <rjones@redhat.com>  Thu, 04 Jun 2009 16:10:38 +0100
+
+libguestfs (1.0.31-1) unstable; urgency=low
+
+  * Initial release (Closes: #530427)
+
+ -- Richard Jones <rjones@redhat.com>  Sun, 24 May 2009 21:43:45 +0100
