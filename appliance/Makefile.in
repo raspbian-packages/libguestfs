@@ -654,8 +654,8 @@ superminfs_DATA = \
 	supermin.d/udev-rules.tar.gz
 
 PACKAGELIST_CPP_FLAGS = -D$(DISTRO)=1 -DEXTRA_PACKAGES="$(EXTRA_PACKAGES)"
-@HAVE_DPKG_TRUE@QUERY_FILES_CMD := sed -e 's,^/,\*/,' | xargs dpkg -S | cut -d: -f1
-@HAVE_PACMAN_TRUE@QUERY_FILES_CMD := xargs pacman -Qo | sed -r 's/.* is owned by ([^ ]+) .*/\1/'
+@HAVE_DPKG_FALSE@@HAVE_PACMAN_TRUE@@HAVE_RPM_FALSE@QUERY_FILES_CMD := xargs pacman -Qo | sed -r 's/.* is owned by ([^ ]+) .*/\1/'
+@HAVE_DPKG_TRUE@@HAVE_RPM_FALSE@QUERY_FILES_CMD := sed -e 's,^/,\*/,' | xargs dpkg -S | cut -d: -f1
 @HAVE_RPM_TRUE@QUERY_FILES_CMD := xargs rpm -qf --qf '%{name}\n'
 
 # If installing the daemon, install the udev rules too.
@@ -1093,6 +1093,7 @@ make.sh: make.sh.in $(top_builddir)/config.log $(top_builddir)/config.status
 	chmod +x $@-t
 	cmp -s $@ $@-t || mv $@-t $@
 	rm -f $@-t
+@HAVE_DPKG_FALSE@@HAVE_PACMAN_FALSE@@HAVE_RPM_FALSE@$(error Error: Unknown Linux distribution "$(DISTRO)".  Please add support to m4/guestfs-appliance.m4 and appliance/Makefile.am and send a patch upstream to libguestfs@redhat.com)
 
 # Automatically generate library dependency list
 guestfsd.deps: ../daemon/guestfsd
@@ -1105,6 +1106,8 @@ guestfsd.deps: ../daemon/guestfsd
 		sort -u > $@.t
 	rm -f ld.so.cache.txt
 	mv $@.t $@
+	@echo "guestfsd.deps:"
+	@cat $@
 
 packagelist: packagelist.in Makefile guestfsd.deps
 	m4 $(PACKAGELIST_CPP_FLAGS) $< | \

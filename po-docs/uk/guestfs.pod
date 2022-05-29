@@ -448,6 +448,30 @@ Libguestfs може отримувати доступ до дисків Ceph (li
 
 C<servers> (параметр C<server>) — список з одного або декількох серверів Ceph. Документацію щодо рядка server наведено у описі L</guestfs_add_drive_opts>. Параметри C<username> та C<secret> є необов'язковими. Якщо їх не вказано, розпізнавання не виконуватиметься.
 
+An encrypted RBD disk -- I<directly> opening which would require the C<username> and C<secret> parameters -- cannot be accessed if the following conditions all hold:
+
+=over 4
+
+=item *
+
+the L<backend|/BACKEND> is libvirt,
+
+=item *
+
+the image specified by the C<filename> parameter is different from the encrypted RBD disk,
+
+=item *
+
+the image specified by the C<filename> parameter has L<qcow2 format|/COMMON VIRTUAL DISK IMAGE FORMATS>,
+
+=item *
+
+the encrypted RBD disk is specified as a backing file at some level in the qcow2 backing chain.
+
+=back
+
+This limitation is due to libvirt's (justified) separate handling of disks vs. secrets.  When the RBD username and secret are provided inside a qcow2 backing file specification, libvirt does not construct an ephemeral secret object from those, for Ceph authentication.  Refer to L<https://bugzilla.redhat.com/2033247>.
+
 =head3 FTP, HTTP ТА TFTP
 
 Libguestfs може отримувати доступ до віддалених дисків за допомогою протоколів FTP, FTPS, HTTP, HTTPS та TFTP.
