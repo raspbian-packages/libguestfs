@@ -135,7 +135,7 @@ parse (const char *arg, char **path_ret, char **protocol_ret,
   socket = query_get (uri, "socket");
 
   if (uri->server && STRNEQ (uri->server, "") && socket) {
-    fprintf (stderr, _("%s: %s: cannot both a server name and a socket query parameter\n"),
+    fprintf (stderr, _("%s: %s: cannot have both a server name and a socket query parameter\n"),
              getprogname (), arg);
     return -1;
   }
@@ -347,6 +347,7 @@ make_server (xmlURIPtr uri, const char *socket, char ***ret)
   *ret = malloc (sizeof (char *) * 2);
   if (*ret == NULL) {
     perror ("malloc");
+    free (server);
     return -1;
   }
   (*ret)[0] = server;

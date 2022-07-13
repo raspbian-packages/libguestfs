@@ -125,30 +125,35 @@ read_first_line_from_file (const char *filename)
  * keystore.  There may be multiple.  If none are read from the
  * keystore, ask the user.
  */
-char **
-get_keys (struct key_store *ks, const char *device, const char *uuid)
+struct matching_key *
+get_keys (struct key_store *ks, const char *device, const char *uuid,
+          size_t *nr_matches)
 {
-  size_t i, j, len;
-  char **r;
+  size_t i, nmemb;
+  struct matching_key *r, *match;
   char *s;
 
   /* We know the returned list must have at least one element and not
    * more than ks->nr_keys.
    */
-  len = 1;
-  if (ks)
-    len = MIN (1, ks->nr_keys);
-  r = calloc (len+1, sizeof (char *));
-  if (r == NULL)
-    error (EXIT_FAILURE, errno, "calloc");
+  nmemb = 1;
+  if (ks && ks->nr_keys > nmemb)
+    nmemb = ks->nr_keys;
 
-  j = 0;
+  if (nmemb > (size_t)-1 / sizeof *r)
+    error (EXIT_FAILURE, 0, _("size_t overflow"));
+
+  r = malloc (nmemb * sizeof *r);
+  if (r == NULL)
+    error (EXIT_FAILURE, errno, "malloc");
+
+  match = r;
 
   if (ks) {
     for (i = 0; i < ks->nr_keys; ++i) {
       struct key_store_key *key = &ks->keys[i];
 
-      if (STRNEQ (key->id, device) && (uuid && STRNEQ (key->id, uuid)))
+      if (STRNEQ (key->id, device) && (!uuid || STRNEQ (key->id, uuid)))
         continue;
 
       switch (key->type) {
@@ -156,68 +161,101 @@ get_keys (struct key_store *ks, const char *device, const char *uuid)
         s = strdup (key->string.s);
         if (!s)
           error (EXIT_FAILURE, errno, "strdup");
-        r[j++] = s;
+        match->clevis = false;
+        match->passphrase = s;
+        ++match;
         break;
       case key_file:
         s = read_first_line_from_file (key->file.name);
-        r[j++] = s;
+        match->clevis = false;
+        match->passphrase = s;
+        ++match;
+        break;
+      case key_clevis:
+        match->clevis = true;
+        match->passphrase = NULL;
+        ++match;
         break;
       }
     }
   }
 
-  if (j == 0) {
+  if (match == r) {
     /* Key not found in the key store, ask the user for it. */
     s = read_key (device);
     if (!s)
       error (EXIT_FAILURE, 0, _("could not read key from user"));
-    r[0] = s;
+    match->clevis = false;
+    match->passphrase = s;
+    ++match;
   }
 
+  *nr_matches = (size_t)(match - r);
   return r;
+}
+
+void
+free_keys (struct matching_key *keys, size_t nr_matches)
+{
+  size_t i;
+
+  for (i = 0; i < nr_matches; ++i) {
+    struct matching_key *key = keys + i;
+
+    assert (key->clevis == (key->passphrase == NULL));
+    if (!key->clevis)
+      free (key->passphrase);
+  }
+  free (keys);
 }
 
 struct key_store *
 key_store_add_from_selector (struct key_store *ks, const char *selector)
 {
-  CLEANUP_FREE_STRING_LIST char **fields =
-    guestfs_int_split_string (':', selector);
+  CLEANUP_FREE_STRING_LIST char **fields = NULL;
+  size_t field_count;
   struct key_store_key key;
 
+  fields = guestfs_int_split_string (':', selector);
   if (!fields)
     error (EXIT_FAILURE, errno, "guestfs_int_split_string");
+  field_count = guestfs_int_count_strings (fields);
 
-  if (guestfs_int_count_strings (fields) != 3) {
-   invalid_selector:
-    error (EXIT_FAILURE, 0, "invalid selector for --key: %s", selector);
-  }
-
-  /* 1: device */
+  /* field#0: ID */
+  if (field_count < 1)
+    error (EXIT_FAILURE, 0, _("selector '%s': missing ID"), selector);
   key.id = strdup (fields[0]);
   if (!key.id)
     error (EXIT_FAILURE, errno, "strdup");
 
-  /* 2: key type */
-  if (STREQ (fields[1], "key"))
-    key.type = key_string;
-  else if (STREQ (fields[1], "file"))
-    key.type = key_file;
-  else
-    goto invalid_selector;
+  /* field#1...: TYPE, and TYPE-specific properties */
+  if (field_count < 2)
+    error (EXIT_FAILURE, 0, _("selector '%s': missing TYPE"), selector);
 
-  /* 3: actual key */
-  switch (key.type) {
-  case key_string:
+  if (STREQ (fields[1], "key")) {
+    key.type = key_string;
+    if (field_count != 3)
+      error (EXIT_FAILURE, 0,
+             _("selector '%s': missing KEY_STRING, or too many fields"),
+             selector);
     key.string.s = strdup (fields[2]);
     if (!key.string.s)
       error (EXIT_FAILURE, errno, "strdup");
-    break;
-  case key_file:
+  } else if (STREQ (fields[1], "file")) {
+    key.type = key_file;
+    if (field_count != 3)
+      error (EXIT_FAILURE, 0,
+             _("selector '%s': missing FILENAME, or too many fields"),
+             selector);
     key.file.name = strdup (fields[2]);
     if (!key.file.name)
       error (EXIT_FAILURE, errno, "strdup");
-    break;
-  }
+  } else if (STREQ (fields[1], "clevis")) {
+    key.type = key_clevis;
+    if (field_count != 2)
+      error (EXIT_FAILURE, 0, _("selector '%s': too many fields"), selector);
+  } else
+    error (EXIT_FAILURE, 0, _("selector '%s': invalid TYPE"), selector);
 
   return key_store_import_key (ks, &key);
 }
@@ -246,6 +284,21 @@ key_store_import_key (struct key_store *ks, const struct key_store_key *key)
   return ks;
 }
 
+bool
+key_store_requires_network (const struct key_store *ks)
+{
+  size_t i;
+
+  if (ks == NULL)
+    return false;
+
+  for (i = 0; i < ks->nr_keys; ++i)
+    if (ks->keys[i].type == key_clevis)
+      return true;
+
+  return false;
+}
+
 void
 free_key_store (struct key_store *ks)
 {
@@ -263,6 +316,9 @@ free_key_store (struct key_store *ks)
       break;
     case key_file:
       free (key->file.name);
+      break;
+    case key_clevis:
+      /* nothing */
       break;
     }
     free (key->id);

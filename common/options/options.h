@@ -115,6 +115,7 @@ struct key_store_key {
   enum {
     key_string,             /* key specified as string */
     key_file,               /* key stored in a file */
+    key_clevis,             /* key reconstructed with Clevis+Tang */
   } type;
   union {
     struct {
@@ -134,6 +135,19 @@ struct key_store {
   size_t nr_keys;
 };
 
+/* A key matching a particular ID (pathname of the libguestfs device node that
+ * stands for the encrypted block device, or LUKS UUID).
+ */
+struct matching_key {
+  /* True iff the passphrase should be reconstructed using Clevis, talking to
+   * Tang servers over the network.
+   */
+  bool clevis;
+
+  /* Explicit passphrase, otherwise. */
+  char *passphrase;
+};
+
 /* in config.c */
 extern void parse_config (void);
 
@@ -151,9 +165,12 @@ extern void print_inspect_prompt (void);
 
 /* in key.c */
 extern char *read_key (const char *param);
-extern char **get_keys (struct key_store *ks, const char *device, const char *uuid);
+extern struct matching_key *get_keys (struct key_store *ks, const char *device,
+                                      const char *uuid, size_t *nr_matches);
+extern void free_keys (struct matching_key *keys, size_t nr_matches);
 extern struct key_store *key_store_add_from_selector (struct key_store *ks, const char *selector);
 extern struct key_store *key_store_import_key (struct key_store *ks, const struct key_store_key *key);
+extern bool key_store_requires_network (const struct key_store *ks);
 extern void free_key_store (struct key_store *ks);
 
 /* in options.c */
