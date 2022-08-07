@@ -1,4 +1,4 @@
-libguestfs (1:1.48.4-1+rpi1) bookworm-staging; urgency=medium
+libguestfs (1:1.48.4-2+rpi1) bookworm-staging; urgency=medium
 
   [changes brought forward from 1:1.42.0-11+rpi1 by Peter Michael Green <plugwash@raspbian.org> at Thu, 12 Nov 2020 16:03:00 +0000]
   * Add raspbian to the list of distros with dpkg.
@@ -9,7 +9,14 @@ libguestfs (1:1.48.4-1+rpi1) bookworm-staging; urgency=medium
   * Remove testsuite-specific build-dependencies.
   * Disable testsuite.
 
- -- Raspbian forward porter <root@raspbian.org>  Wed, 13 Jul 2022 16:38:42 +0000
+ -- Raspbian forward porter <root@raspbian.org>  Sun, 07 Aug 2022 03:20:02 +0000
+
+libguestfs (1:1.48.4-2) unstable; urgency=medium
+
+  * Remove bsdmainutils build-dependency (Closes: #964533, again)
+  * Adjust lintian-overrides to changed lintian output format
+
+ -- Hilko Bengen <bengen@debian.org>  Sun, 31 Jul 2022 19:16:25 +0200
 
 libguestfs (1:1.48.4-1) unstable; urgency=medium
 
