@@ -107,6 +107,7 @@ guestfish.1: guestfish.pod guestfish-actions.pod guestfish-commands.pod guestfis
 	$(PODWRAPPER) \
 	  --no-strict-checks \
 	  --man $@ \
+	  --path $(srcdir) \
 	  --license GPLv2+ \
 	  $<
 
