@@ -107,6 +107,7 @@ guestfish.1: guestfish.pod guestfish-actions.pod guestfish-commands.pod guestfis
 	$(PODWRAPPER) \
 	  --no-strict-checks \
 	  --man $@ \
+	  --path $(srcdir) \
 	  --license GPLv2+ \
 	  $<
 
@@ -156,6 +157,7 @@ virt-p2v.1: virt-p2v.pod virt-p2v-kernel-config.pod
 	$(PODWRAPPER) \
 	  --no-strict-checks \
 	  --man $@ \
+	  --path $(srcdir) \
 	  $<
 
 %.3: %.pod
