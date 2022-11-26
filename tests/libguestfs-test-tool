@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+
+export LIBGUESTFS_DEBUG=1
+
+if ! test -w /dev/kvm; then
+    export LIBGUESTFS_BACKEND_SETTINGS=force_tcg
+fi
+
+libguestfs-test-tool

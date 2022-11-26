@@ -1,0 +1,27 @@
+Tests: extlinux
+Depends: guestfish, libguestfs-tools,
+ linux-image-amd64 [amd64], linux-image-686-pae [i386],
+ mmdebstrap, openssh-client, sleepenh,
+Restrictions: needs-root, allow-stderr
+Architecture: i386 amd64
+
+Tests: libguestfs-test-tool
+Depends: libguestfs-tools,
+ linux-image-alpha-generic [alpha],
+ linux-image-marvell [armel] | linux-image-versatile [armel],
+ linux-image-armmp [armhf],
+ linux-image-arm64 [arm64],
+ linux-image-4kc-malta [mips mipsel] | linux-image-5kc-malta [mips mipsel],
+ linux-image-5kc-malta [mips64 mips64el],
+ linux-image-s390x [s390x],
+ linux-image-parisc [hppa],
+ linux-image-powerpc [powerpc],
+ linux-image-powerpc64 [ppc64],
+ linux-image-powerpc64le [ppc64el],
+ linux-image-sparc64 [sparc sparc64],
+ linux-image-amd64 [amd64 x32],
+ linux-image-686-pae [i386] | linux-image-586 [i386] | linux-image-486 [i386],
+ linux-image-riscv64 [riscv64],
+ linux-image-itanium [ia64] | linux-image-mckinley [ia64],
+Restrictions: needs-root, allow-stderr
+
