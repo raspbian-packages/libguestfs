@@ -35,13 +35,12 @@
 
 #include <string.h>
 
-#define GUESTFS_SET_E2ATTRS_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_SET_E2ATTRS, GuestfsSetE2attrsPrivate))
-
 struct _GuestfsSetE2attrsPrivate {
   GuestfsTristate clear;
 };
 
-G_DEFINE_TYPE (GuestfsSetE2attrs, guestfs_set_e2attrs, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsSetE2attrs, guestfs_set_e2attrs, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsSetE2attrs));
 
 enum {
   PROP_GUESTFS_SET_E2ATTRS_PROP0,
@@ -113,13 +112,12 @@ guestfs_set_e2attrs_class_init (GuestfsSetE2attrsClass *klass)
   );
 
   object_class->finalize = guestfs_set_e2attrs_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsSetE2attrsPrivate));
 }
 
 static void
 guestfs_set_e2attrs_init (GuestfsSetE2attrs *o)
 {
-  o->priv = GUESTFS_SET_E2ATTRS_GET_PRIVATE (o);
+  o->priv = guestfs_set_e2attrs_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsSetE2attrsPrivate));
 }

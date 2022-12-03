@@ -35,8 +35,6 @@
 
 #include <string.h>
 
-#define GUESTFS_MOUNT_LOCAL_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_MOUNT_LOCAL, GuestfsMountLocalPrivate))
-
 struct _GuestfsMountLocalPrivate {
   GuestfsTristate readonly;
   gchar *options;
@@ -44,7 +42,8 @@ struct _GuestfsMountLocalPrivate {
   GuestfsTristate debugcalls;
 };
 
-G_DEFINE_TYPE (GuestfsMountLocal, guestfs_mount_local, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsMountLocal, guestfs_mount_local, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsMountLocal));
 
 enum {
   PROP_GUESTFS_MOUNT_LOCAL_PROP0,
@@ -199,13 +198,12 @@ guestfs_mount_local_class_init (GuestfsMountLocalClass *klass)
   );
 
   object_class->finalize = guestfs_mount_local_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsMountLocalPrivate));
 }
 
 static void
 guestfs_mount_local_init (GuestfsMountLocal *o)
 {
-  o->priv = GUESTFS_MOUNT_LOCAL_GET_PRIVATE (o);
+  o->priv = guestfs_mount_local_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsMountLocalPrivate));
 }

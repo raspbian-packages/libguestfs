@@ -35,14 +35,13 @@
 
 #include <string.h>
 
-#define GUESTFS_INSPECT_GET_ICON_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_INSPECT_GET_ICON, GuestfsInspectGetIconPrivate))
-
 struct _GuestfsInspectGetIconPrivate {
   GuestfsTristate favicon;
   GuestfsTristate highquality;
 };
 
-G_DEFINE_TYPE (GuestfsInspectGetIcon, guestfs_inspect_get_icon, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsInspectGetIcon, guestfs_inspect_get_icon, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsInspectGetIcon));
 
 enum {
   PROP_GUESTFS_INSPECT_GET_ICON_PROP0,
@@ -140,13 +139,12 @@ guestfs_inspect_get_icon_class_init (GuestfsInspectGetIconClass *klass)
   );
 
   object_class->finalize = guestfs_inspect_get_icon_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsInspectGetIconPrivate));
 }
 
 static void
 guestfs_inspect_get_icon_init (GuestfsInspectGetIcon *o)
 {
-  o->priv = GUESTFS_INSPECT_GET_ICON_GET_PRIVATE (o);
+  o->priv = guestfs_inspect_get_icon_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsInspectGetIconPrivate));
 }

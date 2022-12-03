@@ -20,7 +20,7 @@
 # freeform string.
 m4_define([libguestfs_major],   [1])
 m4_define([libguestfs_minor],   [48])
-m4_define([libguestfs_release], [4])
+m4_define([libguestfs_release], [5])
 
 AC_INIT([libguestfs],libguestfs_major.libguestfs_minor.libguestfs_release)
 
@@ -211,7 +211,6 @@ AC_CONFIG_FILES([Makefile
                  bundled/ocaml-augeas/Makefile
                  common/errnostring/Makefile
                  common/edit/Makefile
-                 common/mlgettext/Makefile
                  common/mlpcre/Makefile
                  common/mlstdutils/Makefile
                  common/mlstdutils/guestfs_config.ml

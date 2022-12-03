@@ -35,14 +35,13 @@
 
 #include <string.h>
 
-#define GUESTFS_BTRFS_FILESYSTEM_DEFRAGMENT_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_BTRFS_FILESYSTEM_DEFRAGMENT, GuestfsBTRFSFilesystemDefragmentPrivate))
-
 struct _GuestfsBTRFSFilesystemDefragmentPrivate {
   GuestfsTristate flush;
   gchar *compress;
 };
 
-G_DEFINE_TYPE (GuestfsBTRFSFilesystemDefragment, guestfs_btrfs_filesystem_defragment, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsBTRFSFilesystemDefragment, guestfs_btrfs_filesystem_defragment, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsBTRFSFilesystemDefragment));
 
 enum {
   PROP_GUESTFS_BTRFS_FILESYSTEM_DEFRAGMENT_PROP0,
@@ -145,13 +144,12 @@ guestfs_btrfs_filesystem_defragment_class_init (GuestfsBTRFSFilesystemDefragment
   );
 
   object_class->finalize = guestfs_btrfs_filesystem_defragment_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsBTRFSFilesystemDefragmentPrivate));
 }
 
 static void
 guestfs_btrfs_filesystem_defragment_init (GuestfsBTRFSFilesystemDefragment *o)
 {
-  o->priv = GUESTFS_BTRFS_FILESYSTEM_DEFRAGMENT_GET_PRIVATE (o);
+  o->priv = guestfs_btrfs_filesystem_defragment_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsBTRFSFilesystemDefragmentPrivate));
 }

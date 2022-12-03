@@ -35,14 +35,13 @@
 
 #include <string.h>
 
-#define GUESTFS_CRYPTSETUP_OPEN_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_CRYPTSETUP_OPEN, GuestfsCryptsetupOpenPrivate))
-
 struct _GuestfsCryptsetupOpenPrivate {
   GuestfsTristate readonly;
   gchar *crypttype;
 };
 
-G_DEFINE_TYPE (GuestfsCryptsetupOpen, guestfs_cryptsetup_open, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsCryptsetupOpen, guestfs_cryptsetup_open, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsCryptsetupOpen));
 
 enum {
   PROP_GUESTFS_CRYPTSETUP_OPEN_PROP0,
@@ -145,13 +144,12 @@ guestfs_cryptsetup_open_class_init (GuestfsCryptsetupOpenClass *klass)
   );
 
   object_class->finalize = guestfs_cryptsetup_open_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsCryptsetupOpenPrivate));
 }
 
 static void
 guestfs_cryptsetup_open_init (GuestfsCryptsetupOpen *o)
 {
-  o->priv = GUESTFS_CRYPTSETUP_OPEN_GET_PRIVATE (o);
+  o->priv = guestfs_cryptsetup_open_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsCryptsetupOpenPrivate));
 }

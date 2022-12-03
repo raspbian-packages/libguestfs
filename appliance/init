@@ -17,16 +17,6 @@ if [ ! -d /tmp ] || [ ! -d /var/tmp ]; then
     chmod 1777 /tmp /var/tmp
 fi
 
-# Try to print a stack trace for segfaults inside the appliance.
-for d in /lib64 /lib; do
-  f=$d/libSegFault.so
-  if [ -f "$f" ]; then
-    LD_PRELOAD=$f
-    export LD_PRELOAD
-    break
-  fi
-done
-
 mkdir -p /proc /sys
 mount -t proc /proc /proc
 mount -t sysfs /sys /sys
@@ -74,6 +64,13 @@ fi
 # and e2fsprogs fails if the link doesn't exist .. stupid stupid
 if ! test -e /etc/mtab; then
   ln -s /proc/mounts /etc/mtab
+fi
+
+# For openssl (RHBZ#2133884).
+if test -d /etc/crypto-policies/back-ends &&
+        ! test -f /etc/crypto-policies/back-ends/opensslcnf.config &&
+        test -f /usr/share/crypto-policies/DEFAULT/opensslcnf.txt ; then
+    ln -sf /usr/share/crypto-policies/DEFAULT/opensslcnf.txt /etc/crypto-policies/back-ends/opensslcnf.config
 fi
 
 # Static nodes must happen before udev is started.

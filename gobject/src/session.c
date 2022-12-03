@@ -159,15 +159,14 @@ guestfs_session_event_get_type (void)
 
 /* GuestfsSession */
 
-#define GUESTFS_SESSION_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ( (obj), GUESTFS_TYPE_SESSION, GuestfsSessionPrivate))
-
 struct _GuestfsSessionPrivate
 {
   guestfs_h *g;
   int event_handle;
 };
 
-G_DEFINE_TYPE (GuestfsSession, guestfs_session, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsSession, guestfs_session, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsSession));
 
 static void
 guestfs_session_finalize (GObject *object)
@@ -186,8 +185,6 @@ guestfs_session_class_init (GuestfsSessionClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
   object_class->finalize = guestfs_session_finalize;
-
-  g_type_class_add_private (klass, sizeof (GuestfsSessionPrivate));
 
   /**
    * GuestfsSession::close:
@@ -373,7 +370,7 @@ guestfs_session_class_init (GuestfsSessionClass *klass)
 static void
 guestfs_session_init (GuestfsSession *session)
 {
-  session->priv = GUESTFS_SESSION_GET_PRIVATE (session);
+  session->priv = guestfs_session_get_instance_private (session);
   session->priv->g = guestfs_create ();
 
   guestfs_h *g = session->priv->g;
@@ -14647,7 +14644,7 @@ guestfs_session_internal_test_rstruct (GuestfsSession *session, const gchar *val
 
   GuestfsPV *s = g_slice_new0 (GuestfsPV);
   if (ret->pv_name) s->pv_name = g_strdup (ret->pv_name);
-  if (ret->pv_uuid) memcpy (s->pv_uuid, ret->pv_uuid, sizeof (s->pv_uuid));
+  memcpy (s->pv_uuid, ret->pv_uuid, sizeof (s->pv_uuid));
   if (ret->pv_fmt) s->pv_fmt = g_strdup (ret->pv_fmt);
   s->pv_size = ret->pv_size;
   s->dev_size = ret->dev_size;
@@ -14700,7 +14697,7 @@ guestfs_session_internal_test_rstructerr (GuestfsSession *session, GError **err)
 
   GuestfsPV *s = g_slice_new0 (GuestfsPV);
   if (ret->pv_name) s->pv_name = g_strdup (ret->pv_name);
-  if (ret->pv_uuid) memcpy (s->pv_uuid, ret->pv_uuid, sizeof (s->pv_uuid));
+  memcpy (s->pv_uuid, ret->pv_uuid, sizeof (s->pv_uuid));
   if (ret->pv_fmt) s->pv_fmt = g_strdup (ret->pv_fmt);
   s->pv_size = ret->pv_size;
   s->dev_size = ret->dev_size;
@@ -14757,7 +14754,7 @@ guestfs_session_internal_test_rstructlist (GuestfsSession *session, const gchar 
   for (i = 0; i < ret->len; i++) {
     l[i] = g_slice_new0 (GuestfsPV);
     if (ret->val[i].pv_name) l[i]->pv_name = g_strdup (ret->val[i].pv_name);
-    if (ret->val[i].pv_uuid) memcpy (l[i]->pv_uuid, ret->val[i].pv_uuid, sizeof (l[i]->pv_uuid));
+    memcpy (l[i]->pv_uuid, ret->val[i].pv_uuid, sizeof (l[i]->pv_uuid));
     if (ret->val[i].pv_fmt) l[i]->pv_fmt = g_strdup (ret->val[i].pv_fmt);
     l[i]->pv_size = ret->val[i].pv_size;
     l[i]->dev_size = ret->val[i].dev_size;
@@ -14815,7 +14812,7 @@ guestfs_session_internal_test_rstructlisterr (GuestfsSession *session, GError **
   for (i = 0; i < ret->len; i++) {
     l[i] = g_slice_new0 (GuestfsPV);
     if (ret->val[i].pv_name) l[i]->pv_name = g_strdup (ret->val[i].pv_name);
-    if (ret->val[i].pv_uuid) memcpy (l[i]->pv_uuid, ret->val[i].pv_uuid, sizeof (l[i]->pv_uuid));
+    memcpy (l[i]->pv_uuid, ret->val[i].pv_uuid, sizeof (l[i]->pv_uuid));
     if (ret->val[i].pv_fmt) l[i]->pv_fmt = g_strdup (ret->val[i].pv_fmt);
     l[i]->pv_size = ret->val[i].pv_size;
     l[i]->dev_size = ret->val[i].dev_size;
@@ -18444,7 +18441,7 @@ guestfs_session_lvs_full (GuestfsSession *session, GError **err)
   for (i = 0; i < ret->len; i++) {
     l[i] = g_slice_new0 (GuestfsLV);
     if (ret->val[i].lv_name) l[i]->lv_name = g_strdup (ret->val[i].lv_name);
-    if (ret->val[i].lv_uuid) memcpy (l[i]->lv_uuid, ret->val[i].lv_uuid, sizeof (l[i]->lv_uuid));
+    memcpy (l[i]->lv_uuid, ret->val[i].lv_uuid, sizeof (l[i]->lv_uuid));
     if (ret->val[i].lv_attr) l[i]->lv_attr = g_strdup (ret->val[i].lv_attr);
     l[i]->lv_major = ret->val[i].lv_major;
     l[i]->lv_minor = ret->val[i].lv_minor;
@@ -23263,7 +23260,7 @@ guestfs_session_pvs_full (GuestfsSession *session, GError **err)
   for (i = 0; i < ret->len; i++) {
     l[i] = g_slice_new0 (GuestfsPV);
     if (ret->val[i].pv_name) l[i]->pv_name = g_strdup (ret->val[i].pv_name);
-    if (ret->val[i].pv_uuid) memcpy (l[i]->pv_uuid, ret->val[i].pv_uuid, sizeof (l[i]->pv_uuid));
+    memcpy (l[i]->pv_uuid, ret->val[i].pv_uuid, sizeof (l[i]->pv_uuid));
     if (ret->val[i].pv_fmt) l[i]->pv_fmt = g_strdup (ret->val[i].pv_fmt);
     l[i]->pv_size = ret->val[i].pv_size;
     l[i]->dev_size = ret->val[i].dev_size;
@@ -29003,7 +29000,7 @@ guestfs_session_vgs_full (GuestfsSession *session, GError **err)
   for (i = 0; i < ret->len; i++) {
     l[i] = g_slice_new0 (GuestfsVG);
     if (ret->val[i].vg_name) l[i]->vg_name = g_strdup (ret->val[i].vg_name);
-    if (ret->val[i].vg_uuid) memcpy (l[i]->vg_uuid, ret->val[i].vg_uuid, sizeof (l[i]->vg_uuid));
+    memcpy (l[i]->vg_uuid, ret->val[i].vg_uuid, sizeof (l[i]->vg_uuid));
     if (ret->val[i].vg_fmt) l[i]->vg_fmt = g_strdup (ret->val[i].vg_fmt);
     if (ret->val[i].vg_attr) l[i]->vg_attr = g_strdup (ret->val[i].vg_attr);
     l[i]->vg_size = ret->val[i].vg_size;

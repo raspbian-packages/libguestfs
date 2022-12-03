@@ -35,8 +35,6 @@
 
 #include <string.h>
 
-#define GUESTFS_GREP_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_GREP, GuestfsGrepPrivate))
-
 struct _GuestfsGrepPrivate {
   GuestfsTristate extended;
   GuestfsTristate fixed;
@@ -44,7 +42,8 @@ struct _GuestfsGrepPrivate {
   GuestfsTristate compressed;
 };
 
-G_DEFINE_TYPE (GuestfsGrep, guestfs_grep, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsGrep, guestfs_grep, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsGrep));
 
 enum {
   PROP_GUESTFS_GREP_PROP0,
@@ -194,13 +193,12 @@ guestfs_grep_class_init (GuestfsGrepClass *klass)
   );
 
   object_class->finalize = guestfs_grep_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsGrepPrivate));
 }
 
 static void
 guestfs_grep_init (GuestfsGrep *o)
 {
-  o->priv = GUESTFS_GREP_GET_PRIVATE (o);
+  o->priv = guestfs_grep_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsGrepPrivate));
 }

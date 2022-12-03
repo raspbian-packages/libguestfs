@@ -35,13 +35,12 @@
 
 #include <string.h>
 
-#define GUESTFS_CPIO_OUT_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_CPIO_OUT, GuestfsCpioOutPrivate))
-
 struct _GuestfsCpioOutPrivate {
   gchar *format;
 };
 
-G_DEFINE_TYPE (GuestfsCpioOut, guestfs_cpio_out, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsCpioOut, guestfs_cpio_out, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsCpioOut));
 
 enum {
   PROP_GUESTFS_CPIO_OUT_PROP0,
@@ -118,13 +117,12 @@ guestfs_cpio_out_class_init (GuestfsCpioOutClass *klass)
   );
 
   object_class->finalize = guestfs_cpio_out_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsCpioOutPrivate));
 }
 
 static void
 guestfs_cpio_out_init (GuestfsCpioOut *o)
 {
-  o->priv = GUESTFS_CPIO_OUT_GET_PRIVATE (o);
+  o->priv = guestfs_cpio_out_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsCpioOutPrivate));
 }

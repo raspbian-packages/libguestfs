@@ -35,8 +35,6 @@
 
 #include <string.h>
 
-#define GUESTFS_NTFSCLONE_OUT_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_NTFSCLONE_OUT, GuestfsNtfscloneOutPrivate))
-
 struct _GuestfsNtfscloneOutPrivate {
   GuestfsTristate metadataonly;
   GuestfsTristate rescue;
@@ -45,7 +43,8 @@ struct _GuestfsNtfscloneOutPrivate {
   GuestfsTristate force;
 };
 
-G_DEFINE_TYPE (GuestfsNtfscloneOut, guestfs_ntfsclone_out, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsNtfscloneOut, guestfs_ntfsclone_out, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsNtfscloneOut));
 
 enum {
   PROP_GUESTFS_NTFSCLONE_OUT_PROP0,
@@ -221,13 +220,12 @@ guestfs_ntfsclone_out_class_init (GuestfsNtfscloneOutClass *klass)
   );
 
   object_class->finalize = guestfs_ntfsclone_out_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsNtfscloneOutPrivate));
 }
 
 static void
 guestfs_ntfsclone_out_init (GuestfsNtfscloneOut *o)
 {
-  o->priv = GUESTFS_NTFSCLONE_OUT_GET_PRIVATE (o);
+  o->priv = guestfs_ntfsclone_out_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsNtfscloneOutPrivate));
 }

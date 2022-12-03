@@ -35,13 +35,12 @@
 
 #include <string.h>
 
-#define GUESTFS_BTRFS_SUBVOLUME_CREATE_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_BTRFS_SUBVOLUME_CREATE, GuestfsBTRFSSubvolumeCreatePrivate))
-
 struct _GuestfsBTRFSSubvolumeCreatePrivate {
   gchar *qgroupid;
 };
 
-G_DEFINE_TYPE (GuestfsBTRFSSubvolumeCreate, guestfs_btrfs_subvolume_create, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsBTRFSSubvolumeCreate, guestfs_btrfs_subvolume_create, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsBTRFSSubvolumeCreate));
 
 enum {
   PROP_GUESTFS_BTRFS_SUBVOLUME_CREATE_PROP0,
@@ -118,13 +117,12 @@ guestfs_btrfs_subvolume_create_class_init (GuestfsBTRFSSubvolumeCreateClass *kla
   );
 
   object_class->finalize = guestfs_btrfs_subvolume_create_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsBTRFSSubvolumeCreatePrivate));
 }
 
 static void
 guestfs_btrfs_subvolume_create_init (GuestfsBTRFSSubvolumeCreate *o)
 {
-  o->priv = GUESTFS_BTRFS_SUBVOLUME_CREATE_GET_PRIVATE (o);
+  o->priv = guestfs_btrfs_subvolume_create_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsBTRFSSubvolumeCreatePrivate));
 }

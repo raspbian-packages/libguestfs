@@ -35,13 +35,12 @@
 
 #include <string.h>
 
-#define GUESTFS_GLOB_EXPAND_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_GLOB_EXPAND, GuestfsGlobExpandPrivate))
-
 struct _GuestfsGlobExpandPrivate {
   GuestfsTristate directoryslash;
 };
 
-G_DEFINE_TYPE (GuestfsGlobExpand, guestfs_glob_expand, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsGlobExpand, guestfs_glob_expand, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsGlobExpand));
 
 enum {
   PROP_GUESTFS_GLOB_EXPAND_PROP0,
@@ -113,13 +112,12 @@ guestfs_glob_expand_class_init (GuestfsGlobExpandClass *klass)
   );
 
   object_class->finalize = guestfs_glob_expand_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsGlobExpandPrivate));
 }
 
 static void
 guestfs_glob_expand_init (GuestfsGlobExpand *o)
 {
-  o->priv = GUESTFS_GLOB_EXPAND_GET_PRIVATE (o);
+  o->priv = guestfs_glob_expand_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsGlobExpandPrivate));
 }

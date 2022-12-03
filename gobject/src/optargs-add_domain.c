@@ -35,8 +35,6 @@
 
 #include <string.h>
 
-#define GUESTFS_ADD_DOMAIN_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_ADD_DOMAIN, GuestfsAddDomainPrivate))
-
 struct _GuestfsAddDomainPrivate {
   gchar *libvirturi;
   GuestfsTristate readonly;
@@ -49,7 +47,8 @@ struct _GuestfsAddDomainPrivate {
   GuestfsTristate copyonread;
 };
 
-G_DEFINE_TYPE (GuestfsAddDomain, guestfs_add_domain, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsAddDomain, guestfs_add_domain, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsAddDomain));
 
 enum {
   PROP_GUESTFS_ADD_DOMAIN_PROP0,
@@ -342,13 +341,12 @@ guestfs_add_domain_class_init (GuestfsAddDomainClass *klass)
   );
 
   object_class->finalize = guestfs_add_domain_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsAddDomainPrivate));
 }
 
 static void
 guestfs_add_domain_init (GuestfsAddDomain *o)
 {
-  o->priv = GUESTFS_ADD_DOMAIN_GET_PRIVATE (o);
+  o->priv = guestfs_add_domain_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsAddDomainPrivate));
 }

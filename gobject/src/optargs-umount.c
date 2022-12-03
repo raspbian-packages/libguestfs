@@ -35,14 +35,13 @@
 
 #include <string.h>
 
-#define GUESTFS_UMOUNT_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_UMOUNT, GuestfsUmountPrivate))
-
 struct _GuestfsUmountPrivate {
   GuestfsTristate force;
   GuestfsTristate lazyunmount;
 };
 
-G_DEFINE_TYPE (GuestfsUmount, guestfs_umount, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsUmount, guestfs_umount, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsUmount));
 
 enum {
   PROP_GUESTFS_UMOUNT_PROP0,
@@ -140,13 +139,12 @@ guestfs_umount_class_init (GuestfsUmountClass *klass)
   );
 
   object_class->finalize = guestfs_umount_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsUmountPrivate));
 }
 
 static void
 guestfs_umount_init (GuestfsUmount *o)
 {
-  o->priv = GUESTFS_UMOUNT_GET_PRIVATE (o);
+  o->priv = guestfs_umount_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsUmountPrivate));
 }

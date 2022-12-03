@@ -35,8 +35,6 @@
 
 #include <string.h>
 
-#define GUESTFS_INTERNAL_TEST_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_INTERNAL_TEST, GuestfsInternalTestPrivate))
-
 struct _GuestfsInternalTestPrivate {
   GuestfsTristate obool;
   gint oint;
@@ -45,7 +43,8 @@ struct _GuestfsInternalTestPrivate {
   /* OStringList not implemented yet */
 };
 
-G_DEFINE_TYPE (GuestfsInternalTest, guestfs_internal_test, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsInternalTest, guestfs_internal_test, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsInternalTest));
 
 enum {
   PROP_GUESTFS_INTERNAL_TEST_PROP0,
@@ -201,13 +200,12 @@ guestfs_internal_test_class_init (GuestfsInternalTestClass *klass)
   );
 
   object_class->finalize = guestfs_internal_test_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsInternalTestPrivate));
 }
 
 static void
 guestfs_internal_test_init (GuestfsInternalTest *o)
 {
-  o->priv = GUESTFS_INTERNAL_TEST_GET_PRIVATE (o);
+  o->priv = guestfs_internal_test_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsInternalTestPrivate));
 }

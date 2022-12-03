@@ -35,8 +35,6 @@
 
 #include <string.h>
 
-#define GUESTFS_COPY_DEVICE_TO_FILE_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_COPY_DEVICE_TO_FILE, GuestfsCopyDeviceToFilePrivate))
-
 struct _GuestfsCopyDeviceToFilePrivate {
   gint64 srcoffset;
   gint64 destoffset;
@@ -45,7 +43,8 @@ struct _GuestfsCopyDeviceToFilePrivate {
   GuestfsTristate append;
 };
 
-G_DEFINE_TYPE (GuestfsCopyDeviceToFile, guestfs_copy_device_to_file, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsCopyDeviceToFile, guestfs_copy_device_to_file, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsCopyDeviceToFile));
 
 enum {
   PROP_GUESTFS_COPY_DEVICE_TO_FILE_PROP0,
@@ -221,13 +220,12 @@ guestfs_copy_device_to_file_class_init (GuestfsCopyDeviceToFileClass *klass)
   );
 
   object_class->finalize = guestfs_copy_device_to_file_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsCopyDeviceToFilePrivate));
 }
 
 static void
 guestfs_copy_device_to_file_init (GuestfsCopyDeviceToFile *o)
 {
-  o->priv = GUESTFS_COPY_DEVICE_TO_FILE_GET_PRIVATE (o);
+  o->priv = guestfs_copy_device_to_file_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsCopyDeviceToFilePrivate));
 }

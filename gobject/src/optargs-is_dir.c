@@ -35,13 +35,12 @@
 
 #include <string.h>
 
-#define GUESTFS_IS_DIR_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_IS_DIR, GuestfsIsDirPrivate))
-
 struct _GuestfsIsDirPrivate {
   GuestfsTristate followsymlinks;
 };
 
-G_DEFINE_TYPE (GuestfsIsDir, guestfs_is_dir, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsIsDir, guestfs_is_dir, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsIsDir));
 
 enum {
   PROP_GUESTFS_IS_DIR_PROP0,
@@ -113,13 +112,12 @@ guestfs_is_dir_class_init (GuestfsIsDirClass *klass)
   );
 
   object_class->finalize = guestfs_is_dir_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsIsDirPrivate));
 }
 
 static void
 guestfs_is_dir_init (GuestfsIsDir *o)
 {
-  o->priv = GUESTFS_IS_DIR_GET_PRIVATE (o);
+  o->priv = guestfs_is_dir_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsIsDirPrivate));
 }

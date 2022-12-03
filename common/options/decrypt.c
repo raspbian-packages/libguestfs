@@ -38,6 +38,10 @@
 
 #include "options.h"
 
+#ifndef __clang__
+#pragma GCC diagnostic ignored "-Wstringop-overflow"
+#endif
+
 static void
 append_char (size_t *idx, char *buffer, char c)
 {
@@ -196,8 +200,8 @@ decrypt_mountables (guestfs_h *g, const char * const *mountables,
 void
 inspect_do_decrypt (guestfs_h *g, struct key_store *ks)
 {
+  const char *lvm2_feature[] = { "lvm2", NULL };
   CLEANUP_FREE_STRING_LIST char **partitions = guestfs_list_partitions (g);
-  CLEANUP_FREE_STRING_LIST char **lvs = NULL;
   bool need_rescan;
 
   if (partitions == NULL)
@@ -205,13 +209,17 @@ inspect_do_decrypt (guestfs_h *g, struct key_store *ks)
 
   need_rescan = decrypt_mountables (g, (const char * const *)partitions, ks);
 
-  if (need_rescan) {
-    if (guestfs_lvm_scan (g, 1) == -1)
-      exit (EXIT_FAILURE);
-  }
+  if (guestfs_feature_available (g, (char **) lvm2_feature) > 0) {
+    CLEANUP_FREE_STRING_LIST char **lvs = NULL;
 
-  lvs = guestfs_lvs (g);
-  if (lvs == NULL)
-    exit (EXIT_FAILURE);
-  decrypt_mountables (g, (const char * const *)lvs, ks);
+    if (need_rescan) {
+      if (guestfs_lvm_scan (g, 1) == -1)
+        exit (EXIT_FAILURE);
+    }
+
+    lvs = guestfs_lvs (g);
+    if (lvs == NULL)
+      exit (EXIT_FAILURE);
+    decrypt_mountables (g, (const char * const *)lvs, ks);
+  }
 }

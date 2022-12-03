@@ -35,13 +35,12 @@
 
 #include <string.h>
 
-#define GUESTFS_COMPRESS_DEVICE_OUT_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_COMPRESS_DEVICE_OUT, GuestfsCompressDeviceOutPrivate))
-
 struct _GuestfsCompressDeviceOutPrivate {
   gint level;
 };
 
-G_DEFINE_TYPE (GuestfsCompressDeviceOut, guestfs_compress_device_out, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsCompressDeviceOut, guestfs_compress_device_out, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsCompressDeviceOut));
 
 enum {
   PROP_GUESTFS_COMPRESS_DEVICE_OUT_PROP0,
@@ -113,13 +112,12 @@ guestfs_compress_device_out_class_init (GuestfsCompressDeviceOutClass *klass)
   );
 
   object_class->finalize = guestfs_compress_device_out_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsCompressDeviceOutPrivate));
 }
 
 static void
 guestfs_compress_device_out_init (GuestfsCompressDeviceOut *o)
 {
-  o->priv = GUESTFS_COMPRESS_DEVICE_OUT_GET_PRIVATE (o);
+  o->priv = guestfs_compress_device_out_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsCompressDeviceOutPrivate));
 }

@@ -35,15 +35,14 @@
 
 #include <string.h>
 
-#define GUESTFS_FSTRIM_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_FSTRIM, GuestfsFstrimPrivate))
-
 struct _GuestfsFstrimPrivate {
   gint64 offset;
   gint64 length;
   gint64 minimumfreeextent;
 };
 
-G_DEFINE_TYPE (GuestfsFstrim, guestfs_fstrim, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsFstrim, guestfs_fstrim, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsFstrim));
 
 enum {
   PROP_GUESTFS_FSTRIM_PROP0,
@@ -167,13 +166,12 @@ guestfs_fstrim_class_init (GuestfsFstrimClass *klass)
   );
 
   object_class->finalize = guestfs_fstrim_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsFstrimPrivate));
 }
 
 static void
 guestfs_fstrim_init (GuestfsFstrim *o)
 {
-  o->priv = GUESTFS_FSTRIM_GET_PRIVATE (o);
+  o->priv = guestfs_fstrim_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsFstrimPrivate));
 }

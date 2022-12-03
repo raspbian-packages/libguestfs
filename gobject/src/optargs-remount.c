@@ -35,13 +35,12 @@
 
 #include <string.h>
 
-#define GUESTFS_REMOUNT_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_REMOUNT, GuestfsRemountPrivate))
-
 struct _GuestfsRemountPrivate {
   GuestfsTristate rw;
 };
 
-G_DEFINE_TYPE (GuestfsRemount, guestfs_remount, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsRemount, guestfs_remount, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsRemount));
 
 enum {
   PROP_GUESTFS_REMOUNT_PROP0,
@@ -113,13 +112,12 @@ guestfs_remount_class_init (GuestfsRemountClass *klass)
   );
 
   object_class->finalize = guestfs_remount_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsRemountPrivate));
 }
 
 static void
 guestfs_remount_init (GuestfsRemount *o)
 {
-  o->priv = GUESTFS_REMOUNT_GET_PRIVATE (o);
+  o->priv = guestfs_remount_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsRemountPrivate));
 }

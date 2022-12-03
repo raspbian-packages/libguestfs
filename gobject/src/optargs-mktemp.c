@@ -35,13 +35,12 @@
 
 #include <string.h>
 
-#define GUESTFS_MKTEMP_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_MKTEMP, GuestfsMktempPrivate))
-
 struct _GuestfsMktempPrivate {
   gchar *suffix;
 };
 
-G_DEFINE_TYPE (GuestfsMktemp, guestfs_mktemp, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsMktemp, guestfs_mktemp, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsMktemp));
 
 enum {
   PROP_GUESTFS_MKTEMP_PROP0,
@@ -118,13 +117,12 @@ guestfs_mktemp_class_init (GuestfsMktempClass *klass)
   );
 
   object_class->finalize = guestfs_mktemp_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsMktempPrivate));
 }
 
 static void
 guestfs_mktemp_init (GuestfsMktemp *o)
 {
-  o->priv = GUESTFS_MKTEMP_GET_PRIVATE (o);
+  o->priv = guestfs_mktemp_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsMktempPrivate));
 }

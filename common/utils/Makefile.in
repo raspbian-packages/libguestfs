@@ -146,12 +146,11 @@ build_triplet = @build@
 host_triplet = @host@
 subdir = common/utils
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/guestfs-ocaml-gettext.m4 \
-	$(top_srcdir)/m4/introspection.m4 $(top_srcdir)/m4/libtool.m4 \
-	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
-	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
-	$(top_srcdir)/m4/ocaml.m4 $(top_srcdir)/m4/vapigen.m4 \
-	$(top_srcdir)/m4/guestfs-progs.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/m4/introspection.m4 \
+	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
+	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
+	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/m4/ocaml.m4 \
+	$(top_srcdir)/m4/vapigen.m4 $(top_srcdir)/m4/guestfs-progs.m4 \
 	$(top_srcdir)/m4/guestfs-c.m4 \
 	$(top_srcdir)/m4/guestfs-libraries.m4 \
 	$(top_srcdir)/m4/guestfs-fuse.m4 \
@@ -183,9 +182,9 @@ CONFIG_CLEAN_VPATH_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
 libutils_la_LIBADD =
 am_libutils_la_OBJECTS = libutils_la-cleanups.lo \
-	libutils_la-gnulib-cleanups.lo libutils_la-libxml2-cleanups.lo \
-	libutils_la-pcre2-cleanups.lo libutils_la-stringlists-utils.lo \
-	libutils_la-utils.lo
+	libutils_la-environ.lo libutils_la-gnulib-cleanups.lo \
+	libutils_la-libxml2-cleanups.lo libutils_la-pcre2-cleanups.lo \
+	libutils_la-stringlists-utils.lo libutils_la-utils.lo
 libutils_la_OBJECTS = $(am_libutils_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -210,6 +209,7 @@ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/libutils_la-cleanups.Plo \
+	./$(DEPDIR)/libutils_la-environ.Plo \
 	./$(DEPDIR)/libutils_la-gnulib-cleanups.Plo \
 	./$(DEPDIR)/libutils_la-libxml2-cleanups.Plo \
 	./$(DEPDIR)/libutils_la-pcre2-cleanups.Plo \
@@ -431,10 +431,7 @@ OCAMLOPT = @OCAMLOPT@
 OCAMLOPTDOTOPT = @OCAMLOPTDOTOPT@
 OCAMLVERSION = @OCAMLVERSION@
 OCAML_FLAGS = @OCAML_FLAGS@
-OCAML_GETTEXT = @OCAML_GETTEXT@
-OCAML_PKG_gettext = @OCAML_PKG_gettext@
 OCAML_PKG_hivex = @OCAML_PKG_hivex@
-OCAML_PKG_ounit2 = @OCAML_PKG_ounit2@
 OCAML_RUNTIME_VARIANT_PIC_OPTION = @OCAML_RUNTIME_VARIANT_PIC_OPTION@
 OCAML_WARN_ERROR = @OCAML_WARN_ERROR@
 OTOOL = @OTOOL@
@@ -475,6 +472,7 @@ PYTHON_VERSION = @PYTHON_VERSION@
 QEMU = @QEMU@
 RAKE = @RAKE@
 RANLIB = @RANLIB@
+REALPATH = @REALPATH@
 RELEASE_DATE = @RELEASE_DATE@
 RPCGEN = @RPCGEN@
 RPC_CFLAGS = @RPC_CFLAGS@
@@ -514,6 +512,7 @@ YACC = @YACC@
 YARA_CFLAGS = @YARA_CFLAGS@
 YARA_LIBS = @YARA_LIBS@
 YFLAGS = @YFLAGS@
+ZSTDCAT = @ZSTDCAT@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -642,6 +641,7 @@ noinst_LTLIBRARIES = libutils.la
 libutils_la_SOURCES = \
 	cleanups.c \
 	cleanups.h \
+	environ.c \
 	gnulib-cleanups.c \
 	guestfs-stringlists-utils.h \
 	guestfs-utils.h \
@@ -719,6 +719,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libutils_la-cleanups.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libutils_la-environ.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libutils_la-gnulib-cleanups.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libutils_la-libxml2-cleanups.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libutils_la-pcre2-cleanups.Plo@am__quote@ # am--include-marker
@@ -761,6 +762,13 @@ libutils_la-cleanups.lo: cleanups.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='cleanups.c' object='libutils_la-cleanups.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutils_la_CPPFLAGS) $(CPPFLAGS) $(libutils_la_CFLAGS) $(CFLAGS) -c -o libutils_la-cleanups.lo `test -f 'cleanups.c' || echo '$(srcdir)/'`cleanups.c
+
+libutils_la-environ.lo: environ.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutils_la_CPPFLAGS) $(CPPFLAGS) $(libutils_la_CFLAGS) $(CFLAGS) -MT libutils_la-environ.lo -MD -MP -MF $(DEPDIR)/libutils_la-environ.Tpo -c -o libutils_la-environ.lo `test -f 'environ.c' || echo '$(srcdir)/'`environ.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libutils_la-environ.Tpo $(DEPDIR)/libutils_la-environ.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='environ.c' object='libutils_la-environ.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutils_la_CPPFLAGS) $(CPPFLAGS) $(libutils_la_CFLAGS) $(CFLAGS) -c -o libutils_la-environ.lo `test -f 'environ.c' || echo '$(srcdir)/'`environ.c
 
 libutils_la-gnulib-cleanups.lo: gnulib-cleanups.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutils_la_CPPFLAGS) $(CPPFLAGS) $(libutils_la_CFLAGS) $(CFLAGS) -MT libutils_la-gnulib-cleanups.lo -MD -MP -MF $(DEPDIR)/libutils_la-gnulib-cleanups.Tpo -c -o libutils_la-gnulib-cleanups.lo `test -f 'gnulib-cleanups.c' || echo '$(srcdir)/'`gnulib-cleanups.c
@@ -930,6 +938,7 @@ clean-am: clean-generic clean-libtool clean-noinstLTLIBRARIES \
 
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/libutils_la-cleanups.Plo
+	-rm -f ./$(DEPDIR)/libutils_la-environ.Plo
 	-rm -f ./$(DEPDIR)/libutils_la-gnulib-cleanups.Plo
 	-rm -f ./$(DEPDIR)/libutils_la-libxml2-cleanups.Plo
 	-rm -f ./$(DEPDIR)/libutils_la-pcre2-cleanups.Plo
@@ -981,6 +990,7 @@ installcheck-am:
 
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/libutils_la-cleanups.Plo
+	-rm -f ./$(DEPDIR)/libutils_la-environ.Plo
 	-rm -f ./$(DEPDIR)/libutils_la-gnulib-cleanups.Plo
 	-rm -f ./$(DEPDIR)/libutils_la-libxml2-cleanups.Plo
 	-rm -f ./$(DEPDIR)/libutils_la-pcre2-cleanups.Plo

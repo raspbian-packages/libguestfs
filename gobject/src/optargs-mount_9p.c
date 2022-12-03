@@ -35,13 +35,12 @@
 
 #include <string.h>
 
-#define GUESTFS_MOUNT_9P_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_MOUNT_9P, GuestfsMount9PPrivate))
-
 struct _GuestfsMount9PPrivate {
   gchar *options;
 };
 
-G_DEFINE_TYPE (GuestfsMount9P, guestfs_mount_9p, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsMount9P, guestfs_mount_9p, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsMount9P));
 
 enum {
   PROP_GUESTFS_MOUNT_9P_PROP0,
@@ -118,13 +117,12 @@ guestfs_mount_9p_class_init (GuestfsMount9PClass *klass)
   );
 
   object_class->finalize = guestfs_mount_9p_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsMount9PPrivate));
 }
 
 static void
 guestfs_mount_9p_init (GuestfsMount9P *o)
 {
-  o->priv = GUESTFS_MOUNT_9P_GET_PRIVATE (o);
+  o->priv = guestfs_mount_9p_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsMount9PPrivate));
 }

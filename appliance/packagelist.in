@@ -34,6 +34,7 @@ ifelse(REDHAT,1,
   iproute
   iputils
   kernel
+  libldm
   nilfs-utils
   ntfsprogs
   ntfs-3g
@@ -47,6 +48,7 @@ ifelse(REDHAT,1,
   vim-minimal
   xz
   zfs-fuse
+  zstd
 )
 
 ifelse(DEBIAN,1,
@@ -88,6 +90,7 @@ dnl iproute has been renamed to iproute2
   vim-tiny
   xz-utils
   zfs-fuse
+  zstd
   uuid-runtime
 )
 
@@ -114,6 +117,7 @@ ifelse(ARCHLINUX,1,
   systemd
   vim
   xz
+  zstd
 )
 
 ifelse(SUSE,1,
@@ -138,6 +142,7 @@ ifelse(SUSE,1,
   systemd-sysvinit
   vim
   xz
+  zstd
 )
 
 ifelse(FRUGALWARE,1,
@@ -171,6 +176,7 @@ ifelse(MAGEIA,1,
   hfsplus-tools
   iproute2
   iputils
+  libldm
   dnl syslinux uses mtools without depending on it
   mtools
   nilfs-utils
@@ -183,6 +189,7 @@ ifelse(MAGEIA,1,
   systemd /* for /sbin/reboot and udevd */
   vim-minimal
   xz
+  zstd
 )
 
 ifelse(OPENMANDRIVA,1,
@@ -193,6 +200,7 @@ ifelse(OPENMANDRIVA,1,
   grub2
   iproute2
   iputils
+  libldm
   dnl syslinux uses mtools without depending on it
   mtools
   nilfs-utils
@@ -201,6 +209,7 @@ ifelse(OPENMANDRIVA,1,
   systemd /* for /sbin/reboot and udevd */
   vim-minimal
   xz
+  zstd
 )
 
 include(guestfsd.deps)
@@ -226,6 +235,7 @@ gzip
 jfsutils
 kmod
 less
+libxml2
 lsof
 lsscsi
 lvm2

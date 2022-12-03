@@ -35,8 +35,6 @@
 
 #include <string.h>
 
-#define GUESTFS_MKFS_BTRFS_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_MKFS_BTRFS, GuestfsMkfsBtrfsPrivate))
-
 struct _GuestfsMkfsBtrfsPrivate {
   gint64 allocstart;
   gint64 bytecount;
@@ -48,7 +46,8 @@ struct _GuestfsMkfsBtrfsPrivate {
   gint sectorsize;
 };
 
-G_DEFINE_TYPE (GuestfsMkfsBtrfs, guestfs_mkfs_btrfs, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsMkfsBtrfs, guestfs_mkfs_btrfs, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsMkfsBtrfs));
 
 enum {
   PROP_GUESTFS_MKFS_BTRFS_PROP0,
@@ -311,13 +310,12 @@ guestfs_mkfs_btrfs_class_init (GuestfsMkfsBtrfsClass *klass)
   );
 
   object_class->finalize = guestfs_mkfs_btrfs_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsMkfsBtrfsPrivate));
 }
 
 static void
 guestfs_mkfs_btrfs_init (GuestfsMkfsBtrfs *o)
 {
-  o->priv = GUESTFS_MKFS_BTRFS_GET_PRIVATE (o);
+  o->priv = guestfs_mkfs_btrfs_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsMkfsBtrfsPrivate));
 }

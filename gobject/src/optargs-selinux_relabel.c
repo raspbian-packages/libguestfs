@@ -35,13 +35,12 @@
 
 #include <string.h>
 
-#define GUESTFS_SELINUX_RELABEL_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_SELINUX_RELABEL, GuestfsSelinuxRelabelPrivate))
-
 struct _GuestfsSelinuxRelabelPrivate {
   GuestfsTristate force;
 };
 
-G_DEFINE_TYPE (GuestfsSelinuxRelabel, guestfs_selinux_relabel, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsSelinuxRelabel, guestfs_selinux_relabel, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsSelinuxRelabel));
 
 enum {
   PROP_GUESTFS_SELINUX_RELABEL_PROP0,
@@ -113,13 +112,12 @@ guestfs_selinux_relabel_class_init (GuestfsSelinuxRelabelClass *klass)
   );
 
   object_class->finalize = guestfs_selinux_relabel_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsSelinuxRelabelPrivate));
 }
 
 static void
 guestfs_selinux_relabel_init (GuestfsSelinuxRelabel *o)
 {
-  o->priv = GUESTFS_SELINUX_RELABEL_GET_PRIVATE (o);
+  o->priv = guestfs_selinux_relabel_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsSelinuxRelabelPrivate));
 }

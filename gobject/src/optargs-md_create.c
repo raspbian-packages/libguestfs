@@ -35,8 +35,6 @@
 
 #include <string.h>
 
-#define GUESTFS_MD_CREATE_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_MD_CREATE, GuestfsMDCreatePrivate))
-
 struct _GuestfsMDCreatePrivate {
   gint64 missingbitmap;
   gint nrdevices;
@@ -45,7 +43,8 @@ struct _GuestfsMDCreatePrivate {
   gchar *level;
 };
 
-G_DEFINE_TYPE (GuestfsMDCreate, guestfs_md_create, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsMDCreate, guestfs_md_create, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsMDCreate));
 
 enum {
   PROP_GUESTFS_MD_CREATE_PROP0,
@@ -226,13 +225,12 @@ guestfs_md_create_class_init (GuestfsMDCreateClass *klass)
   );
 
   object_class->finalize = guestfs_md_create_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsMDCreatePrivate));
 }
 
 static void
 guestfs_md_create_init (GuestfsMDCreate *o)
 {
-  o->priv = GUESTFS_MD_CREATE_GET_PRIVATE (o);
+  o->priv = guestfs_md_create_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsMDCreatePrivate));
 }

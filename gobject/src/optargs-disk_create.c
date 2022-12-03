@@ -35,8 +35,6 @@
 
 #include <string.h>
 
-#define GUESTFS_DISK_CREATE_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_DISK_CREATE, GuestfsDiskCreatePrivate))
-
 struct _GuestfsDiskCreatePrivate {
   gchar *backingfile;
   gchar *backingformat;
@@ -45,7 +43,8 @@ struct _GuestfsDiskCreatePrivate {
   gint clustersize;
 };
 
-G_DEFINE_TYPE (GuestfsDiskCreate, guestfs_disk_create, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsDiskCreate, guestfs_disk_create, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsDiskCreate));
 
 enum {
   PROP_GUESTFS_DISK_CREATE_PROP0,
@@ -232,13 +231,12 @@ guestfs_disk_create_class_init (GuestfsDiskCreateClass *klass)
   );
 
   object_class->finalize = guestfs_disk_create_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsDiskCreatePrivate));
 }
 
 static void
 guestfs_disk_create_init (GuestfsDiskCreate *o)
 {
-  o->priv = GUESTFS_DISK_CREATE_GET_PRIVATE (o);
+  o->priv = guestfs_disk_create_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsDiskCreatePrivate));
 }

@@ -36,6 +36,10 @@ PHP_VERSIONS    := $(subst -config,,\
 # Use private Go build cache
 export GOCACHE = $(CURDIR)/debian/gocache
 
+# Influcnce Python sysconfig.get_path() as called from configure so
+# that the correct install paths are chosen.
+export DEB_PYTHON_INSTALL_LAYOUT = deb_system
+
 # Determine the number of builds needed due to script language version
 # variants
 BUILD_COUNT := $(lastword $(sort $(foreach lang,PYTHON RUBY LUA PHP,$(words $($(lang)_VERSIONS)))))

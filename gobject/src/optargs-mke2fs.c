@@ -35,8 +35,6 @@
 
 #include <string.h>
 
-#define GUESTFS_MKE2FS_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_MKE2FS, GuestfsMke2fsPrivate))
-
 struct _GuestfsMke2fsPrivate {
   gint64 blockscount;
   gint64 blocksize;
@@ -78,7 +76,8 @@ struct _GuestfsMke2fsPrivate {
   GuestfsTristate uninitbg;
 };
 
-G_DEFINE_TYPE (GuestfsMke2fs, guestfs_mke2fs, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsMke2fs, guestfs_mke2fs, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsMke2fs));
 
 enum {
   PROP_GUESTFS_MKE2FS_PROP0,
@@ -1129,13 +1128,12 @@ guestfs_mke2fs_class_init (GuestfsMke2fsClass *klass)
   );
 
   object_class->finalize = guestfs_mke2fs_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsMke2fsPrivate));
 }
 
 static void
 guestfs_mke2fs_init (GuestfsMke2fs *o)
 {
-  o->priv = GUESTFS_MKE2FS_GET_PRIVATE (o);
+  o->priv = guestfs_mke2fs_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsMke2fsPrivate));
 }

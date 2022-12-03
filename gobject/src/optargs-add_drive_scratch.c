@@ -35,15 +35,14 @@
 
 #include <string.h>
 
-#define GUESTFS_ADD_DRIVE_SCRATCH_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_ADD_DRIVE_SCRATCH, GuestfsAddDriveScratchPrivate))
-
 struct _GuestfsAddDriveScratchPrivate {
   gchar *name;
   gchar *label;
   gint blocksize;
 };
 
-G_DEFINE_TYPE (GuestfsAddDriveScratch, guestfs_add_drive_scratch, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsAddDriveScratch, guestfs_add_drive_scratch, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsAddDriveScratch));
 
 enum {
   PROP_GUESTFS_ADD_DRIVE_SCRATCH_PROP0,
@@ -174,13 +173,12 @@ guestfs_add_drive_scratch_class_init (GuestfsAddDriveScratchClass *klass)
   );
 
   object_class->finalize = guestfs_add_drive_scratch_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsAddDriveScratchPrivate));
 }
 
 static void
 guestfs_add_drive_scratch_init (GuestfsAddDriveScratch *o)
 {
-  o->priv = GUESTFS_ADD_DRIVE_SCRATCH_GET_PRIVATE (o);
+  o->priv = guestfs_add_drive_scratch_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsAddDriveScratchPrivate));
 }

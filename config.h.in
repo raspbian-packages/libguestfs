@@ -67,6 +67,10 @@
    */
 #undef HAVE_DCGETTEXT
 
+/* Define to 1 if you have the declaration of `strerror_r', and to 0 if you
+   don't. */
+#undef HAVE_DECL_STRERROR_R
+
 /* Define to 1 if you have the <dirent.h> header file, and it defines `DIR'.
    */
 #undef HAVE_DIRENT_H
@@ -212,12 +216,6 @@
 /* Found _Py_IsFinalizing in libpython. */
 #undef HAVE_PY_ISFINALIZING
 
-/* Define to 1 if you have old-style register_printf_function. */
-#undef HAVE_REGISTER_PRINTF_FUNCTION
-
-/* Define to 1 if you have new-style register_printf_specifier. */
-#undef HAVE_REGISTER_PRINTF_SPECIFIER
-
 /* Define to 1 if you have the `removexattr' function. */
 #undef HAVE_REMOVEXATTR
 
@@ -259,6 +257,9 @@
 
 /* Define to 1 if you have the <stdlib.h> header file. */
 #undef HAVE_STDLIB_H
+
+/* Define if you have `strerror_r'. */
+#undef HAVE_STRERROR_R
 
 /* Define to 1 if you have the <strings.h> header file. */
 #undef HAVE_STRINGS_H
@@ -431,6 +432,9 @@
    required in a freestanding environment). This macro is provided for
    backward compatibility; new code need not use it. */
 #undef STDC_HEADERS
+
+/* Define to 1 if strerror_r returns char *. */
+#undef STRERROR_R_CHAR_P
 
 /* Name of supermin program */
 #undef SUPERMIN

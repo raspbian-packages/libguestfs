@@ -35,14 +35,13 @@
 
 #include <string.h>
 
-#define GUESTFS_MKSWAP_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_MKSWAP, GuestfsMkswapPrivate))
-
 struct _GuestfsMkswapPrivate {
   gchar *label;
   gchar *uuid;
 };
 
-G_DEFINE_TYPE (GuestfsMkswap, guestfs_mkswap, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsMkswap, guestfs_mkswap, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsMkswap));
 
 enum {
   PROP_GUESTFS_MKSWAP_PROP0,
@@ -147,13 +146,12 @@ guestfs_mkswap_class_init (GuestfsMkswapClass *klass)
   );
 
   object_class->finalize = guestfs_mkswap_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsMkswapPrivate));
 }
 
 static void
 guestfs_mkswap_init (GuestfsMkswap *o)
 {
-  o->priv = GUESTFS_MKSWAP_GET_PRIVATE (o);
+  o->priv = guestfs_mkswap_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsMkswapPrivate));
 }

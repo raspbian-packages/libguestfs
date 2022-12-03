@@ -126,6 +126,10 @@ I<Обов’язкове>.
 
 I<Обов’язкове>.
 
+=item realpath
+
+I<Обов’язкове>.
+
 =item flex
 
 =item bison
@@ -153,6 +157,10 @@ I<Обов’язкове>.
 I<Обов’язкове>.
 
 =item xz
+
+I<Обов’язкове>.
+
+=item zstd
 
 I<Обов’язкове>.
 
@@ -502,7 +510,7 @@ I have a file called F<localconfigure> which is a simple wrapper around F<config
 
 Зауважте, що вимикання OCaml (прив'язок) або Perl призведе до того, що буде вимкнено частину комплексу засобів тестування та деякі інструменти.
 
-Для збирання libguestfs необхідний OCaml. Цю залежність не можна вилучити. Використання прапорця I<--disable-ocaml> вимикає лише збирання прив'язок та інструментів мовою OCaml.
+OCaml is required to build libguestfs and this requirement cannot be removed.  Using I<--disable-ocaml> only disables the bindings.
 
 =item B<--disable-fuse>
 

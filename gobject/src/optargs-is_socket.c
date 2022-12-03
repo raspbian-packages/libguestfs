@@ -35,13 +35,12 @@
 
 #include <string.h>
 
-#define GUESTFS_IS_SOCKET_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_IS_SOCKET, GuestfsIsSocketPrivate))
-
 struct _GuestfsIsSocketPrivate {
   GuestfsTristate followsymlinks;
 };
 
-G_DEFINE_TYPE (GuestfsIsSocket, guestfs_is_socket, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsIsSocket, guestfs_is_socket, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsIsSocket));
 
 enum {
   PROP_GUESTFS_IS_SOCKET_PROP0,
@@ -113,13 +112,12 @@ guestfs_is_socket_class_init (GuestfsIsSocketClass *klass)
   );
 
   object_class->finalize = guestfs_is_socket_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsIsSocketPrivate));
 }
 
 static void
 guestfs_is_socket_init (GuestfsIsSocket *o)
 {
-  o->priv = GUESTFS_IS_SOCKET_GET_PRIVATE (o);
+  o->priv = guestfs_is_socket_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsIsSocketPrivate));
 }

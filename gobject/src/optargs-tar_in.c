@@ -35,8 +35,6 @@
 
 #include <string.h>
 
-#define GUESTFS_TAR_IN_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_TAR_IN, GuestfsTarInPrivate))
-
 struct _GuestfsTarInPrivate {
   gchar *compress;
   GuestfsTristate xattrs;
@@ -44,7 +42,8 @@ struct _GuestfsTarInPrivate {
   GuestfsTristate acls;
 };
 
-G_DEFINE_TYPE (GuestfsTarIn, guestfs_tar_in, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsTarIn, guestfs_tar_in, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsTarIn));
 
 enum {
   PROP_GUESTFS_TAR_IN_PROP0,
@@ -199,13 +198,12 @@ guestfs_tar_in_class_init (GuestfsTarInClass *klass)
   );
 
   object_class->finalize = guestfs_tar_in_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsTarInPrivate));
 }
 
 static void
 guestfs_tar_in_init (GuestfsTarIn *o)
 {
-  o->priv = GUESTFS_TAR_IN_GET_PRIVATE (o);
+  o->priv = guestfs_tar_in_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsTarInPrivate));
 }

@@ -35,14 +35,13 @@
 
 #include <string.h>
 
-#define GUESTFS_MKSQUASHFS_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_MKSQUASHFS, GuestfsMksquashfsPrivate))
-
 struct _GuestfsMksquashfsPrivate {
   gchar *compress;
   /* OStringList not implemented yet */
 };
 
-G_DEFINE_TYPE (GuestfsMksquashfs, guestfs_mksquashfs, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsMksquashfs, guestfs_mksquashfs, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsMksquashfs));
 
 enum {
   PROP_GUESTFS_MKSQUASHFS_PROP0,
@@ -120,13 +119,12 @@ guestfs_mksquashfs_class_init (GuestfsMksquashfsClass *klass)
   );
 
   object_class->finalize = guestfs_mksquashfs_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsMksquashfsPrivate));
 }
 
 static void
 guestfs_mksquashfs_init (GuestfsMksquashfs *o)
 {
-  o->priv = GUESTFS_MKSQUASHFS_GET_PRIVATE (o);
+  o->priv = guestfs_mksquashfs_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsMksquashfsPrivate));
 }

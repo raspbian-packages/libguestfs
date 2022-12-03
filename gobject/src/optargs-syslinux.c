@@ -35,13 +35,12 @@
 
 #include <string.h>
 
-#define GUESTFS_SYSLINUX_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_SYSLINUX, GuestfsSyslinuxPrivate))
-
 struct _GuestfsSyslinuxPrivate {
   gchar *directory;
 };
 
-G_DEFINE_TYPE (GuestfsSyslinux, guestfs_syslinux, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsSyslinux, guestfs_syslinux, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsSyslinux));
 
 enum {
   PROP_GUESTFS_SYSLINUX_PROP0,
@@ -118,13 +117,12 @@ guestfs_syslinux_class_init (GuestfsSyslinuxClass *klass)
   );
 
   object_class->finalize = guestfs_syslinux_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsSyslinuxPrivate));
 }
 
 static void
 guestfs_syslinux_init (GuestfsSyslinux *o)
 {
-  o->priv = GUESTFS_SYSLINUX_GET_PRIVATE (o);
+  o->priv = guestfs_syslinux_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsSyslinuxPrivate));
 }

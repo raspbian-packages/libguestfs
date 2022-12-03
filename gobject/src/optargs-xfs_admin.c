@@ -35,8 +35,6 @@
 
 #include <string.h>
 
-#define GUESTFS_XFS_ADMIN_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_XFS_ADMIN, GuestfsXfsAdminPrivate))
-
 struct _GuestfsXfsAdminPrivate {
   GuestfsTristate extunwritten;
   GuestfsTristate imgfile;
@@ -47,7 +45,8 @@ struct _GuestfsXfsAdminPrivate {
   gchar *uuid;
 };
 
-G_DEFINE_TYPE (GuestfsXfsAdmin, guestfs_xfs_admin, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsXfsAdmin, guestfs_xfs_admin, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsXfsAdmin));
 
 enum {
   PROP_GUESTFS_XFS_ADMIN_PROP0,
@@ -282,13 +281,12 @@ guestfs_xfs_admin_class_init (GuestfsXfsAdminClass *klass)
   );
 
   object_class->finalize = guestfs_xfs_admin_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsXfsAdminPrivate));
 }
 
 static void
 guestfs_xfs_admin_init (GuestfsXfsAdmin *o)
 {
-  o->priv = GUESTFS_XFS_ADMIN_GET_PRIVATE (o);
+  o->priv = guestfs_xfs_admin_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsXfsAdminPrivate));
 }

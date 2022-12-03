@@ -35,8 +35,6 @@
 
 #include <string.h>
 
-#define GUESTFS_TUNE2FS_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_TUNE2FS, GuestfsTune2FSPrivate))
-
 struct _GuestfsTune2FSPrivate {
   GuestfsTristate force;
   gint maxmountcount;
@@ -50,7 +48,8 @@ struct _GuestfsTune2FSPrivate {
   gint64 user;
 };
 
-G_DEFINE_TYPE (GuestfsTune2FS, guestfs_tune2fs, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsTune2FS, guestfs_tune2fs, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsTune2FS));
 
 enum {
   PROP_GUESTFS_TUNE2FS_PROP0,
@@ -363,13 +362,12 @@ guestfs_tune2fs_class_init (GuestfsTune2FSClass *klass)
   );
 
   object_class->finalize = guestfs_tune2fs_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsTune2FSPrivate));
 }
 
 static void
 guestfs_tune2fs_init (GuestfsTune2FS *o)
 {
-  o->priv = GUESTFS_TUNE2FS_GET_PRIVATE (o);
+  o->priv = guestfs_tune2fs_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsTune2FSPrivate));
 }

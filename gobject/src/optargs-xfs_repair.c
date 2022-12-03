@@ -35,8 +35,6 @@
 
 #include <string.h>
 
-#define GUESTFS_XFS_REPAIR_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_XFS_REPAIR, GuestfsXfsRepairPrivate))
-
 struct _GuestfsXfsRepairPrivate {
   GuestfsTristate forcelogzero;
   GuestfsTristate nomodify;
@@ -50,7 +48,8 @@ struct _GuestfsXfsRepairPrivate {
   gchar *rtdev;
 };
 
-G_DEFINE_TYPE (GuestfsXfsRepair, guestfs_xfs_repair, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsXfsRepair, guestfs_xfs_repair, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsXfsRepair));
 
 enum {
   PROP_GUESTFS_XFS_REPAIR_PROP0,
@@ -363,13 +362,12 @@ guestfs_xfs_repair_class_init (GuestfsXfsRepairClass *klass)
   );
 
   object_class->finalize = guestfs_xfs_repair_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsXfsRepairPrivate));
 }
 
 static void
 guestfs_xfs_repair_init (GuestfsXfsRepair *o)
 {
-  o->priv = GUESTFS_XFS_REPAIR_GET_PRIVATE (o);
+  o->priv = guestfs_xfs_repair_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsXfsRepairPrivate));
 }

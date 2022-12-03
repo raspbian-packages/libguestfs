@@ -35,8 +35,6 @@
 
 #include <string.h>
 
-#define GUESTFS_ADD_DRIVE_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_ADD_DRIVE, GuestfsAddDrivePrivate))
-
 struct _GuestfsAddDrivePrivate {
   GuestfsTristate readonly;
   gchar *format;
@@ -53,7 +51,8 @@ struct _GuestfsAddDrivePrivate {
   gint blocksize;
 };
 
-G_DEFINE_TYPE (GuestfsAddDrive, guestfs_add_drive, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsAddDrive, guestfs_add_drive, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsAddDrive));
 
 enum {
   PROP_GUESTFS_ADD_DRIVE_PROP0,
@@ -433,13 +432,12 @@ guestfs_add_drive_class_init (GuestfsAddDriveClass *klass)
   );
 
   object_class->finalize = guestfs_add_drive_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsAddDrivePrivate));
 }
 
 static void
 guestfs_add_drive_init (GuestfsAddDrive *o)
 {
-  o->priv = GUESTFS_ADD_DRIVE_GET_PRIVATE (o);
+  o->priv = guestfs_add_drive_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsAddDrivePrivate));
 }

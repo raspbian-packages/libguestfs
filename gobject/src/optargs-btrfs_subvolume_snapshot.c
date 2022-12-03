@@ -35,14 +35,13 @@
 
 #include <string.h>
 
-#define GUESTFS_BTRFS_SUBVOLUME_SNAPSHOT_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_BTRFS_SUBVOLUME_SNAPSHOT, GuestfsBTRFSSubvolumeSnapshotPrivate))
-
 struct _GuestfsBTRFSSubvolumeSnapshotPrivate {
   GuestfsTristate ro;
   gchar *qgroupid;
 };
 
-G_DEFINE_TYPE (GuestfsBTRFSSubvolumeSnapshot, guestfs_btrfs_subvolume_snapshot, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsBTRFSSubvolumeSnapshot, guestfs_btrfs_subvolume_snapshot, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsBTRFSSubvolumeSnapshot));
 
 enum {
   PROP_GUESTFS_BTRFS_SUBVOLUME_SNAPSHOT_PROP0,
@@ -145,13 +144,12 @@ guestfs_btrfs_subvolume_snapshot_class_init (GuestfsBTRFSSubvolumeSnapshotClass 
   );
 
   object_class->finalize = guestfs_btrfs_subvolume_snapshot_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsBTRFSSubvolumeSnapshotPrivate));
 }
 
 static void
 guestfs_btrfs_subvolume_snapshot_init (GuestfsBTRFSSubvolumeSnapshot *o)
 {
-  o->priv = GUESTFS_BTRFS_SUBVOLUME_SNAPSHOT_GET_PRIVATE (o);
+  o->priv = guestfs_btrfs_subvolume_snapshot_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsBTRFSSubvolumeSnapshotPrivate));
 }

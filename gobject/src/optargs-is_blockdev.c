@@ -35,13 +35,12 @@
 
 #include <string.h>
 
-#define GUESTFS_IS_BLOCKDEV_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_IS_BLOCKDEV, GuestfsIsBlockdevPrivate))
-
 struct _GuestfsIsBlockdevPrivate {
   GuestfsTristate followsymlinks;
 };
 
-G_DEFINE_TYPE (GuestfsIsBlockdev, guestfs_is_blockdev, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsIsBlockdev, guestfs_is_blockdev, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsIsBlockdev));
 
 enum {
   PROP_GUESTFS_IS_BLOCKDEV_PROP0,
@@ -113,13 +112,12 @@ guestfs_is_blockdev_class_init (GuestfsIsBlockdevClass *klass)
   );
 
   object_class->finalize = guestfs_is_blockdev_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsIsBlockdevPrivate));
 }
 
 static void
 guestfs_is_blockdev_init (GuestfsIsBlockdev *o)
 {
-  o->priv = GUESTFS_IS_BLOCKDEV_GET_PRIVATE (o);
+  o->priv = guestfs_is_blockdev_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsIsBlockdevPrivate));
 }

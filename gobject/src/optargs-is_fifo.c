@@ -35,13 +35,12 @@
 
 #include <string.h>
 
-#define GUESTFS_IS_FIFO_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_IS_FIFO, GuestfsIsFifoPrivate))
-
 struct _GuestfsIsFifoPrivate {
   GuestfsTristate followsymlinks;
 };
 
-G_DEFINE_TYPE (GuestfsIsFifo, guestfs_is_fifo, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsIsFifo, guestfs_is_fifo, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsIsFifo));
 
 enum {
   PROP_GUESTFS_IS_FIFO_PROP0,
@@ -113,13 +112,12 @@ guestfs_is_fifo_class_init (GuestfsIsFifoClass *klass)
   );
 
   object_class->finalize = guestfs_is_fifo_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsIsFifoPrivate));
 }
 
 static void
 guestfs_is_fifo_init (GuestfsIsFifo *o)
 {
-  o->priv = GUESTFS_IS_FIFO_GET_PRIVATE (o);
+  o->priv = guestfs_is_fifo_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsIsFifoPrivate));
 }

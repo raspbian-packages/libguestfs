@@ -35,13 +35,12 @@
 
 #include <string.h>
 
-#define GUESTFS_DOWNLOAD_BLOCKS_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_DOWNLOAD_BLOCKS, GuestfsDownloadBlocksPrivate))
-
 struct _GuestfsDownloadBlocksPrivate {
   GuestfsTristate unallocated;
 };
 
-G_DEFINE_TYPE (GuestfsDownloadBlocks, guestfs_download_blocks, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsDownloadBlocks, guestfs_download_blocks, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsDownloadBlocks));
 
 enum {
   PROP_GUESTFS_DOWNLOAD_BLOCKS_PROP0,
@@ -113,13 +112,12 @@ guestfs_download_blocks_class_init (GuestfsDownloadBlocksClass *klass)
   );
 
   object_class->finalize = guestfs_download_blocks_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsDownloadBlocksPrivate));
 }
 
 static void
 guestfs_download_blocks_init (GuestfsDownloadBlocks *o)
 {
-  o->priv = GUESTFS_DOWNLOAD_BLOCKS_GET_PRIVATE (o);
+  o->priv = guestfs_download_blocks_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsDownloadBlocksPrivate));
 }

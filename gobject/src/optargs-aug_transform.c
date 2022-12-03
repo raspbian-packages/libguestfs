@@ -35,13 +35,12 @@
 
 #include <string.h>
 
-#define GUESTFS_AUG_TRANSFORM_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_AUG_TRANSFORM, GuestfsAugTransformPrivate))
-
 struct _GuestfsAugTransformPrivate {
   GuestfsTristate remove;
 };
 
-G_DEFINE_TYPE (GuestfsAugTransform, guestfs_aug_transform, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsAugTransform, guestfs_aug_transform, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsAugTransform));
 
 enum {
   PROP_GUESTFS_AUG_TRANSFORM_PROP0,
@@ -113,13 +112,12 @@ guestfs_aug_transform_class_init (GuestfsAugTransformClass *klass)
   );
 
   object_class->finalize = guestfs_aug_transform_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsAugTransformPrivate));
 }
 
 static void
 guestfs_aug_transform_init (GuestfsAugTransform *o)
 {
-  o->priv = GUESTFS_AUG_TRANSFORM_GET_PRIVATE (o);
+  o->priv = guestfs_aug_transform_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsAugTransformPrivate));
 }

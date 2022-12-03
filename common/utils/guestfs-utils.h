@@ -32,6 +32,7 @@
 #ifndef GUESTFS_UTILS_H_
 #define GUESTFS_UTILS_H_
 
+#include <stdio.h>
 #include <stdbool.h>
 
 #include "guestfs-internal-all.h"
@@ -108,5 +109,8 @@ extern const char *guestfs_int_strerror (int errnum, char *buf, size_t buflen);
     if (force_colour || isatty (fileno (fp)))    \
       fputs ("\033[0m", (fp));                   \
   } while (0)
+
+/* environ.c */
+extern char **guestfs_int_copy_environ (char **env, ...);
 
 #endif /* GUESTFS_UTILS_H_ */

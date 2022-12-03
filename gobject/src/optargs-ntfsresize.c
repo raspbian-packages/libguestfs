@@ -35,14 +35,13 @@
 
 #include <string.h>
 
-#define GUESTFS_NTFSRESIZE_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_NTFSRESIZE, GuestfsNTFSResizeOptsPrivate))
-
 struct _GuestfsNTFSResizeOptsPrivate {
   gint64 size;
   GuestfsTristate force;
 };
 
-G_DEFINE_TYPE (GuestfsNTFSResizeOpts, guestfs_ntfsresize, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsNTFSResizeOpts, guestfs_ntfsresize, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsNTFSResizeOpts));
 
 enum {
   PROP_GUESTFS_NTFSRESIZE_PROP0,
@@ -140,13 +139,12 @@ guestfs_ntfsresize_class_init (GuestfsNTFSResizeOptsClass *klass)
   );
 
   object_class->finalize = guestfs_ntfsresize_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsNTFSResizeOptsPrivate));
 }
 
 static void
 guestfs_ntfsresize_init (GuestfsNTFSResizeOpts *o)
 {
-  o->priv = GUESTFS_NTFSRESIZE_GET_PRIVATE (o);
+  o->priv = guestfs_ntfsresize_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsNTFSResizeOptsPrivate));
 }

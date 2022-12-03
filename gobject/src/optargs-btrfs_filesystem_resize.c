@@ -35,13 +35,12 @@
 
 #include <string.h>
 
-#define GUESTFS_BTRFS_FILESYSTEM_RESIZE_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_BTRFS_FILESYSTEM_RESIZE, GuestfsBTRFSFilesystemResizePrivate))
-
 struct _GuestfsBTRFSFilesystemResizePrivate {
   gint64 size;
 };
 
-G_DEFINE_TYPE (GuestfsBTRFSFilesystemResize, guestfs_btrfs_filesystem_resize, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsBTRFSFilesystemResize, guestfs_btrfs_filesystem_resize, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsBTRFSFilesystemResize));
 
 enum {
   PROP_GUESTFS_BTRFS_FILESYSTEM_RESIZE_PROP0,
@@ -113,13 +112,12 @@ guestfs_btrfs_filesystem_resize_class_init (GuestfsBTRFSFilesystemResizeClass *k
   );
 
   object_class->finalize = guestfs_btrfs_filesystem_resize_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsBTRFSFilesystemResizePrivate));
 }
 
 static void
 guestfs_btrfs_filesystem_resize_init (GuestfsBTRFSFilesystemResize *o)
 {
-  o->priv = GUESTFS_BTRFS_FILESYSTEM_RESIZE_GET_PRIVATE (o);
+  o->priv = guestfs_btrfs_filesystem_resize_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsBTRFSFilesystemResizePrivate));
 }

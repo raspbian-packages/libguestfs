@@ -35,8 +35,6 @@
 
 #include <string.h>
 
-#define GUESTFS_COPY_ATTRIBUTES_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_COPY_ATTRIBUTES, GuestfsCopyAttributesPrivate))
-
 struct _GuestfsCopyAttributesPrivate {
   GuestfsTristate all;
   GuestfsTristate mode;
@@ -44,7 +42,8 @@ struct _GuestfsCopyAttributesPrivate {
   GuestfsTristate ownership;
 };
 
-G_DEFINE_TYPE (GuestfsCopyAttributes, guestfs_copy_attributes, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsCopyAttributes, guestfs_copy_attributes, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsCopyAttributes));
 
 enum {
   PROP_GUESTFS_COPY_ATTRIBUTES_PROP0,
@@ -194,13 +193,12 @@ guestfs_copy_attributes_class_init (GuestfsCopyAttributesClass *klass)
   );
 
   object_class->finalize = guestfs_copy_attributes_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsCopyAttributesPrivate));
 }
 
 static void
 guestfs_copy_attributes_init (GuestfsCopyAttributes *o)
 {
-  o->priv = GUESTFS_COPY_ATTRIBUTES_GET_PRIVATE (o);
+  o->priv = guestfs_copy_attributes_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsCopyAttributesPrivate));
 }

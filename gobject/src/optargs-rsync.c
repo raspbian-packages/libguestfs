@@ -35,14 +35,13 @@
 
 #include <string.h>
 
-#define GUESTFS_RSYNC_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_RSYNC, GuestfsRsyncPrivate))
-
 struct _GuestfsRsyncPrivate {
   GuestfsTristate archive;
   GuestfsTristate deletedest;
 };
 
-G_DEFINE_TYPE (GuestfsRsync, guestfs_rsync, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsRsync, guestfs_rsync, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsRsync));
 
 enum {
   PROP_GUESTFS_RSYNC_PROP0,
@@ -140,13 +139,12 @@ guestfs_rsync_class_init (GuestfsRsyncClass *klass)
   );
 
   object_class->finalize = guestfs_rsync_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsRsyncPrivate));
 }
 
 static void
 guestfs_rsync_init (GuestfsRsync *o)
 {
-  o->priv = GUESTFS_RSYNC_GET_PRIVATE (o);
+  o->priv = guestfs_rsync_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsRsyncPrivate));
 }

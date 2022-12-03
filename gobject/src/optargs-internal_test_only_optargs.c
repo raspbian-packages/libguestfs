@@ -35,13 +35,12 @@
 
 #include <string.h>
 
-#define GUESTFS_INTERNAL_TEST_ONLY_OPTARGS_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_INTERNAL_TEST_ONLY_OPTARGS, GuestfsInternalTestOnlyOptargsPrivate))
-
 struct _GuestfsInternalTestOnlyOptargsPrivate {
   gint test;
 };
 
-G_DEFINE_TYPE (GuestfsInternalTestOnlyOptargs, guestfs_internal_test_only_optargs, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsInternalTestOnlyOptargs, guestfs_internal_test_only_optargs, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsInternalTestOnlyOptargs));
 
 enum {
   PROP_GUESTFS_INTERNAL_TEST_ONLY_OPTARGS_PROP0,
@@ -113,13 +112,12 @@ guestfs_internal_test_only_optargs_class_init (GuestfsInternalTestOnlyOptargsCla
   );
 
   object_class->finalize = guestfs_internal_test_only_optargs_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsInternalTestOnlyOptargsPrivate));
 }
 
 static void
 guestfs_internal_test_only_optargs_init (GuestfsInternalTestOnlyOptargs *o)
 {
-  o->priv = GUESTFS_INTERNAL_TEST_ONLY_OPTARGS_GET_PRIVATE (o);
+  o->priv = guestfs_internal_test_only_optargs_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsInternalTestOnlyOptargsPrivate));
 }

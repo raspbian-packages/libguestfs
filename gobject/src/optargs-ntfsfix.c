@@ -35,13 +35,12 @@
 
 #include <string.h>
 
-#define GUESTFS_NTFSFIX_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_NTFSFIX, GuestfsNtfsfixPrivate))
-
 struct _GuestfsNtfsfixPrivate {
   GuestfsTristate clearbadsectors;
 };
 
-G_DEFINE_TYPE (GuestfsNtfsfix, guestfs_ntfsfix, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsNtfsfix, guestfs_ntfsfix, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsNtfsfix));
 
 enum {
   PROP_GUESTFS_NTFSFIX_PROP0,
@@ -113,13 +112,12 @@ guestfs_ntfsfix_class_init (GuestfsNtfsfixClass *klass)
   );
 
   object_class->finalize = guestfs_ntfsfix_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsNtfsfixPrivate));
 }
 
 static void
 guestfs_ntfsfix_init (GuestfsNtfsfix *o)
 {
-  o->priv = GUESTFS_NTFSFIX_GET_PRIVATE (o);
+  o->priv = guestfs_ntfsfix_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsNtfsfixPrivate));
 }

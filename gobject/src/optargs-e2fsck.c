@@ -35,14 +35,13 @@
 
 #include <string.h>
 
-#define GUESTFS_E2FSCK_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_E2FSCK, GuestfsE2fsckPrivate))
-
 struct _GuestfsE2fsckPrivate {
   GuestfsTristate correct;
   GuestfsTristate forceall;
 };
 
-G_DEFINE_TYPE (GuestfsE2fsck, guestfs_e2fsck, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsE2fsck, guestfs_e2fsck, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsE2fsck));
 
 enum {
   PROP_GUESTFS_E2FSCK_PROP0,
@@ -140,13 +139,12 @@ guestfs_e2fsck_class_init (GuestfsE2fsckClass *klass)
   );
 
   object_class->finalize = guestfs_e2fsck_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsE2fsckPrivate));
 }
 
 static void
 guestfs_e2fsck_init (GuestfsE2fsck *o)
 {
-  o->priv = GUESTFS_E2FSCK_GET_PRIVATE (o);
+  o->priv = guestfs_e2fsck_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsE2fsckPrivate));
 }

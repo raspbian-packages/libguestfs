@@ -35,14 +35,13 @@
 
 #include <string.h>
 
-#define GUESTFS_BTRFS_FSCK_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_BTRFS_FSCK, GuestfsBtrfsFsckPrivate))
-
 struct _GuestfsBtrfsFsckPrivate {
   gint64 superblock;
   GuestfsTristate repair;
 };
 
-G_DEFINE_TYPE (GuestfsBtrfsFsck, guestfs_btrfs_fsck, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsBtrfsFsck, guestfs_btrfs_fsck, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsBtrfsFsck));
 
 enum {
   PROP_GUESTFS_BTRFS_FSCK_PROP0,
@@ -140,13 +139,12 @@ guestfs_btrfs_fsck_class_init (GuestfsBtrfsFsckClass *klass)
   );
 
   object_class->finalize = guestfs_btrfs_fsck_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsBtrfsFsckPrivate));
 }
 
 static void
 guestfs_btrfs_fsck_init (GuestfsBtrfsFsck *o)
 {
-  o->priv = GUESTFS_BTRFS_FSCK_GET_PRIVATE (o);
+  o->priv = guestfs_btrfs_fsck_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsBtrfsFsckPrivate));
 }

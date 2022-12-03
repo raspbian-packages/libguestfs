@@ -35,13 +35,12 @@
 
 #include <string.h>
 
-#define GUESTFS_BTRFS_IMAGE_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_BTRFS_IMAGE, GuestfsBTRFSImagePrivate))
-
 struct _GuestfsBTRFSImagePrivate {
   gint compresslevel;
 };
 
-G_DEFINE_TYPE (GuestfsBTRFSImage, guestfs_btrfs_image, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsBTRFSImage, guestfs_btrfs_image, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsBTRFSImage));
 
 enum {
   PROP_GUESTFS_BTRFS_IMAGE_PROP0,
@@ -113,13 +112,12 @@ guestfs_btrfs_image_class_init (GuestfsBTRFSImageClass *klass)
   );
 
   object_class->finalize = guestfs_btrfs_image_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsBTRFSImagePrivate));
 }
 
 static void
 guestfs_btrfs_image_init (GuestfsBTRFSImage *o)
 {
-  o->priv = GUESTFS_BTRFS_IMAGE_GET_PRIVATE (o);
+  o->priv = guestfs_btrfs_image_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsBTRFSImagePrivate));
 }

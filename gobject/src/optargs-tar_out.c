@@ -35,8 +35,6 @@
 
 #include <string.h>
 
-#define GUESTFS_TAR_OUT_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GUESTFS_TYPE_TAR_OUT, GuestfsTarOutPrivate))
-
 struct _GuestfsTarOutPrivate {
   gchar *compress;
   GuestfsTristate numericowner;
@@ -46,7 +44,8 @@ struct _GuestfsTarOutPrivate {
   GuestfsTristate acls;
 };
 
-G_DEFINE_TYPE (GuestfsTarOut, guestfs_tar_out, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_CODE (GuestfsTarOut, guestfs_tar_out, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GuestfsTarOut));
 
 enum {
   PROP_GUESTFS_TAR_OUT_PROP0,
@@ -228,13 +227,12 @@ guestfs_tar_out_class_init (GuestfsTarOutClass *klass)
   );
 
   object_class->finalize = guestfs_tar_out_finalize;
-  g_type_class_add_private (klass, sizeof (GuestfsTarOutPrivate));
 }
 
 static void
 guestfs_tar_out_init (GuestfsTarOut *o)
 {
-  o->priv = GUESTFS_TAR_OUT_GET_PRIVATE (o);
+  o->priv = guestfs_tar_out_get_instance_private (o);
   /* XXX: Find out if gobject already zeroes private structs */
   memset (o->priv, 0, sizeof (GuestfsTarOutPrivate));
 }

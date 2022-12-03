@@ -149,12 +149,11 @@ host_triplet = @host@
 @HAVE_PO4A_TRUE@am__append_16 = po-docs
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/guestfs-ocaml-gettext.m4 \
-	$(top_srcdir)/m4/introspection.m4 $(top_srcdir)/m4/libtool.m4 \
-	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
-	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
-	$(top_srcdir)/m4/ocaml.m4 $(top_srcdir)/m4/vapigen.m4 \
-	$(top_srcdir)/m4/guestfs-progs.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/m4/introspection.m4 \
+	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
+	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
+	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/m4/ocaml.m4 \
+	$(top_srcdir)/m4/vapigen.m4 $(top_srcdir)/m4/guestfs-progs.m4 \
 	$(top_srcdir)/m4/guestfs-c.m4 \
 	$(top_srcdir)/m4/guestfs-libraries.m4 \
 	$(top_srcdir)/m4/guestfs-fuse.m4 \
@@ -452,14 +451,13 @@ TEST_LOG_COMPILE = $(TEST_LOG_COMPILER) $(AM_TEST_LOG_FLAGS) \
 DIST_SUBDIRS = common/mlstdutils generator test-data gnulib/lib \
 	common/errnostring common/protocol common/qemuopts \
 	common/utils common/structs include lib docs examples \
-	common/mlutils bundled/ocaml-augeas common/mlpcre \
-	common/mlgettext daemon appliance tests common/edit \
-	common/options common/parallel common/progress common/visit \
-	common/windows test-tool fish rescue bash perl perl/examples \
-	ocaml ocaml/examples python python/examples ruby ruby/examples \
-	java java/examples haskell php erlang erlang/examples lua \
-	lua/examples gobject golang golang/examples rust csharp fuse \
-	po po-docs
+	common/mlutils bundled/ocaml-augeas common/mlpcre daemon \
+	appliance tests common/edit common/options common/parallel \
+	common/progress common/visit common/windows test-tool fish \
+	rescue bash perl perl/examples ocaml ocaml/examples python \
+	python/examples ruby ruby/examples java java/examples haskell \
+	php erlang erlang/examples lua lua/examples gobject golang \
+	golang/examples rust csharp fuse po po-docs
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in \
 	$(srcdir)/config.sh.in $(srcdir)/installcheck.sh.in \
 	$(srcdir)/ocaml-dep.sh.in $(srcdir)/ocaml-link.sh.in \
@@ -697,10 +695,7 @@ OCAMLOPT = @OCAMLOPT@
 OCAMLOPTDOTOPT = @OCAMLOPTDOTOPT@
 OCAMLVERSION = @OCAMLVERSION@
 OCAML_FLAGS = @OCAML_FLAGS@
-OCAML_GETTEXT = @OCAML_GETTEXT@
-OCAML_PKG_gettext = @OCAML_PKG_gettext@
 OCAML_PKG_hivex = @OCAML_PKG_hivex@
-OCAML_PKG_ounit2 = @OCAML_PKG_ounit2@
 OCAML_RUNTIME_VARIANT_PIC_OPTION = @OCAML_RUNTIME_VARIANT_PIC_OPTION@
 OCAML_WARN_ERROR = @OCAML_WARN_ERROR@
 OTOOL = @OTOOL@
@@ -741,6 +736,7 @@ PYTHON_VERSION = @PYTHON_VERSION@
 QEMU = @QEMU@
 RAKE = @RAKE@
 RANLIB = @RANLIB@
+REALPATH = @REALPATH@
 RELEASE_DATE = @RELEASE_DATE@
 RPCGEN = @RPCGEN@
 RPC_CFLAGS = @RPC_CFLAGS@
@@ -780,6 +776,7 @@ YACC = @YACC@
 YARA_CFLAGS = @YARA_CFLAGS@
 YARA_LIBS = @YARA_LIBS@
 YFLAGS = @YFLAGS@
+ZSTDCAT = @ZSTDCAT@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -898,14 +895,14 @@ SUBDIRS = common/mlstdutils generator test-data gnulib/lib \
 	common/errnostring common/protocol common/qemuopts \
 	common/utils common/structs include lib docs examples \
 	common/mlutils bundled/ocaml-augeas common/mlpcre \
-	common/mlgettext $(am__append_1) $(am__append_2) tests \
-	common/edit common/options common/parallel common/progress \
-	common/visit common/windows test-tool fish rescue bash \
-	$(am__append_3) $(am__append_4) $(am__append_5) \
-	$(am__append_6) $(am__append_7) $(am__append_8) \
-	$(am__append_9) $(am__append_10) $(am__append_11) \
-	$(am__append_12) $(am__append_13) $(am__append_14) csharp \
-	$(am__append_15) po $(am__append_16)
+	$(am__append_1) $(am__append_2) tests common/edit \
+	common/options common/parallel common/progress common/visit \
+	common/windows test-tool fish rescue bash $(am__append_3) \
+	$(am__append_4) $(am__append_5) $(am__append_6) \
+	$(am__append_7) $(am__append_8) $(am__append_9) \
+	$(am__append_10) $(am__append_11) $(am__append_12) \
+	$(am__append_13) $(am__append_14) csharp $(am__append_15) po \
+	$(am__append_16)
 EXTRA_DIST = \
 	AUTHORS HACKING RELEASES TODO \
 	.gitignore \
@@ -1694,9 +1691,8 @@ maintainer-upload-website:
 #  docs/C_SOURCE_FILES
 #                 - source files scanned for internal documentation
 #  po/POTFILES    - files with ordinary extensions, but not OCaml files
-#  po/POTFILES-ml - OCaml files, which need a special tool to translate
 
-dist-hook: docs/C_SOURCE_FILES po/POTFILES po/POTFILES-ml
+dist-hook: docs/C_SOURCE_FILES po/POTFILES
 
 # This has to be in the top-level Makefile.am so that we have access
 # to DIST_SUBDIRS.
@@ -1908,6 +1904,7 @@ maintainer-check-extra-dist:
 	  cd common; git ls-files | sed 's,^,common/,' ) | \
 	  grep -v '^common$$' | \
 	  grep -v '^common/mlcustomize/' | \
+	  grep -v '^common/mlgettext/' | \
 	  grep -v '^common/mlprogress/' | \
 	  grep -v '^common/mltools/' | \
 	  grep -v '^common/mlv2v/' | \

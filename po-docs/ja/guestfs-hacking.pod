@@ -677,30 +677,6 @@ In either case, check that the right program is being tested by examining the F<
 
 You do not need to subscribe to the mailing list if you don’t want to. There may be a short delay while your message is moderated.
 
-=head2 DAEMON CUSTOM PRINTF FORMATTERS
-
-In the daemon code we have created custom printf formatters C<%Q> and C<%R>, which are used to do shell quoting.
-
-=over 4
-
-=item %Q
-
-シンプルなシェルクオート文字列。すべての空白と他のシェル文字がエスケープされます。
-
-=item %R
-
-Same as C<%Q> except the string is treated as a path which is prefixed by the sysroot.
-
-=back
-
-例:
-
- asprintf (&cmd, "cat %R", path);
-
-C<cat /sysroot/some\ path\ with\ spaces> を生成します
-
-I<Note:> Do I<not> use these when you are passing parameters to the C<command{,r,v,rv}()> functions.  These parameters do NOT need to be quoted because they are not passed via the shell (instead, straight to exec).  You probably want to use the C<sysroot_path()> function however.
-
 =head2 国際化 (i18n) サポート
 
 We support i18n (gettext anyhow) in the library.
