@@ -5835,9 +5835,8 @@ public class GuestFS {
    * This call will also transparently look inside various
    * types of compressed file.
    * </p><p>
-   * The exact command which runs is "file -zb path". Note in
-   * particular that the filename is not prepended to the
-   * output (the *-b* option).
+   * The filename is not prepended to the output (like the
+   * file command *-b* option).
    * </p><p>
    * The output depends on the output of the underlying
    * file(1) command and it can change in future in ways

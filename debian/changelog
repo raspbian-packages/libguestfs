@@ -1,4 +1,4 @@
-libguestfs (1:1.48.5-2+rpi1) bookworm-staging; urgency=medium
+libguestfs (1:1.48.6-1+rpi1) bookworm-staging; urgency=medium
 
   [changes brought forward from 1:1.42.0-11+rpi1 by Peter Michael Green <plugwash@raspbian.org> at Thu, 12 Nov 2020 16:03:00 +0000]
   * Add raspbian to the list of distros with dpkg.
@@ -9,7 +9,13 @@ libguestfs (1:1.48.5-2+rpi1) bookworm-staging; urgency=medium
   * Remove testsuite-specific build-dependencies.
   * Disable testsuite.
 
- -- Raspbian forward porter <root@raspbian.org>  Sat, 03 Dec 2022 14:39:15 +0000
+ -- Raspbian forward porter <root@raspbian.org>  Thu, 08 Dec 2022 18:19:00 +0000
+
+libguestfs (1:1.48.6-1) unstable; urgency=medium
+
+  * New upstream version 1.48.6
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 29 Nov 2022 10:27:07 +0100
 
 libguestfs (1:1.48.5-2) unstable; urgency=medium
 

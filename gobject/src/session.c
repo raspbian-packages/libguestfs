@@ -7750,8 +7750,8 @@ guestfs_session_fgrepi (GuestfsSession *session, const gchar *pattern, const gch
  * This call will also transparently look inside various types of
  * compressed file.
  * 
- * The exact command which runs is "file -zb path". Note in particular that
- * the filename is not prepended to the output (the *-b* option).
+ * The filename is not prepended to the output (like the file command *-b*
+ * option).
  * 
  * The output depends on the output of the underlying file(1) command and
  * it can change in future in ways beyond our control. In other words, the

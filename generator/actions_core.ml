@@ -2122,9 +2122,8 @@ the type or contents of the file.
 This call will also transparently look inside various types
 of compressed file.
 
-The exact command which runs is C<file -zb path>.  Note in
-particular that the filename is not prepended to the output
-(the I<-b> option).
+The filename is not prepended to the output
+(like the file command I<-b> option).
 
 The output depends on the output of the underlying L<file(1)>
 command and it can change in future in ways beyond our control.
@@ -7461,9 +7460,9 @@ in the returned structure is defined by the API." };
         [["part_disk"; "/dev/sda"; "mbr"];
          ["pvcreate"; "/dev/sda1"];
          ["vgcreate"; "VG"; "/dev/sda1"];
-         ["lvcreate"; "LV"; "VG"; "40"];
+         ["lvcreate"; "LV"; "VG"; "300"];
          ["mkfs"; "xfs"; "/dev/VG/LV"; ""; "NOARG"; ""; ""; "NOARG"];
-         ["lvresize"; "/dev/VG/LV"; "80"];
+         ["lvresize"; "/dev/VG/LV"; "400"];
          ["mount"; "/dev/VG/LV"; "/"];
          ["xfs_growfs"; "/"; "true"; "false"; "false"; ""; ""; ""; ""; ""];
          ["xfs_info"; "/"]], "ret->xfs_blocksize == 4096"), [];
