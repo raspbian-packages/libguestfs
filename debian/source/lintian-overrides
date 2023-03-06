@@ -1,0 +1,5 @@
+# See test-data/binaries/README
+libguestfs source: source-is-missing [test-data/binaries/bin-*-dynamic]
+libguestfs source: source-is-missing [test-data/binaries/lib-*.so]
+libguestfs source: source-contains-prebuilt-windows-binary [test-data/binaries/*.exe]
+libguestfs source: source-contains-prebuilt-windows-binary [test-data/binaries/*.dll]
