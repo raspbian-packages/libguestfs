@@ -1,0 +1,354 @@
+
+=head1 名前
+
+guestfs-testing - libguestfs の手動テスト、手助けになります!
+
+=head1 説明
+
+This page has manual tests you can try on libguestfs.  Everyone has a slightly different combination of platform, hardware and guests, so this testing is very valuable.  Thanks for helping out!
+
+Tests marked with a B<*> (asterisk) can B<destroy data> if you're not careful.  The others are safe and won't modify anything.
+
+These tests B<require libguestfs E<ge> 1.22>.
+
+このリンクを使用して見つけたバグを報告できます:
+
+L<https://bugzilla.redhat.com/enter_bug.cgi?component=libguestfs&product=Virtualization+Tools>
+
+or post on the mailing list (registration is B<not> required, but if you're not registered then you'll have to wait for a moderator to manually approve your message):
+
+L<https://www.redhat.com/mailman/listinfo/libguestfs>
+
+=head1 テスト
+
+=head2 libguestfs-test-tool の実行
+
+次を実行します:
+
+ libguestfs-test-tool
+
+このコマンドは、基本的な libguestfs が機能しているか、非常に簡単かつ非破壊的なテストを実行します。root として実行する必要がありません。
+
+If it I<doesn't> print C<===== TEST FINISHED OK =====>, report it as a bug. It is very important that you include the B<complete, unedited> output of C<libguestfs-test-tool> in your bug report.  See the L</BUGS> section at the end of this page.
+
+=head2 KVM アクセラレーションが使用されていることを確認します。
+
+If your host has hardware virt acceleration, then with a hot cache libguestfs should be able to start up in a few seconds.  Run the following command a few times:
+
+ time guestfish -a /dev/null run
+
+After a few runs, the time should settle down to a few seconds (under 3 seconds on fast 64 bit hardware).
+
+上のコマンドがまったく機能しなければ、 L<libguestfs-test-tool(1)> を使用します。
+
+=head2 Check which version of libguestfs, qemu, libvirt, etc is being used.
+
+Look at the output of C<libguestfs-test-tool> and check:
+
+=over 4
+
+=item *
+
+Which version of libguestfs is being used? Near the beginning of the output you'll see a line like:
+
+ library version: 1.22.0fedora=19,release=1.fc19,libvirt
+
+=item *
+
+Is libvirt being used? You can tell the difference by looking for the backend:
+
+ guestfs_get_backend: direct
+
+または:
+
+ guestfs_get_backend: libvirt
+
+=item *
+
+Which version of qemu is being used? It may be printed out:
+
+ libguestfs: qemu version 1.5
+
+=item *
+
+Which kernel is being used? L<supermin(1)> will try to pick the latest kernel installed on your machine.  You can see the version in the appliance output, eg:
+
+ [    0.000000] Linux version 3.9.2-200.fc18.x86_64 [...]
+
+=back
+
+=head2 Try to open a local guest image with guestfish.
+
+You can use any guest disk image for this test.  Make sure you use the C<--ro> flag so that L<guestfish(1)> will open the disk image read-only.
+
+ guestfish --ro -a /path/to/disk.img -i
+
+If the command is successful, it should print out the guest operating system name and put you at the guestfish C<E<gt>E<lt>fsE<gt>> prompt.  You can use guestfish commands like S<C<ll />> to look inside the disk image.  To exit, type C<exit>.
+
+If you get an error, try enabling debugging (add C<-v> to the command line).  Also make sure that L<libguestfs-test-tool(1)> succeeds.
+
+=head2 Try to open a remote guest image with guestfish.
+
+You may also have to disable libvirt by setting this:
+
+ export LIBGUESTFS_BACKEND=direct
+
+If you have a disk image available over HTTP/FTP, try to open it.
+
+ guestfish --ro -i --format=raw -a http://www.example.com/disk.img
+
+For SSH you will need to make sure that ssh-agent is set up so you don't need a password to log in to the remote machine.  Then a command similar to this should work:
+
+ guestfish --ro -i --format=raw \
+   -a ssh://remote.example.com/path/to/disk.img
+
+If you get an error, try enabling debugging (add C<-v> to the command line).  Also make sure that L<libguestfs-test-tool(1)> succeeds.
+
+=head2 すべての仮想マシンにおいて virt-alignment-scan を実行します。
+
+仮想マシンまたはディスクイメージにおいて L<virt-alignment-scan(1)> を実行します:
+
+ virt-alignment-scan -a /path/to/disk.img
+
+または:
+
+ virt-alignment-scan -d Guest
+
+Does the alignment report match how the guest partitions are aligned?
+
+=head2 仮想マシンにあるいくつかのファイルにおいて virt-cat を実行します。
+
+L<virt-cat(1)> は仮想マシンからファイルを表示できます。 Linux 仮想マシンに対しては、次を試します:
+
+ virt-cat LinuxGuest /etc/passwd
+
+最近の機能は Windows のパスをサポートします、たとえば:
+
+ virt-cat WindowsGuest 'c:\windows\win.ini'
+
+An even better test is if you have a Windows guest with multiple drives.  Do C<D:>, C<E:> etc paths work correctly?
+
+=head2 B<*> Copy some files into a B<shut off> guest.
+
+L<virt-copy-in(1)> は仮想マシンまたはディスクイメージの中にあるファイルおよびディレクトリーを再帰的にコピーできます。
+
+ virt-copy-in -d Guest /etc /tmp
+
+This should copy local directory F</etc> to F</tmp/etc> in the guest (recursively).  If you boot the guest, can you see all of the copied files and directories?
+
+Shut the guest down and try copying multiple files and directories:
+
+ virt-copy-in -d Guest /home /etc/issue /tmp
+
+=head2 仮想マシンからいくつかのファイルをコピーします
+
+L<virt-copy-out(1)> can recursively copy files and directories out of a guest or disk image.
+
+ virt-copy-out -d Guest /home .
+
+Note the final space and period in the command is not a typo.
+
+This should copy F</home> from the guest into the current directory.
+
+=head2 virt-df を実行します。
+
+L<virt-df(1)> はディスク領域を一覧表示します。次を実行します:
+
+ virt-df
+
+You can try comparing this to the results from L<df(1)> inside the guest, but there are some provisos:
+
+=over 4
+
+=item *
+
+仮想マシンはアイドル状態にある必要があります。
+
+=item *
+
+仮想マシンのディスクは L<sync(1)> を使用して同期する必要があります。
+
+=item *
+
+Any action such as booting the guest will write log files causing the numbers to change.
+
+=back
+
+We don’t guarantee that the numbers will be identical even under these circumstances.  They should be similar.  It would indicate a bug if you saw greatly differing numbers.
+
+=head2 Try importing virt-df CSV output into a spreadsheet or database.
+
+次を実行します:
+
+ virt-df --csv > /tmp/report.csv
+
+Now try to load this into your favorite spreadsheet or database.  Are the results reproduced faithfully in the spreadsheet/database?
+
+L<http://www.postgresql.org/docs/8.1/static/sql-copy.html> L<http://dev.mysql.com/doc/refman/5.1/en/load-data.html>
+
+=head2 B<*> B<シャットオフ>している仮想マシンにあるファイルを編集します。
+
+L<virt-edit(1)> は仮想マシンにあるファイルを編集できます。RHEL または Fedora 仮想マシンにおいてこのコマンドを試します:
+
+ virt-edit LinuxGuest /etc/sysconfig/network
+
+他の Linux 仮想マシンにおいて、次のように他のファイルの編集を試します:
+
+ virt-edit LinuxGuest /etc/motd
+
+Are the changes seen inside the guest when it is booted?
+
+=head2 仮想マシンにあるファイルシステム / パーティション / 論理ボリュームを表示します。
+
+L<virt-filesystems(1)> can be used to display filesystems in a guest.  Try this command on any disk image or guest:
+
+ virt-filesystems -a /path/to/disk.img --all --long -h
+
+または:
+
+ virt-filesystems -d Guest --all --long -h
+
+Do the results match what is seen in the guest?
+
+=head2 すべての仮想マシンにおいて virt-inspector を実行します。
+
+Use L<virt-inspector(1)> to get a report on all of your guests or disk images:
+
+ virt-inspector -a /path/to/disk.img | less
+
+または:
+
+ virt-inspector -d Guest | less
+
+Do the results match what is actually in the guest?
+
+If you have an unusual guest (a rare Linux distro, a very new version of Windows), does virt-inspector recognize it? If not, then it's probably a bug.
+
+=head2 すべての仮想マシンにおいて virt-ls の監査機能を試します。
+
+Linux 仮想マシンにある setuid または setgid プログラムを一覧表示します:
+
+ virt-ls -lR -d Guest / | grep '^- [42]'
+
+Linux 仮想マシンにあるすべての全体書き込み可能なディレクトリーを一覧表示します:
+
+ virt-ls -lR -d Guest / | grep '^d ...7'
+
+Linux 仮想マシンにあるすべての Unix ドメインソケットを一覧表示します:
+
+ virt-ls -lR -d Guest / | grep '^s'
+
+List all regular files with filenames ending in ‘.png’:
+
+ virt-ls -lR -d Guest / | grep -i '^-.*\.png$'
+
+ホームディレクトリーにある 10MB より大きなファイルを表示します:
+
+ virt-ls -lR -d Guest /home | awk '$3 > 10*1024*1024'
+
+7日以内に変更されたものをすべて検索します:
+
+ virt-ls -lR -d Guest --time-days / | awk '$6 <= 7'
+
+24時間以内に変更された通常のファイルを検索します:
+
+ virt-ls -lR -d Guest --time-days / | grep '^-' | awk '$6 < 1'
+
+Do the results match what is in the guest?
+
+=head2 tar ファイルからディスクイメージを作成します。
+
+Use L<virt-make-fs(1)> to create a disk image from any tarball that you happen to have:
+
+ virt-make-fs --partition=mbr --type=vfat /any/tarball.tar.gz output.img
+
+Add ‘output.img’ as a raw disk to an existing guest.  Check the guest can see the files.  This test is particularly useful if you try it with a Windows guest.
+
+他のパーティションスキーマを試してください。例: I<--partition=gpt>
+
+他のファイルシステム形式を試してください。例: I<--type=ntfs>, I<--type=ext2>
+
+=head2 B<*> B<停止状態>のディスクイメージまたは仮想マシンにおいて virt-rescue を実行します。
+
+B<停止状態>の仮想マシンまたはディスクイメージを検査、復旧、または修復するには L<virt-rescue(1)> を使用します:
+
+ virt-rescue -a /path/to/disk.img
+
+または:
+
+ virt-rescue -d Guest
+
+仮想マシンを検査するために通常のシェルコマンドを使用できますか？
+
+=head2 B<*> 仮想マシンの容量を変更します。
+
+仮想マシンのディスク容量を大きくするために L<virt-resize(1)> を使用します。たとえば、ディスクイメージが 30G より小さければ、次を実行して 30G に増やします:
+
+ truncate -s 30G newdisk.img
+ virt-filesystems -a /path/to/olddisk.img --all --long -h
+ virt-resize /path/to/olddisk.img newdisk.img --expand /dev/sda1
+ qemu-kvm -m 1024 -hda newdisk.img
+
+仮想マシンがまだ起動しますか？他のパーティションの拡張を試します。
+
+=head2 B<*> 仮想マシンのディスクをスパースにします。
+
+L<virt-sparsify(1)> を使用して、ディスクイメージをよりスパースにします:
+
+ virt-sparsify /path/to/olddisk.img newdisk.img
+
+Is F<newdisk.img> still bootable after sparsifying? Is the resulting disk image smaller (use C<du> to check)?
+
+=head2 Build and boot a guest
+
+Using L<virt-builder(1)>, choose a guest from the list:
+
+ virt-builder -l
+
+build it:
+
+ virt-builder -o disk.img [os-version from list above]
+
+and boot it:
+
+ qemu-kvm -cpu host -m 2048 -drive file=disk.img,format=raw
+
+Does it boot?
+
+=head2 B<*> "Sysprep" a B<shut off> Linux guest.
+
+B<Note> that this really will mess up an existing guest, so it's better to clone the guest before trying this.
+
+ virt-sysprep --hostname newhost.example.com -a /path/to/disk.img
+
+sysprep が成功しましたか？起動後、何を変更しましたか、その変更は成功しましたか？
+
+=head2 Windows ゲストから Windows レジストリをダンプします。
+
+Windows 仮想マシンから Windows レジストリをダンプ出力するには L<virt-win-reg(1)> を使用します。
+
+ virt-win-reg --unsafe-printable-strings WindowsGuest 'HKLM\Software' |
+   less
+
+ virt-win-reg --unsafe-printable-strings WindowsGuest 'HKLM\System' |
+   less
+
+Does the output match running C<regedit> inside the guest?
+
+A recent feature is the ability to dump user registries, so try this, replacing I<username> with the name of a local user in the guest:
+
+ virt-win-reg --unsafe-printable-strings WindowsGuest 'HKEY_USERS\username' |
+   less
+
+=head1 関連項目
+
+L<guestfs(3)>, L<guestfish(1)>, L<guestfs-examples(3)>, L<http://libguestfs.org/>.
+
+=head1 著者
+
+Richard W.M. Jones (C<rjones at redhat dot com>)
+
+=head1 COPYRIGHT
+
+Copyright (C) 2011-2023 Red Hat Inc.
+

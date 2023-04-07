@@ -1,0 +1,132 @@
+
+=head1 НАЗВА
+
+guestfs-release-notes - нотатки щодо випусків libguestfs
+
+=head1 НОТАТКИ ЩОДО ВИПУСКУ LIBGUESTFS 1.10
+
+Ці нотатки щодо випуску стосуються лише відмінностей від попереднього стабільного випуску (1.8.0). Докладний журнал змін є частиною журналу змін сховища git. Його також наведено у файлі ChangeLog, який є частиною архіву tar із кодом бібліотеки.
+
+=head2 Нові можливості
+
+ - libguestfs та інструменти можна використовувати для роботи
+  із робочими віртуальними машинами. Див. параметри guestfish
+ --live та guestmount --live, а також (для низькорівневого інтерфейсу)
+ нові програмні інтерфейси set-attach-method і get-attach-method.
+
+ - Нові інструменти віртуалізації:
+   virt-copy-in, virt-copy-out, virt-tar-in, virt-tar-out.
+
+ - libguestfs може отримувати прив'язки до літер дисків для гостьових систем Windows.
+
+ - virt-inspector показує прив'язки до літер дисків для гостьових систем Windows.
+
+ - Літери дисків тепер можна використовувати у програмах virt-edit і guestfish під час роботи із гостьовими системами Windows.
+
+ - virt-resize тепер працює із 32-бітовими основними системами.
+
+ - Тепер ви можете інспектувати диски для встановлення та
+    образи портативних систем для компакт-дисків багатьох різних операційних систем.
+
+ - guestfish <! команда, виконує команду оболонки і вбудовує результат її виконання.
+
+- guestfish, guestmount, virt-rescue тепер усі підтримують параметри --ro і --rw. Типовий варіант можна вибрати за допомогою файла налаштувань (/etc/libguestfs-tools.conf).
+
+- Новий програмний інтерфейс подій надає змогу реєструвати декілька зворотних викликів для кожної події, уможливлює виклики програмного інтерфейсу з інших мов програмування і надає змогу переспрямовувати з stderr майже усі повідомлення журналу, діагностики та трасування.
+
+- Ширша сумісність із FHS для тимчасових файлів, зокрема використання /var/tmp для великих кешованих файлів, які мають переживати перезавантаження (замість /tmp).
+
+- параметр guestfish, guestmount -m уможливлює передавання параметрів монтування до підлеглої файлової системи.
+
+- mkfs-opts уможливлює визначення можливостей файлових систем.
+
+- Ефективніша обробка точок монтування, яка уможливлює належну сумісну роботу команд mkmountpoint, mount та umount-all.
+
+- Реалізовано дописування префікса до повідомлень трасування, що уможливлює їхнє просте фільтрування за допомогою grep у виведених діагностичних повідомленнях.
+
+ - guestfs_launch (команда guestfish run) тепер створює повідомлення щодо поступу (смужка поступу guestfish), якщо виконання триває понад 5 секунд.
+
+- Реалізовано надсилання подій щодо поступу у режимі пульсації для декількох команд, час виконання яких не можна наперед оцінити. Оновлено код смужки поступу у guestfish для показу даних таких подій.
+
+- Оприлюднено нові приклади коду такими мовами: C, Perl, Python, OCaml, Ruby.
+
+ - Новий приклад програми virt-dhcp-address.
+
+- Значні поліпшення у прив'язках до Java і Ruby.
+
+ - До Perl включено спосіб отримання номера останньої помилки.
+
+ - Прив'язки Python тепер сумісні з rpyc (завдяки Erez Shinan).
+
+ - Для керування перекладами тепер використовується Transifex.
+   http://www.transifex.net/projects/p/libguestfs/
+
+ - У інспекції реалізовано підтримку дистрибутивів Red Hat Desktop, Slackware.
+
+- Засіб інспектування тепер може обробляти гостьові системи Windows, у яких два або декілька дисків.
+
+- Засіб інспектування тепер може відрізняти Windows 2008 Server і Windows 7.
+
+- Засіб інспектування може виявляти встановлені 32-бітові програми у 64-бітовій Windows, де використовується емулятор WOW64.
+
+ - За допомогою послідовного виправлення протоколу виправлено давню ваду RHBZ#576879, яка спричиняла помилки під час виконання команди вивантаження через втрату синхронізації у протоколі.
+
+ - Новий логотип!
+
+=head2 Безпека
+
+  [немає]
+
+=head2 Нові програмні інтерфейси
+
+  first-private, get-attach-method, inspect-get-drive-mappings,
+  inspect-get-product-variant,
+  inspect-get-windows-current-control-set, next-private, resize2fs-M,
+  set-attach-method.
+
+=head2 Внутрішня частина роботи програми
+
+- Файл HACKING застарів. Вміст файла було перенесено до розділу на сторінці підручника щодо guestfs(3).
+
+- Спрощено libguestfs-test-tool. Тепер програма не вимагає статичного виконуваного файла і не намагається побудувати ISO.
+
+- Створені за допомогою rpcgen файли збираються з використанням -fno-strict-aliasing, що має бути безпечнішим (дякуємо Matt Booth).
+
+- virt-resize було переписано на OCaml.
+
+- guestfish та інші інструменти було перевірено за допомогою valgrind; виправлено деякі витоки пам'яті.
+
+=head2 Виправлені вади
+
+ - 502533 Оновлення перекладу libguestfs польською
+ - 576879 libguestfs protocol loses synchronization if you 'upload' before mounting disks
+ - 599503 document that mkmountpoint and umount-all cannot be mixed
+ - 617440 guestfish: fails to tilde expand '~' when the $HOME env is unset
+ - 664558 RFE: Allow to set log callback in Ruby bindings
+ - 665358 Завершено переклад пенджабською (pa_IN)
+ - 666577 libguestfs: unknown filesystem /dev/fd0
+ - 667610 Multiple bugs, memory leaks in libguestfs ruby bindings
+ - 668112 virt-filesystems command fails on guest with corrupt filesystem label
+ - 668574 guestfish -i is trying to mount all mounts from /etc/fstab and fails with an error when device doesn't exists
+ - 673479 Add a grep-friendly string to LIBGUESTFS_TRACE output
+ - 674130 Inspection code fails for Windows guest with two disks
+ - 682756 libguestfs trace segfaults when list-filesystems returns error
+ - 682979 libguestfs incorrectly detects Red Hat desktop as 'redhat-based' instead of 'redhat'
+ - 690819 mkfs fails creating a filesystem on a disk device when using a disk with 'ide' interface
+ - 691389 Extended attributes don't work over guestmount (FUSE)
+ - 691724 virt-inspector reports unknown filesystem /dev/vda1
+ - 692545 inspect-list-applications fails to detect 32 bit apps installed under WOW64 emulator on 64 bit Windows
+ - 693324 sfdisk's python interface only accepts lists of type 'list' for the lines parameter
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfs-examples(1)>, L<guestfs-faq(1)>, L<guestfs-performance(1)>, L<guestfs-recipes(1)>, L<guestfs-testing(1)>, L<guestfs(3)>, L<guestfish(1)>, L<http://libguestfs.org/>
+
+=head1 АВТОР
+
+Richard W.M. Jones
+
+=head1 АВТОРСЬКІ ПРАВА
+
+Copyright (C) 2009-2023 Red Hat Inc.
+

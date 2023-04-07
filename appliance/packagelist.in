@@ -1,0 +1,305 @@
+dnl This is the list of distro packages which are
+dnl installed on the appliance.
+dnl
+dnl This file is processed by m4 with one of the
+dnl following symbols defined (depending on the distro):
+dnl
+dnl   REDHAT=1     For Fedora, RHEL, EPEL and workalikes.
+dnl   DEBIAN=1     For Debian.
+dnl   UBUNTU=1     For Ubuntu.
+dnl   ARCHLINUX=1  For Archlinux.
+dnl   SUSE=1       For OpenSUSE.
+dnl   FRUGALWARE=1 For Frugalware.
+dnl   MAGEIA=1     For Mageia.
+dnl
+dnl There is also a list of packages which are excluded if they appear
+dnl as dependencies of the packages below.  See: excludelist.in
+dnl
+dnl To add arbitrary extra packages, use:
+dnl
+dnl   ./configure --with-extra-packages="gdb valgrind [etc]"
+
+dnl Basically the same with a few minor tweaks.
+ifelse(UBUNTU,1,`define(`DEBIAN',1)')
+
+ifelse(REDHAT,1,
+  clevis-luks
+  cryptsetup
+  cryptsetup-luks      dnl old name used before Fedora 17
+  dhclient
+  gfs-utils
+  gfs2-utils
+  glibc-gconv-extra    dnl syslinux requires IBM850 iconv converter
+  grub
+  hfsplus-tools
+  iproute
+  iputils
+  kernel
+  libldm
+  nilfs-utils
+  ntfsprogs
+  ntfs-3g
+  ntfs-3g-system-compression
+  openssh-clients
+  policycoreutils
+  reiserfs-utils
+  rpm-libs
+  syslinux-extlinux
+  systemd              dnl for /sbin/reboot and udevd
+  vim-minimal
+  xz
+  zfs-fuse
+  zstd
+)
+
+ifelse(DEBIAN,1,
+  bsdmainutils
+dnl old name used in Jessie and earlier
+  btrfs-tools
+  clevis-luks
+  cryptsetup
+  dash
+  extlinux
+dnl gfs-tools, gfs2-tools have been renamed to gfs2-utils
+  gfs-tools
+  gfs2-tools
+  gfs2-utils
+  grub2-common
+  hfsplus
+dnl iproute has been renamed to iproute2
+  iproute
+  iproute2
+  iputils-ping
+  iputils-arping
+  iputils-tracepath
+  isc-dhcp-client
+  ldmtool
+  libc-bin
+  librpm9
+  linux-image
+  dnl syslinux 'suggests' mtools, but in reality it's a hard dependency:
+  mtools
+  mount                     dnl util-linux subpackage containing mount cmd
+  nilfs-tools
+  ntfs-3g
+  openssh-client
+  reiserfsprogs
+  sysvinit                  dnl for /sbin/reboot
+  systemd                   dnl alternative for /sbin/reboot
+  ufsutils
+  vim-tiny
+  xz-utils
+  zfs-fuse
+  zstd
+  uuid-runtime
+)
+
+ifelse(ARCHLINUX,1,
+  cdrkit
+  cdrtools
+  clevis
+  cryptsetup
+  dhclient
+  dhcpcd
+  gptfdisk
+  grub
+  iproute2
+  iputils
+  linux
+  lrzip
+  dnl syslinux has mtools as optional dependency, but in reality it's
+  dnl a hard one:
+  mtools
+  multipath-tools  dnl for kpartx
+  nilfs-utils
+  ntfs-3g
+  ntfs-3g-system-compression
+  reiserfsprogs
+  systemd
+  vim
+  xz
+  zstd
+)
+
+ifelse(SUSE,1,
+  dnl It seems no other augeas package depends on it.
+  augeas-lenses
+  btrfsprogs
+  cdrkit-cdrtools-compat
+  clevis
+  cryptsetup
+  dhcpcd
+  dhcp-client
+  glibc-locale
+  gptfdisk
+  initviocons
+  iproute2
+  iputils
+  ntfsprogs
+  ntfs-3g
+  reiserfs
+  squashfs
+  sysconfig-netconfig
+  systemd
+  systemd-sysvinit
+  vim
+  xz
+  zstd
+)
+
+ifelse(FRUGALWARE,1,
+  cryptsetup-luks
+  cdrkit
+  dhclient
+  grub2
+  hfsplus
+  iproute2
+  iputils
+  kernel
+  ntfsprogs
+  ntfs-3g
+  openssh
+  reiserfsprogs
+  systemd
+  vim
+  xz
+  xfsprogs-acl
+  xfsprogs-attr
+  gptfdisk
+)
+
+ifelse(MAGEIA,1,
+  cryptsetup
+  chkconfig /* for /etc/init.d */
+  dhcp-client
+  extlinux
+  gfs2-utils
+  grub
+  hfsplus-tools
+  iproute2
+  iputils
+  libldm
+  dnl syslinux uses mtools without depending on it
+  mtools
+  nilfs-utils
+  ntfsprogs
+  ntfs-3g
+  ntfs-3g-system-compression
+  openssh-clients
+  reiserfs-utils
+  rpm /* for "supermin: ext2fs_namei: parent directory not found: /var/lib/rpm: File not found by ext2_lookup" */
+  systemd /* for /sbin/reboot and udevd */
+  vim-minimal
+  xz
+  zstd
+)
+
+ifelse(OPENMANDRIVA,1,
+  cryptsetup
+  chkconfig /* for /etc/init.d */
+  dhcp-client
+  extlinux
+  grub2
+  iproute2
+  iputils
+  libldm
+  dnl syslinux uses mtools without depending on it
+  mtools
+  nilfs-utils
+  ntfs-3g
+  openssh-clients
+  systemd /* for /sbin/reboot and udevd */
+  vim-minimal
+  xz
+  zstd
+)
+
+include(guestfsd.deps)
+
+acl
+attr
+bash
+binutils
+btrfs-progs
+bzip2
+coreutils
+cpio
+diffutils
+dosfstools
+e2fsprogs
+f2fs-tools
+file
+findutils
+gawk
+gdisk
+grep
+gzip
+jfsutils
+kmod
+less
+libxml2
+lsof
+lsscsi
+lvm2
+lzop
+mdadm
+module-init-tools
+dnl Enabling this pulls out 140 extra packages
+dnl into the appliance:
+dnl ocfs2-tools
+parted
+pciutils
+procps
+procps-ng
+psmisc
+rsync
+scrub
+sed
+sleuthkit
+squashfs-tools
+strace
+syslinux
+tar
+udev
+util-linux
+util-linux-ng
+xfsprogs
+zerofree
+
+dnl tools needed by virt-dib
+ifelse(REDHAT,1,
+  qemu-img
+  which
+)
+ifelse(DEBIAN,1,
+  qemu-utils
+)
+ifelse(ARCHLINUX,1,
+  qemu
+  which
+)
+ifelse(SUSE,1,
+  qemu-tools
+  which
+)
+ifelse(FRUGALWARE,1,
+  qemu
+  which
+)
+ifelse(MAGEIA,1,
+  qemu-img
+  which
+)
+curl
+kpartx
+dnl (virt-dib) tools optionally used for elements
+debootstrap
+
+dnl exFAT is not usually available in free software repos
+exfat-fuse
+exfat-utils
+exfatprogs
+fuse-exfat
+
+dnl Define this by doing: ./configure --with-extra-packages="..."
+EXTRA_PACKAGES

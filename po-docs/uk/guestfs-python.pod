@@ -1,0 +1,66 @@
+
+=head1 НАЗВА
+
+guestfs-python — як використовувати libguestfs з Python
+
+=head1 КОРОТКИЙ ОПИС
+
+ import guestfs
+ g = guestfs.GuestFS(python_return_dict=True)
+ g.add_drive_opts("disk.img", format="raw", readonly=1)
+ g.launch()
+
+=head1 ОПИС
+
+На цій сторінці підручника наведено документацію щодо викликів libguestfs з коду мовою програмування Python. На сторінці задокументовано відмінності від програмного інтерфейсу C та подано декілька прикладів. Якщо ви не дуже знайомі із користуванням libguestfs, вам також слід прочитати підручник з L<guestfs(3)>.
+
+=head2 python_return_dict=True
+
+Увесь новий код має будувати дескриптор за допомогою такого:
+
+ g = guestfs.GuestFS(python_return_dict=True)
+
+Це вказує на те, що ваша програма потребує отримання словників Python для методів у програмному інтерфейсі, які повертають таблиці хешів.
+
+У майбутніх версіях libguestfs цей спосіб має стати типовим.
+
+=head2 ВИНЯТКИ
+
+Помилки від функцій libguestfs пов'язуються із C<RuntimeException> з єдиним рядковим аргументом, яким є текст повідомлення про помилку.
+
+=head2 ДОДАТКОВА ДОКУМЕНТАЦІЯ
+
+Тип:
+
+ $ python
+ >>> import guestfs
+ >>> help(guestfs)
+
+=head2 КОРИСТУВАННЯ ПРИВ'ЯЗКАМИ ДО PYTHON У ВІРТУАЛЬНОМУ СЕРЕДОВИЩІ
+
+Ці прив'язки недоступні у pypi через проблеми із ліцензуванням. За станом розв'язання проблем можна слідкувати тут: L<https://bugzilla.redhat.com/1075594>.
+
+Втім, ми оприлюднюємо дистрибутив Python для вибраних стабільних версій libguestfs на L<http://libguestfs.org/download/python>. Ви можете скористатися ним за допомогою такої команди:
+
+ pip install http://libguestfs.org/download/python/guestfs-1.XX.YY.tar.gz
+
+=head1 ПРИКЛАД 1. СТВОРЕННЯ ОБРАЗУ ДИСКА
+
+@EXAMPLE1@
+
+=head1 ПРИКЛАД 2. ПЕРЕВІРКА ОБРАЗУ ДИСКА ВІРТУАЛЬНОЇ МАШИНИ
+
+@EXAMPLE2@
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfs(3)>, L<guestfs-examples(3)>, L<guestfs-erlang(3)>, L<guestfs-gobject(3)>, L<guestfs-golang(3)>, L<guestfs-java(3)>, L<guestfs-lua(3)>, L<guestfs-ocaml(3)>, L<guestfs-perl(3)>, L<guestfs-recipes(1)>, L<guestfs-ruby(3)>, L<http://libguestfs.org/>.
+
+=head1 АВТОРИ
+
+Richard W.M. Jones (C<rjones at redhat dot com>)
+
+=head1 АВТОРСЬКІ ПРАВА
+
+Copyright (C) 2010-2023 Red Hat Inc.
+

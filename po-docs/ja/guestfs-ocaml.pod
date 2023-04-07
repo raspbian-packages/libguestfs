@@ -1,0 +1,77 @@
+
+=head1 名前
+
+guestfs-ocaml - OCaml から libguestfs を使用する方法
+
+=head1 書式
+
+モジュール形式:
+
+ let g = Guestfs.create () in
+ Guestfs.add_drive_opts g ~format:"raw" ~readonly:true "disk.img";
+ Guestfs.launch g;
+
+オブジェクト指向スタイル:
+
+ let g = new Guestfs.guestfs () in
+ g#add_drive_opts ~format:"raw" ~readonly:true "disk.img";
+ g#launch ();
+
+ ocamlfind opt prog.ml -package guestfs -linkpkg -o prog
+or:
+ ocamlopt -I +guestfs mlguestfs.cmxa prog.ml -o prog
+
+=head1 説明
+
+This manual page documents how to call libguestfs from the OCaml programming language.  This page just documents the differences from the C API and gives some examples.  If you are not familiar with using libguestfs, you also need to read L<guestfs(3)>.
+
+=head2 プログラミング形式
+
+There are two different programming styles supported by the OCaml bindings. You can use a module style, with each C function mapped to an OCaml function:
+
+ int guestfs_set_verbose (guestfs_h *g, int flag);
+
+becomes:
+
+ val Guestfs.set_verbose : Guestfs.t -> bool -> unit
+
+Alternately you can use an object-oriented style, calling methods on the class C<Guestfs.guestfs>:
+
+ method set_verbose : bool -> unit
+
+The object-oriented style is usually briefer, and the minor performance penalty isn't noticeable in the general overhead of performing libguestfs functions.
+
+=head2 ハンドルの閉じ方
+
+The handle is closed when it is reaped by the garbage collector.  Because libguestfs handles include a lot of state, it is also possible to close (and hence free) them explicitly by calling C<Guestfs.close> or the C<#close> method.
+
+=head2 例外
+
+Errors from libguestfs functions are mapped into the C<Guestfs.Error> exception.  This has a single parameter which is the error message (a string).
+
+Calling any function/method on a closed handle raises C<Guestfs.Handle_closed>.  The single parameter is the name of the function that you called.
+
+=head1 例: ディスクイメージの作成
+
+@CREATE_DISK@
+
+=head1 例: 仮想マシンのディスクイメージの検査
+
+@INSPECT_VM@
+
+=head1 例: デバッグおよびロギングの有効化
+
+@DEBUG_LOGGING@
+
+=head1 関連項目
+
+L<guestfs(3)>, L<guestfs-examples(3)>, L<guestfs-erlang(3)>, L<guestfs-gobject(3)>, L<guestfs-golang(3)>, L<guestfs-java(3)>, L<guestfs-lua(3)>, L<guestfs-perl(3)>, L<guestfs-python(3)>, L<guestfs-recipes(1)>, L<guestfs-ruby(3)>, L<http://libguestfs.org/>, L<http://caml.inria.fr/>.
+
+=head1 著者
+
+Richard W.M. Jones (C<rjones at redhat dot com>)
+
+=head1 COPYRIGHT
+
+Copyright (C) 2010-2023 Red Hat Inc.
+

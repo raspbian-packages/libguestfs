@@ -1,0 +1,160 @@
+
+=head1 НАЗВА
+
+guestfs-release-notes - нотатки щодо випусків libguestfs
+
+=head1 НОТАТКИ ЩОДО ВИПУСКУ LIBGUESTFS 1.6
+
+Ці нотатки щодо випуску стосуються лише відмінностей від попереднього стабільного випуску (1.4.0). Докладний журнал змін є частиною журналу змін сховища git. Його також наведено у файлі ChangeLog, який є частиною архіву tar із кодом бібліотеки.
+
+=head2 Нові можливості
+
+- Використано новий спосіб створення і кешування базової системи. Це значно пришвидшує роботу libguestfs, доволі часто у 4-5 разів.
+
+- Реалізовано підтримку інспектування гостьових системи (подібно до virt-inspector) за допомогою звичайного програмного інтерфейсу та прив'язок до мов програмування. Побіжним ефектом є значне пришвидшення роботи «guestfish -i».
+
+- virt-inspector та основний програмний інтерфейс інспектування тепер може виявляти такі гостьові системи: Fedora, Debian, Ubuntu, Windows, Red Hat Enterprise Linux, CentOS, Scientific Linux, Gentoo, Pardus, Arch Linux, MeeGo.
+
+- Реалізовано підтримку повного шифрування дисків за допомогою LUKS у гостьових системах.
+
+ - Прив’язки до PHP.
+
+- Реалізовано повідомлення щодо поступу (та смужки поступу у guestfish і virt-resize) для певних типів довготривалих дій.
+
+- virt-df тепер працює значно ефективніше. Скористайтеся параметром «--one-per-guest», щоб відновити попередню поведінку із ізоляцією окремих гостьових систем.
+
+- Реалізовано команди guestfish «copy-in» і «copy-out» для рекурсивного копіювання файлів та каталогів до гостьової системи та з неї.
+
+- Реалізовано команду guestfish «hexedit» для виконання двійкового редагування на пристроях і у файлах.
+
+- Змінено синтаксис guestfish -i з метою уможливлення визначення команд у командному рядку (із збереженням зворотної сумісності).
+
+- Реалізовано параметр guestfish -d <домен> для додавання дисків з доменів libvirt.
+
+- Для параметра guestfish -N передбачено підтримку декількох нових типів приготованих образів дисків:
+         lvfs : диск у форматі логічного тому з файловою системою
+           lv : диск із логічним томом
+     bootroot : boot+root
+   bootrootlv : boot і root на логічному томі
+
+- Команди guestfish more та edit тепер працюють із довільними файлами.
+
+- За допомогою параметра guestfish --echo-keys ви зможете бачити символи ключів і паролів, коли їх вводитимете.
+
+- У guestmount тепер передбачено параметри -a / -d / -i, як у guestfish.
+
+- Реалізовано використання virtio-serial для обміну даними із базовою системою. Це дало значні переваги у швидкодії.
+
+ - Реалізовано параметр virt-edit -b для створення резервних копій редагованих файлів.
+
+- Реалізовано параметр virt-edit -e для неінтерактивного редагування файлів.
+
+- Реалізовано можливість перехоплення дампів ядра із базової системи (дякуємо Matthew Booth).
+
+- virt-rescue тепер завершує роботу коректно (дякуємо Matthew Booth).
+
+- virt-rescue тепер має параметр --network для вмикання доступу до мережі.
+
+- Тепер virt-resize може працювати із гостьовими системами, які використовують формат таблиці розділів GPT.
+
+- у virt-resize реалізовано ліпшу підтримку зменшення розмірів гостьових систем.
+
+- у virt-resize передбачено підтримку гостьових систем у форматі qcow2.
+
+- Можна скористатися $TMPDIR для перевизначення майже усіх тимчасових каталогів.
+
+- Користувачі OCaml можуть скористатися альтернативним OO-стилем програмування, наприклад g#launch ()
+
+- У програмному інтерфейсі передбачено підтримку викликів, які приймають необов'язкові параметри. Приклад: $g->add_drive_opts ("disk", readonly => 1);
+
+- У виведених даних трасування тепер екрануються і скорочуються довгі рядки (дякуємо Matthew Booth).
+
+- Тепер автосинхронізацію типово увімкнено. Це забезпечує вищу надійність при закритті дескриптора.
+
+- За допомогою параметра virt-df --uuid ви можете здійснювати переходи у домені навіть після перенесення або перейменування.
+
+ - Переклади сторінок підручника (man).
+
+=head2 Безпека
+
+- CVE-2010-3851 libguestfs: пропущено специфікатор формату диска під час додавання диска
+https://www.redhat.com/archives/libguestfs/2010-October/msg00036.html
+Цю ваду повністю виправлено у цьому випуску, виправлення буде зворотно портовано на інші стабільні гілки після додаткового тестування.
+
+- virt-inspector більше не покладається на ненадійний код гостьової системи для побудови списку програм у деяких гостьових системах.
+
+=head2 Нові програмні інтерфейси
+
+  download-offset, file-architecture, findfs-label, findfs-uuid,
+  inspect-os, inspect-get-arch, inspect-get-distro,
+  inspect-get-filesystems, inspect-get-major-version,
+  inspect-get-minor-version, inspect-get-mountpoints,
+  inspect-get-product-name, inspect-get-type, is-blockdev, is-chardev,
+  is-fifo, is-lv, is-socket, is-symlink, list-filesystems, luks-add-key,
+  luks-close, luks-format, luks-format-cipher, luks-kill-slot,
+  luks-open, luks-open-ro, lvm-clear-filter, lvm-canonical-lv-name,
+  lvm-set-filter, part-to-dev, pread-device, pwrite-device,
+  upload-offset
+
+=head2 Внутрішня частина роботи програми
+
+- Використано size_t для змінних циклів.
+- Код бібліотеки поділено на декілька окремих файлів.
+- Код генератора поділено на декілька окремих файлів.
+- Реалізовано генерацію команд guestfish.
+- Уніфіковано обробку параметрів guestfish і guestmount.
+- Зміни у протоколі:
+    розмір повідомлення щодо помилки збільшено до 64 кБ
+    реалізовано надсилання errno до бібліотеки
+- Додано «make bindist» для створення бінарного дистрибутива.
+- Поліпшено поведінку під керуванням valgrind.
+- Ширше тестування параметрів командного рядка guestfish та інтеграції libvirt.
+- Код інспектування мовою Perl більше не використовується у жодному з інструментів.
+
+=head2 Виправлені вади
+
+ - 646822 libguestfs trace mode should not print long binary strings
+ - 646821 virt-df should have --uuid option
+ - 646432 /dev/mapper paths should not be returned from guestfs_mountpoints
+ - 643624 libguestfs tools documentation should describe how to quote guest domain names from shell
+ - 642934 No way to specify disk format when adding a disk to libguestfs
+ - 642933 guestfs_list_filesystems should be used in all possible places
+ - 642932 guestmount options should match guestfish options
+ - 642930 virt-inspector (Sys::Guestfs::Lib) should use C inspection APIs
+ - 642929 C inspection code should ignore /dev/fd* in /etc/fstab
+ - 642826 virt-resize converts any other image format to raw without notifying user, instructions do not account for this
+ - 640961 Document that grub-install might be needed for old Linux guests after virt-resize
+ - 639986 virt-df --csv does not properly quote " in libvirt domain names
+ - 639405 Interrupted cached appliance creation leaves libguestfs unusable
+ - 638901 Appliance filename should not contain repository name
+ - 638899 /dev/mapper paths should not be returned from C inspection APIs
+ - 636918 Updates to Spanish translation
+ - 636061 [abrt] guestfish-1.2.11-1.fc12: malloc_consolidate: Process /usr/bin/guestfish was killed by signal 11 (SIGSEGV)
+ - 635969 glob echo mkfs ext2 /dev/vd[b-t]1 prints garbage
+ - 634246 guestfs_part_get_parttype returns "loop" when run against a partition, LV or filesystem
+ - 633766 virt-resize --shrink fails
+ - 633357 Оновлення перекладу іспанською
+ - 633096 virt-resize calculates block device size incorrectly, doesn't work with qcow2 target
+ - 629593 Додано переклад голландською
+ - 627556 Оновлено переклад libguestfs іспанською
+ - 626843 Оновлення перекладу іспанською
+ - 619793 [RFE] Need a way to determine if a particular block device is a logical volume
+ - 618556 virt-rescue return none zero value when exit
+ - 617200 mount operation failed and hung on some images which running in read-only mode
+ - 610880 libguestfs should set broader read perms on tmpdir, so works in some situations when executed with umask 077
+ - 599503 document that mkmountpoint and umount-all cannot be mixed
+ - 571714 Running virt-df on disk image relabels it, so qemu can no longer write to it.
+ - 502533 Оновлення перекладу libguestfs польською
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfs-examples(1)>, L<guestfs-faq(1)>, L<guestfs-performance(1)>, L<guestfs-recipes(1)>, L<guestfs-testing(1)>, L<guestfs(3)>, L<guestfish(1)>, L<http://libguestfs.org/>
+
+=head1 АВТОР
+
+Richard W.M. Jones
+
+=head1 АВТОРСЬКІ ПРАВА
+
+Copyright (C) 2009-2023 Red Hat Inc.
+

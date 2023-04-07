@@ -1,0 +1,620 @@
+
+=begin коментар
+
+Тут ми порушили традицію і не писали заголовки розділів великими літерами, оскільки це значно полегшує читання заголовків.
+
+=end коментар
+
+=head1 НАЗВА
+
+guestfs-recipes — рецепти для libguestfs, guestfish та інструментів віртуалізації
+
+=head1 ОПИС
+
+На цій сторінці містяться рецепти і посилання на сторінки із описом дій, які можна виконати за допомогою libguestfs, L<guestfish(1)> та інших засобів віртуалізації.
+
+=head1 Доступ до віддаленого образу диска за допомогою guestfish
+
+Якщо образ диска зберігається на віддаленому сервері, доступ до якого здійснюється за допомогою SSH, HTTP, FTP, NBD, iSCSI або подібного протоколу, ви можете відкрити його безпосередньо. Приклади наведено у розділі L<guestfish(1)/ДОДАВАННЯ ВІДДАЛЕНОГО СХОВИЩА>. Цю можливість реалізовано у libguestfs E<ge> 1.22 та qemu E<ge> 1.5.
+
+=head1 Аудит віртуальної машини щодо файлів із setuid
+
+See: L<virt-ls(1)/EXAMPLES>.
+
+=head1 Аудит віртуальної машини щодо вразливостей і проблем захисту
+
+Див. L<https://rwmj.wordpress.com/2013/05/16/scanning-offline-guests-using-openscap-and-guestmount/#content>
+
+=head1 Зміна зображення тла у віртуальній машині Windows XP
+
+За наведеними нижче посиланнями можна знайти опис використання L<guestfish(1)> для зміни зображення тла для користувача віртуальної машини Windows XP. На жаль, у різних версіях Windows методика досягнення аналогічного результату є різною.
+
+L<https://lists.fedoraproject.org/pipermail/virt/2011-May/002655.html> L<https://lists.fedoraproject.org/pipermail/virt/2011-May/002658.html>
+
+=head1 Створення контрольної суми файла або пристрою всередині образу диска
+
+Щоб створити контрольну суму усього пристрою, розділу, логічного тому всередині образу диска, скористайтеся командою:
+
+ guestfish --ro -a диск.img run : checksum-device md5 /dev/sda1
+
+Замініть C<md5> на тип потрібної вам контрольної суми. Список підтримуваних типів можна знайти у розділі L<guestfs(3)/guestfs_checksum_device>.
+
+F</dev/sda1> означає «перший розділ». Ви можете скористатися F</dev/sda>, щоб обчислити контрольну суму всього образу диска, або вказати назву логічного тому або пристрою RAID.
+
+Створення контрольної суми для окремого файла:
+
+ guestfish --ro -a диск.img -i checksum sha256 /etc/passwd
+
+або для гостьової системи Windows:
+
+ guestfish --ro -a диск.img -i \
+   checksum sha256 'win:\windows\system32\config\SOFTWARE'
+
+=head1 Клонування віртуальної машини
+
+Скористайтеся комбінацією інструментів, подібних до L<cp(1)>, L<dd(1)>, та інструментами віртуалізації, зокрема L<virt-sysprep(1)>, L<virt-sparsify(1)> та L<virt-resize(1)>.
+
+Докладніший опис у розділі L<virt-sysprep(1)/КОПІЮВАННЯ І КЛОНУВАННЯ>.
+
+=head1 Перетворення CD-ROM / DVD / ISO на архів tar
+
+Ця команда перетворює F<cd.iso> на F<cd.tar.gz>:
+
+ guestfish --ro -a cd.iso -m /dev/sda tgz-out / cd.tar.gz
+
+Щоб експортувати підкаталог, наприклад F</files>, віддайте таку команду:
+
+ guestfish --ro -a cd.iso -m /dev/sda tgz-out /files cd.tar.gz
+
+=head1 Перетворення з одного формату або однієї файлової системи у інший формат
+
+Якщо у вас є диск із даними у одному форматі, файловій системі, на розділі або під керуванням засобу керування томами, за допомогою цієї методики ви можете перетворити ці дані у інший формат.
+
+У цьому прикладі ми розпочнемо з диска, на якому є один розділ із однією файловою системою. Ми створимо інший диск, який міститиме ті самі файли, але у файловій системі ext3, вбудованій у логічний том на диску у розрідженому простому (raw) форматі.
+
+Спочатку створіть форматований, але порожній диск призначення:
+
+ truncate -s 10G target.img
+ virt-format -a target.img --partition=mbr --lvm --filesystem=ext3
+
+Тепер, з'єднаємо канали обробки двох екземплярів guestfish разом для передавання старих даних на новий диск:
+
+ guestfish --ro -a source.img -m /dev/sda1  -- tar-out / - | \
+ guestfish --rw -a target.img -m /dev/VG/LV -- tar-in - /
+
+Для навігації створеним остаточним образом диска скористайтеся такою командою:
+
+ guestfish --ro -a target.img -m /dev/VG/LV
+ ><fs> ll /
+
+Ця методика доволі потужна і надає вам змогу, наприклад, поділити початкові каталоги між файловими системами призначення.
+
+Зауважте, що це не працюватиме (принаймні безпосередньо) для завантажувальних дисків віртуальних машин, оскільки не копіюється завантажувач.
+
+=head1 Перетворення DVD Windows на придатний до завантаження диск USB
+
+L<http://rwmj.wordpress.com/2013/05/09/tip-convert-a-windows-dvd-iso-to-a-bootable-usb-key-using-guestfish/#content>
+
+=head1 Перетворення образу без розділів у стилі Xen на образ диска із розділами
+
+У образах дисків Xen часто немає розділів. Це означає, що файлова система розпочинається безпосередньо на початку диска, без таблиці розділів. Ви, фактично, можете користуватися такими образами безпосередньо у KVM (якщо гостьовою системою не є Windows), але декому подобається перетворювати такі образи у образи дисків зі звичайним розподілом на розділи. Такий розподіл є обов'язковим для гостьових систем Windows. Ось як скористатися guestfish для виконання цього завдання:
+
+ guestfish
+ ><fs> add-ro input.img
+ ><fs> sparse output.img 10G     # скоригувати розмір результату
+ ><fs> run
+ # Створити таблицю розділів на диску-результаті:
+ ><fs> part-init /dev/sdb mbr
+ ><fs> part-add /dev/sdb p 2048 -2048
+ # Скопіювати дані на розділ призначення:
+ ><fs> copy-device-to-device /dev/sda /dev/sdb1 sparse:true
+ # Додатково змінити розмір файлової системи призначення.
+ # Скористайтеся ntfsresize для гостьових систем Windows:
+ ><fs> resize2fs /dev/sdb1
+
+Такий образ диска не можна буде безпосередньо завантажити. Ймовірно, для його завантаження вам доведеться використовувати зовнішнє ядро та initramfs (див. нижче). Ви також можете скористатися командами guestfish C<syslinux> та C<extlinux> для встановлення завантажувача SYSLINUX.
+
+=head1 Створення порожніх образів дисків
+
+Програма L<virt-format(1)> може робити це безпосередньо.
+
+Скористайтеся L<virt-make-fs(1)> для створення образу диска з даними. Ця програма здатна також створювати деякі стандартні образи дисків, зокрема віртуальні пристрої для читання дискет (VFD).
+
+Ви також можете скористатися параметром I<-N> L<guestfish(1)> для створення порожніх образів дисків. Корисні настанови, наведені нижче, допоможуть вам скористатися доступними варіантами.
+
+L<https://rwmj.wordpress.com/2010/09/08/new-guestfish-n-options-in-1-5-9/#content>
+
+L<virt-builder(1)> може створювати мінімальні гостьові системи.
+
+=head1 Вилучення файлів (або інші прості дії з файлами)
+
+Скористайтеся guestfish. Вилучення файла:
+
+ guestfish -a диск.img -i rm /файл/який/слід/вилучити
+
+Торкнутися файла (оновити його часову позначку або створити його):
+
+ guestfish -a диск.img -i touch /файл/позначку/якого/слід/оновити
+
+Отримання статистичних даних щодо файла. Оскільки для цієї дії потрібне лише читання, можна зробити її безпечнішою, додавши параметр I<--ro>.
+
+ guestfish --ro -a диск.img -i stat /файл/який/слід/обробити
+
+Таких команд десятки. Див. L<guestfish(1)>  або дані, виведені командою C<guestfish -h>
+
+=head1 Порівняти дві гостьові системи; порівняти знімок із поточною версією
+
+Починаючи з libguestfs E<ge> 1.26, можна скористатися L<virt-diff(1)> для пошуку відмінностей між двома гостьовими системами (наприклад, якщо ці системи у початковому стані були клонами тієї самої системи) або між двома знімками однієї гостьової системи. У ранніх версіях libguestfs для цього використовувалася програма L<virt-ls(1)>.
+
+=head1 Вимикання служби systemd
+
+Наведена нижче команда є еквівалентом C<systemctl mask ...>. Щоб вимкнути службу C<cloud-init> так, щоб вона не запускалася під час наступного завантаження, віддайте таку команду:
+
+ guestfish -a disk.img -i \
+     ln-sf /dev/null /etc/systemd/system/cloud-init.service
+
+Щоб вимкнути tmp-on-tmpfs:
+
+ guestfish -a disk.img -i \
+     ln-sf /dev/null /etc/systemd/system/tmp.mount
+
+Однією з проблем наведених вище команд є те, що ви не отримаєте ніякого відгуку від системи, якщо назву служби, яку ви хочете замаскувати, вказано неправильно. Але ви можете скористатися L<virt-ls(1)> для отримання списку доступних служб systemd, ось так:
+
+ virt-ls -a /tmp/fedora-19.img -R /lib/systemd/system
+
+=head1 Літери дисків у FUSE
+
+Якщо ви маєте справу із гостьовою системою Windows і хочете відкрити її літерні диски як точки монтування FUSE (F</C/...>, F</D/...> тощо), замість L<guestmount(1)> скористайтеся таким скриптом мовою Perl:
+
+ #!/usr/bin/perl -w
+ use strict;
+ use Sys::Guestfs;
+ $| = 1;
+ die "usage: $0 mountpoint disk.img" if @ARGV < 2;
+ my $mp = shift @ARGV;
+ my $g = new Sys::Guestfs;
+ $g->add_drive_opts ($_) foreach @ARGV;
+ $g->launch;
+ my @roots = $g->inspect_os;
+ die "$0: no operating system found" if @roots != 1;
+ my $root = $roots[0];
+ die "$0: not Windows" if $g->inspect_get_type ($root) ne "windows";
+ my %map = $g->inspect_get_drive_mappings ($root);
+ foreach (keys %map) {
+     $g->mkmountpoint ("/$_");
+     eval { $g->mount ($map{$_}, "/$_") };
+     warn "$@ (ignored)\n" if $@;
+ }
+ $g->mount_local ($mp);
+ print "filesystem ready on $mp\n";
+ $g->mount_local_run;
+ $g->shutdown;
+
+Ви можете скористатися скриптом ось так:
+
+ $ mkdir /tmp/mnt
+ $ ./drive-letters.pl /tmp/mnt windows7.img
+ filesystem ready on /tmp/mnt
+
+У іншому вікні:
+
+ $ cd /tmp/mnt
+ $ ls
+ C  D
+ $ cd C
+ $ ls
+ Documents and Settings
+ PerfLogs
+ ProgramData
+ Program Files
+ [etc]
+ $ cd ../..
+ $ guestunmount /tmp/mnt
+
+=head1 Створення дампів вмісту простої файлової системи у образі диска або ВМ
+
+Ви можете скористатися командою C<download> L<guestfish(1)> для видобування вмісту простої файлової системи з будь-якої файлової системи на образі диску або у віртуальній машині (навіть зашифрованої або захованої у логічному томі або на пристрої RAID):
+
+ guestfish --ro -a disk.img run : download /dev/sda1 sda1.img
+
+ guestfish --ro -d Guest run : download /dev/vg_guest/lv_root lv.img
+
+Щоб отримати дані до stdout, замініть назву файла символом C<->:
+
+ guestfish --ro -a disk.img run : download /dev/sda1 - | gzip > sda1.gz
+
+Для отримання списку файлових систем на образі диска скористайтеся L<virt-filesystems(1)>.
+
+Див. також L</Вивантаження даних на файлові системи без обробки>.
+
+=head1 Редагувати налаштування grub у віртуальній машині
+
+Ви можете скористатися цим для того, щоб виконати такі завдання:
+
+=over 4
+
+=item *
+
+Виправити віртуальну машину, яка не завантажується.
+
+=item *
+
+Змінити ядро, яке використовується для завантаження віртуальної машини.
+
+=item *
+
+Змінити параметри командного рядка ядра.
+
+=back
+
+Для редагування налаштувань grub скористайтеся L<virt-edit(1)>:
+
+ virt-edit -d BrokenGuest /boot/grub2/grub.cfg
+
+або, для загального виправлення у непридатній до завантаження віртуальній машині, скористайтеся L<virt-rescue(1)> ось так:
+
+ virt-rescue -d BrokenGuest
+
+=head1 Експортувати будь-який каталог з віртуальної машини
+
+Щоб експортувати F</home> з віртуальної машини до локального каталогу, скористайтеся L<virt-copy-out(1)>:
+
+ virt-copy-out -d Guest /home .
+
+Нотатки:
+
+=over 4
+
+=item *
+
+Кінцева крапка у команді не є друкарською помилкою. Вона означає, що ми хочемо скопіювати дані до поточного каталогу.
+
+=item *
+
+Ця команда створить каталог із назвою C<home> у поточному каталозі.
+
+=back
+
+Якщо гостьова система є операційною системою Windows, ви можете скористатися літерами дисків та символами зворотної похилої риски, але вам слід додати до шляху префікс C<win:> і взяти його у лапки, щоб захистити від обробки командною оболонкою, ось так:
+
+ virt-copy-out -d WinGuest 'win:c:\windows\system32\config' .
+
+Щоб отримати результат у форматі стисненого архіву tar, слід віддати таку команду:
+
+ virt-tar-out -d Guest /home - | gzip --best > home.tar.gz
+
+Хоча виникає спокуса використання цієї команди для створення резервних копій запущеної гостьової системи, не варто користуватися нею саме для цього. Докладніше про це у розділі запитань та відповідей на них: L<http://libguestfs.org/FAQ.html#backup>
+
+=head1 Експортування зовнішнього ядра та initramfs (initrd)
+
+Якщо у гостьовій системі Linux немає завантажувача або завантажувач пошкоджено, ви, зазвичай, можете завантажити цю систему за допомогою зовнішнього ядра і initramfs. У такій конфігурації гіпервізор працює як завантажувач, завантажуючи ядро з диска основної системи до пам'яті гостьової системи і переходячи безпосередньо до ядра.
+
+Втім, у вас може виникнути питання щодо того, як отримати правильне ядро, яке відповідає образу диска, який у вас є. Починаючи з libguestfs E<ge> 1.24, L<virt-builder(1)> може отримувати найсвіжіше ядро і відповідний файл initramfs:
+
+ mkdir outputdir
+ virt-builder --get-kernel disk.img -o outputdir
+ ls -lh outputdir
+
+=head1 Визначення користувача, дані якого займають найбільше місця
+
+За допомогою цього простого скрипту ви можете визначити, який із користувачів гостьової системи Linux використовує найбільше місця для даних у своєму домашньому каталозі:
+
+ #!/bin/sh -
+ 
+ set -e
+ 
+ vm="$1"
+ dir=/home
+ 
+ eval $(guestfish --ro -d "$vm" -i --listen)
+ 
+ for d in $(guestfish --remote ls "$dir"); do
+     echo -n "$dir/$d"
+     echo -ne '\t'
+     guestfish --remote du "$dir/$d";
+ done | sort -nr -k 2
+ 
+ guestfish --remote exit
+
+=head1 Отримання адреси DHCP з ВМ
+
+За наведеним нижче посиланням можна знайти різноманітні методики отримання останньої призначеної адреси DHCP для віртуальної машини.
+
+L<https://rwmj.wordpress.com/2011/03/31/tip-code-for-getting-dhcp-address-from-a-virtual-machine-disk-image/#content>
+
+Каталозі із прикладами початкових кодів libguestfs є найсвіжіша версія програми F<virt-dhcp-address.c>.
+
+=head1 Отримання рядка назви продукту операційної системи
+
+Збережіть наведений нижче скрипт до файла із назвою F<product-name.sh>:
+
+ #!/bin/sh -
+ set -e
+ eval "$(guestfish --ro -d "$1" --i --listen)"
+ root="$(guestfish --remote inspect-get-roots)"
+ guestfish --remote inspect-get-product-name "$root"
+ guestfish --remote exit
+
+Зробіть скрипт придатним до виконання і запустіть його на іменованій гостьовій системі:
+
+ # product-name.sh RHEL60x64
+ Red Hat Enterprise Linux Server release 6.0 (Santiago)
+
+Крім того, ви можете скористатися запитом XPath у XML L<virt-inspector(1)> за допомогою засобу командного рядка C<xpath> або з вашої улюбленої мови програмування:
+
+ # virt-inspector RHEL60x64 > xml
+ # xpath '//product_name' < xml
+ Found 1 nodes:
+ -- NODE --
+ <product_name>Red Hat Enterprise Linux Server release 6.0 (Santiago)</product_name>
+
+=head1 Отримання типового ядра для завантаження для віртуальної машини Linux
+
+За наведеним нижче посиланням можна знайти програму для виведення типового ядра для завантаження у віртуальній машині Linux.
+
+L<https://rwmj.wordpress.com/2010/10/30/tip-use-augeas-to-get-the-default-boot-kernel-for-a-vm/#content>
+
+У ній використано Augeas та методику, якою можна скористатися для виконання багатьох різних завдань, зокрема таких:
+
+=over 4
+
+=item *
+
+показ списку облікових записів користувачів у гостьовій системі
+
+=item *
+
+показ списку сховищ, які використовуються системою
+
+=item *
+
+показ списку серверів NTP, з якими з'єднано систему
+
+=item *
+
+показ списку повідомлень під час останнього сеансу завантаження системи
+
+=item *
+
+показ списку користувачів, які входили до системи нещодавно
+
+=back
+
+L<http://augeas.net/>
+
+=head1 Повислі гостьові системи
+
+Існують різноманітні способи скористатися libguestfs для визначення причин, чому гостьова система повисла або не відповідає на запити:
+
+=over 4
+
+=item 1.
+
+Читання файлів журналу за допомогою virt-cat:
+
+ virt-cat Guest /var/log/messages | less
+
+=item 2.
+
+Читання журналу подій Windows (лише Windows Vista або новіші версії):
+
+L<https://rwmj.wordpress.com/2011/04/17/decoding-the-windows-event-log-using-guestfish/#content>
+
+=item 3.
+
+Визначити файли, які було нещодавно оновлено у гостьовій системі:
+
+L<https://rwmj.wordpress.com/2012/02/27/using-libguestfs-to-find-out-why-a-windows-guest-was-hanging/#content>
+
+Це може підказати вам, яка саме програма працює.
+
+=back
+
+=head1 Створення шістнадцяткових дампів секторів диска з гостьової системи
+
+Створення шістнадцяткового дампу розділу завантаження (MBR / перший сектор):
+
+ guestfish --ro -a диск.img run : pread-device /dev/sda 0x200 0 |
+   hexdump -C
+
+(C<0x200> = 512 байтів, тобто розмір традиційних секторів PC)
+
+Щоб створити шістнадцятковий дамп N-го розділу, замініть C<N> на відповідне число у такій команду:
+
+ guestfish --ro -a disk.img \
+     run : pread-device /dev/sda 0x200 $((N*0x200)) |
+   hexdump -C
+
+=head1 Шістнадцяткове редагування секторів у гостьовій системі
+
+Редагування шістнадцяткового дампу розділу завантаження (MBR / перший сектор):
+
+ guestfish --rw -a диск.img run : hexedit /dev/sda 0x200
+
+=head1 Встановлення пакунків (RPM, пакунки Debian) у гостьовій системі
+
+Починаючи з libguestfs 1.26, L<virt-builder(1)>, L<virt-customize(1)> та L<virt-sysprep(1)> мають параметр I<--install> для встановлення пакунків у гостьових системах Linux. (Скористайтеся virt-customize, якщо у вас уже є наявна гостьова система, або virt-builder, якщо ви хочете створити гостьову систему від початку).
+
+Приклад:
+
+ virt-builder fedora-20 --install emacs
+
+=head1 Встановлення пакунків із альтернативного сховища
+
+Починаючи з libguestfs 1.26, ви можете скористатися параметром I<--edit> L<virt-builder(1)>, L<virt-customize(1)> або L<virt-sysprep(1)> для редагування метаданих сховища до встановлення пакунків.
+
+Наприклад, вказана нижче команда встановить пакунки зі сховища updates-testing у Fedora:
+
+ virt-builder fedora-20 \
+   --edit '/etc/yum.repos.d/fedora-updates-testing.repo:
+             s/enabled=0/enabled=1/' \
+   --install emacs
+
+=head1 Встановлення завантажувача SYSLINUX у гостьовій системі
+
+SYSLINUX — невеличкий, простий у налаштовуванні завантажувач для гостьових систем Linux і Windows. Якщо ваша гостьова система не придатна до завантаження, ви можете встановити завантажувач SYSLINUX за допомогою команди guestfish C<syslinux> (для заснованих на FAT гостьових систем) або C<extlinux> (для заснованих на ext2/3/4 або btrfs гостьових систем).
+
+У цих настановах ми припускаємо, що маємо справу із гостьовою системою Linux, де F</dev/sda1> змонтовано як F</boot>, F</boot/vmlinuz> є ядром гостьової системи, а F</dev/sda3> є кореневим розділом. Для гостьової системи Windows вам знадобиться завантажувальний розділ у форматі FAT і використання команди C<syslinux> замість вказаних нижче.
+
+Створіть файл налаштувань F<syslinux.cfg>. Вам слід скористатися документацією з SYSLINUX з сайта L<http://www.syslinux.org>, але вміст виглядатиме десь так:
+
+ DEFAULT linux
+ LABEL linux
+   SAY Booting the kernel
+   KERNEL vmlinuz
+   INITRD initrd
+   APPEND ro root=/dev/sda3
+
+Знайдіть головний запис завантаження syslinux (файл, який називається якось так: F</usr/share/syslinux/mbr.bin>).
+
+ guestfish -a диск.img -i
+ # Вивантаження головного запису завантаження та файла налаштувань:
+ ><fs> upload ..../mbr.bin /boot/mbr.bin
+ ><fs> upload ..../syslinux.cfg /boot/syslinux.cfg
+ # Запис MBR до сектора завантаження:
+ ><fs> copy-file-to-device /boot/mbr.bin /dev/sda size:440
+ # Встановлення syslinux на першому розділі:
+ ><fs> extlinux /boot
+ # Визначення першого розділу як завантажувального:
+ ><fs> part-set-bootable /dev/sda 1 true
+
+Див. також L<http://rwmj.wordpress.com/2013/04/04/new-in-libguestfs-use-syslinux-or-extlinux-to-make-bootable-guests/#content>
+
+=head1 Показати список програм, встановлених у віртуальній машині
+
+Збережіть такий текст до файла F<list-apps.sh>:
+
+ #!/bin/sh -
+ set -e
+ eval "$(guestfish --ro -d "$1" --i --listen)"
+ root="$(guestfish --remote inspect-get-roots)"
+ guestfish --remote inspect-list-applications "$root"
+ guestfish --remote exit
+
+Зробіть цей файл придатним до виконання, а потім можете запустити його для будь-якої іменованої віртуальної машини:
+
+ # list-apps.sh WinGuest
+ [0] = {
+   app_name: Mozilla Firefox (3.6.12)
+   app_display_name: Mozilla Firefox (3.6.12)
+   app_epoch: 0
+   app_version: 3.6.12 (en-GB)
+   app_release:
+   app_install_path: C:\Program Files\Mozilla Firefox
+   app_trans_path:
+   app_publisher: Mozilla
+   app_url: http://www.mozilla.com/en-GB/
+   app_source_package:
+   app_summary:
+   app_description: Mozilla Firefox
+ }
+ [1] = {
+   app_name: VLC media player
+   app_display_name: VLC media player 1.1.5
+   app_epoch: 0
+   app_version: 1.1.5
+   app_release:
+   app_install_path: C:\Program Files\VideoLAN\VLC
+   app_trans_path:
+   app_publisher: VideoLAN
+   app_url: http://www.videolan.org/
+   app_source_package:
+   app_summary:
+   app_description:
+ }
+
+Якщо ви хочете запустити скрипт для образів дисків (замість віртуальних машин libvirt), замініть C<-d "$1"> на C<-a "$1">. Див. також L<virt-inspector(1)>.
+
+=head1 Показати список файлів і каталогів у віртуальній машині
+
+Скористайтеся L<virt-ls(1)>.
+
+=head1 Показати список служб у віртуальній машині Windows
+
+За наведеним нижче посиланням можна знайти скрипт, яким можна скористатися для отримання списку служб з віртуальної машини Windows і визначення того, запускаються ці служби під час завантаження чи завантажуються за потреби.
+
+L<https://rwmj.wordpress.com/2010/12/10/tip-list-services-in-a-windows-guest/#content>
+
+=head1 Створення образу диска розрідженим
+
+Скористайтеся L<virt-sparsify(1)>.
+
+=head1 Спостереження за зміною використання диска з часом
+
+Для спостереження за зміною вживання диска у ваших гостьових системах з часом ви можете скористатися L<virt-df(1)>. Настанови можна знайти за наведеним нижче посиланням.
+
+L<http://web.archive.org/web/20130214073726/http://virt-tools.org/learning/advanced-virt-df/>
+
+=head1 Читання журналу подій у Windows з версії Windows Vista
+
+Для читання журналу подій Windows у будь-якій віртуальній машині, де запущено Windows Vista або новішу версію Windows, можна скористатися L<guestfish(1)> та іншими інструментами, як це описано за наведеним нижче посиланням.
+
+L<https://rwmj.wordpress.com/2011/04/17/decoding-the-windows-event-log-using-guestfish/#content>
+
+=head1 Вилучення пароля root (Linux)
+
+За допомогою параметра I<-e> L<virt-edit(1)> ви можете виконувати прості заміни у файлах. Одним із варіантів таких замін є вилучення пароля root з гостьової системи Linux:
+
+ virt-edit -d назва_домену /etc/passwd -e 's/^root:.*?:/root::/'
+
+ virt-edit -a диск.img /etc/passwd -e 's/^root:.*?:/root::/'
+
+=head1 Вилучення пароля адміністратора (Windows)
+
+За наведеним нижче посиланням викладено одну методику вилучення пароля адміністратора з віртуальної машини Windows VM або, якщо бути точнішим, отримання доступу до командної оболонки під час наступного входу до системи, звідки ви можете обійти будь-який захист:
+
+L<https://mdbooth.wordpress.com/2010/10/18/resetting-a-windows-guests-administrator-password-with-guestfish/>
+
+=head1 Виконання sysprep для віртуальної машини (Windows)
+
+«sysprep» можна виконати засобами лише libguestfs, хоча і не напряму.  У поточній версії проєкту Aeolus Oz є код, який робить це (за допомогою libguestfs). Ймовірно, ми додамо цю можливість до L<virt-sysprep(1)> у майбутніх версіях.
+
+L<https://github.com/clalancette/oz> L<https://www.redhat.com/archives/virt-tools-list/2011-May/msg00019.html>
+
+=head1 Розпакування компакт-диска з портативною системою
+
+Образи портативних систем Linux для компакт-дисків часто містять багато шарів образів дисків, подібно до матрьошки. Ви можете скористатися L<guestfish(1)>, щоб зазирнути всередину цих шарів, як це описано у настановах за наведеним нижче посиланням.
+
+L<https://rwmj.wordpress.com/2009/07/15/unpack-the-russian-doll-of-a-f11-live-cd/#content>
+
+=head1 Вивантаження і звантаження файлів
+
+За наведеним нижче посиланням містяться загальні підказки щодо вивантаження (копіювання всередину) або отримання (копіювання назовні) файлів з віртуальних машин.
+
+L<https://rwmj.wordpress.com/2010/12/02/tip-uploading-and-downloading/#content>
+
+=head1 Вивантаження даних на файлові системи без обробки
+
+Ви можете скористатися L<guestfish(1)> для вивантаження цілих файлових систем до віртуальної машини, навіть до файлової системи, яку зашифровано і включено до логічного тому або пристрою RAID:
+
+ guestfish --rw -a disk.img run : upload sda1.img /dev/sda1
+
+ guestfish --rw -d Guest run : upload lv.img /dev/vg_guest/lv_root
+
+Однією загальною проблемою є те, що розмір файлової системи є невідповідним для цілі. Якщо місця надто багато, зробити щось за допомогою libguestfs навряд чи вдасться — вам слід інакше готувати файлову систему. Але якщо файлову систему слід розширити, ви можете скористатися guestfish для зміни розміру на відповідний:
+
+ guestfish --rw -d Guest run : \
+   upload lv.img /dev/vg_guest/lv_root : \
+   resize2fs /dev/vg_guest/lv_root
+
+(або скористайтеся C<ntfsresize>, якщо файловою системою є NTFS).
+
+=head1 Користування засобами libguestfs для роботи із гостьовими системами VMware
+ESX
+
+За наведеним нижче посиланням описано використання libguestfs, L<guestfish(1)> та засобів віртуалізації для будь-яких гостьових систем VMware ESX. Для цього слід спочатку оприлюднити VMware VMFS за допомогою sshfs.
+
+L<https://rwmj.wordpress.com/2011/05/10/tip-use-libguestfs-on-vmware-esx-guests/#content>
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfs(3)>, L<guestfish(1)>, L<guestfs-examples(3)>, L<guestfs-erlang(3)>, L<guestfs-gobject(3)>, L<guestfs-golang(3)>, L<guestfs-java(3)>, L<guestfs-lua(3)>, L<guestfs-ocaml(3)>, L<guestfs-perl(3)>, L<guestfs-python(3)>, L<guestfs-ruby(3)>, L<http://libguestfs.org/>.
+
+=head1 АВТОРИ
+
+Richard W.M. Jones (C<rjones at redhat dot com>)
+
+=head1 АВТОРСЬКІ ПРАВА
+
+Copyright (C) 2009-2023 Red Hat Inc.
+

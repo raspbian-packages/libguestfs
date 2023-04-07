@@ -1,0 +1,84 @@
+=head1 NAME
+
+guestfs-python - How to use libguestfs from Python
+
+=head1 SYNOPSIS
+
+ import guestfs
+ g = guestfs.GuestFS(python_return_dict=True)
+ g.add_drive_opts("disk.img", format="raw", readonly=1)
+ g.launch()
+
+=head1 DESCRIPTION
+
+This manual page documents how to call libguestfs from the Python
+programming language.  This page just documents the differences from
+the C API and gives some examples.  If you are not familiar with using
+libguestfs, you also need to read L<guestfs(3)>.
+
+=head2 python_return_dict=True
+
+All new code should construct the handle using:
+
+ g = guestfs.GuestFS(python_return_dict=True)
+
+This indicates that your program wants to receive Python dicts for
+methods in the API that return hashtables.
+
+In a future version of libguestfs, this will become the default.
+
+=head2 EXCEPTIONS
+
+Errors from libguestfs functions are mapped into C<RuntimeException>
+with a single string argument which is the error message.
+
+=head2 MORE DOCUMENTATION
+
+Type:
+
+ $ python
+ >>> import guestfs
+ >>> help(guestfs)
+
+=head2 USING PYTHON BINDINGS IN A VIRTUALENV
+
+These bindings are I<not> available in pypi owing to a licensing
+problem.  See L<https://bugzilla.redhat.com/1075594> for current
+status.
+
+However we do publish a Python distribution for selected stable
+versions of libguestfs in L<http://libguestfs.org/download/python>.
+You can use it like this:
+
+ pip install http://libguestfs.org/download/python/guestfs-1.XX.YY.tar.gz
+
+=head1 EXAMPLE 1: CREATE A DISK IMAGE
+
+@EXAMPLE1@
+
+=head1 EXAMPLE 2: INSPECT A VIRTUAL MACHINE DISK IMAGE
+
+@EXAMPLE2@
+
+=head1 SEE ALSO
+
+L<guestfs(3)>,
+L<guestfs-examples(3)>,
+L<guestfs-erlang(3)>,
+L<guestfs-gobject(3)>,
+L<guestfs-golang(3)>,
+L<guestfs-java(3)>,
+L<guestfs-lua(3)>,
+L<guestfs-ocaml(3)>,
+L<guestfs-perl(3)>,
+L<guestfs-recipes(1)>,
+L<guestfs-ruby(3)>,
+L<http://libguestfs.org/>.
+
+=head1 AUTHORS
+
+Richard W.M. Jones (C<rjones at redhat dot com>)
+
+=head1 COPYRIGHT
+
+Copyright (C) 2010-2023 Red Hat Inc.
