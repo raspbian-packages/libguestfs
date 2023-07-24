@@ -1,0 +1,20 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Sat, 26 Nov 2022 16:12:08 +0100
+Subject: Fix include path for guestfish.1
+
+---
+ po-docs/language.mk | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/po-docs/language.mk b/po-docs/language.mk
+index 2d5f0fe..8968864 100644
+--- a/po-docs/language.mk
++++ b/po-docs/language.mk
+@@ -107,6 +107,7 @@ guestfish.1: guestfish.pod guestfish-actions.pod guestfish-commands.pod guestfis
+ 	$(PODWRAPPER) \
+ 	  --no-strict-checks \
+ 	  --man $@ \
++	  --path $(srcdir) \
+ 	  --license GPLv2+ \
+ 	  $<
+ 
