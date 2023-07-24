@@ -1,0 +1,22 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Sun, 6 Jul 2014 21:34:47 +0200
+Subject: Do not use DTB for armel
+
+---
+ lib/guestfs-internal.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/lib/guestfs-internal.h b/lib/guestfs-internal.h
+index 306f2a2..c648ca5 100644
+--- a/lib/guestfs-internal.h
++++ b/lib/guestfs-internal.h
+@@ -115,6 +115,9 @@ cleanup_mutex_unlock (pthread_mutex_t **ptr)
+ /* Machine types. */
+ #ifdef __arm__
+ #define MACHINE_TYPE "virt"
++#ifdef __ARM_PCS_VFP /* do not use DTB for armel */
++#define DTB_WILDCARD "vexpress*a15-tc1.dtb"
++#endif
+ #endif
+ #ifdef __aarch64__
+ #define MACHINE_TYPE "virt"

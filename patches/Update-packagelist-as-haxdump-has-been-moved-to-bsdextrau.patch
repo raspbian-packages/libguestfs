@@ -1,0 +1,21 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Mon, 1 Feb 2021 21:12:58 +0100
+Subject: Update packagelist as haxdump has been moved to bsdextrautils in
+ Debian
+
+---
+ appliance/packagelist.in | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/appliance/packagelist.in b/appliance/packagelist.in
+index 4dab258..81d24a8 100644
+--- a/appliance/packagelist.in
++++ b/appliance/packagelist.in
+@@ -54,6 +54,7 @@ ifelse(REDHAT,1,
+ 
+ ifelse(DEBIAN,1,
+   bsdmainutils
++  bsdextrautils
+ dnl old name used in Jessie and earlier
+   btrfs-tools
+   clevis-luks

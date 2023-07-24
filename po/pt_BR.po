@@ -1,0 +1,57 @@
+# Debconf translations for libguestfs.
+# Copyright (C) 2022 THE libguestfs'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the libguestfs package.
+# Paulo Henrique de Lima Santana (phls) <phls@debian.org>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libguestfs_1:1.48.5-2\n"
+"Report-Msgid-Bugs-To: libguestfs@packages.debian.org\n"
+"POT-Creation-Date: 2011-11-24 23:43+0100\n"
+"PO-Revision-Date: 2022-11-30 19:59-0300\n"
+"Last-Translator: Paulo Henrique de Lima Santana (phls) <phls@debian.org>\n"
+"Language-Team: Brazilian Portuguese <debian-l10n-portuguese@lists.debian."
+"org>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"X-Generator: Gtranslator 42.0\n"
+
+#. Type: boolean
+#. Description
+#: ../libguestfs-tools.templates:2001
+msgid "Create or update supermin appliance now?"
+msgstr "Criar ou atualizar o dispositivo supermin agora?"
+
+#. Type: boolean
+#. Description
+#: ../libguestfs-tools.templates:2001
+msgid ""
+"A \"supermin appliance\" is mandatory for libguestfs. It contains lists of "
+"files and directories. These will be copied into an ad-hoc file system "
+"whenever libguestfs starts a virtual machine."
+msgstr ""
+"Um \"dispositivo supermin\" é obrigatório para o libguestfs. Ele contém "
+"listas de arquivos e diretórios. Eles serão copiados em um sistema de "
+"arquivos ad-hoc sempre que o libguestfs iniciar uma máquina virtual."
+
+#. Type: boolean
+#. Description
+#: ../libguestfs-tools.templates:2001
+msgid ""
+"To generate or update a supermin appliance, network access to a package "
+"repository is needed."
+msgstr ""
+"Para gerar ou atualizar um dispositivo supermin, é necessário acesso à rede "
+"para um repositório de pacotes."
+
+#. Type: boolean
+#. Description
+#: ../libguestfs-tools.templates:2001
+msgid ""
+"This can be done later by using the update-guestfs-appliance(8) utility."
+msgstr ""
+"Isso pode ser feito posteriormente usando o utilitário update-guestfs-"
+"appliance(8)."
