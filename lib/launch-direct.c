@@ -649,8 +649,10 @@ launch_direct (guestfs_h *g, void *datav, const char *arg)
   /* Force exit instead of reboot on panic */
   flag ("-no-reboot");
 
+#if defined(__i386__) || defined(__x86_64__)
   /* These are recommended settings, see RHBZ#1053847. */
   arg ("-rtc", "driftfix=slew");
+#endif
   if (guestfs_int_qemu_supports (g, data->qemu_data, "-no-hpet"))
     flag ("-no-hpet");
 #if defined(__i386__) || defined(__x86_64__)
