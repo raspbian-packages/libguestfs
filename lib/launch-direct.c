@@ -624,8 +624,10 @@ launch_direct (guestfs_h *g, void *datav, const char *arg)
   /* Force exit instead of reboot on panic */
   flag ("-no-reboot");
 
+#if defined(__i386__) || defined(__x86_64__)
   /* These are recommended settings, see RHBZ#1053847. */
   arg ("-rtc", "driftfix=slew");
+#endif
 #if defined(__i386__) || defined(__x86_64__)
   arg ("-global", "kvm-pit.lost_tick_policy=discard");
 #endif
