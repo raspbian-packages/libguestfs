@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -111,6 +111,7 @@ guestfs_int_ruby_acl_set_file (VALUE gv, VALUE pathv, VALUE acltypev, VALUE aclv
  *
  * This is the same as "g.add_drive" but it allows you to
  * specify the QEMU interface emulation to use at run time.
+ * Both the direct and the libvirt backends ignore "iface".
  *
  *
  * [Since] Added in version 1.0.84.

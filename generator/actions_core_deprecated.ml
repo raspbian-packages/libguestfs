@@ -1,5 +1,5 @@
 (* libguestfs
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,7 +73,8 @@ of C<guestfs_add_drive_ro>." };
     shortdesc = "add a drive specifying the QEMU block emulation to use";
     longdesc = "\
 This is the same as C<guestfs_add_drive> but it allows you
-to specify the QEMU interface emulation to use at run time." };
+to specify the QEMU interface emulation to use at run time.
+Both the direct and the libvirt backends ignore C<iface>." };
 
   { defaults with
     name = "add_drive_ro_with_if"; added = (1, 0, 84);
@@ -83,7 +84,8 @@ to specify the QEMU interface emulation to use at run time." };
     shortdesc = "add a drive read-only specifying the QEMU block emulation to use";
     longdesc = "\
 This is the same as C<guestfs_add_drive_ro> but it allows you
-to specify the QEMU interface emulation to use at run time." };
+to specify the QEMU interface emulation to use at run time.
+Both the direct and the libvirt backends ignore C<iface>." };
 
   { defaults with
     name = "lstatlist"; added = (1, 0, 77);

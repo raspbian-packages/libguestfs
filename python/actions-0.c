@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -448,6 +448,40 @@ guestfs_int_py_btrfstune_enable_extended_inode_refs (PyObject *self, PyObject *a
 }
 #endif
 
+#ifdef GUESTFS_HAVE_CLEVIS_LUKS_UNLOCK
+PyObject *
+guestfs_int_py_clevis_luks_unlock (PyObject *self, PyObject *args)
+{
+  PyObject *py_g;
+  guestfs_h *g;
+  PyObject *py_r = NULL;
+  int r;
+  const char *device;
+  const char *mapname;
+
+  if (!PyArg_ParseTuple (args, (char *) "Oss:guestfs_clevis_luks_unlock",
+                         &py_g, &device, &mapname))
+    goto out;
+  g = get_handle (py_g);
+
+  Py_BEGIN_ALLOW_THREADS
+  r = guestfs_clevis_luks_unlock (g, device, mapname);
+  Py_END_ALLOW_THREADS
+
+  if (r == -1) {
+    PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
+    goto out;
+  }
+
+  Py_INCREF (Py_None);
+  py_r = Py_None;
+
+  PyErr_Clear ();
+ out:
+  return py_r;
+}
+#endif
+
 #ifdef GUESTFS_HAVE_COMMAND_LINES
 PyObject *
 guestfs_int_py_command_lines (PyObject *self, PyObject *args)
@@ -676,6 +710,40 @@ guestfs_int_py_cryptsetup_close (PyObject *self, PyObject *args)
 
   Py_INCREF (Py_None);
   py_r = Py_None;
+
+  PyErr_Clear ();
+ out:
+  return py_r;
+}
+#endif
+
+#ifdef GUESTFS_HAVE_DEVICE_NAME
+PyObject *
+guestfs_int_py_device_name (PyObject *self, PyObject *args)
+{
+  PyObject *py_g;
+  guestfs_h *g;
+  PyObject *py_r = NULL;
+  char *r;
+  int index;
+
+  if (!PyArg_ParseTuple (args, (char *) "Oi:guestfs_device_name",
+                         &py_g, &index))
+    goto out;
+  g = get_handle (py_g);
+
+  Py_BEGIN_ALLOW_THREADS
+  r = guestfs_device_name (g, index);
+  Py_END_ALLOW_THREADS
+
+  if (r == NULL) {
+    PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
+    goto out;
+  }
+
+  py_r = guestfs_int_py_fromstring (r);
+  free (r);
+  if (py_r == NULL) goto out;
 
   PyErr_Clear ();
  out:

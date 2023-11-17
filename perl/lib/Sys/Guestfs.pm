@@ -4,7 +4,7 @@
 #          and from the code in the generator/ subdirectory.
 # ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 #
-# Copyright (C) 2009-2020 Red Hat Inc.
+# Copyright (C) 2009-2023 Red Hat Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -752,6 +752,7 @@ automatically.
 
 This is the same as C<$g-E<gt>add_drive_ro> but it allows you
 to specify the QEMU interface emulation to use at run time.
+Both the direct and the libvirt backends ignore C<iface>.
 
 I<This function is deprecated.>
 In new code, use the L</add_drive> call instead.
@@ -774,6 +775,7 @@ C<$g-E<gt>add_drive_opts>.
 
 This is the same as C<$g-E<gt>add_drive> but it allows you
 to specify the QEMU interface emulation to use at run time.
+Both the direct and the libvirt backends ignore C<iface>.
 
 I<This function is deprecated.>
 In new code, use the L</add_drive> call instead.
@@ -1782,6 +1784,42 @@ This call returns the number of strings which were removed
 
 See L<guestfs(3)/BACKEND>, L<guestfs(3)/BACKEND SETTINGS>.
 
+=item $g->clevis_luks_unlock ($device, $mapname);
+
+This command opens a block device that has been encrypted according to
+the Linux Unified Key Setup (LUKS) standard, using network-bound disk
+encryption (NBDE).
+
+C<device> is the encrypted block device.
+
+The appliance will connect to the Tang servers noted in the tree of
+Clevis pins that is bound to a keyslot of the LUKS header.  The Clevis
+pin tree may comprise C<sss> (redudancy) pins as internal nodes
+(optionally), and C<tang> pins as leaves.  C<tpm2> pins are not
+supported.  The appliance unlocks the encrypted block device by
+combining responses from the Tang servers with metadata from the LUKS
+header; there is no C<key> parameter.
+
+This command will fail if networking has not been enabled for the
+appliance. Refer to C<$g-E<gt>set_network>.
+
+The command creates a new block device called F</dev/mapper/mapname>.
+Reads and writes to this block device are decrypted from and encrypted
+to the underlying C<device> respectively.  Close the decrypted block
+device with C<$g-E<gt>cryptsetup_close>.
+
+C<mapname> cannot be C<"control"> because that name is reserved by
+device-mapper.
+
+If this block device contains LVM volume groups, then calling
+C<$g-E<gt>lvm_scan> with the C<activate> parameter C<true> will make
+them visible.
+
+Use C<$g-E<gt>list_dm_devices> to list all device mapper devices.
+
+This function depends on the feature C<clevisluks>.  See also
+C<$g-E<gt>feature-available>.
+
 =item $output = $g->command (\@arguments);
 
 This call runs a command from the guest filesystem.  The
@@ -2110,7 +2148,18 @@ returns the index of the device in the list of devices.
 Index numbers start from 0.  The named device must exist,
 for example as a string returned from C<$g-E<gt>list_devices>.
 
-See also C<$g-E<gt>list_devices>, C<$g-E<gt>part_to_dev>.
+See also C<$g-E<gt>list_devices>, C<$g-E<gt>part_to_dev>,
+C<$g-E<gt>device_name>.
+
+=item $name = $g->device_name ($index);
+
+This function takes a device index and returns the device
+name.  For example index C<0> will return the string C</dev/sda>.
+
+The drive index must have been added to the handle.
+
+See also C<$g-E<gt>list_devices>, C<$g-E<gt>part_to_dev>,
+C<$g-E<gt>device_index>.
 
 =item $output = $g->df ();
 
@@ -3888,6 +3937,21 @@ C<$g-E<gt>file_architecture>.
 
 If the architecture could not be determined, then the
 string C<unknown> is returned.
+
+Please read L<guestfs(3)/INSPECTION> for more details.
+
+=item $buildid = $g->inspect_get_build_id ($root);
+
+This returns the build ID of the system, or the string
+C<"unknown"> if the system does not have a build ID.
+
+For Windows, this gets the build number.  Although it is
+returned as a string, it is (so far) always a number.  See
+L<https://en.wikipedia.org/wiki/List_of_Microsoft_Windows_versions>
+for some possible values.
+
+For Linux, this returns the C<BUILD_ID> string from
+F</etc/os-release>, although this is not often used.
 
 Please read L<guestfs(3)/INSPECTION> for more details.
 
@@ -7251,9 +7315,6 @@ This function is primarily intended for use by programs.  To
 get a simple list of names, use C<$g-E<gt>ls>.  To get a printable
 directory for human consumption, use C<$g-E<gt>ll>.
 
-Because of the message protocol, there is a transfer limit
-of somewhere between 2MB and 4MB.  See L<guestfs(3)/PROTOCOL LIMITS>.
-
 =item $link = $g->readlink ($path);
 
 This command reads the target of a symbolic link.
@@ -9370,7 +9431,7 @@ with some unique string, to avoid conflicts with other users.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2009-2020 Red Hat Inc.
+Copyright (C) 2009-2023 Red Hat Inc.
 
 =head1 LICENSE
 

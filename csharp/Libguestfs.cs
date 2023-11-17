@@ -4,7 +4,7 @@
 //          and from the code in the generator/ subdirectory.
 // ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 //
-// Copyright (C) 2009-2020 Red Hat Inc.
+// Copyright (C) 2009-2023 Red Hat Inc.
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -1848,6 +1848,20 @@ namespace Guestfs
     }
 
     [DllImport ("libguestfs.so.0")]
+    static extern int guestfs_clevis_luks_unlock (IntPtr h, [In] string device, [In] string mapname);
+
+    /// <summary>
+    /// open an encrypted LUKS block device with Clevis and Tang
+    /// </summary>
+    public void clevis_luks_unlock (string device, string mapname)
+    {
+      int r;
+      r = guestfs_clevis_luks_unlock (_handle, device, mapname);
+      if (r == -1)
+        throw new Error (guestfs_last_error (_handle));
+    }
+
+    [DllImport ("libguestfs.so.0")]
     static extern string guestfs_command (IntPtr h, [In] string[] arguments);
 
     /// <summary>
@@ -2184,6 +2198,21 @@ namespace Guestfs
       int r;
       r = guestfs_device_index (_handle, device);
       if (r == -1)
+        throw new Error (guestfs_last_error (_handle));
+      return r;
+    }
+
+    [DllImport ("libguestfs.so.0")]
+    static extern string guestfs_device_name (IntPtr h, int index);
+
+    /// <summary>
+    /// convert device index to name
+    /// </summary>
+    public string device_name (int index)
+    {
+      string r;
+      r = guestfs_device_name (_handle, index);
+      if (r == null)
         throw new Error (guestfs_last_error (_handle));
       return r;
     }
@@ -3862,6 +3891,21 @@ namespace Guestfs
     {
       string r;
       r = guestfs_inspect_get_arch (_handle, root);
+      if (r == null)
+        throw new Error (guestfs_last_error (_handle));
+      return r;
+    }
+
+    [DllImport ("libguestfs.so.0")]
+    static extern string guestfs_inspect_get_build_id (IntPtr h, [In] string root);
+
+    /// <summary>
+    /// get the system build ID
+    /// </summary>
+    public string inspect_get_build_id (string root)
+    {
+      string r;
+      r = guestfs_inspect_get_build_id (_handle, root);
       if (r == null)
         throw new Error (guestfs_last_error (_handle));
       return r;

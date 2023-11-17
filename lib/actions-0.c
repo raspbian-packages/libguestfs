@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -307,6 +307,43 @@ guestfs_copy_in (guestfs_h *g,
     if (trace_flag)
       guestfs_int_trace (g, "%s = %s (error)",
                          "copy_in", "-1");
+  }
+
+  return r;
+}
+
+GUESTFS_DLL_PUBLIC char *
+guestfs_device_name (guestfs_h *g,
+                     int index)
+{
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
+  int trace_flag = g->trace;
+  struct trace_buffer trace_buffer;
+  char *r;
+
+  guestfs_int_call_callbacks_message (g, GUESTFS_EVENT_ENTER,
+                                      "device_name", 11);
+  if (trace_flag) {
+    guestfs_int_trace_open (&trace_buffer);
+    fprintf (trace_buffer.fp, "%s", "device_name");
+    fprintf (trace_buffer.fp, " %d", index);
+    guestfs_int_trace_send_line (g, &trace_buffer);
+  }
+
+  r = guestfs_impl_device_name (g, index);
+
+  if (r != NULL) {
+    if (trace_flag) {
+      guestfs_int_trace_open (&trace_buffer);
+      fprintf (trace_buffer.fp, "%s = ", "device_name");
+      fprintf (trace_buffer.fp, "\"%s\"", r);
+      guestfs_int_trace_send_line (g, &trace_buffer);
+    }
+
+  } else {
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "device_name", "NULL");
   }
 
   return r;
@@ -2121,6 +2158,110 @@ guestfs_btrfstune_enable_extended_inode_refs (guestfs_h *g,
   if (trace_flag) {
     guestfs_int_trace_open (&trace_buffer);
     fprintf (trace_buffer.fp, "%s = ", "btrfstune_enable_extended_inode_refs");
+    fprintf (trace_buffer.fp, "%d", ret_v);
+    guestfs_int_trace_send_line (g, &trace_buffer);
+  }
+
+  return ret_v;
+}
+
+GUESTFS_DLL_PUBLIC int
+guestfs_clevis_luks_unlock (guestfs_h *g,
+                            const char *device,
+                            const char *mapname)
+{
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
+  struct guestfs_clevis_luks_unlock_args args;
+  guestfs_message_header hdr;
+  guestfs_message_error err;
+  int serial;
+  int r;
+  int trace_flag = g->trace;
+  struct trace_buffer trace_buffer;
+  int ret_v;
+  const uint64_t progress_hint = 0;
+
+  guestfs_int_call_callbacks_message (g, GUESTFS_EVENT_ENTER,
+                                      "clevis_luks_unlock", 18);
+  if (device == NULL) {
+    error (g, "%s: %s: parameter cannot be NULL",
+           "clevis_luks_unlock", "device");
+    return -1;
+  }
+  if (mapname == NULL) {
+    error (g, "%s: %s: parameter cannot be NULL",
+           "clevis_luks_unlock", "mapname");
+    return -1;
+  }
+
+  if (trace_flag) {
+    guestfs_int_trace_open (&trace_buffer);
+    fprintf (trace_buffer.fp, "%s", "clevis_luks_unlock");
+    fprintf (trace_buffer.fp, " \"%s\"", device);
+    fprintf (trace_buffer.fp, " \"%s\"", mapname);
+    guestfs_int_trace_send_line (g, &trace_buffer);
+  }
+
+  if (guestfs_int_check_appliance_up (g, "clevis_luks_unlock") == -1) {
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "clevis_luks_unlock", "-1");
+    return -1;
+  }
+
+  args.device = (char *) device;
+  args.mapname = (char *) mapname;
+  serial = guestfs_int_send (g, GUESTFS_PROC_CLEVIS_LUKS_UNLOCK,
+                             progress_hint, 0,
+                             (xdrproc_t) xdr_guestfs_clevis_luks_unlock_args, (char *) &args);
+  if (serial == -1) {
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "clevis_luks_unlock", "-1");
+    return -1;
+  }
+
+  memset (&hdr, 0, sizeof hdr);
+  memset (&err, 0, sizeof err);
+
+  r = guestfs_int_recv (g, "clevis_luks_unlock", &hdr, &err,
+        NULL, NULL);
+  if (r == -1) {
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "clevis_luks_unlock", "-1");
+    return -1;
+  }
+
+  if (guestfs_int_check_reply_header (g, &hdr, GUESTFS_PROC_CLEVIS_LUKS_UNLOCK, serial) == -1) {
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "clevis_luks_unlock", "-1");
+    return -1;
+  }
+
+  if (hdr.status == GUESTFS_STATUS_ERROR) {
+    int errnum = 0;
+
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "clevis_luks_unlock", "-1");
+    if (err.errno_string[0] != '\0')
+      errnum = guestfs_int_string_to_errno (err.errno_string);
+    if (errnum <= 0)
+      error (g, "%s: %s", "clevis_luks_unlock", err.error_message);
+    else
+      guestfs_int_error_errno (g, errnum, "%s: %s", "clevis_luks_unlock",
+                               err.error_message);
+    free (err.error_message);
+    free (err.errno_string);
+    return -1;
+  }
+
+  ret_v = 0;
+  if (trace_flag) {
+    guestfs_int_trace_open (&trace_buffer);
+    fprintf (trace_buffer.fp, "%s = ", "clevis_luks_unlock");
     fprintf (trace_buffer.fp, "%d", ret_v);
     guestfs_int_trace_send_line (g, &trace_buffer);
   }
@@ -4566,6 +4707,116 @@ guestfs_internal_journal_get (guestfs_h *g,
   if (trace_flag) {
     guestfs_int_trace_open (&trace_buffer);
     fprintf (trace_buffer.fp, "%s = ", "internal_journal_get");
+    fprintf (trace_buffer.fp, "%d", ret_v);
+    guestfs_int_trace_send_line (g, &trace_buffer);
+  }
+
+  return ret_v;
+}
+
+GUESTFS_DLL_PUBLIC int
+guestfs_internal_readdir (guestfs_h *g,
+                          const char *dir,
+                          const char *filename)
+{
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
+  struct guestfs_internal_readdir_args args;
+  guestfs_message_header hdr;
+  guestfs_message_error err;
+  int serial;
+  int r;
+  int trace_flag = g->trace;
+  struct trace_buffer trace_buffer;
+  int ret_v;
+  const uint64_t progress_hint = 0;
+
+  guestfs_int_call_callbacks_message (g, GUESTFS_EVENT_ENTER,
+                                      "internal_readdir", 16);
+  if (dir == NULL) {
+    error (g, "%s: %s: parameter cannot be NULL",
+           "internal_readdir", "dir");
+    return -1;
+  }
+  if (filename == NULL) {
+    error (g, "%s: %s: parameter cannot be NULL",
+           "internal_readdir", "filename");
+    return -1;
+  }
+
+  if (trace_flag) {
+    guestfs_int_trace_open (&trace_buffer);
+    fprintf (trace_buffer.fp, "%s", "internal_readdir");
+    fprintf (trace_buffer.fp, " \"%s\"", dir);
+    fprintf (trace_buffer.fp, " \"%s\"", filename);
+    guestfs_int_trace_send_line (g, &trace_buffer);
+  }
+
+  if (guestfs_int_check_appliance_up (g, "internal_readdir") == -1) {
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "internal_readdir", "-1");
+    return -1;
+  }
+
+  args.dir = (char *) dir;
+  serial = guestfs_int_send (g, GUESTFS_PROC_INTERNAL_READDIR,
+                             progress_hint, 0,
+                             (xdrproc_t) xdr_guestfs_internal_readdir_args, (char *) &args);
+  if (serial == -1) {
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "internal_readdir", "-1");
+    return -1;
+  }
+
+  memset (&hdr, 0, sizeof hdr);
+  memset (&err, 0, sizeof err);
+
+  r = guestfs_int_recv (g, "internal_readdir", &hdr, &err,
+        NULL, NULL);
+  if (r == -1) {
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "internal_readdir", "-1");
+    return -1;
+  }
+
+  if (guestfs_int_check_reply_header (g, &hdr, GUESTFS_PROC_INTERNAL_READDIR, serial) == -1) {
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "internal_readdir", "-1");
+    return -1;
+  }
+
+  if (hdr.status == GUESTFS_STATUS_ERROR) {
+    int errnum = 0;
+
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "internal_readdir", "-1");
+    if (err.errno_string[0] != '\0')
+      errnum = guestfs_int_string_to_errno (err.errno_string);
+    if (errnum <= 0)
+      error (g, "%s: %s", "internal_readdir", err.error_message);
+    else
+      guestfs_int_error_errno (g, errnum, "%s: %s", "internal_readdir",
+                               err.error_message);
+    free (err.error_message);
+    free (err.errno_string);
+    return -1;
+  }
+
+  if (guestfs_int_recv_file (g, filename) == -1) {
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "internal_readdir", "-1");
+    return -1;
+  }
+
+  ret_v = 0;
+  if (trace_flag) {
+    guestfs_int_trace_open (&trace_buffer);
+    fprintf (trace_buffer.fp, "%s = ", "internal_readdir");
     fprintf (trace_buffer.fp, "%d", ret_v);
     guestfs_int_trace_send_line (g, &trace_buffer);
   }

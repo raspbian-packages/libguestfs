@@ -7,7 +7,7 @@ libguestfs generated file
           and from the code in the generator/ subdirectory.
  ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 
- © Red Hat Inc., 2009–2020
+ Copyright (C) 2009-2023 Red Hat Inc.
 
  Ця програма є вільним програмним забезпеченням; ви можете поширювати та/або
  змінювати її за умов дотримання GNU General Public License утому вигляді, що
@@ -379,7 +379,7 @@ F<filename> вважатиметься локальним файлом або п
 
  add-drive-ro-with-if назва_файла інтерфейс
 
-Те саме, що і L</add-drive-ro>, але надає вам змогу вказати емуляцію інтерфейсу QEMU, яку буде використано під час роботи.
+This is the same as L</add-drive-ro> but it allows you to specify the QEMU interface emulation to use at run time.  Both the direct and the libvirt backends ignore C<iface>.
 
 I<Ця функція вважається застарілою.> У новому коді замість неї слід використовувати L</add-drive>.
 
@@ -401,7 +401,7 @@ I<Ця функція вважається застарілою.> У новом�
 
  add-drive-with-if назва_файла інтерфейс
 
-Те саме, що і L</add-drive>, але надає вам змогу вказати емуляцію інтерфейсу QEMU, яку буде використано під час роботи.
+This is the same as L</add-drive> but it allows you to specify the QEMU interface emulation to use at run time.  Both the direct and the libvirt backends ignore C<iface>.
 
 I<Ця функція вважається застарілою.> У новому коді замість неї слід використовувати L</add-drive>.
 
@@ -1320,6 +1320,28 @@ I<Зауваження>: при використанні цієї команди
 
 Див. L<guestfs(3)/МОДУЛЬ>, L<guestfs(3)/ПАРАМЕТРИ МОДУЛЯ>.
 
+=head2 clevis-luks-unlock
+
+ clevis-luks-unlock device mapname
+
+This command opens a block device that has been encrypted according to the Linux Unified Key Setup (LUKS) standard, using network-bound disk encryption (NBDE).
+
+C<device> is the encrypted block device.
+
+The appliance will connect to the Tang servers noted in the tree of Clevis pins that is bound to a keyslot of the LUKS header.  The Clevis pin tree may comprise C<sss> (redudancy) pins as internal nodes (optionally), and C<tang> pins as leaves.  C<tpm2> pins are not supported.  The appliance unlocks the encrypted block device by combining responses from the Tang servers with metadata from the LUKS header; there is no C<key> parameter.
+
+This command will fail if networking has not been enabled for the appliance. Refer to L</set-network>.
+
+The command creates a new block device called F</dev/mapper/mapname>.  Reads and writes to this block device are decrypted from and encrypted to the underlying C<device> respectively.  Close the decrypted block device with L</cryptsetup-close>.
+
+C<mapname> cannot be C<"control"> because that name is reserved by device-mapper.
+
+Якщо на цьому блоковому пристрої містяться групи томів LVM, видимими їх можна зробити за допомогою виклику L</lvm-scan> зі значенням параметра C<activate> рівним C<true>.
+
+Скористайтеся командою L</list-dm-devices>, щоб отримати список усіх пристроїв засобу прив'язування пристроїв.
+
+This command depends on the feature C<clevisluks>.  See also L</feature-available>.
+
 =head2 command
 
  command 'параметри...'
@@ -1586,7 +1608,17 @@ I<Ця функція вважається застарілою.> У новом�
 
 Нумерація індексів починається з 0. Іменований пристрій має існувати, наприклад, як рядок, повернутий з L</list-devices>.
 
-Див. також L</list-devices>, L</part-to-dev>.
+See also L</list-devices>, L</part-to-dev>, L</device-name>.
+
+=head2 device-name
+
+ device-name index
+
+This function takes a device index and returns the device name.  For example index C<0> will return the string C</dev/sda>.
+
+The drive index must have been added to the handle.
+
+See also L</list-devices>, L</part-to-dev>, L</device-index>.
 
 =head2 df
 
@@ -3150,6 +3182,18 @@ I<Зауваження>: щоб переконатися, що усі запис
 Повертає архітектуру інспектованої операційної системи. Список можливих повернутих значень можна знайти у описі L</file-architecture>.
 
 Якщо архітектуру визначити не вдасться, буде повернуто рядок C<unknown>.
+
+З докладнішими даними можна ознайомитися у розділі L<guestfs(3)/INSPECTION>.
+
+=head2 inspect-get-build-id
+
+ inspect-get-build-id root
+
+This returns the build ID of the system, or the string C<"unknown"> if the system does not have a build ID.
+
+For Windows, this gets the build number.  Although it is returned as a string, it is (so far) always a number.  See L<https://en.wikipedia.org/wiki/List_of_Microsoft_Windows_versions> for some possible values.
+
+For Linux, this returns the C<BUILD_ID> string from F</etc/os-release>, although this is not often used.
 
 З докладнішими даними можна ознайомитися у розділі L<guestfs(3)/INSPECTION>.
 
@@ -5952,8 +5996,6 @@ FIFO (іменований канал)
 =back
 
 Цю функцію створено, в основному, для використання у програмах. Щоб отримати простий список назв, скористайтеся L</ls>. Щоб отримати придатний для друку і сприйняття людиною список каталогу, скористайтеся L</ll>.
-
-Через обмеження протоколу передавання повідомлень існує граничний об'єм повідомлення, щось у діапазоні від 2 МБ до 4 МБ. Див. L<guestfs(3)/ОБМЕЖЕННЯ ПРОТОКОЛУ>.
 
 =head2 readlink
 

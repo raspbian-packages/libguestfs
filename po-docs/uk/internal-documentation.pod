@@ -591,9 +591,9 @@ XXX Має уможливити надсилання одинарних деск
 
 Вивільнити усі диски у дескрипторі.
 
-=head4 Визначення C<lib/drives.c:VALID_FORMAT_IFACE>
+=head4 Definition C<lib/drives.c:VALID_FORMAT>
 
- #define VALID_FORMAT_IFACE
+ #define VALID_FORMAT
 
 Перевірити, чи відповідає рядковий параметр формальному виразу C<^[-_[:alnum:]]+$> (у локалі C).
 
@@ -792,9 +792,8 @@ C<status> — код стану команди (наприклад, поверн
     */
    char *overlay;
  
-   /* Різноманітні прапорці диска. */
+   /* Various per-drive flags. */
    bool readonly;
-   char *iface;
    char *name;
    char *disk_label;
    char *cachemode;
@@ -988,8 +987,8 @@ C<connection> відповідає з'єднанню із консоллю ба�
    int ml_debug_calls;        /* Додаткові діагностичні дані для кожного виклику FUSE. */
  #endif
  
- #ifdef HAVE_LIBVIRT_BACKEND
-   /* Використовується у lib/libvirt-auth.c. */
+ #ifdef HAVE_LIBVIRT
+   /* Used by lib/libvirt-auth.c. */
  #define NR_CREDENTIAL_TYPES 9
    unsigned int nr_supported_credentials;
    int supported_credentials[NR_CREDENTIAL_TYPES];

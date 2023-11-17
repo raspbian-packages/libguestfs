@@ -7,13 +7,13 @@ Subject: Change cryptsetop->cryptsetup-bin in appliance
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/appliance/packagelist.in b/appliance/packagelist.in
-index 0a355d4..f297c51 100644
+index 4fa23ed..4dab258 100644
 --- a/appliance/packagelist.in
 +++ b/appliance/packagelist.in
-@@ -53,7 +53,7 @@ ifelse(DEBIAN,1,
-   bsdmainutils
+@@ -57,7 +57,7 @@ ifelse(DEBIAN,1,
  dnl old name used in Jessie and earlier
    btrfs-tools
+   clevis-luks
 -  cryptsetup
 +  cryptsetup-bin
    dash

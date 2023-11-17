@@ -5,6 +5,9 @@
 
 #include "guestfs_protocol.h"
 #include <config.h>
+#ifndef HAVE_XDR_UINT64_T
+#define xdr_uint64_t xdr_int64_t
+#endif
 
 bool_t
 xdr_guestfs_str (XDR *xdrs, guestfs_str *objp)
@@ -2470,6 +2473,18 @@ xdr_guestfs_chown_args (XDR *xdrs, guestfs_chown_args *objp)
 }
 
 bool_t
+xdr_guestfs_clevis_luks_unlock_args (XDR *xdrs, guestfs_clevis_luks_unlock_args *objp)
+{
+	register int32_t *buf;
+
+	 if (!xdr_string (xdrs, &objp->device, ~0))
+		 return FALSE;
+	 if (!xdr_string (xdrs, &objp->mapname, ~0))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
 xdr_guestfs_command_args (XDR *xdrs, guestfs_command_args *objp)
 {
 	register int32_t *buf;
@@ -4197,6 +4212,26 @@ xdr_guestfs_inspect_get_arch_ret (XDR *xdrs, guestfs_inspect_get_arch_ret *objp)
 }
 
 bool_t
+xdr_guestfs_inspect_get_build_id_args (XDR *xdrs, guestfs_inspect_get_build_id_args *objp)
+{
+	register int32_t *buf;
+
+	 if (!xdr_string (xdrs, &objp->root, ~0))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_guestfs_inspect_get_build_id_ret (XDR *xdrs, guestfs_inspect_get_build_id_ret *objp)
+{
+	register int32_t *buf;
+
+	 if (!xdr_string (xdrs, &objp->buildid, ~0))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
 xdr_guestfs_inspect_get_distro_args (XDR *xdrs, guestfs_inspect_get_distro_args *objp)
 {
 	register int32_t *buf;
@@ -4735,6 +4770,16 @@ xdr_guestfs_internal_parse_mountable_ret (XDR *xdrs, guestfs_internal_parse_moun
 	register int32_t *buf;
 
 	 if (!xdr_guestfs_int_internal_mountable (xdrs, &objp->mountable))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_guestfs_internal_readdir_args (XDR *xdrs, guestfs_internal_readdir_args *objp)
+{
+	register int32_t *buf;
+
+	 if (!xdr_string (xdrs, &objp->dir, ~0))
 		 return FALSE;
 	return TRUE;
 }
@@ -7654,26 +7699,6 @@ xdr_guestfs_pwrite_device_ret (XDR *xdrs, guestfs_pwrite_device_ret *objp)
 	register int32_t *buf;
 
 	 if (!xdr_int (xdrs, &objp->nbytes))
-		 return FALSE;
-	return TRUE;
-}
-
-bool_t
-xdr_guestfs_readdir_args (XDR *xdrs, guestfs_readdir_args *objp)
-{
-	register int32_t *buf;
-
-	 if (!xdr_string (xdrs, &objp->dir, ~0))
-		 return FALSE;
-	return TRUE;
-}
-
-bool_t
-xdr_guestfs_readdir_ret (XDR *xdrs, guestfs_readdir_ret *objp)
-{
-	register int32_t *buf;
-
-	 if (!xdr_guestfs_int_dirent_list (xdrs, &objp->entries))
 		 return FALSE;
 	return TRUE;
 }

@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -42,6 +42,7 @@ extern int guestfs_impl_copy_in (guestfs_h *g, const char *localpath, const char
 extern int guestfs_impl_copy_out (guestfs_h *g, const char *remotepath, const char *localdir);
 extern char **guestfs_impl_debug_drives (guestfs_h *g);
 extern int guestfs_impl_device_index (guestfs_h *g, const char *device);
+extern char *guestfs_impl_device_name (guestfs_h *g, int index);
 extern int guestfs_impl_disk_create (guestfs_h *g, const char *filename, const char *format, int64_t size, const struct guestfs_disk_create_argv *optargs);
 extern char *guestfs_impl_disk_format (guestfs_h *g, const char *filename);
 extern int guestfs_impl_disk_has_backing_file (guestfs_h *g, const char *filename);
@@ -132,6 +133,7 @@ extern int guestfs_impl_parse_environment (guestfs_h *g);
 extern int guestfs_impl_parse_environment_list (guestfs_h *g, char *const *environment);
 extern char *guestfs_impl_read_file (guestfs_h *g, const char *path, size_t *size_r);
 extern char **guestfs_impl_read_lines (guestfs_h *g, const char *path);
+extern struct guestfs_dirent_list *guestfs_impl_readdir (guestfs_h *g, const char *dir);
 extern char **guestfs_impl_readlinklist (guestfs_h *g, const char *path, char *const *names);
 extern int guestfs_impl_remove_drive (guestfs_h *g, const char *label);
 extern int guestfs_impl_set_append (guestfs_h *g, const char *append);

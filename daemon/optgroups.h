@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ extern int optgroup_acl_available (void);
 extern int optgroup_blkdiscard_available (void);
 extern int optgroup_blkdiscardzeroes_available (void);
 extern int optgroup_btrfs_available (void);
+extern int optgroup_clevisluks_available (void);
 extern int optgroup_extlinux_available (void);
 extern int optgroup_f2fs_available (void);
 extern int optgroup_fstrim_available (void);
@@ -125,6 +126,10 @@ extern int optgroup_zerofree_available (void);
   int __attribute__((noreturn)) do_btrfstune_seeding (const char *device, int seeding) { abort (); } \
   int __attribute__((noreturn)) do_mkfs_btrfs (char *const *devices, int64_t allocstart, int64_t bytecount, const char *datatype, int leafsize, const char *label, const char *metadata, int nodesize, int sectorsize) { abort (); } \
   int optgroup_btrfs_available (void) { return 0; }
+
+#define OPTGROUP_CLEVISLUKS_NOT_AVAILABLE \
+  int __attribute__((noreturn)) do_clevis_luks_unlock (const char *device, const char *mapname) { abort (); } \
+  int optgroup_clevisluks_available (void) { return 0; }
 
 #define OPTGROUP_EXTLINUX_NOT_AVAILABLE \
   int __attribute__((noreturn)) do_extlinux (const char *directory) { abort (); } \

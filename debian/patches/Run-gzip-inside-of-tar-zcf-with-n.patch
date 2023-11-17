@@ -7,7 +7,7 @@ Subject: Run gzip (inside of tar zcf) with -n
  1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/appliance/Makefile.am b/appliance/Makefile.am
-index 8c8e7b8..4405d17 100644
+index b7357c2..8ffc3e6 100644
 --- a/appliance/Makefile.am
 +++ b/appliance/Makefile.am
 @@ -55,13 +55,14 @@ superminfs_DATA = \

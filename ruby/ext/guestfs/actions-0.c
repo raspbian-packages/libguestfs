@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -290,7 +290,8 @@ guestfs_int_ruby_add_drive_ro (VALUE gv, VALUE filenamev)
  *
  * This is the same as "g.add_drive_ro" but it allows you
  * to specify the QEMU interface emulation to use at run
- * time.
+ * time. Both the direct and the libvirt backends ignore
+ * "iface".
  *
  *
  * [Since] Added in version 1.0.84.
@@ -568,6 +569,75 @@ guestfs_int_ruby_btrfstune_enable_extended_inode_refs (VALUE gv, VALUE devicev)
   int r;
 
   r = guestfs_btrfstune_enable_extended_inode_refs (g, device);
+  if (r == -1)
+    rb_raise (e_Error, "%s", guestfs_last_error (g));
+
+  return Qnil;
+}
+
+/*
+ * call-seq:
+ *   g.clevis_luks_unlock(device, mapname) -> nil
+ *
+ * open an encrypted LUKS block device with Clevis and Tang
+ *
+ * This command opens a block device that has been
+ * encrypted according to the Linux Unified Key Setup
+ * (LUKS) standard, using network-bound disk encryption
+ * (NBDE).
+ * 
+ * "device" is the encrypted block device.
+ * 
+ * The appliance will connect to the Tang servers noted in
+ * the tree of Clevis pins that is bound to a keyslot of
+ * the LUKS header. The Clevis pin tree may comprise "sss"
+ * (redudancy) pins as internal nodes (optionally), and
+ * "tang" pins as leaves. "tpm2" pins are not supported.
+ * The appliance unlocks the encrypted block device by
+ * combining responses from the Tang servers with metadata
+ * from the LUKS header; there is no "key" parameter.
+ * 
+ * This command will fail if networking has not been
+ * enabled for the appliance. Refer to "g.set_network".
+ * 
+ * The command creates a new block device called
+ * /dev/mapper/mapname. Reads and writes to this block
+ * device are decrypted from and encrypted to the
+ * underlying "device" respectively. Close the decrypted
+ * block device with "g.cryptsetup_close".
+ * 
+ * "mapname" cannot be "control" because that name is
+ * reserved by device-mapper.
+ * 
+ * If this block device contains LVM volume groups, then
+ * calling "g.lvm_scan" with the "activate" parameter
+ * "true" will make them visible.
+ * 
+ * Use "g.list_dm_devices" to list all device mapper
+ * devices.
+ *
+ *
+ * [Since] Added in version 1.49.3.
+ *
+ * [Feature] This function depends on the feature +clevisluks+.  See also {#feature_available}[rdoc-ref:feature_available].
+ *
+ * [C API] For the C API documentation for this function, see
+ *         {guestfs_clevis_luks_unlock}[http://libguestfs.org/guestfs.3.html#guestfs_clevis_luks_unlock].
+ */
+VALUE
+guestfs_int_ruby_clevis_luks_unlock (VALUE gv, VALUE devicev, VALUE mapnamev)
+{
+  guestfs_h *g;
+  Data_Get_Struct (gv, guestfs_h, g);
+  if (!g)
+    rb_raise (rb_eArgError, "%s: used handle after closing it", "clevis_luks_unlock");
+
+  const char *device = StringValueCStr (devicev);
+  const char *mapname = StringValueCStr (mapnamev);
+
+  int r;
+
+  r = guestfs_clevis_luks_unlock (g, device, mapname);
   if (r == -1)
     rb_raise (e_Error, "%s", guestfs_last_error (g));
 
@@ -873,6 +943,48 @@ guestfs_int_ruby_cryptsetup_close (VALUE gv, VALUE devicev)
     rb_raise (e_Error, "%s", guestfs_last_error (g));
 
   return Qnil;
+}
+
+/*
+ * call-seq:
+ *   g.device_name(index) -> string
+ *
+ * convert device index to name
+ *
+ * This function takes a device index and returns the
+ * device name. For example index 0 will return the string
+ * "/dev/sda".
+ * 
+ * The drive index must have been added to the handle.
+ * 
+ * See also "g.list_devices", "g.part_to_dev",
+ * "g.device_index".
+ *
+ *
+ * [Since] Added in version 1.49.1.
+ *
+ * [C API] For the C API documentation for this function, see
+ *         {guestfs_device_name}[http://libguestfs.org/guestfs.3.html#guestfs_device_name].
+ */
+VALUE
+guestfs_int_ruby_device_name (VALUE gv, VALUE indexv)
+{
+  guestfs_h *g;
+  Data_Get_Struct (gv, guestfs_h, g);
+  if (!g)
+    rb_raise (rb_eArgError, "%s: used handle after closing it", "device_name");
+
+  int index = NUM2INT (indexv);
+
+  char *r;
+
+  r = guestfs_device_name (g, index);
+  if (r == NULL)
+    rb_raise (e_Error, "%s", guestfs_last_error (g));
+
+  volatile VALUE rv = rb_str_new2 (r);
+  free (r);
+  return rv;
 }
 
 /*

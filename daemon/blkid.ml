@@ -1,5 +1,5 @@
 (* guestfs-inspection
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ open Std_utils
 open Utils
 
 let rec vfs_type { Mountable.m_device = device } =
-  Option.default "" (get_blkid_tag device "TYPE")
+  Option.value ~default:"" (get_blkid_tag device "TYPE")
 
 and get_blkid_tag device tag =
   let r, out, err =

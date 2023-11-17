@@ -7,7 +7,7 @@ libguestfs generated file
           and from the code in the generator/ subdirectory.
  ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 
- Copyright (C) 2009-2020 Red Hat Inc.
+ Copyright (C) 2009-2023 Red Hat Inc.
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -379,7 +379,7 @@ This function is the equivalent of calling L</add-drive-opts> with the optional 
 
  add-drive-ro-with-if filename iface
 
-This is the same as L</add-drive-ro> but it allows you to specify the QEMU interface emulation to use at run time.
+This is the same as L</add-drive-ro> but it allows you to specify the QEMU interface emulation to use at run time.  Both the direct and the libvirt backends ignore C<iface>.
 
 I<この関数は推奨されません。> 新しいコードでは、代わりに L</add-drive> を使用してください。
 
@@ -401,7 +401,7 @@ The optional arguments C<name>, C<label> and C<blocksize> are passed through to 
 
  add-drive-with-if filename iface
 
-This is the same as L</add-drive> but it allows you to specify the QEMU interface emulation to use at run time.
+This is the same as L</add-drive> but it allows you to specify the QEMU interface emulation to use at run time.  Both the direct and the libvirt backends ignore C<iface>.
 
 I<この関数は推奨されません。> 新しいコードでは、代わりに L</add-drive> を使用してください。
 
@@ -1321,6 +1321,28 @@ This call returns the number of strings which were removed (which may be 0, 1 or
 
 See L<guestfs(3)/BACKEND>, L<guestfs(3)/BACKEND SETTINGS>.
 
+=head2 clevis-luks-unlock
+
+ clevis-luks-unlock device mapname
+
+This command opens a block device that has been encrypted according to the Linux Unified Key Setup (LUKS) standard, using network-bound disk encryption (NBDE).
+
+C<device> is the encrypted block device.
+
+The appliance will connect to the Tang servers noted in the tree of Clevis pins that is bound to a keyslot of the LUKS header.  The Clevis pin tree may comprise C<sss> (redudancy) pins as internal nodes (optionally), and C<tang> pins as leaves.  C<tpm2> pins are not supported.  The appliance unlocks the encrypted block device by combining responses from the Tang servers with metadata from the LUKS header; there is no C<key> parameter.
+
+This command will fail if networking has not been enabled for the appliance. Refer to L</set-network>.
+
+The command creates a new block device called F</dev/mapper/mapname>.  Reads and writes to this block device are decrypted from and encrypted to the underlying C<device> respectively.  Close the decrypted block device with L</cryptsetup-close>.
+
+C<mapname> cannot be C<"control"> because that name is reserved by device-mapper.
+
+If this block device contains LVM volume groups, then calling L</lvm-scan> with the C<activate> parameter C<true> will make them visible.
+
+Use L</list-dm-devices> to list all device mapper devices.
+
+This command depends on the feature C<clevisluks>.  See also L</feature-available>.
+
 =head2 command
 
  command 'arguments ...'
@@ -1587,7 +1609,17 @@ Deprecated functions will not be removed from the API, but the fact that they ar
 
 Index numbers start from 0.  The named device must exist, for example as a string returned from L</list-devices>.
 
-L</list-devices>, L</part-to-dev> 参照。
+See also L</list-devices>, L</part-to-dev>, L</device-name>.
+
+=head2 device-name
+
+ device-name index
+
+This function takes a device index and returns the device name.  For example index C<0> will return the string C</dev/sda>.
+
+The drive index must have been added to the handle.
+
+See also L</list-devices>, L</part-to-dev>, L</device-index>.
 
 =head2 df
 
@@ -3151,6 +3183,18 @@ This command depends on the feature C<inotify>.  See also L</feature-available>.
 This returns the architecture of the inspected operating system.  The possible return values are listed under L</file-architecture>.
 
 アーキテクチャーが決められなければ、文字列 C<unknown> が返されます。
+
+詳細は L<guestfs(3)/INSPECTION> を参照してください。
+
+=head2 inspect-get-build-id
+
+ inspect-get-build-id root
+
+This returns the build ID of the system, or the string C<"unknown"> if the system does not have a build ID.
+
+For Windows, this gets the build number.  Although it is returned as a string, it is (so far) always a number.  See L<https://en.wikipedia.org/wiki/List_of_Microsoft_Windows_versions> for some possible values.
+
+For Linux, this returns the C<BUILD_ID> string from F</etc/os-release>, although this is not often used.
 
 詳細は L<guestfs(3)/INSPECTION> を参照してください。
 
@@ -5953,8 +5997,6 @@ The L<readdir(3)> call returned a C<d_type> field with an unexpected value
 =back
 
 This function is primarily intended for use by programs.  To get a simple list of names, use L</ls>.  To get a printable directory for human consumption, use L</ll>.
-
-Because of the message protocol, there is a transfer limit of somewhere between 2MB and 4MB.  See L<guestfs(3)/PROTOCOL LIMITS>.
 
 =head2 readlink
 

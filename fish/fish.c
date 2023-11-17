@@ -1,5 +1,5 @@
 /* guestfish - guest filesystem shell
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -116,7 +116,7 @@ usage (int status)
   else {
     printf (_("%s: guest filesystem shell\n"
               "%s lets you edit virtual machine filesystems\n"
-              "Copyright (C) 2009-2020 Red Hat Inc.\n"
+              "Copyright (C) 2009-2023 Red Hat Inc.\n"
               "Usage:\n"
               "  %s [--options] cmd [: cmd : cmd ...]\n"
               "Options:\n"
@@ -475,6 +475,9 @@ main (int argc, char *argv[])
 
   /* If we've got drives to add, add them now. */
   add_drives (drvs);
+
+  if (key_store_requires_network (ks) && guestfs_set_network (g, 1) == -1)
+    exit (EXIT_FAILURE);
 
   /* If we've got mountpoints or prepared drives or -i option, we must
    * launch the guest and mount them.

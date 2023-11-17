@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -2007,6 +2007,18 @@ PREINIT:
  OUTPUT:
       RETVAL
 
+void
+clevis_luks_unlock (g, device, mapname)
+      guestfs_h *g;
+      char *device;
+      char *mapname;
+PREINIT:
+      int r;
+ PPCODE:
+      r = guestfs_clevis_luks_unlock (g, device, mapname);
+      if (r == -1)
+        croak ("%s", guestfs_last_error (g));
+
 SV *
 command (g, arguments)
       guestfs_h *g;
@@ -2594,6 +2606,21 @@ PREINIT:
       if (r == -1)
         croak ("%s", guestfs_last_error (g));
       RETVAL = newSViv (r);
+ OUTPUT:
+      RETVAL
+
+SV *
+device_name (g, index)
+      guestfs_h *g;
+      int index;
+PREINIT:
+      char *r;
+   CODE:
+      r = guestfs_device_name (g, index);
+      if (r == NULL)
+        croak ("%s", guestfs_last_error (g));
+      RETVAL = newSVpv (r, 0);
+      free (r);
  OUTPUT:
       RETVAL
 
@@ -4506,6 +4533,21 @@ PREINIT:
       char *r;
    CODE:
       r = guestfs_inspect_get_arch (g, root);
+      if (r == NULL)
+        croak ("%s", guestfs_last_error (g));
+      RETVAL = newSVpv (r, 0);
+      free (r);
+ OUTPUT:
+      RETVAL
+
+SV *
+inspect_get_build_id (g, root)
+      guestfs_h *g;
+      char *root;
+PREINIT:
+      char *r;
+   CODE:
+      r = guestfs_inspect_get_build_id (g, root);
       if (r == NULL)
         croak ("%s", guestfs_last_error (g));
       RETVAL = newSVpv (r, 0);

@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -922,6 +922,29 @@ run_inotify_read (const char *cmd, size_t argc, char *argv[])
   ret = 0;
   print_inotify_event_list (r);
   guestfs_free_inotify_event_list (r);
+ out:
+ out_noargs:
+  return ret;
+}
+
+int
+run_inspect_get_build_id (const char *cmd, size_t argc, char *argv[])
+{
+  int ret = RUN_ERROR;
+  char *r;
+  const char *root;
+  size_t i = 0;
+
+  if (argc != 1) {
+    ret = RUN_WRONG_ARGS;
+    goto out_noargs;
+  }
+  root = argv[i++];
+  r = guestfs_inspect_get_build_id (g, root);
+  if (r == NULL) goto out;
+  ret = 0;
+  printf ("%s\n", r);
+  free (r);
  out:
  out_noargs:
   return ret;

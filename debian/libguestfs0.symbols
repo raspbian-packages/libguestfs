@@ -122,6 +122,7 @@ libguestfs.so.0 libguestfs0 #MINVER#
  guestfs_chmod@Base 1.10
  guestfs_chown@Base 1.10
  guestfs_clear_backend_setting@Base 1:1.27.1
+ guestfs_clevis_luks_unlock@Base 1:1.50
  guestfs_close@Base 1.10
  guestfs_command@Base 1.10
  guestfs_command_lines@Base 1.10
@@ -276,6 +277,7 @@ libguestfs.so.0 libguestfs0 #MINVER#
  guestfs_debug_upload@Base 1.10
  guestfs_delete_event_callback@Base 1.10
  guestfs_device_index@Base 1:1.18
+ guestfs_device_name@Base 1:1.50
  guestfs_df@Base 1.10
  guestfs_df_h@Base 1.10
  guestfs_disk_create@Base 1:1.25.31
@@ -464,6 +466,7 @@ libguestfs.so.0 libguestfs0 #MINVER#
  guestfs_inotify_read@Base 1.10
  guestfs_inotify_rm_watch@Base 1.10
  guestfs_inspect_get_arch@Base 1.10
+ guestfs_inspect_get_build_id@Base 1:1.50
  guestfs_inspect_get_distro@Base 1.10
  guestfs_inspect_get_drive_mappings@Base 1.10
  guestfs_inspect_get_filesystems@Base 1.10

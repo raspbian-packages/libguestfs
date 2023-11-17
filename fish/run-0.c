@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -447,6 +447,29 @@ run_btrfstune_enable_extended_inode_refs (const char *cmd, size_t argc, char *ar
 }
 
 int
+run_clevis_luks_unlock (const char *cmd, size_t argc, char *argv[])
+{
+  int ret = RUN_ERROR;
+  int r;
+  const char *device;
+  const char *mapname;
+  size_t i = 0;
+
+  if (argc != 2) {
+    ret = RUN_WRONG_ARGS;
+    goto out_noargs;
+  }
+  device = argv[i++];
+  mapname = argv[i++];
+  r = guestfs_clevis_luks_unlock (g, device, mapname);
+  if (r == -1) goto out;
+  ret = 0;
+ out:
+ out_noargs:
+  return ret;
+}
+
+int
 run_command_lines (const char *cmd, size_t argc, char *argv[])
 {
   int ret = RUN_ERROR;
@@ -665,6 +688,48 @@ run_cryptsetup_close (const char *cmd, size_t argc, char *argv[])
   if (r == -1) goto out;
   ret = 0;
  out:
+ out_noargs:
+  return ret;
+}
+
+int
+run_device_name (const char *cmd, size_t argc, char *argv[])
+{
+  int ret = RUN_ERROR;
+  char *r;
+  int index;
+  size_t i = 0;
+
+  if (argc != 1) {
+    ret = RUN_WRONG_ARGS;
+    goto out_noargs;
+  }
+  {
+    strtol_error xerr;
+    long long r;
+
+    xerr = xstrtoll (argv[i++], NULL, 0, &r, xstrtol_suffixes);
+    if (xerr != LONGINT_OK) {
+      fprintf (stderr,
+               _("%s: %s: invalid integer parameter (%s returned %u)\n"),
+               cmd, "index", "xstrtoll", xerr);
+      goto out_index;
+    }
+    /* The Int type in the generator is a signed 31 bit int. */
+    if (r < (-(2LL<<30)) || r > ((2LL<<30)-1)) {
+      fprintf (stderr, _("%s: %s: integer out of range\n"), cmd, "index");
+      goto out_index;
+    }
+    /* The check above should ensure this assignment does not overflow. */
+    index = r;
+  }
+  r = guestfs_device_name (g, index);
+  if (r == NULL) goto out;
+  ret = 0;
+  printf ("%s\n", r);
+  free (r);
+ out:
+ out_index:
  out_noargs:
   return ret;
 }

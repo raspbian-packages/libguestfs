@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -1165,6 +1165,14 @@ val clear_backend_setting : t -> string -> int
     @since 1.27.2
  *)
 
+val clevis_luks_unlock : t -> string -> string -> unit
+(** open an encrypted LUKS block device with Clevis and Tang
+
+    This function depends on the feature "clevisluks".  See also {!feature_available}.
+
+    @since 1.49.3
+ *)
+
 val command : t -> string array -> string
 (** run a command from the guest filesystem
 
@@ -1309,6 +1317,12 @@ val device_index : t -> string -> int
 (** convert device to index
 
     @since 1.19.7
+ *)
+
+val device_name : t -> int -> string
+(** convert device index to name
+
+    @since 1.49.1
  *)
 
 val df : t -> string
@@ -2099,6 +2113,12 @@ val inspect_get_arch : t -> string -> string
 (** get architecture of inspected operating system
 
     @since 1.5.3
+ *)
+
+val inspect_get_build_id : t -> string -> string
+(** get the system build ID
+
+    @since 1.49.8
  *)
 
 val inspect_get_distro : t -> string -> string
@@ -5394,6 +5414,13 @@ class guestfs : ?environment:bool -> ?close_on_exit:bool -> unit -> object
 
     @since 1.27.2
    *)
+  method clevis_luks_unlock : string -> string -> unit
+  (** open an encrypted LUKS block device with Clevis and Tang
+
+    This function depends on the feature "clevisluks".  See also {!feature_available}.
+
+    @since 1.49.3
+   *)
   method command : string array -> string
   (** run a command from the guest filesystem
 
@@ -5515,6 +5542,11 @@ class guestfs : ?environment:bool -> ?close_on_exit:bool -> unit -> object
   (** convert device to index
 
     @since 1.19.7
+   *)
+  method device_name : int -> string
+  (** convert device index to name
+
+    @since 1.49.1
    *)
   method df : unit -> string
   (** report file system disk space usage
@@ -6190,6 +6222,11 @@ class guestfs : ?environment:bool -> ?close_on_exit:bool -> unit -> object
   (** get architecture of inspected operating system
 
     @since 1.5.3
+   *)
+  method inspect_get_build_id : string -> string
+  (** get the system build ID
+
+    @since 1.49.8
    *)
   method inspect_get_distro : string -> string
   (** get distro of inspected operating system

@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -291,6 +291,23 @@ run_btrfstune_enable_extended_inode_refs (ei_x_buff *retbuff, const char *buff, 
 }
 
 int
+run_clevis_luks_unlock (ei_x_buff *retbuff, const char *buff, int *idx)
+{
+  CLEANUP_FREE char *device;
+  if (decode_string (buff, idx, &device) != 0) return -1;
+  CLEANUP_FREE char *mapname;
+  if (decode_string (buff, idx, &mapname) != 0) return -1;
+  int r;
+
+  r = guestfs_clevis_luks_unlock (g, device, mapname);
+  if (r == -1)
+    return make_error (retbuff, "clevis_luks_unlock");
+
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
+}
+
+int
 run_command_lines (ei_x_buff *retbuff, const char *buff, int *idx)
 {
   CLEANUP_FREE_STRING_LIST char **arguments;
@@ -432,6 +449,22 @@ run_cryptsetup_close (ei_x_buff *retbuff, const char *buff, int *idx)
     return make_error (retbuff, "cryptsetup_close");
 
   if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
+}
+
+int
+run_device_name (ei_x_buff *retbuff, const char *buff, int *idx)
+{
+  int index;
+  if (decode_int (buff, idx, &index) != 0) return -1;
+  char *r;
+
+  r = guestfs_device_name (g, index);
+  if (r == NULL)
+    return make_error (retbuff, "device_name");
+
+  if (ei_x_encode_string (retbuff, r) != 0) return -1;
+  free (r);
   return 0;
 }
 

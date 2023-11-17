@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1205,7 +1205,8 @@ guestfs_session_add_drive_ro (GuestfsSession *session, const gchar *filename, GE
  * add a drive read-only specifying the QEMU block emulation to use
  *
  * This is the same as guestfs_session_add_drive_ro() but it allows you to
- * specify the QEMU interface emulation to use at run time.
+ * specify the QEMU interface emulation to use at run time. Both the direct
+ * and the libvirt backends ignore @iface.
  * 
  * Returns: true on success, false on error
  * Deprecated: In new code, use guestfs_session_add_drive() instead
@@ -1313,7 +1314,8 @@ guestfs_session_add_drive_scratch (GuestfsSession *session, gint64 size, Guestfs
  * add a drive specifying the QEMU block emulation to use
  *
  * This is the same as guestfs_session_add_drive() but it allows you to
- * specify the QEMU interface emulation to use at run time.
+ * specify the QEMU interface emulation to use at run time. Both the direct
+ * and the libvirt backends ignore @iface.
  * 
  * Returns: true on success, false on error
  * Deprecated: In new code, use guestfs_session_add_drive() instead
@@ -5103,6 +5105,72 @@ guestfs_session_clear_backend_setting (GuestfsSession *session, const gchar *nam
 }
 
 /**
+ * guestfs_session_clevis_luks_unlock:
+ * @session: (transfer none): A GuestfsSession object
+ * @device: (transfer none) (type filename):
+ * @mapname: (transfer none) (type utf8):
+ * @err: A GError object to receive any generated errors
+ *
+ * open an encrypted LUKS block device with Clevis and Tang
+ *
+ * This command opens a block device that has been encrypted according to
+ * the Linux Unified Key Setup (LUKS) standard, using network-bound disk
+ * encryption (NBDE).
+ * 
+ * @device is the encrypted block device.
+ * 
+ * The appliance will connect to the Tang servers noted in the tree of
+ * Clevis pins that is bound to a keyslot of the LUKS header. The Clevis
+ * pin tree may comprise @sss (redudancy) pins as internal nodes
+ * (optionally), and @tang pins as leaves. @tpm2 pins are not supported.
+ * The appliance unlocks the encrypted block device by combining responses
+ * from the Tang servers with metadata from the LUKS header; there is no
+ * @key parameter.
+ * 
+ * This command will fail if networking has not been enabled for the
+ * appliance. Refer to guestfs_session_set_network().
+ * 
+ * The command creates a new block device called /dev/mapper/mapname. Reads
+ * and writes to this block device are decrypted from and encrypted to the
+ * underlying @device respectively. Close the decrypted block device with
+ * guestfs_session_cryptsetup_close().
+ * 
+ * @mapname cannot be "control" because that name is reserved by
+ * device-mapper.
+ * 
+ * If this block device contains LVM volume groups, then calling
+ * guestfs_session_lvm_scan() with the @activate parameter @true will make
+ * them visible.
+ * 
+ * Use guestfs_session_list_dm_devices() to list all device mapper devices.
+ * 
+ * This function depends on the feature "clevisluks".
+ * See also guestfs_session_feature_available().
+ *
+ * Returns: true on success, false on error
+ * Since: 1.49.3
+ */
+gboolean
+guestfs_session_clevis_luks_unlock (GuestfsSession *session, const gchar *device, const gchar *mapname, GError **err)
+{
+  guestfs_h *g = session->priv->g;
+  if (g == NULL) {
+    g_set_error (err, GUESTFS_ERROR, 0,
+                "attempt to call %s after the session has been closed",
+                "clevis_luks_unlock");
+    return FALSE;
+  }
+
+  int ret = guestfs_clevis_luks_unlock (g, device, mapname);
+  if (ret == -1) {
+    g_set_error_literal (err, GUESTFS_ERROR, 0, guestfs_last_error (g));
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+/**
  * guestfs_session_command:
  * @session: (transfer none): A GuestfsSession object
  * @arguments: (transfer none) (array zero-terminated=1) (element-type utf8): an array of strings
@@ -6463,7 +6531,8 @@ guestfs_session_debug_upload (GuestfsSession *session, const gchar *filename, co
  * Index numbers start from 0. The named device must exist, for example as
  * a string returned from guestfs_session_list_devices().
  * 
- * See also guestfs_session_list_devices(), guestfs_session_part_to_dev().
+ * See also guestfs_session_list_devices(), guestfs_session_part_to_dev(),
+ * guestfs_session_device_name().
  * 
  * Returns: the returned value, or -1 on error
  * Since: 1.19.7
@@ -6483,6 +6552,45 @@ guestfs_session_device_index (GuestfsSession *session, const gchar *device, GErr
   if (ret == -1) {
     g_set_error_literal (err, GUESTFS_ERROR, 0, guestfs_last_error (g));
     return -1;
+  }
+
+  return ret;
+}
+
+/**
+ * guestfs_session_device_name:
+ * @session: (transfer none): A GuestfsSession object
+ * @index: (type gint32):
+ * @err: A GError object to receive any generated errors
+ *
+ * convert device index to name
+ *
+ * This function takes a device index and returns the device name. For
+ * example index @0 will return the string "/dev/sda".
+ * 
+ * The drive index must have been added to the handle.
+ * 
+ * See also guestfs_session_list_devices(), guestfs_session_part_to_dev(),
+ * guestfs_session_device_index().
+ * 
+ * Returns: (transfer full): the returned string, or NULL on error
+ * Since: 1.49.1
+ */
+gchar *
+guestfs_session_device_name (GuestfsSession *session, gint32 index, GError **err)
+{
+  guestfs_h *g = session->priv->g;
+  if (g == NULL) {
+    g_set_error (err, GUESTFS_ERROR, 0,
+                "attempt to call %s after the session has been closed",
+                "device_name");
+    return NULL;
+  }
+
+  char *ret = guestfs_device_name (g, index);
+  if (ret == NULL) {
+    g_set_error_literal (err, GUESTFS_ERROR, 0, guestfs_last_error (g));
+    return NULL;
   }
 
   return ret;
@@ -11572,6 +11680,51 @@ guestfs_session_inspect_get_arch (GuestfsSession *session, const gchar *root, GE
   }
 
   char *ret = guestfs_inspect_get_arch (g, root);
+  if (ret == NULL) {
+    g_set_error_literal (err, GUESTFS_ERROR, 0, guestfs_last_error (g));
+    return NULL;
+  }
+
+  return ret;
+}
+
+/**
+ * guestfs_session_inspect_get_build_id:
+ * @session: (transfer none): A GuestfsSession object
+ * @root: (transfer none) (type filename):
+ * @err: A GError object to receive any generated errors
+ *
+ * get the system build ID
+ *
+ * This returns the build ID of the system, or the string "unknown" if the
+ * system does not have a build ID.
+ * 
+ * For Windows, this gets the build number. Although it is returned as a
+ * string, it is (so far) always a number. See <ulink
+ * url='https://en.wikipedia.org/wiki/List_of_Microsoft_Windows_versions'>
+ * http://en.wikipedia.org/wiki/List_of_Microsoft_Windows_versions </ulink>
+ * for some possible values.
+ * 
+ * For Linux, this returns the @BUILD_ID string from /etc/os-release,
+ * although this is not often used.
+ * 
+ * Please read "INSPECTION" in guestfs(3) for more details.
+ * 
+ * Returns: (transfer full): the returned string, or NULL on error
+ * Since: 1.49.8
+ */
+gchar *
+guestfs_session_inspect_get_build_id (GuestfsSession *session, const gchar *root, GError **err)
+{
+  guestfs_h *g = session->priv->g;
+  if (g == NULL) {
+    g_set_error (err, GUESTFS_ERROR, 0,
+                "attempt to call %s after the session has been closed",
+                "inspect_get_build_id");
+    return NULL;
+  }
+
+  char *ret = guestfs_inspect_get_build_id (g, root);
   if (ret == NULL) {
     g_set_error_literal (err, GUESTFS_ERROR, 0, guestfs_last_error (g));
     return NULL;
@@ -23483,6 +23636,7 @@ guestfs_session_read_lines (GuestfsSession *session, const gchar *path, GError *
  * guestfs_session_readdir:
  * @session: (transfer none): A GuestfsSession object
  * @dir: (transfer none) (type filename):
+ * @cancellable: A GCancellable object
  * @err: A GError object to receive any generated errors
  *
  * read directories entries
@@ -23523,8 +23677,12 @@ guestfs_session_read_lines (GuestfsSession *session, const gchar *path, GError *
  * Since: 1.0.55
  */
 GuestfsDirent **
-guestfs_session_readdir (GuestfsSession *session, const gchar *dir, GError **err)
+guestfs_session_readdir (GuestfsSession *session, const gchar *dir, GCancellable *cancellable, GError **err)
 {
+  /* Check we haven't already been cancelled */
+  if (g_cancellable_set_error_if_cancelled (cancellable, err))
+    return NULL;
+
   guestfs_h *g = session->priv->g;
   if (g == NULL) {
     g_set_error (err, GUESTFS_ERROR, 0,
@@ -23533,7 +23691,15 @@ guestfs_session_readdir (GuestfsSession *session, const gchar *dir, GError **err
     return NULL;
   }
 
+  gulong id = 0;
+  if (cancellable) {
+    id = g_cancellable_connect (cancellable,
+                               G_CALLBACK (cancelled_handler),
+                               g, NULL);
+  }
+
   struct guestfs_dirent_list *ret = guestfs_readdir (g, dir);
+  g_cancellable_disconnect (cancellable, id);
   if (ret == NULL) {
     g_set_error_literal (err, GUESTFS_ERROR, 0, guestfs_last_error (g));
     return NULL;

@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1056,6 +1056,51 @@ inotify_read_stub (XDR *xdr_in)
   ret.events = *r;
   reply ((xdrproc_t) xdr_guestfs_inotify_read_ret, (char *) &ret);
   xdr_free ((xdrproc_t) xdr_guestfs_inotify_read_ret, (char *) &ret);
+}
+
+#ifdef HAVE_ATTRIBUTE_CLEANUP
+
+#define CLEANUP_XDR_FREE_INSPECT_GET_BUILD_ID_ARGS \
+    __attribute__((cleanup(cleanup_xdr_free_inspect_get_build_id_args)))
+
+static void
+cleanup_xdr_free_inspect_get_build_id_args (struct guestfs_inspect_get_build_id_args *argsp)
+{
+  xdr_free ((xdrproc_t) xdr_guestfs_inspect_get_build_id_args, (char *) argsp);
+}
+
+#else /* !HAVE_ATTRIBUTE_CLEANUP */
+#define CLEANUP_XDR_FREE_INSPECT_GET_BUILD_ID_ARGS
+#endif /* !HAVE_ATTRIBUTE_CLEANUP */
+
+void
+inspect_get_build_id_stub (XDR *xdr_in)
+{
+  CLEANUP_FREE char *r = NULL;
+  CLEANUP_XDR_FREE_INSPECT_GET_BUILD_ID_ARGS struct guestfs_inspect_get_build_id_args args;
+  memset (&args, 0, sizeof args);
+  CLEANUP_FREE_MOUNTABLE mountable_t root
+      = { .device = NULL, .volume = NULL };
+
+  if (optargs_bitmask != 0) {
+    reply_with_error ("header optargs_bitmask field must be passed as 0 for calls that don't take optional arguments");
+    return;
+  }
+
+  if (!xdr_guestfs_inspect_get_build_id_args (xdr_in, &args)) {
+    reply_with_error ("daemon failed to decode procedure arguments");
+    return;
+  }
+  RESOLVE_MOUNTABLE (args.root, root, false);
+
+  r = do_inspect_get_build_id (&root);
+  if (r == NULL)
+    /* do_inspect_get_build_id has already called reply_with_error */
+    return;
+
+  struct guestfs_inspect_get_build_id_ret ret;
+  ret.buildid = r;
+  reply ((xdrproc_t) &xdr_guestfs_inspect_get_build_id_ret, (char *) &ret);
 }
 
 #ifdef HAVE_ATTRIBUTE_CLEANUP

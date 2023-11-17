@@ -1,5 +1,5 @@
 (* guestfs-inspection
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -332,6 +332,12 @@ and inspect_get_arch root =
 and inspect_get_hostname root =
   let root = search_for_root root in
   match root.inspection_data.hostname with
+  | Some v -> v
+  | None -> "unknown"
+
+and inspect_get_build_id root =
+  let root = search_for_root root in
+  match root.inspection_data.build_id with
   | Some v -> v
   | None -> "unknown"
 

@@ -4,7 +4,7 @@
             and from the code in the generator/ subdirectory.
    ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
   
-   Copyright (C) 2009-2020 Red Hat Inc.
+   Copyright (C) 2009-2023 Red Hat Inc.
   
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -106,6 +106,7 @@ module Guestfs (
   chmod,
   chown,
   clear_backend_setting,
+  clevis_luks_unlock,
   command,
   command_lines,
   config,
@@ -121,6 +122,7 @@ module Guestfs (
   debug_drives,
   debug_upload,
   device_index,
+  device_name,
   df,
   df_h,
   disk_format,
@@ -217,6 +219,7 @@ module Guestfs (
   inotify_init,
   inotify_rm_watch,
   inspect_get_arch,
+  inspect_get_build_id,
   inspect_get_distro,
   inspect_get_drive_mappings,
   inspect_get_filesystems,
@@ -1559,6 +1562,18 @@ clear_backend_setting h name = do
       fail err
     else return (fromIntegral r)
 
+foreign import ccall unsafe "guestfs.h guestfs_clevis_luks_unlock" c_clevis_luks_unlock
+  :: GuestfsP -> CString -> CString -> IO CInt
+
+clevis_luks_unlock :: GuestfsH -> String -> String -> IO ()
+clevis_luks_unlock h device mapname = do
+  r <- withCString device $ \device -> withCString mapname $ \mapname -> withForeignPtr h (\p -> c_clevis_luks_unlock p device mapname)
+  if (r == -1)
+    then do
+      err <- last_error h
+      fail err
+    else return ()
+
 foreign import ccall unsafe "guestfs.h guestfs_command" c_command
   :: GuestfsP -> Ptr CString -> IO CString
 
@@ -1738,6 +1753,18 @@ device_index h device = do
       err <- last_error h
       fail err
     else return (fromIntegral r)
+
+foreign import ccall unsafe "guestfs.h guestfs_device_name" c_device_name
+  :: GuestfsP -> CInt -> IO CString
+
+device_name :: GuestfsH -> Int -> IO String
+device_name h index = do
+  r <- withForeignPtr h (\p -> c_device_name p (fromIntegral index))
+  if (r == nullPtr)
+    then do
+      err <- last_error h
+      fail err
+    else peekCString r
 
 foreign import ccall unsafe "guestfs.h guestfs_df" c_df
   :: GuestfsP -> IO CString
@@ -2885,6 +2912,18 @@ foreign import ccall unsafe "guestfs.h guestfs_inspect_get_arch" c_inspect_get_a
 inspect_get_arch :: GuestfsH -> String -> IO String
 inspect_get_arch h root = do
   r <- withCString root $ \root -> withForeignPtr h (\p -> c_inspect_get_arch p root)
+  if (r == nullPtr)
+    then do
+      err <- last_error h
+      fail err
+    else peekCString r
+
+foreign import ccall unsafe "guestfs.h guestfs_inspect_get_build_id" c_inspect_get_build_id
+  :: GuestfsP -> CString -> IO CString
+
+inspect_get_build_id :: GuestfsH -> String -> IO String
+inspect_get_build_id h root = do
+  r <- withCString root $ \root -> withForeignPtr h (\p -> c_inspect_get_build_id p root)
   if (r == nullPtr)
     then do
       err <- last_error h

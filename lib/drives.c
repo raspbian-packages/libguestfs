@@ -31,6 +31,7 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <assert.h>
+#include <errno.h>
 #include <libintl.h>
 
 #include "c-ctype.h"
@@ -52,7 +53,6 @@ struct drive_create_data {
   const char *secret;
   bool readonly;
   const char *format;
-  const char *iface;
   const char *name;
   const char *disk_label;
   const char *cachemode;
@@ -109,7 +109,6 @@ create_drive_file (guestfs_h *g,
   drv->src.format = data->format ? safe_strdup (g, data->format) : NULL;
 
   drv->readonly = data->readonly;
-  drv->iface = data->iface ? safe_strdup (g, data->iface) : NULL;
   drv->name = data->name ? safe_strdup (g, data->name) : NULL;
   drv->disk_label = data->disk_label ? safe_strdup (g, data->disk_label) : NULL;
   drv->cachemode = data->cachemode ? safe_strdup (g, data->cachemode) : NULL;
@@ -146,7 +145,6 @@ create_drive_non_file (guestfs_h *g,
   drv->src.format = data->format ? safe_strdup (g, data->format) : NULL;
 
   drv->readonly = data->readonly;
-  drv->iface = data->iface ? safe_strdup (g, data->iface) : NULL;
   drv->name = data->name ? safe_strdup (g, data->name) : NULL;
   drv->disk_label = data->disk_label ? safe_strdup (g, data->disk_label) : NULL;
   drv->cachemode = data->cachemode ? safe_strdup (g, data->cachemode) : NULL;
@@ -469,7 +467,6 @@ free_drive_struct (struct drive *drv)
 {
   free_drive_source (&drv->src);
   free (drv->overlay);
-  free (drv->iface);
   free (drv->name);
   free (drv->disk_label);
   free (drv->cachemode);
@@ -510,14 +507,12 @@ drive_to_string (guestfs_h *g, const struct drive *drv)
     s_blocksize = safe_asprintf (g, "%d", drv->blocksize);
 
   return safe_asprintf
-    (g, "%s%s%s%s protocol=%s%s%s%s%s%s%s%s%s%s%s%s%s",
+    (g, "%s%s%s%s protocol=%s%s%s%s%s%s%s%s%s%s%s",
      drv->src.u.path,
      drv->readonly ? " readonly" : "",
      drv->src.format ? " format=" : "",
      drv->src.format ? : "",
      guestfs_int_drive_protocol_to_string (drv->src.protocol),
-     drv->iface ? " iface=" : "",
-     drv->iface ? : "",
      drv->name ? " name=" : "",
      drv->name ? : "",
      drv->disk_label ? " label=" : "",
@@ -598,7 +593,7 @@ guestfs_int_free_drives (guestfs_h *g)
  * Check string parameter matches regular expression
  * C<^[-_[:alnum:]]+$> (in C locale).
  */
-#define VALID_FORMAT_IFACE(str) \
+#define VALID_FORMAT(str) \
   guestfs_int_string_is_valid ((str), 1, 0, \
                                VALID_FLAG_ALPHA|VALID_FLAG_DIGIT, "-_")
 
@@ -746,8 +741,6 @@ guestfs_impl_add_drive_opts (guestfs_h *g, const char *filename,
     ? optargs->readonly : false;
   data.format = optargs->bitmask & GUESTFS_ADD_DRIVE_OPTS_FORMAT_BITMASK
     ? optargs->format : NULL;
-  data.iface = optargs->bitmask & GUESTFS_ADD_DRIVE_OPTS_IFACE_BITMASK
-    ? optargs->iface : NULL;
   data.name = optargs->bitmask & GUESTFS_ADD_DRIVE_OPTS_NAME_BITMASK
     ? optargs->name : NULL;
   data.disk_label = optargs->bitmask & GUESTFS_ADD_DRIVE_OPTS_LABEL_BITMASK
@@ -797,15 +790,9 @@ guestfs_impl_add_drive_opts (guestfs_h *g, const char *filename,
     return -1;
   }
 
-  if (data.format && !VALID_FORMAT_IFACE (data.format)) {
+  if (data.format && !VALID_FORMAT (data.format)) {
     error (g, _("%s parameter is empty or contains disallowed characters"),
            "format");
-    free_drive_servers (data.servers, data.nr_servers);
-    return -1;
-  }
-  if (data.iface && !VALID_FORMAT_IFACE (data.iface)) {
-    error (g, _("%s parameter is empty or contains disallowed characters"),
-           "iface");
     free_drive_servers (data.servers, data.nr_servers);
     return -1;
   }
@@ -934,24 +921,17 @@ guestfs_impl_add_drive_ro (guestfs_h *g, const char *filename)
 
 int
 guestfs_impl_add_drive_with_if (guestfs_h *g, const char *filename,
-				const char *iface)
+				const char *iface ATTRIBUTE_UNUSED)
 {
-  const struct guestfs_add_drive_opts_argv optargs = {
-    .bitmask = GUESTFS_ADD_DRIVE_OPTS_IFACE_BITMASK,
-    .iface = iface,
-  };
-
-  return guestfs_add_drive_opts_argv (g, filename, &optargs);
+  return guestfs_add_drive_opts_argv (g, filename, NULL);
 }
 
 int
 guestfs_impl_add_drive_ro_with_if (guestfs_h *g, const char *filename,
-                               const char *iface)
+                               const char *iface ATTRIBUTE_UNUSED)
 {
   const struct guestfs_add_drive_opts_argv optargs = {
-    .bitmask = GUESTFS_ADD_DRIVE_OPTS_IFACE_BITMASK
-             | GUESTFS_ADD_DRIVE_OPTS_READONLY_BITMASK,
-    .iface = iface,
+    .bitmask = GUESTFS_ADD_DRIVE_OPTS_READONLY_BITMASK,
     .readonly = true,
   };
 
@@ -1083,4 +1063,18 @@ guestfs_impl_device_index (guestfs_h *g, const char *device)
   if (r == -1)
     error (g, _("%s: device not found"), device);
   return r;
+}
+
+char *
+guestfs_impl_device_name (guestfs_h *g, int index)
+{
+  char drive_name[64];
+
+  if (index < 0 || index >= g->nr_drives) {
+    guestfs_int_error_errno (g, EINVAL, _("drive index out of range"));
+    return NULL;
+  }
+
+  guestfs_int_drive_name (index, drive_name);
+  return safe_asprintf (g, "/dev/sd%s", drive_name);
 }

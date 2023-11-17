@@ -10,7 +10,7 @@ Debian bug #948017
  1 file changed, 12 insertions(+), 4 deletions(-)
 
 diff --git a/m4/guestfs-python.m4 b/m4/guestfs-python.m4
-index f562a05..8b5d847 100644
+index ccb15d0..c4bc7a3 100644
 --- a/m4/guestfs-python.m4
 +++ b/m4/guestfs-python.m4
 @@ -52,22 +52,30 @@ supports it.

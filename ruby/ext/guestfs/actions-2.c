@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -3267,10 +3267,6 @@ guestfs_int_ruby_pwrite_device (VALUE gv, VALUE devicev, VALUE contentv, VALUE o
  * This function is primarily intended for use by programs.
  * To get a simple list of names, use "g.ls". To get a
  * printable directory for human consumption, use "g.ll".
- * 
- * Because of the message protocol, there is a transfer
- * limit of somewhere between 2MB and 4MB. See "PROTOCOL
- * LIMITS" in guestfs(3).
  *
  *
  * [Since] Added in version 1.0.55.

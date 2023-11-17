@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -569,22 +569,6 @@ make_yara_detection (ei_x_buff *buff, const struct guestfs_yara_detection *yara_
 }
 
 int
-make_lvm_lv_list (ei_x_buff *buff, const struct guestfs_lvm_lv_list *lvm_lvs)
-{
-  size_t len = lvm_lvs->len;
-  size_t i;
-
-  if (ei_x_encode_list_header (buff, len) != 0) return -1;
-  for (i = 0; i < len; ++i) {
-    if (make_lvm_lv (buff, &lvm_lvs->val[i]) != 0) return -1;
-  }
-  if (len > 0)
-    if (ei_x_encode_empty_list (buff) != 0) return -1;
-
-  return 0;
-}
-
-int
 make_dirent_list (ei_x_buff *buff, const struct guestfs_dirent_list *dirents)
 {
   size_t len = dirents->len;
@@ -593,6 +577,22 @@ make_dirent_list (ei_x_buff *buff, const struct guestfs_dirent_list *dirents)
   if (ei_x_encode_list_header (buff, len) != 0) return -1;
   for (i = 0; i < len; ++i) {
     if (make_dirent (buff, &dirents->val[i]) != 0) return -1;
+  }
+  if (len > 0)
+    if (ei_x_encode_empty_list (buff) != 0) return -1;
+
+  return 0;
+}
+
+int
+make_lvm_lv_list (ei_x_buff *buff, const struct guestfs_lvm_lv_list *lvm_lvs)
+{
+  size_t len = lvm_lvs->len;
+  size_t i;
+
+  if (ei_x_encode_list_header (buff, len) != 0) return -1;
+  for (i = 0; i < len; ++i) {
+    if (make_lvm_lv (buff, &lvm_lvs->val[i]) != 0) return -1;
   }
   if (len > 0)
     if (ei_x_encode_empty_list (buff) != 0) return -1;

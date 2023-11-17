@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ let init_callbacks () =
   Callback.register "Findfs.findfs_label" Findfs.findfs_label;
   Callback.register "Findfs.findfs_uuid" Findfs.findfs_uuid;
   Callback.register "Inspect.inspect_get_arch" Inspect.inspect_get_arch;
+  Callback.register "Inspect.inspect_get_build_id" Inspect.inspect_get_build_id;
   Callback.register "Inspect.inspect_get_distro" Inspect.inspect_get_distro;
   Callback.register "Inspect.inspect_get_drive_mappings" Inspect.inspect_get_drive_mappings;
   Callback.register "Inspect.inspect_get_filesystems" Inspect.inspect_get_filesystems;

@@ -1,5 +1,5 @@
 /* libguestfs
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -85,7 +85,8 @@ guestfs_int_get_cpu_model (int kvm)
   /* See discussion in https://bugzilla.redhat.com/show_bug.cgi?id=1605071 */
   return NULL;
 #elif defined(__riscv)
-  return "rv64";
+  /* qemu-system-riscv64 (7.0) doesn't yet support -cpu max */
+  return NULL;
 #else
   /* On most architectures we can use "max" to get the best possible CPU.
    * For recent qemu this should work even on TCG.

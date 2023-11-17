@@ -7,9 +7,10 @@ Build-Depends: debhelper-compat (= 13),
   po-debconf, bash-completion,
   supermin (>= 5),
   libreadline-dev, libaugeas-dev (>= 1.0.0), libselinux1-dev, libhivex-ocaml-dev, libvirt-dev (>= 1.2.20),
+  libaugeas-ocaml-dev,
   libvirt-ocaml-dev,
   libounit-ocaml-dev,
-  liblzma-dev, libmagic-dev, libncurses5-dev, libncursesw5-dev, libpcre2-dev, libxml2-dev,
+  liblzma-dev, libmagic-dev, libncurses-dev, libpcre2-dev, libxml2-dev,
   libconfig-dev, libc-dev-bin,
   libdbus-1-dev,
   librpm-dev,
@@ -37,6 +38,7 @@ Build-Depends: debhelper-compat (= 13),
   dh-python,
   default-jdk,
   gem2deb, rake, libjs-jquery,
+  perl-xs-dev,
   libmodule-build-perl,
   libtest-pod-coverage-perl, libextutils-command-perl, libintl-perl, libtest-pod-perl,
   libstring-shellquote-perl,
@@ -53,7 +55,6 @@ Build-Depends: debhelper-compat (= 13),
 #-# appliance start
   acl,
   attr,
-  binutils,
   bsdextrautils | bsdmainutils,
   btrfs-progs,
   bzip2,
@@ -119,7 +120,7 @@ Build-Depends: debhelper-compat (= 13),
   zstd,
 #-# appliance end
 Homepage: http://libguestfs.org
-Standards-Version: 4.6.0
+Standards-Version: 4.6.2
 Rules-Requires-Root: no
 Vcs-Git: https://salsa.debian.org/libvirt-team/libguestfs.git
 Vcs-Browser: https://salsa.debian.org/libvirt-team/libguestfs
@@ -447,7 +448,7 @@ Package: ruby-guestfs
 Section: ruby
 XB-Ruby-Versions: ${ruby:Versions}
 Architecture: linux-any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ruby | ruby-interpreter
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${ruby:Depends},
 Conflicts: libguestfs-dev (<< 1:1.15.15-1~)
 Description: guest disk image management system - Ruby bindings
  The libguestfs library allows accessing and modifying guest disk

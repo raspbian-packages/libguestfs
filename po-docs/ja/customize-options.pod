@@ -7,7 +7,7 @@ libguestfs generated file
           and from the code in the generator/ subdirectory.
  ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 
- Copyright (C) 2009-2020 Red Hat Inc.
+ Copyright (C) 2009-2023 Red Hat Inc.
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -138,6 +138,38 @@ For an overview on the different ways to install packages, see L<virt-builder(1)
 
 Set the hostname of the guest to C<HOSTNAME>.  You can use a dotted hostname.domainname (FQDN) if you want.
 
+=item B<--inject-qemu-ga> METHOD
+
+Inject the QEMU Guest Agent into a Windows guest.  The guest agent communicates with qemu through a socket in order to provide enhanced features (see L<qemu-ga(8)>).  This operation also injects a firstboot script so that the Guest Agent is installed when the guest boots.
+
+The parameter is the same as used by the I<--inject-virtio-win> operation.
+
+Note that to do a full conversion of a Windows guest from a foreign hypervisor like VMware (which involves many other operations)  you should use the L<virt-v2v(1)> tool instead of this.
+
+=item B<--inject-virtio-win> METHOD
+
+Inject virtio-win drivers into a Windows guest.  These drivers add virtio accelerated drivers suitable when running on top of a hypervisor that supports virtio (such as qemu/KVM).  The operation also adjusts the Windows Registry so that the drivers are installed when the guest boots.
+
+The parameter can be one of:
+
+=over 4
+
+=item ISO
+
+The path to the ISO image containing the virtio-win drivers (eg. F</usr/share/virtio-win/virtio-win.iso>).
+
+=item DIR
+
+The directory containing the unpacked virtio-win drivers (eg. F</usr/share/virtio-win>).
+
+=item B<"osinfo">
+
+The literal string C<"osinfo"> means to use the libosinfo database to locate the drivers.  (See L<osinfo-query(1)>.
+
+=back
+
+Note that to do a full conversion of a Windows guest from a foreign hypervisor like VMware (which involves many other operations)  you should use the L<virt-v2v(1)> tool instead of this.
+
 =item B<--install> PKG,PKG..
 
 Install the named packages (a comma-separated list).  These are installed during the image build using the guest’s package manager (eg. apt, yum, etc.) and the host’s network connection.
@@ -167,6 +199,14 @@ Wildcards cannot be used.
 Scrub C<builder.log> (log file from build commands) from the image after building is complete.  If you don't want to reveal precisely how the image was built, use this option.
 
 See also: L</LOG FILE>.
+
+=item B<--no-selinux-relabel>
+
+Do not attempt to correct the SELinux labels of files in the guest.
+
+In such guests that support SELinux, customization automatically relabels files so that they have the correct SELinux label.  (The relabeling is performed immediately, but if the operation fails, customization will instead touch F</.autorelabel> on the image to schedule a relabel operation for the next time the image boots.)  This option disables the automatic relabeling.
+
+The option is a no-op for guests that do not support SELinux.
 
 =item B<--password> USER:SELECTOR
 
@@ -234,11 +274,7 @@ It cannot delete directories, only regular files.
 
 =item B<--selinux-relabel>
 
-Relabel files in the guest so that they have the correct SELinux label.
-
-This will attempt to relabel files immediately, but if the operation fails this will instead touch F</.autorelabel> on the image to schedule a relabel operation for the next time the image boots.
-
-This option is a no-op for guests that do not support SELinux.
+This is a compatibility option that does nothing.
 
 =item B<--sm-attach> SELECTOR
 

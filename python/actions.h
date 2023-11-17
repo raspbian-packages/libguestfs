@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -141,11 +141,11 @@ extern PyObject *guestfs_int_py_put_xfsinfo (struct guestfs_xfsinfo *xfsinfo);
 #ifdef GUESTFS_HAVE_STRUCT_YARA_DETECTION
 extern PyObject *guestfs_int_py_put_yara_detection (struct guestfs_yara_detection *yara_detection);
 #endif
-#ifdef GUESTFS_HAVE_STRUCT_LVM_LV
-extern PyObject *guestfs_int_py_put_lvm_lv_list (struct guestfs_lvm_lv_list *lvm_lvs);
-#endif
 #ifdef GUESTFS_HAVE_STRUCT_DIRENT
 extern PyObject *guestfs_int_py_put_dirent_list (struct guestfs_dirent_list *dirents);
+#endif
+#ifdef GUESTFS_HAVE_STRUCT_LVM_LV
+extern PyObject *guestfs_int_py_put_lvm_lv_list (struct guestfs_lvm_lv_list *lvm_lvs);
 #endif
 #ifdef GUESTFS_HAVE_STRUCT_BTRFSQGROUP
 extern PyObject *guestfs_int_py_put_btrfsqgroup_list (struct guestfs_btrfsqgroup_list *btrfsqgroups);
@@ -487,6 +487,9 @@ extern PyObject *guestfs_int_py_chown (PyObject *self, PyObject *args);
 #ifdef GUESTFS_HAVE_CLEAR_BACKEND_SETTING
 extern PyObject *guestfs_int_py_clear_backend_setting (PyObject *self, PyObject *args);
 #endif
+#ifdef GUESTFS_HAVE_CLEVIS_LUKS_UNLOCK
+extern PyObject *guestfs_int_py_clevis_luks_unlock (PyObject *self, PyObject *args);
+#endif
 #ifdef GUESTFS_HAVE_COMMAND
 extern PyObject *guestfs_int_py_command (PyObject *self, PyObject *args);
 #endif
@@ -558,6 +561,9 @@ extern PyObject *guestfs_int_py_debug_upload (PyObject *self, PyObject *args);
 #endif
 #ifdef GUESTFS_HAVE_DEVICE_INDEX
 extern PyObject *guestfs_int_py_device_index (PyObject *self, PyObject *args);
+#endif
+#ifdef GUESTFS_HAVE_DEVICE_NAME
+extern PyObject *guestfs_int_py_device_name (PyObject *self, PyObject *args);
 #endif
 #ifdef GUESTFS_HAVE_DF
 extern PyObject *guestfs_int_py_df (PyObject *self, PyObject *args);
@@ -897,6 +903,9 @@ extern PyObject *guestfs_int_py_inotify_rm_watch (PyObject *self, PyObject *args
 #endif
 #ifdef GUESTFS_HAVE_INSPECT_GET_ARCH
 extern PyObject *guestfs_int_py_inspect_get_arch (PyObject *self, PyObject *args);
+#endif
+#ifdef GUESTFS_HAVE_INSPECT_GET_BUILD_ID
+extern PyObject *guestfs_int_py_inspect_get_build_id (PyObject *self, PyObject *args);
 #endif
 #ifdef GUESTFS_HAVE_INSPECT_GET_DISTRO
 extern PyObject *guestfs_int_py_inspect_get_distro (PyObject *self, PyObject *args);

@@ -7,7 +7,7 @@ libguestfs generated file
           and from the code in the generator/ subdirectory.
  ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 
- © Red Hat Inc., 2009–2020
+ Copyright (C) 2009-2023 Red Hat Inc.
 
  Ця програма є вільним програмним забезпеченням; ви можете поширювати та/або
  змінювати її за умов дотримання GNU General Public License утому вигляді, що
@@ -138,6 +138,38 @@ I<Зауваження>: типово C<ПРАВА_ДОСТУПУ> запису�
 
 Встановити як назву вузла гостьової системи значення C<НАЗВА_ВУЗЛА>. Якщо потрібно, можете скористатися форматом із крапкою, «назва_вузла.назва_домену» (FQDN).
 
+=item B<--inject-qemu-ga> METHOD
+
+Inject the QEMU Guest Agent into a Windows guest.  The guest agent communicates with qemu through a socket in order to provide enhanced features (see L<qemu-ga(8)>).  This operation also injects a firstboot script so that the Guest Agent is installed when the guest boots.
+
+The parameter is the same as used by the I<--inject-virtio-win> operation.
+
+Note that to do a full conversion of a Windows guest from a foreign hypervisor like VMware (which involves many other operations)  you should use the L<virt-v2v(1)> tool instead of this.
+
+=item B<--inject-virtio-win> METHOD
+
+Inject virtio-win drivers into a Windows guest.  These drivers add virtio accelerated drivers suitable when running on top of a hypervisor that supports virtio (such as qemu/KVM).  The operation also adjusts the Windows Registry so that the drivers are installed when the guest boots.
+
+The parameter can be one of:
+
+=over 4
+
+=item ISO
+
+The path to the ISO image containing the virtio-win drivers (eg. F</usr/share/virtio-win/virtio-win.iso>).
+
+=item DIR
+
+The directory containing the unpacked virtio-win drivers (eg. F</usr/share/virtio-win>).
+
+=item B<"osinfo">
+
+The literal string C<"osinfo"> means to use the libosinfo database to locate the drivers.  (See L<osinfo-query(1)>.
+
+=back
+
+Note that to do a full conversion of a Windows guest from a foreign hypervisor like VMware (which involves many other operations)  you should use the L<virt-v2v(1)> tool instead of this.
+
 =item B<--install> ПАКУНОК,ПАКУНОК..
 
 Встановити іменовані пакунки (список значень, відокремлених комами). Ці пакунки буде встановлено під час збирання образу за допомогою програми для керування пакунків гостьової системи (наприклад, apt, yum тощо) і з'єднання із мережею основної системи.
@@ -167,6 +199,14 @@ I<Зауваження>: типово C<ПРАВА_ДОСТУПУ> запису�
 Витерти C<builder.log> (файл журналу із командами збирання) з образу після завершення збирання. Якщо ви не хочете явним чином показувати, як було зібрано образ, скористайтеся цим параметром.
 
 Див. також L</LOG FILE>.
+
+=item B<--no-selinux-relabel>
+
+Do not attempt to correct the SELinux labels of files in the guest.
+
+In such guests that support SELinux, customization automatically relabels files so that they have the correct SELinux label.  (The relabeling is performed immediately, but if the operation fails, customization will instead touch F</.autorelabel> on the image to schedule a relabel operation for the next time the image boots.)  This option disables the automatic relabeling.
+
+The option is a no-op for guests that do not support SELinux.
 
 =item B<--password> КОРИСТУВАЧ:ВАРІАНТ
 
@@ -234,11 +274,7 @@ C<md5> працюватиме з відносно давніми гостьов�
 
 =item B<--selinux-relabel>
 
-Повторно встановити мітки для файлів у гостьовій системі так, щоб вони були правильними з точки зору SELinux.
-
-Якщо буде використано цей параметр, програма спробує змінити мітки файлів негайно, але якщо цього зробити не вдасться, вона змінить часову мітку файла F</.autorelabel> на образі, щоб дію зі зміни міток було заплановано на наступне завантаження образу.
-
-This option is a no-op for guests that do not support SELinux.
+This is a compatibility option that does nothing.
 
 =item B<--sm-attach> ВАРІАНТ
 

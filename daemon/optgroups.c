@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,6 +40,7 @@ struct optgroup optgroups[] = {
   { "blkdiscard", optgroup_blkdiscard_available },
   { "blkdiscardzeroes", optgroup_blkdiscardzeroes_available },
   { "btrfs", optgroup_btrfs_available },
+  { "clevisluks", optgroup_clevisluks_available },
   { "extlinux", optgroup_extlinux_available },
   { "f2fs", optgroup_f2fs_available },
   { "fstrim", optgroup_fstrim_available },
@@ -111,6 +112,15 @@ value
 guestfs_int_daemon_optgroup_btrfs_available (value unitv)
 {
   return Val_bool (optgroup_btrfs_available ());
+}
+
+extern value guestfs_int_daemon_optgroup_clevisluks_available (value);
+
+/* NB: This is a [@@noalloc] call. */
+value
+guestfs_int_daemon_optgroup_clevisluks_available (value unitv)
+{
+  return Val_bool (optgroup_clevisluks_available ());
 }
 
 extern value guestfs_int_daemon_optgroup_extlinux_available (value);

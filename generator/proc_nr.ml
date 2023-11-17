@@ -1,5 +1,5 @@
 (* libguestfs
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -152,7 +152,6 @@ let proc_nr = [
 135, "mknod_b";
 136, "mknod_c";
 137, "umask";
-138, "readdir";
 139, "sfdiskM";
 140, "zfile";
 141, "getxattrs";
@@ -514,6 +513,9 @@ let proc_nr = [
 508, "cryptsetup_open";
 509, "cryptsetup_close";
 510, "internal_list_rpm_applications";
+511, "internal_readdir";
+512, "clevis_luks_unlock";
+513, "inspect_get_build_id";
 ]
 
 (* End of list.  If adding a new entry, add it at the end of the list

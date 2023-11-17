@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -81,6 +81,7 @@ no_test_warnings (void)
     "checksums_out",
     "chown",
     "clear_backend_setting",
+    "clevis_luks_unlock",
     "compress_device_out",
     "compress_out",
     "config",
@@ -147,6 +148,7 @@ no_test_warnings (void)
     "inotify_read",
     "inotify_rm_watch",
     "inspect_get_arch",
+    "inspect_get_build_id",
     "inspect_get_distro",
     "inspect_get_drive_mappings",
     "inspect_get_filesystems",
@@ -184,6 +186,7 @@ no_test_warnings (void)
     "internal_lstatnslist",
     "internal_lxattrlist",
     "internal_parse_mountable",
+    "internal_readdir",
     "internal_readlinklist",
     "internal_rhbz914931",
     "internal_test",
@@ -8638,6 +8641,151 @@ test_device_index_0_perform (guestfs_h *g)
   return 0;
 }
 
+static int test_device_name_0_skip (void);
+static int test_device_name_0_perform (guestfs_h *);
+
+static int
+test_device_name_0 (guestfs_h *g)
+{
+  if (test_device_name_0_skip ()) {
+    skipped ("test_device_name_0", "environment variable set");
+    return 0;
+  }
+
+  if (init_empty (g) == -1)
+    return -1;
+
+  return test_device_name_0_perform (g);
+}
+
+static int
+test_device_name_0_skip (void)
+{
+  const char *str;
+
+  str = getenv ("TEST_ONLY");
+  if (str)
+    return strstr (str, "device_name") == NULL;
+  str = getenv ("SKIP_TEST_DEVICE_NAME_0");
+  if (str && STREQ (str, "1")) return 1;
+  str = getenv ("SKIP_TEST_DEVICE_NAME");
+  if (str && STREQ (str, "1")) return 1;
+  return 0;
+}
+
+static int
+test_device_name_0_perform (guestfs_h *g)
+{
+  /* TestResult for device_name (0) */
+  CLEANUP_FREE char *ret;
+  ret = guestfs_device_name (g, 0);
+  if (ret == NULL)
+      return -1;
+  if (! (STREQ (ret, "/dev/sda"))) {
+    fprintf (stderr, "%s: test failed: expression false: %s\n",
+             "test_device_name_0", "STREQ (ret, \"/dev/sda\")");
+    if (!guestfs_get_trace (g))
+      fprintf (stderr, "Set LIBGUESTFS_TRACE=1 to see values returned from API calls.\n");
+    return -1;
+  }
+  return 0;
+}
+
+static int test_device_name_1_skip (void);
+static int test_device_name_1_perform (guestfs_h *);
+
+static int
+test_device_name_1 (guestfs_h *g)
+{
+  if (test_device_name_1_skip ()) {
+    skipped ("test_device_name_1", "environment variable set");
+    return 0;
+  }
+
+  if (init_empty (g) == -1)
+    return -1;
+
+  return test_device_name_1_perform (g);
+}
+
+static int
+test_device_name_1_skip (void)
+{
+  const char *str;
+
+  str = getenv ("TEST_ONLY");
+  if (str)
+    return strstr (str, "device_name") == NULL;
+  str = getenv ("SKIP_TEST_DEVICE_NAME_1");
+  if (str && STREQ (str, "1")) return 1;
+  str = getenv ("SKIP_TEST_DEVICE_NAME");
+  if (str && STREQ (str, "1")) return 1;
+  return 0;
+}
+
+static int
+test_device_name_1_perform (guestfs_h *g)
+{
+  /* TestResult for device_name (1) */
+  CLEANUP_FREE char *ret;
+  ret = guestfs_device_name (g, 1);
+  if (ret == NULL)
+      return -1;
+  if (! (STREQ (ret, "/dev/sdb"))) {
+    fprintf (stderr, "%s: test failed: expression false: %s\n",
+             "test_device_name_1", "STREQ (ret, \"/dev/sdb\")");
+    if (!guestfs_get_trace (g))
+      fprintf (stderr, "Set LIBGUESTFS_TRACE=1 to see values returned from API calls.\n");
+    return -1;
+  }
+  return 0;
+}
+
+static int test_device_name_2_skip (void);
+static int test_device_name_2_perform (guestfs_h *);
+
+static int
+test_device_name_2 (guestfs_h *g)
+{
+  if (test_device_name_2_skip ()) {
+    skipped ("test_device_name_2", "environment variable set");
+    return 0;
+  }
+
+  if (init_empty (g) == -1)
+    return -1;
+
+  return test_device_name_2_perform (g);
+}
+
+static int
+test_device_name_2_skip (void)
+{
+  const char *str;
+
+  str = getenv ("TEST_ONLY");
+  if (str)
+    return strstr (str, "device_name") == NULL;
+  str = getenv ("SKIP_TEST_DEVICE_NAME_2");
+  if (str && STREQ (str, "1")) return 1;
+  str = getenv ("SKIP_TEST_DEVICE_NAME");
+  if (str && STREQ (str, "1")) return 1;
+  return 0;
+}
+
+static int
+test_device_name_2_perform (guestfs_h *g)
+{
+  /* TestLastFail for device_name (2) */
+  CLEANUP_FREE char *ret1258;
+  guestfs_push_error_handler (g, NULL, NULL);
+  ret1258 = guestfs_device_name (g, 99);
+  guestfs_pop_error_handler (g);
+  if (ret1258 != NULL)
+    return -1;
+  return 0;
+}
+
 static int test_disk_format_0_skip (void);
 static int test_disk_format_0_perform (guestfs_h *);
 
@@ -8674,9 +8822,9 @@ static int
 test_disk_format_0_perform (guestfs_h *g)
 {
   /* TestResultString for disk_format (0) */
-  const char *arg1254 = "../test-data/blank-disks/blank-disk-1s.raw";
+  const char *arg1261 = "../test-data/blank-disks/blank-disk-1s.raw";
   CLEANUP_FREE char *ret;
-  ret = guestfs_disk_format (g, arg1254);
+  ret = guestfs_disk_format (g, arg1261);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "raw")) {
@@ -8723,9 +8871,9 @@ static int
 test_disk_format_1_perform (guestfs_h *g)
 {
   /* TestResultString for disk_format (1) */
-  const char *arg1256 = "../test-data/blank-disks/blank-disk-1s.qcow2";
+  const char *arg1263 = "../test-data/blank-disks/blank-disk-1s.qcow2";
   CLEANUP_FREE char *ret;
-  ret = guestfs_disk_format (g, arg1256);
+  ret = guestfs_disk_format (g, arg1263);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "qcow2")) {
@@ -8772,9 +8920,9 @@ static int
 test_disk_format_2_perform (guestfs_h *g)
 {
   /* TestResultString for disk_format (2) */
-  const char *arg1258 = "../test-data/blank-disks/blank-disk-1K.raw";
+  const char *arg1265 = "../test-data/blank-disks/blank-disk-1K.raw";
   CLEANUP_FREE char *ret;
-  ret = guestfs_disk_format (g, arg1258);
+  ret = guestfs_disk_format (g, arg1265);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "raw")) {
@@ -8821,9 +8969,9 @@ static int
 test_disk_format_3_perform (guestfs_h *g)
 {
   /* TestResultString for disk_format (3) */
-  const char *arg1260 = "../test-data/blank-disks/blank-disk-1K.qcow2";
+  const char *arg1267 = "../test-data/blank-disks/blank-disk-1K.qcow2";
   CLEANUP_FREE char *ret;
-  ret = guestfs_disk_format (g, arg1260);
+  ret = guestfs_disk_format (g, arg1267);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "qcow2")) {
@@ -8870,9 +9018,9 @@ static int
 test_disk_format_4_perform (guestfs_h *g)
 {
   /* TestResultString for disk_format (4) */
-  const char *arg1262 = "../test-data/blank-disks/blank-disk-1M.raw";
+  const char *arg1269 = "../test-data/blank-disks/blank-disk-1M.raw";
   CLEANUP_FREE char *ret;
-  ret = guestfs_disk_format (g, arg1262);
+  ret = guestfs_disk_format (g, arg1269);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "raw")) {
@@ -8919,9 +9067,9 @@ static int
 test_disk_format_5_perform (guestfs_h *g)
 {
   /* TestResultString for disk_format (5) */
-  const char *arg1264 = "../test-data/blank-disks/blank-disk-1M.qcow2";
+  const char *arg1271 = "../test-data/blank-disks/blank-disk-1M.qcow2";
   CLEANUP_FREE char *ret;
-  ret = guestfs_disk_format (g, arg1264);
+  ret = guestfs_disk_format (g, arg1271);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "qcow2")) {
@@ -8968,9 +9116,9 @@ static int
 test_disk_format_6_perform (guestfs_h *g)
 {
   /* TestResultString for disk_format (6) */
-  const char *arg1266 = "../test-data/blank-disks/blank-disk-with-backing.qcow2";
+  const char *arg1273 = "../test-data/blank-disks/blank-disk-with-backing.qcow2";
   CLEANUP_FREE char *ret;
-  ret = guestfs_disk_format (g, arg1266);
+  ret = guestfs_disk_format (g, arg1273);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "qcow2")) {
@@ -9017,9 +9165,9 @@ static int
 test_disk_has_backing_file_0_perform (guestfs_h *g)
 {
   /* TestResultFalse for disk_has_backing_file (0) */
-  const char *arg1268 = "../test-data/blank-disks/blank-disk-1s.raw";
+  const char *arg1275 = "../test-data/blank-disks/blank-disk-1s.raw";
   int ret;
-  ret = guestfs_disk_has_backing_file (g, arg1268);
+  ret = guestfs_disk_has_backing_file (g, arg1275);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -9066,9 +9214,9 @@ static int
 test_disk_has_backing_file_1_perform (guestfs_h *g)
 {
   /* TestResultFalse for disk_has_backing_file (1) */
-  const char *arg1270 = "../test-data/blank-disks/blank-disk-1s.qcow2";
+  const char *arg1277 = "../test-data/blank-disks/blank-disk-1s.qcow2";
   int ret;
-  ret = guestfs_disk_has_backing_file (g, arg1270);
+  ret = guestfs_disk_has_backing_file (g, arg1277);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -9115,9 +9263,9 @@ static int
 test_disk_has_backing_file_2_perform (guestfs_h *g)
 {
   /* TestResultFalse for disk_has_backing_file (2) */
-  const char *arg1272 = "../test-data/blank-disks/blank-disk-1K.raw";
+  const char *arg1279 = "../test-data/blank-disks/blank-disk-1K.raw";
   int ret;
-  ret = guestfs_disk_has_backing_file (g, arg1272);
+  ret = guestfs_disk_has_backing_file (g, arg1279);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -9164,9 +9312,9 @@ static int
 test_disk_has_backing_file_3_perform (guestfs_h *g)
 {
   /* TestResultFalse for disk_has_backing_file (3) */
-  const char *arg1274 = "../test-data/blank-disks/blank-disk-1K.qcow2";
+  const char *arg1281 = "../test-data/blank-disks/blank-disk-1K.qcow2";
   int ret;
-  ret = guestfs_disk_has_backing_file (g, arg1274);
+  ret = guestfs_disk_has_backing_file (g, arg1281);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -9213,9 +9361,9 @@ static int
 test_disk_has_backing_file_4_perform (guestfs_h *g)
 {
   /* TestResultFalse for disk_has_backing_file (4) */
-  const char *arg1276 = "../test-data/blank-disks/blank-disk-1M.raw";
+  const char *arg1283 = "../test-data/blank-disks/blank-disk-1M.raw";
   int ret;
-  ret = guestfs_disk_has_backing_file (g, arg1276);
+  ret = guestfs_disk_has_backing_file (g, arg1283);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -9262,9 +9410,9 @@ static int
 test_disk_has_backing_file_5_perform (guestfs_h *g)
 {
   /* TestResultFalse for disk_has_backing_file (5) */
-  const char *arg1278 = "../test-data/blank-disks/blank-disk-1M.qcow2";
+  const char *arg1285 = "../test-data/blank-disks/blank-disk-1M.qcow2";
   int ret;
-  ret = guestfs_disk_has_backing_file (g, arg1278);
+  ret = guestfs_disk_has_backing_file (g, arg1285);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -9311,9 +9459,9 @@ static int
 test_disk_has_backing_file_6_perform (guestfs_h *g)
 {
   /* TestResultTrue for disk_has_backing_file (6) */
-  const char *arg1280 = "../test-data/blank-disks/blank-disk-with-backing.qcow2";
+  const char *arg1287 = "../test-data/blank-disks/blank-disk-with-backing.qcow2";
   int ret;
-  ret = guestfs_disk_has_backing_file (g, arg1280);
+  ret = guestfs_disk_has_backing_file (g, arg1287);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -9360,9 +9508,9 @@ static int
 test_disk_virtual_size_0_perform (guestfs_h *g)
 {
   /* TestResult for disk_virtual_size (0) */
-  const char *arg1282 = "../test-data/blank-disks/blank-disk-1s.raw";
+  const char *arg1289 = "../test-data/blank-disks/blank-disk-1s.raw";
   int64_t ret;
-  ret = guestfs_disk_virtual_size (g, arg1282);
+  ret = guestfs_disk_virtual_size (g, arg1289);
   if (ret == -1)
     return -1;
   if (! (ret == 512)) {
@@ -9411,9 +9559,9 @@ static int
 test_disk_virtual_size_1_perform (guestfs_h *g)
 {
   /* TestResult for disk_virtual_size (1) */
-  const char *arg1284 = "../test-data/blank-disks/blank-disk-1s.qcow2";
+  const char *arg1291 = "../test-data/blank-disks/blank-disk-1s.qcow2";
   int64_t ret;
-  ret = guestfs_disk_virtual_size (g, arg1284);
+  ret = guestfs_disk_virtual_size (g, arg1291);
   if (ret == -1)
     return -1;
   if (! (ret == 512)) {
@@ -9462,9 +9610,9 @@ static int
 test_disk_virtual_size_2_perform (guestfs_h *g)
 {
   /* TestResult for disk_virtual_size (2) */
-  const char *arg1286 = "../test-data/blank-disks/blank-disk-1K.raw";
+  const char *arg1293 = "../test-data/blank-disks/blank-disk-1K.raw";
   int64_t ret;
-  ret = guestfs_disk_virtual_size (g, arg1286);
+  ret = guestfs_disk_virtual_size (g, arg1293);
   if (ret == -1)
     return -1;
   if (! (ret == 1024)) {
@@ -9513,9 +9661,9 @@ static int
 test_disk_virtual_size_3_perform (guestfs_h *g)
 {
   /* TestResult for disk_virtual_size (3) */
-  const char *arg1288 = "../test-data/blank-disks/blank-disk-1K.qcow2";
+  const char *arg1295 = "../test-data/blank-disks/blank-disk-1K.qcow2";
   int64_t ret;
-  ret = guestfs_disk_virtual_size (g, arg1288);
+  ret = guestfs_disk_virtual_size (g, arg1295);
   if (ret == -1)
     return -1;
   if (! (ret == 1024)) {
@@ -9564,9 +9712,9 @@ static int
 test_disk_virtual_size_4_perform (guestfs_h *g)
 {
   /* TestResult for disk_virtual_size (4) */
-  const char *arg1290 = "../test-data/blank-disks/blank-disk-1M.raw";
+  const char *arg1297 = "../test-data/blank-disks/blank-disk-1M.raw";
   int64_t ret;
-  ret = guestfs_disk_virtual_size (g, arg1290);
+  ret = guestfs_disk_virtual_size (g, arg1297);
   if (ret == -1)
     return -1;
   if (! (ret == 1024*1024)) {
@@ -9615,9 +9763,9 @@ static int
 test_disk_virtual_size_5_perform (guestfs_h *g)
 {
   /* TestResult for disk_virtual_size (5) */
-  const char *arg1292 = "../test-data/blank-disks/blank-disk-1M.qcow2";
+  const char *arg1299 = "../test-data/blank-disks/blank-disk-1M.qcow2";
   int64_t ret;
-  ret = guestfs_disk_virtual_size (g, arg1292);
+  ret = guestfs_disk_virtual_size (g, arg1299);
   if (ret == -1)
     return -1;
   if (! (ret == 1024*1024)) {
@@ -9666,9 +9814,9 @@ static int
 test_disk_virtual_size_6_perform (guestfs_h *g)
 {
   /* TestResult for disk_virtual_size (6) */
-  const char *arg1294 = "../test-data/blank-disks/blank-disk-with-backing.qcow2";
+  const char *arg1301 = "../test-data/blank-disks/blank-disk-with-backing.qcow2";
   int64_t ret;
-  ret = guestfs_disk_virtual_size (g, arg1294);
+  ret = guestfs_disk_virtual_size (g, arg1301);
   if (ret == -1)
     return -1;
   if (! (ret == 1024*1024)) {
@@ -9717,9 +9865,9 @@ static int
 test_dmesg_0_perform (guestfs_h *g)
 {
   /* TestRun for dmesg (0) */
-  CLEANUP_FREE char *ret1296;
-  ret1296 = guestfs_dmesg (g);
-  if (ret1296 == NULL)
+  CLEANUP_FREE char *ret1303;
+  ret1303 = guestfs_dmesg (g);
+  if (ret1303 == NULL)
       return -1;
   return 0;
 }
@@ -9760,32 +9908,32 @@ static int
 test_download_0_perform (guestfs_h *g)
 {
   /* TestResultString for download (0) */
-  const char *arg1299 = "/download";
-  int ret1298;
-  ret1298 = guestfs_mkdir (g, arg1299);
-  if (ret1298 == -1)
-    return -1;
-  CLEANUP_FREE char *arg1302 = substitute_srcdir ("$srcdir/../COPYING.LIB");
-  const char *arg1303 = "/download/COPYING.LIB";
-  int ret1301;
-  ret1301 = guestfs_upload (g, arg1302, arg1303);
-  if (ret1301 == -1)
-    return -1;
-  const char *arg1306 = "/download/COPYING.LIB";
+  const char *arg1306 = "/download";
   int ret1305;
-  ret1305 = guestfs_download (g, arg1306, "testdownload.tmp");
+  ret1305 = guestfs_mkdir (g, arg1306);
   if (ret1305 == -1)
     return -1;
-  CLEANUP_FREE char *arg1310 = substitute_srcdir ("testdownload.tmp");
-  const char *arg1311 = "/download/upload";
-  int ret1309;
-  ret1309 = guestfs_upload (g, arg1310, arg1311);
-  if (ret1309 == -1)
+  CLEANUP_FREE char *arg1309 = substitute_srcdir ("$srcdir/../COPYING.LIB");
+  const char *arg1310 = "/download/COPYING.LIB";
+  int ret1308;
+  ret1308 = guestfs_upload (g, arg1309, arg1310);
+  if (ret1308 == -1)
     return -1;
-  const char *arg1313 = "md5";
-  const char *arg1314 = "/download/upload";
+  const char *arg1313 = "/download/COPYING.LIB";
+  int ret1312;
+  ret1312 = guestfs_download (g, arg1313, "testdownload.tmp");
+  if (ret1312 == -1)
+    return -1;
+  CLEANUP_FREE char *arg1317 = substitute_srcdir ("testdownload.tmp");
+  const char *arg1318 = "/download/upload";
+  int ret1316;
+  ret1316 = guestfs_upload (g, arg1317, arg1318);
+  if (ret1316 == -1)
+    return -1;
+  const char *arg1320 = "md5";
+  const char *arg1321 = "/download/upload";
   CLEANUP_FREE char *ret;
-  ret = guestfs_checksum (g, arg1313, arg1314);
+  ret = guestfs_checksum (g, arg1320, arg1321);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "4fbd65380cdd255951079008b364516c")) {
@@ -9832,32 +9980,32 @@ static int
 test_download_offset_0_perform (guestfs_h *g)
 {
   /* TestResultString for download_offset (0) */
-  const char *arg1317 = "/download_offset";
-  int ret1316;
-  ret1316 = guestfs_mkdir (g, arg1317);
-  if (ret1316 == -1)
-    return -1;
-  CLEANUP_FREE char *arg1320 = substitute_srcdir ("$srcdir/../COPYING.LIB");
-  const char *arg1321 = "/download_offset/COPYING.LIB";
-  int ret1319;
-  ret1319 = guestfs_upload (g, arg1320, arg1321);
-  if (ret1319 == -1)
-    return -1;
-  const char *arg1324 = "/download_offset/COPYING.LIB";
+  const char *arg1324 = "/download_offset";
   int ret1323;
-  ret1323 = guestfs_download_offset (g, arg1324, "testdownload.tmp", 100, 26430);
+  ret1323 = guestfs_mkdir (g, arg1324);
   if (ret1323 == -1)
     return -1;
-  CLEANUP_FREE char *arg1330 = substitute_srcdir ("testdownload.tmp");
-  const char *arg1331 = "/download_offset/COPYING.LIB";
-  int ret1329;
-  ret1329 = guestfs_upload_offset (g, arg1330, arg1331, 100);
-  if (ret1329 == -1)
+  CLEANUP_FREE char *arg1327 = substitute_srcdir ("$srcdir/../COPYING.LIB");
+  const char *arg1328 = "/download_offset/COPYING.LIB";
+  int ret1326;
+  ret1326 = guestfs_upload (g, arg1327, arg1328);
+  if (ret1326 == -1)
     return -1;
-  const char *arg1334 = "md5";
-  const char *arg1335 = "/download_offset/COPYING.LIB";
+  const char *arg1331 = "/download_offset/COPYING.LIB";
+  int ret1330;
+  ret1330 = guestfs_download_offset (g, arg1331, "testdownload.tmp", 100, 26430);
+  if (ret1330 == -1)
+    return -1;
+  CLEANUP_FREE char *arg1337 = substitute_srcdir ("testdownload.tmp");
+  const char *arg1338 = "/download_offset/COPYING.LIB";
+  int ret1336;
+  ret1336 = guestfs_upload_offset (g, arg1337, arg1338, 100);
+  if (ret1336 == -1)
+    return -1;
+  const char *arg1341 = "md5";
+  const char *arg1342 = "/download_offset/COPYING.LIB";
   CLEANUP_FREE char *ret;
-  ret = guestfs_checksum (g, arg1334, arg1335);
+  ret = guestfs_checksum (g, arg1341, arg1342);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "4fbd65380cdd255951079008b364516c")) {
@@ -9904,9 +10052,9 @@ static int
 test_drop_caches_0_perform (guestfs_h *g)
 {
   /* TestRun for drop_caches (0) */
-  int ret1337;
-  ret1337 = guestfs_drop_caches (g, 3);
-  if (ret1337 == -1)
+  int ret1344;
+  ret1344 = guestfs_drop_caches (g, 3);
+  if (ret1344 == -1)
     return -1;
   return 0;
 }
@@ -9947,9 +10095,9 @@ static int
 test_du_0_perform (guestfs_h *g)
 {
   /* TestResult for du (0) */
-  const char *arg1340 = "/directory";
+  const char *arg1347 = "/directory";
   int64_t ret;
-  ret = guestfs_du (g, arg1340);
+  ret = guestfs_du (g, arg1347);
   if (ret == -1)
     return -1;
   if (! (ret == 2)) {
@@ -9998,19 +10146,19 @@ static int
 test_echo_daemon_0_perform (guestfs_h *g)
 {
   /* TestResultString for echo_daemon (0) */
-  const char *arg1342_0 = "This";
-  const char *arg1342_1 = "is";
-  const char *arg1342_2 = "a";
-  const char *arg1342_3 = "test";
-  const char *const arg1342[] = {
-    arg1342_0,
-    arg1342_1,
-    arg1342_2,
-    arg1342_3,
+  const char *arg1349_0 = "This";
+  const char *arg1349_1 = "is";
+  const char *arg1349_2 = "a";
+  const char *arg1349_3 = "test";
+  const char *const arg1349[] = {
+    arg1349_0,
+    arg1349_1,
+    arg1349_2,
+    arg1349_3,
     NULL
   };
   CLEANUP_FREE char *ret;
-  ret = guestfs_echo_daemon (g, (char **) arg1342);
+  ret = guestfs_echo_daemon (g, (char **) arg1349);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "This is a test")) {
@@ -10057,9 +10205,9 @@ static int
 test_echo_daemon_1_perform (guestfs_h *g)
 {
   /* TestResultString for echo_daemon (1) */
-  const char *const arg1344[1] = { NULL };
+  const char *const arg1351[1] = { NULL };
   CLEANUP_FREE char *ret;
-  ret = guestfs_echo_daemon (g, (char **) arg1344);
+  ret = guestfs_echo_daemon (g, (char **) arg1351);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "")) {
@@ -10106,10 +10254,10 @@ static int
 test_egrep_0_perform (guestfs_h *g)
 {
   /* TestResult for egrep (0) */
-  const char *arg1346 = "abc";
-  const char *arg1347 = "/test-grep.txt";
+  const char *arg1353 = "abc";
+  const char *arg1354 = "/test-grep.txt";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_egrep (g, arg1346, arg1347);
+  ret = guestfs_egrep (g, arg1353, arg1354);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 2, "abc", "abc123"))) {
@@ -10158,10 +10306,10 @@ static int
 test_egrepi_0_perform (guestfs_h *g)
 {
   /* TestResult for egrepi (0) */
-  const char *arg1349 = "abc";
-  const char *arg1350 = "/test-grep.txt";
+  const char *arg1356 = "abc";
+  const char *arg1357 = "/test-grep.txt";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_egrepi (g, arg1349, arg1350);
+  ret = guestfs_egrepi (g, arg1356, arg1357);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 3, "abc", "abc123", "ABC"))) {
@@ -10210,28 +10358,28 @@ static int
 test_equal_0_perform (guestfs_h *g)
 {
   /* TestResultTrue for equal (0) */
-  const char *arg1353 = "/equal";
-  int ret1352;
-  ret1352 = guestfs_mkdir (g, arg1353);
-  if (ret1352 == -1)
-    return -1;
-  const char *arg1356 = "/equal/file1";
-  const char *arg1357 = "contents of a file";
-  size_t arg1357_size = 18;
-  int ret1355;
-  ret1355 = guestfs_write (g, arg1356, arg1357, arg1357_size);
-  if (ret1355 == -1)
-    return -1;
-  const char *arg1360 = "/equal/file1";
-  const char *arg1361 = "/equal/file2";
+  const char *arg1360 = "/equal";
   int ret1359;
-  ret1359 = guestfs_cp (g, arg1360, arg1361);
+  ret1359 = guestfs_mkdir (g, arg1360);
   if (ret1359 == -1)
     return -1;
   const char *arg1363 = "/equal/file1";
-  const char *arg1364 = "/equal/file2";
+  const char *arg1364 = "contents of a file";
+  size_t arg1364_size = 18;
+  int ret1362;
+  ret1362 = guestfs_write (g, arg1363, arg1364, arg1364_size);
+  if (ret1362 == -1)
+    return -1;
+  const char *arg1367 = "/equal/file1";
+  const char *arg1368 = "/equal/file2";
+  int ret1366;
+  ret1366 = guestfs_cp (g, arg1367, arg1368);
+  if (ret1366 == -1)
+    return -1;
+  const char *arg1370 = "/equal/file1";
+  const char *arg1371 = "/equal/file2";
   int ret;
-  ret = guestfs_equal (g, arg1363, arg1364);
+  ret = guestfs_equal (g, arg1370, arg1371);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -10278,29 +10426,29 @@ static int
 test_equal_1_perform (guestfs_h *g)
 {
   /* TestResultFalse for equal (1) */
-  const char *arg1367 = "/equal2";
-  int ret1366;
-  ret1366 = guestfs_mkdir (g, arg1367);
-  if (ret1366 == -1)
-    return -1;
-  const char *arg1370 = "/equal2/file1";
-  const char *arg1371 = "contents of a file";
-  size_t arg1371_size = 18;
-  int ret1369;
-  ret1369 = guestfs_write (g, arg1370, arg1371, arg1371_size);
-  if (ret1369 == -1)
-    return -1;
-  const char *arg1374 = "/equal2/file2";
-  const char *arg1375 = "contents of another file";
-  size_t arg1375_size = 24;
+  const char *arg1374 = "/equal2";
   int ret1373;
-  ret1373 = guestfs_write (g, arg1374, arg1375, arg1375_size);
+  ret1373 = guestfs_mkdir (g, arg1374);
   if (ret1373 == -1)
     return -1;
   const char *arg1377 = "/equal2/file1";
-  const char *arg1378 = "/equal2/file2";
+  const char *arg1378 = "contents of a file";
+  size_t arg1378_size = 18;
+  int ret1376;
+  ret1376 = guestfs_write (g, arg1377, arg1378, arg1378_size);
+  if (ret1376 == -1)
+    return -1;
+  const char *arg1381 = "/equal2/file2";
+  const char *arg1382 = "contents of another file";
+  size_t arg1382_size = 24;
+  int ret1380;
+  ret1380 = guestfs_write (g, arg1381, arg1382, arg1382_size);
+  if (ret1380 == -1)
+    return -1;
+  const char *arg1384 = "/equal2/file1";
+  const char *arg1385 = "/equal2/file2";
   int ret;
-  ret = guestfs_equal (g, arg1377, arg1378);
+  ret = guestfs_equal (g, arg1384, arg1385);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -10347,18 +10495,18 @@ static int
 test_equal_2_perform (guestfs_h *g)
 {
   /* TestLastFail for equal (2) */
-  const char *arg1381 = "/equal3";
-  int ret1380;
-  ret1380 = guestfs_mkdir (g, arg1381);
-  if (ret1380 == -1)
+  const char *arg1388 = "/equal3";
+  int ret1387;
+  ret1387 = guestfs_mkdir (g, arg1388);
+  if (ret1387 == -1)
     return -1;
-  const char *arg1384 = "/equal3/file1";
-  const char *arg1385 = "/equal3/file2";
-  int ret1383;
+  const char *arg1391 = "/equal3/file1";
+  const char *arg1392 = "/equal3/file2";
+  int ret1390;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret1383 = guestfs_equal (g, arg1384, arg1385);
+  ret1390 = guestfs_equal (g, arg1391, arg1392);
   guestfs_pop_error_handler (g);
-  if (ret1383 != -1)
+  if (ret1390 != -1)
     return -1;
   return 0;
 }
@@ -10399,9 +10547,9 @@ static int
 test_exists_0_perform (guestfs_h *g)
 {
   /* TestResultTrue for exists (0) */
-  const char *arg1387 = "/empty";
+  const char *arg1394 = "/empty";
   int ret;
-  ret = guestfs_exists (g, arg1387);
+  ret = guestfs_exists (g, arg1394);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -10448,9 +10596,9 @@ static int
 test_exists_1_perform (guestfs_h *g)
 {
   /* TestResultTrue for exists (1) */
-  const char *arg1389 = "/directory";
+  const char *arg1396 = "/directory";
   int ret;
-  ret = guestfs_exists (g, arg1389);
+  ret = guestfs_exists (g, arg1396);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -10497,14 +10645,14 @@ static int
 test_fallocate_0_perform (guestfs_h *g)
 {
   /* TestResult for fallocate (0) */
-  const char *arg1391 = "/fallocate";
+  const char *arg1398 = "/fallocate";
   int ret1;
-  ret1 = guestfs_fallocate (g, arg1391, 1000000);
+  ret1 = guestfs_fallocate (g, arg1398, 1000000);
   if (ret1 == -1)
     return -1;
-  const char *arg1394 = "/fallocate";
+  const char *arg1401 = "/fallocate";
   CLEANUP_FREE_STAT struct guestfs_stat *ret;
-  ret = guestfs_stat (g, arg1394);
+  ret = guestfs_stat (g, arg1401);
   if (ret == NULL)
       return -1;
   if (! (ret->size == 1000000)) {
@@ -10553,14 +10701,14 @@ static int
 test_fallocate64_0_perform (guestfs_h *g)
 {
   /* TestResult for fallocate64 (0) */
-  const char *arg1396 = "/fallocate64";
+  const char *arg1403 = "/fallocate64";
   int ret1;
-  ret1 = guestfs_fallocate64 (g, arg1396, 1000000);
+  ret1 = guestfs_fallocate64 (g, arg1403, 1000000);
   if (ret1 == -1)
     return -1;
-  const char *arg1399 = "/fallocate64";
+  const char *arg1406 = "/fallocate64";
   CLEANUP_FREE_STAT struct guestfs_stat *ret;
-  ret = guestfs_stat (g, arg1399);
+  ret = guestfs_stat (g, arg1406);
   if (ret == NULL)
       return -1;
   if (! (ret->size == 1000000)) {
@@ -10609,9 +10757,9 @@ static int
 test_feature_available_0_perform (guestfs_h *g)
 {
   /* TestResultTrue for feature_available (0) */
-  const char *const arg1401[1] = { NULL };
+  const char *const arg1408[1] = { NULL };
   int ret;
-  ret = guestfs_feature_available (g, (char **) arg1401);
+  ret = guestfs_feature_available (g, (char **) arg1408);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -10658,10 +10806,10 @@ static int
 test_fgrep_0_perform (guestfs_h *g)
 {
   /* TestResult for fgrep (0) */
-  const char *arg1403 = "abc";
-  const char *arg1404 = "/test-grep.txt";
+  const char *arg1410 = "abc";
+  const char *arg1411 = "/test-grep.txt";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_fgrep (g, arg1403, arg1404);
+  ret = guestfs_fgrep (g, arg1410, arg1411);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 2, "abc", "abc123"))) {
@@ -10710,10 +10858,10 @@ static int
 test_fgrepi_0_perform (guestfs_h *g)
 {
   /* TestResult for fgrepi (0) */
-  const char *arg1406 = "abc";
-  const char *arg1407 = "/test-grep.txt";
+  const char *arg1413 = "abc";
+  const char *arg1414 = "/test-grep.txt";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_fgrepi (g, arg1406, arg1407);
+  ret = guestfs_fgrepi (g, arg1413, arg1414);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 3, "abc", "abc123", "ABC"))) {
@@ -10762,9 +10910,9 @@ static int
 test_file_0_perform (guestfs_h *g)
 {
   /* TestResultString for file (0) */
-  const char *arg1409 = "/empty";
+  const char *arg1416 = "/empty";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file (g, arg1409);
+  ret = guestfs_file (g, arg1416);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "empty")) {
@@ -10811,9 +10959,9 @@ static int
 test_file_1_perform (guestfs_h *g)
 {
   /* TestResultString for file (1) */
-  const char *arg1411 = "/known-1";
+  const char *arg1418 = "/known-1";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file (g, arg1411);
+  ret = guestfs_file (g, arg1418);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "ASCII text")) {
@@ -10860,12 +11008,12 @@ static int
 test_file_2_perform (guestfs_h *g)
 {
   /* TestLastFail for file (2) */
-  const char *arg1414 = "/notexists";
-  CLEANUP_FREE char *ret1413;
+  const char *arg1421 = "/notexists";
+  CLEANUP_FREE char *ret1420;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret1413 = guestfs_file (g, arg1414);
+  ret1420 = guestfs_file (g, arg1421);
   guestfs_pop_error_handler (g);
-  if (ret1413 != NULL)
+  if (ret1420 != NULL)
     return -1;
   return 0;
 }
@@ -10906,9 +11054,9 @@ static int
 test_file_3_perform (guestfs_h *g)
 {
   /* TestResultString for file (3) */
-  const char *arg1416 = "/abssymlink";
+  const char *arg1423 = "/abssymlink";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file (g, arg1416);
+  ret = guestfs_file (g, arg1423);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "symbolic link")) {
@@ -10955,9 +11103,9 @@ static int
 test_file_4_perform (guestfs_h *g)
 {
   /* TestResultString for file (4) */
-  const char *arg1418 = "/directory";
+  const char *arg1425 = "/directory";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file (g, arg1418);
+  ret = guestfs_file (g, arg1425);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "directory")) {
@@ -11004,9 +11152,9 @@ static int
 test_file_architecture_0_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (0) */
-  const char *arg1420 = "/bin-aarch64-dynamic";
+  const char *arg1427 = "/bin-aarch64-dynamic";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1420);
+  ret = guestfs_file_architecture (g, arg1427);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "aarch64")) {
@@ -11053,9 +11201,9 @@ static int
 test_file_architecture_1_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (1) */
-  const char *arg1422 = "/bin-armv7-dynamic";
+  const char *arg1429 = "/bin-armv7-dynamic";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1422);
+  ret = guestfs_file_architecture (g, arg1429);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "arm")) {
@@ -11102,9 +11250,9 @@ static int
 test_file_architecture_2_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (2) */
-  const char *arg1424 = "/bin-i586-dynamic";
+  const char *arg1431 = "/bin-i586-dynamic";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1424);
+  ret = guestfs_file_architecture (g, arg1431);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "i386")) {
@@ -11151,9 +11299,9 @@ static int
 test_file_architecture_3_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (3) */
-  const char *arg1426 = "/bin-ppc64-dynamic";
+  const char *arg1433 = "/bin-ppc64-dynamic";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1426);
+  ret = guestfs_file_architecture (g, arg1433);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "ppc64")) {
@@ -11200,9 +11348,9 @@ static int
 test_file_architecture_4_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (4) */
-  const char *arg1428 = "/bin-ppc64le-dynamic";
+  const char *arg1435 = "/bin-ppc64le-dynamic";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1428);
+  ret = guestfs_file_architecture (g, arg1435);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "ppc64le")) {
@@ -11249,9 +11397,9 @@ static int
 test_file_architecture_5_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (5) */
-  const char *arg1430 = "/bin-riscv64-dynamic";
+  const char *arg1437 = "/bin-riscv64-dynamic";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1430);
+  ret = guestfs_file_architecture (g, arg1437);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "riscv64")) {
@@ -11298,9 +11446,9 @@ static int
 test_file_architecture_6_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (6) */
-  const char *arg1432 = "/bin-s390x-dynamic";
+  const char *arg1439 = "/bin-s390x-dynamic";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1432);
+  ret = guestfs_file_architecture (g, arg1439);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "s390x")) {
@@ -11347,9 +11495,9 @@ static int
 test_file_architecture_7_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (7) */
-  const char *arg1434 = "/bin-sparc-dynamic";
+  const char *arg1441 = "/bin-sparc-dynamic";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1434);
+  ret = guestfs_file_architecture (g, arg1441);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "sparc")) {
@@ -11396,9 +11544,9 @@ static int
 test_file_architecture_8_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (8) */
-  const char *arg1436 = "/bin-win32.exe";
+  const char *arg1443 = "/bin-win32.exe";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1436);
+  ret = guestfs_file_architecture (g, arg1443);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "i386")) {
@@ -11445,9 +11593,9 @@ static int
 test_file_architecture_9_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (9) */
-  const char *arg1438 = "/bin-win64.exe";
+  const char *arg1445 = "/bin-win64.exe";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1438);
+  ret = guestfs_file_architecture (g, arg1445);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "x86_64")) {
@@ -11494,9 +11642,9 @@ static int
 test_file_architecture_10_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (10) */
-  const char *arg1440 = "/bin-x86_64-dynamic";
+  const char *arg1447 = "/bin-x86_64-dynamic";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1440);
+  ret = guestfs_file_architecture (g, arg1447);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "x86_64")) {
@@ -11543,9 +11691,9 @@ static int
 test_file_architecture_11_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (11) */
-  const char *arg1442 = "/lib-aarch64.so";
+  const char *arg1449 = "/lib-aarch64.so";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1442);
+  ret = guestfs_file_architecture (g, arg1449);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "aarch64")) {
@@ -11592,9 +11740,9 @@ static int
 test_file_architecture_12_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (12) */
-  const char *arg1444 = "/lib-armv7.so";
+  const char *arg1451 = "/lib-armv7.so";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1444);
+  ret = guestfs_file_architecture (g, arg1451);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "arm")) {
@@ -11641,9 +11789,9 @@ static int
 test_file_architecture_13_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (13) */
-  const char *arg1446 = "/lib-i586.so";
+  const char *arg1453 = "/lib-i586.so";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1446);
+  ret = guestfs_file_architecture (g, arg1453);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "i386")) {
@@ -11690,9 +11838,9 @@ static int
 test_file_architecture_14_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (14) */
-  const char *arg1448 = "/lib-ppc64.so";
+  const char *arg1455 = "/lib-ppc64.so";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1448);
+  ret = guestfs_file_architecture (g, arg1455);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "ppc64")) {
@@ -11739,9 +11887,9 @@ static int
 test_file_architecture_15_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (15) */
-  const char *arg1450 = "/lib-ppc64le.so";
+  const char *arg1457 = "/lib-ppc64le.so";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1450);
+  ret = guestfs_file_architecture (g, arg1457);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "ppc64le")) {
@@ -11788,9 +11936,9 @@ static int
 test_file_architecture_16_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (16) */
-  const char *arg1452 = "/lib-riscv64.so";
+  const char *arg1459 = "/lib-riscv64.so";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1452);
+  ret = guestfs_file_architecture (g, arg1459);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "riscv64")) {
@@ -11837,9 +11985,9 @@ static int
 test_file_architecture_17_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (17) */
-  const char *arg1454 = "/lib-s390x.so";
+  const char *arg1461 = "/lib-s390x.so";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1454);
+  ret = guestfs_file_architecture (g, arg1461);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "s390x")) {
@@ -11886,9 +12034,9 @@ static int
 test_file_architecture_18_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (18) */
-  const char *arg1456 = "/lib-sparc.so";
+  const char *arg1463 = "/lib-sparc.so";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1456);
+  ret = guestfs_file_architecture (g, arg1463);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "sparc")) {
@@ -11935,9 +12083,9 @@ static int
 test_file_architecture_19_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (19) */
-  const char *arg1458 = "/lib-win32.dll";
+  const char *arg1465 = "/lib-win32.dll";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1458);
+  ret = guestfs_file_architecture (g, arg1465);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "i386")) {
@@ -11984,9 +12132,9 @@ static int
 test_file_architecture_20_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (20) */
-  const char *arg1460 = "/lib-win64.dll";
+  const char *arg1467 = "/lib-win64.dll";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1460);
+  ret = guestfs_file_architecture (g, arg1467);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "x86_64")) {
@@ -12033,9 +12181,9 @@ static int
 test_file_architecture_21_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (21) */
-  const char *arg1462 = "/lib-x86_64.so";
+  const char *arg1469 = "/lib-x86_64.so";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1462);
+  ret = guestfs_file_architecture (g, arg1469);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "x86_64")) {
@@ -12082,9 +12230,9 @@ static int
 test_file_architecture_22_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (22) */
-  const char *arg1464 = "/initrd-x86_64.img";
+  const char *arg1471 = "/initrd-x86_64.img";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1464);
+  ret = guestfs_file_architecture (g, arg1471);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "x86_64")) {
@@ -12131,9 +12279,9 @@ static int
 test_file_architecture_23_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (23) */
-  const char *arg1466 = "/initrd-x86_64.img.gz";
+  const char *arg1473 = "/initrd-x86_64.img.gz";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1466);
+  ret = guestfs_file_architecture (g, arg1473);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "x86_64")) {
@@ -12180,9 +12328,9 @@ static int
 test_file_architecture_24_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (24) */
-  const char *arg1468 = "/bin-x86_64-dynamic.gz";
+  const char *arg1475 = "/bin-x86_64-dynamic.gz";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1468);
+  ret = guestfs_file_architecture (g, arg1475);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "x86_64")) {
@@ -12229,9 +12377,9 @@ static int
 test_file_architecture_25_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (25) */
-  const char *arg1470 = "/lib-i586.so.xz";
+  const char *arg1477 = "/lib-i586.so.xz";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1470);
+  ret = guestfs_file_architecture (g, arg1477);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "i386")) {
@@ -12278,9 +12426,9 @@ static int
 test_file_architecture_26_perform (guestfs_h *g)
 {
   /* TestResultString for file_architecture (26) */
-  const char *arg1472 = "/lib-i586.so.zst";
+  const char *arg1479 = "/lib-i586.so.zst";
   CLEANUP_FREE char *ret;
-  ret = guestfs_file_architecture (g, arg1472);
+  ret = guestfs_file_architecture (g, arg1479);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "i386")) {
@@ -12327,16 +12475,16 @@ static int
 test_filesize_0_perform (guestfs_h *g)
 {
   /* TestResult for filesize (0) */
-  const char *arg1474 = "/filesize";
-  const char *arg1475 = "hello, world";
-  size_t arg1475_size = 12;
+  const char *arg1481 = "/filesize";
+  const char *arg1482 = "hello, world";
+  size_t arg1482_size = 12;
   int ret1;
-  ret1 = guestfs_write (g, arg1474, arg1475, arg1475_size);
+  ret1 = guestfs_write (g, arg1481, arg1482, arg1482_size);
   if (ret1 == -1)
     return -1;
-  const char *arg1477 = "/filesize";
+  const char *arg1484 = "/filesize";
   int64_t ret;
-  ret = guestfs_filesize (g, arg1477);
+  ret = guestfs_filesize (g, arg1484);
   if (ret == -1)
     return -1;
   if (! (ret == 12)) {
@@ -12385,15 +12533,15 @@ static int
 test_fill_0_perform (guestfs_h *g)
 {
   /* TestResult for fill (0) */
-  const char *arg1481 = "/fill";
+  const char *arg1488 = "/fill";
   int ret1;
-  ret1 = guestfs_fill (g, 99, 10, arg1481);
+  ret1 = guestfs_fill (g, 99, 10, arg1488);
   if (ret1 == -1)
     return -1;
-  const char *arg1483 = "/fill";
+  const char *arg1490 = "/fill";
   CLEANUP_FREE char *ret;
   size_t size;
-  ret = guestfs_read_file (g, arg1483, &size);
+  ret = guestfs_read_file (g, arg1490, &size);
   if (ret == NULL)
       return -1;
   if (! (compare_buffers (ret, size, "cccccccccc", 10) == 0)) {
@@ -12442,16 +12590,16 @@ static int
 test_fill_pattern_0_perform (guestfs_h *g)
 {
   /* TestResult for fill_pattern (0) */
-  const char *arg1485 = "abcdefghijklmnopqrstuvwxyz";
-  const char *arg1487 = "/fill_pattern";
+  const char *arg1492 = "abcdefghijklmnopqrstuvwxyz";
+  const char *arg1494 = "/fill_pattern";
   int ret1;
-  ret1 = guestfs_fill_pattern (g, arg1485, 28, arg1487);
+  ret1 = guestfs_fill_pattern (g, arg1492, 28, arg1494);
   if (ret1 == -1)
     return -1;
-  const char *arg1489 = "/fill_pattern";
+  const char *arg1496 = "/fill_pattern";
   CLEANUP_FREE char *ret;
   size_t size;
-  ret = guestfs_read_file (g, arg1489, &size);
+  ret = guestfs_read_file (g, arg1496, &size);
   if (ret == NULL)
       return -1;
   if (! (compare_buffers (ret, size, "abcdefghijklmnopqrstuvwxyzab", 28) == 0)) {
@@ -12500,9 +12648,9 @@ static int
 test_find_0_perform (guestfs_h *g)
 {
   /* TestResult for find (0) */
-  const char *arg1491 = "/";
+  const char *arg1498 = "/";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_find (g, arg1491);
+  ret = guestfs_find (g, arg1498);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 1, "lost+found"))) {
@@ -12551,24 +12699,24 @@ static int
 test_find_1_perform (guestfs_h *g)
 {
   /* TestResult for find (1) */
-  const char *arg1493 = "/a";
+  const char *arg1500 = "/a";
   int ret3;
-  ret3 = guestfs_touch (g, arg1493);
+  ret3 = guestfs_touch (g, arg1500);
   if (ret3 == -1)
     return -1;
-  const char *arg1495 = "/b";
+  const char *arg1502 = "/b";
   int ret2;
-  ret2 = guestfs_mkdir (g, arg1495);
+  ret2 = guestfs_mkdir (g, arg1502);
   if (ret2 == -1)
     return -1;
-  const char *arg1497 = "/b/c";
+  const char *arg1504 = "/b/c";
   int ret1;
-  ret1 = guestfs_touch (g, arg1497);
+  ret1 = guestfs_touch (g, arg1504);
   if (ret1 == -1)
     return -1;
-  const char *arg1499 = "/";
+  const char *arg1506 = "/";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_find (g, arg1499);
+  ret = guestfs_find (g, arg1506);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 4, "a", "b", "b/c", "lost+found"))) {
@@ -12617,19 +12765,19 @@ static int
 test_find_2_perform (guestfs_h *g)
 {
   /* TestResult for find (2) */
-  const char *arg1501 = "/find/b/c";
+  const char *arg1508 = "/find/b/c";
   int ret2;
-  ret2 = guestfs_mkdir_p (g, arg1501);
+  ret2 = guestfs_mkdir_p (g, arg1508);
   if (ret2 == -1)
     return -1;
-  const char *arg1503 = "/find/b/c/d";
+  const char *arg1510 = "/find/b/c/d";
   int ret1;
-  ret1 = guestfs_touch (g, arg1503);
+  ret1 = guestfs_touch (g, arg1510);
   if (ret1 == -1)
     return -1;
-  const char *arg1505 = "/find/b/";
+  const char *arg1512 = "/find/b/";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_find (g, arg1505);
+  ret = guestfs_find (g, arg1512);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 2, "c", "c/d"))) {
@@ -12678,19 +12826,19 @@ static int
 test_fsck_0_perform (guestfs_h *g)
 {
   /* TestResult for fsck (0) */
-  const char *arg1507 = "/dev/sda1";
-  struct guestfs_umount_opts_argv optargs1508;
-  optargs1508.force = 0;
-  optargs1508.lazyunmount = 0;
-  optargs1508.bitmask = UINT64_C(0x3);
+  const char *arg1514 = "/dev/sda1";
+  struct guestfs_umount_opts_argv optargs1515;
+  optargs1515.force = 0;
+  optargs1515.lazyunmount = 0;
+  optargs1515.bitmask = UINT64_C(0x3);
   int ret1;
-  ret1 = guestfs_umount_opts_argv (g, arg1507, &optargs1508);
+  ret1 = guestfs_umount_opts_argv (g, arg1514, &optargs1515);
   if (ret1 == -1)
     return -1;
-  const char *arg1509 = "ext2";
-  const char *arg1510 = "/dev/sda1";
+  const char *arg1516 = "ext2";
+  const char *arg1517 = "/dev/sda1";
   int ret;
-  ret = guestfs_fsck (g, arg1509, arg1510);
+  ret = guestfs_fsck (g, arg1516, arg1517);
   if (ret == -1)
     return -1;
   if (! (ret == 0)) {
@@ -12739,24 +12887,24 @@ static int
 test_fsck_1_perform (guestfs_h *g)
 {
   /* TestResult for fsck (1) */
-  const char *arg1512 = "/dev/sda1";
-  struct guestfs_umount_opts_argv optargs1513;
-  optargs1513.force = 0;
-  optargs1513.lazyunmount = 0;
-  optargs1513.bitmask = UINT64_C(0x3);
+  const char *arg1519 = "/dev/sda1";
+  struct guestfs_umount_opts_argv optargs1520;
+  optargs1520.force = 0;
+  optargs1520.lazyunmount = 0;
+  optargs1520.bitmask = UINT64_C(0x3);
   int ret2;
-  ret2 = guestfs_umount_opts_argv (g, arg1512, &optargs1513);
+  ret2 = guestfs_umount_opts_argv (g, arg1519, &optargs1520);
   if (ret2 == -1)
     return -1;
-  const char *arg1514 = "/dev/sda1";
+  const char *arg1521 = "/dev/sda1";
   int ret1;
-  ret1 = guestfs_zero (g, arg1514);
+  ret1 = guestfs_zero (g, arg1521);
   if (ret1 == -1)
     return -1;
-  const char *arg1516 = "ext2";
-  const char *arg1517 = "/dev/sda1";
+  const char *arg1523 = "ext2";
+  const char *arg1524 = "/dev/sda1";
   int ret;
-  ret = guestfs_fsck (g, arg1516, arg1517);
+  ret = guestfs_fsck (g, arg1523, arg1524);
   if (ret == -1)
     return -1;
   if (! (ret == 8)) {
@@ -12805,9 +12953,9 @@ static int
 test_get_attach_method_0_perform (guestfs_h *g)
 {
   /* TestRun for get_attach_method (0) */
-  CLEANUP_FREE char *ret1519;
-  ret1519 = guestfs_get_attach_method (g);
-  if (ret1519 == NULL)
+  CLEANUP_FREE char *ret1526;
+  ret1526 = guestfs_get_attach_method (g);
+  if (ret1526 == NULL)
       return -1;
   return 0;
 }
@@ -12896,9 +13044,9 @@ static int
 test_get_backend_0_perform (guestfs_h *g)
 {
   /* TestRun for get_backend (0) */
-  CLEANUP_FREE char *ret1522;
-  ret1522 = guestfs_get_backend (g);
-  if (ret1522 == NULL)
+  CLEANUP_FREE char *ret1529;
+  ret1529 = guestfs_get_backend (g);
+  if (ret1529 == NULL)
       return -1;
   return 0;
 }
@@ -12939,9 +13087,9 @@ static int
 test_get_backend_settings_0_perform (guestfs_h *g)
 {
   /* TestRun for get_backend_settings (0) */
-  CLEANUP_FREE_STRING_LIST char **ret1524;
-  ret1524 = guestfs_get_backend_settings (g);
-  if (ret1524 == NULL)
+  CLEANUP_FREE_STRING_LIST char **ret1531;
+  ret1531 = guestfs_get_backend_settings (g);
+  if (ret1531 == NULL)
       return -1;
   return 0;
 }
@@ -12982,14 +13130,14 @@ static int
 test_get_e2attrs_0_perform (guestfs_h *g)
 {
   /* TestResultString for get_e2attrs (0) */
-  const char *arg1527 = "/e2attrs1";
-  int ret1526;
-  ret1526 = guestfs_touch (g, arg1527);
-  if (ret1526 == -1)
+  const char *arg1534 = "/e2attrs1";
+  int ret1533;
+  ret1533 = guestfs_touch (g, arg1534);
+  if (ret1533 == -1)
     return -1;
-  const char *arg1529 = "/e2attrs1";
+  const char *arg1536 = "/e2attrs1";
   CLEANUP_FREE char *ret;
-  ret = guestfs_get_e2attrs (g, arg1529);
+  ret = guestfs_get_e2attrs (g, arg1536);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "")) {
@@ -13036,23 +13184,23 @@ static int
 test_get_e2attrs_1_perform (guestfs_h *g)
 {
   /* TestResultString for get_e2attrs (1) */
-  const char *arg1532 = "/e2attrs2";
-  int ret1531;
-  ret1531 = guestfs_touch (g, arg1532);
-  if (ret1531 == -1)
+  const char *arg1539 = "/e2attrs2";
+  int ret1538;
+  ret1538 = guestfs_touch (g, arg1539);
+  if (ret1538 == -1)
     return -1;
-  const char *arg1535 = "/e2attrs2";
-  const char *arg1536 = "is";
-  struct guestfs_set_e2attrs_argv optargs1537;
-  optargs1537.clear = 0;
-  optargs1537.bitmask = UINT64_C(0x1);
-  int ret1534;
-  ret1534 = guestfs_set_e2attrs_argv (g, arg1535, arg1536, &optargs1537);
-  if (ret1534 == -1)
+  const char *arg1542 = "/e2attrs2";
+  const char *arg1543 = "is";
+  struct guestfs_set_e2attrs_argv optargs1544;
+  optargs1544.clear = 0;
+  optargs1544.bitmask = UINT64_C(0x1);
+  int ret1541;
+  ret1541 = guestfs_set_e2attrs_argv (g, arg1542, arg1543, &optargs1544);
+  if (ret1541 == -1)
     return -1;
-  const char *arg1538 = "/e2attrs2";
+  const char *arg1545 = "/e2attrs2";
   CLEANUP_FREE char *ret;
-  ret = guestfs_get_e2attrs (g, arg1538);
+  ret = guestfs_get_e2attrs (g, arg1545);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "is")) {
@@ -13099,32 +13247,32 @@ static int
 test_get_e2attrs_2_perform (guestfs_h *g)
 {
   /* TestResultString for get_e2attrs (2) */
-  const char *arg1541 = "/e2attrs3";
-  int ret1540;
-  ret1540 = guestfs_touch (g, arg1541);
-  if (ret1540 == -1)
-    return -1;
-  const char *arg1544 = "/e2attrs3";
-  const char *arg1545 = "is";
-  struct guestfs_set_e2attrs_argv optargs1546;
-  optargs1546.clear = 0;
-  optargs1546.bitmask = UINT64_C(0x1);
-  int ret1543;
-  ret1543 = guestfs_set_e2attrs_argv (g, arg1544, arg1545, &optargs1546);
-  if (ret1543 == -1)
-    return -1;
   const char *arg1548 = "/e2attrs3";
-  const char *arg1549 = "i";
-  struct guestfs_set_e2attrs_argv optargs1550;
-  optargs1550.clear = 1;
-  optargs1550.bitmask = UINT64_C(0x1);
   int ret1547;
-  ret1547 = guestfs_set_e2attrs_argv (g, arg1548, arg1549, &optargs1550);
+  ret1547 = guestfs_touch (g, arg1548);
   if (ret1547 == -1)
     return -1;
   const char *arg1551 = "/e2attrs3";
+  const char *arg1552 = "is";
+  struct guestfs_set_e2attrs_argv optargs1553;
+  optargs1553.clear = 0;
+  optargs1553.bitmask = UINT64_C(0x1);
+  int ret1550;
+  ret1550 = guestfs_set_e2attrs_argv (g, arg1551, arg1552, &optargs1553);
+  if (ret1550 == -1)
+    return -1;
+  const char *arg1555 = "/e2attrs3";
+  const char *arg1556 = "i";
+  struct guestfs_set_e2attrs_argv optargs1557;
+  optargs1557.clear = 1;
+  optargs1557.bitmask = UINT64_C(0x1);
+  int ret1554;
+  ret1554 = guestfs_set_e2attrs_argv (g, arg1555, arg1556, &optargs1557);
+  if (ret1554 == -1)
+    return -1;
+  const char *arg1558 = "/e2attrs3";
   CLEANUP_FREE char *ret;
-  ret = guestfs_get_e2attrs (g, arg1551);
+  ret = guestfs_get_e2attrs (g, arg1558);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "s")) {
@@ -13171,68 +13319,68 @@ static int
 test_get_e2attrs_3_perform (guestfs_h *g)
 {
   /* TestResultString for get_e2attrs (3) */
-  const char *arg1554 = "/e2attrs4";
-  int ret1553;
-  ret1553 = guestfs_touch (g, arg1554);
-  if (ret1553 == -1)
-    return -1;
-  const char *arg1557 = "/e2attrs4";
-  const char *arg1558 = "adst";
-  struct guestfs_set_e2attrs_argv optargs1559;
-  optargs1559.clear = 0;
-  optargs1559.bitmask = UINT64_C(0x1);
-  int ret1556;
-  ret1556 = guestfs_set_e2attrs_argv (g, arg1557, arg1558, &optargs1559);
-  if (ret1556 == -1)
-    return -1;
   const char *arg1561 = "/e2attrs4";
-  const char *arg1562 = "iS";
-  struct guestfs_set_e2attrs_argv optargs1563;
-  optargs1563.clear = 0;
-  optargs1563.bitmask = UINT64_C(0x1);
   int ret1560;
-  ret1560 = guestfs_set_e2attrs_argv (g, arg1561, arg1562, &optargs1563);
+  ret1560 = guestfs_touch (g, arg1561);
   if (ret1560 == -1)
     return -1;
-  const char *arg1565 = "/e2attrs4";
-  const char *arg1566 = "i";
-  struct guestfs_set_e2attrs_argv optargs1567;
-  optargs1567.clear = 1;
-  optargs1567.bitmask = UINT64_C(0x1);
-  int ret1564;
-  ret1564 = guestfs_set_e2attrs_argv (g, arg1565, arg1566, &optargs1567);
-  if (ret1564 == -1)
+  const char *arg1564 = "/e2attrs4";
+  const char *arg1565 = "adst";
+  struct guestfs_set_e2attrs_argv optargs1566;
+  optargs1566.clear = 0;
+  optargs1566.bitmask = UINT64_C(0x1);
+  int ret1563;
+  ret1563 = guestfs_set_e2attrs_argv (g, arg1564, arg1565, &optargs1566);
+  if (ret1563 == -1)
     return -1;
-  const char *arg1569 = "/e2attrs4";
-  const char *arg1570 = "ad";
-  struct guestfs_set_e2attrs_argv optargs1571;
-  optargs1571.clear = 1;
-  optargs1571.bitmask = UINT64_C(0x1);
-  int ret1568;
-  ret1568 = guestfs_set_e2attrs_argv (g, arg1569, arg1570, &optargs1571);
-  if (ret1568 == -1)
+  const char *arg1568 = "/e2attrs4";
+  const char *arg1569 = "iS";
+  struct guestfs_set_e2attrs_argv optargs1570;
+  optargs1570.clear = 0;
+  optargs1570.bitmask = UINT64_C(0x1);
+  int ret1567;
+  ret1567 = guestfs_set_e2attrs_argv (g, arg1568, arg1569, &optargs1570);
+  if (ret1567 == -1)
     return -1;
-  const char *arg1573 = "/e2attrs4";
-  const char *arg1574 = "";
-  struct guestfs_set_e2attrs_argv optargs1575;
-  optargs1575.clear = 0;
-  optargs1575.bitmask = UINT64_C(0x1);
-  int ret1572;
-  ret1572 = guestfs_set_e2attrs_argv (g, arg1573, arg1574, &optargs1575);
-  if (ret1572 == -1)
+  const char *arg1572 = "/e2attrs4";
+  const char *arg1573 = "i";
+  struct guestfs_set_e2attrs_argv optargs1574;
+  optargs1574.clear = 1;
+  optargs1574.bitmask = UINT64_C(0x1);
+  int ret1571;
+  ret1571 = guestfs_set_e2attrs_argv (g, arg1572, arg1573, &optargs1574);
+  if (ret1571 == -1)
     return -1;
-  const char *arg1577 = "/e2attrs4";
-  const char *arg1578 = "";
-  struct guestfs_set_e2attrs_argv optargs1579;
-  optargs1579.clear = 1;
-  optargs1579.bitmask = UINT64_C(0x1);
-  int ret1576;
-  ret1576 = guestfs_set_e2attrs_argv (g, arg1577, arg1578, &optargs1579);
-  if (ret1576 == -1)
+  const char *arg1576 = "/e2attrs4";
+  const char *arg1577 = "ad";
+  struct guestfs_set_e2attrs_argv optargs1578;
+  optargs1578.clear = 1;
+  optargs1578.bitmask = UINT64_C(0x1);
+  int ret1575;
+  ret1575 = guestfs_set_e2attrs_argv (g, arg1576, arg1577, &optargs1578);
+  if (ret1575 == -1)
     return -1;
   const char *arg1580 = "/e2attrs4";
+  const char *arg1581 = "";
+  struct guestfs_set_e2attrs_argv optargs1582;
+  optargs1582.clear = 0;
+  optargs1582.bitmask = UINT64_C(0x1);
+  int ret1579;
+  ret1579 = guestfs_set_e2attrs_argv (g, arg1580, arg1581, &optargs1582);
+  if (ret1579 == -1)
+    return -1;
+  const char *arg1584 = "/e2attrs4";
+  const char *arg1585 = "";
+  struct guestfs_set_e2attrs_argv optargs1586;
+  optargs1586.clear = 1;
+  optargs1586.bitmask = UINT64_C(0x1);
+  int ret1583;
+  ret1583 = guestfs_set_e2attrs_argv (g, arg1584, arg1585, &optargs1586);
+  if (ret1583 == -1)
+    return -1;
+  const char *arg1587 = "/e2attrs4";
   CLEANUP_FREE char *ret;
-  ret = guestfs_get_e2attrs (g, arg1580);
+  ret = guestfs_get_e2attrs (g, arg1587);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "Sst")) {
@@ -13279,21 +13427,21 @@ static int
 test_get_e2attrs_4_perform (guestfs_h *g)
 {
   /* TestLastFail for get_e2attrs (4) */
-  const char *arg1583 = "/e2attrs5";
-  int ret1582;
-  ret1582 = guestfs_touch (g, arg1583);
-  if (ret1582 == -1)
+  const char *arg1590 = "/e2attrs5";
+  int ret1589;
+  ret1589 = guestfs_touch (g, arg1590);
+  if (ret1589 == -1)
     return -1;
-  const char *arg1586 = "/e2attrs5";
-  const char *arg1587 = "R";
-  struct guestfs_set_e2attrs_argv optargs1588;
-  optargs1588.clear = 0;
-  optargs1588.bitmask = UINT64_C(0x1);
-  int ret1585;
+  const char *arg1593 = "/e2attrs5";
+  const char *arg1594 = "R";
+  struct guestfs_set_e2attrs_argv optargs1595;
+  optargs1595.clear = 0;
+  optargs1595.bitmask = UINT64_C(0x1);
+  int ret1592;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret1585 = guestfs_set_e2attrs_argv (g, arg1586, arg1587, &optargs1588);
+  ret1592 = guestfs_set_e2attrs_argv (g, arg1593, arg1594, &optargs1595);
   guestfs_pop_error_handler (g);
-  if (ret1585 != -1)
+  if (ret1592 != -1)
     return -1;
   return 0;
 }
@@ -13334,21 +13482,21 @@ static int
 test_get_e2attrs_5_perform (guestfs_h *g)
 {
   /* TestLastFail for get_e2attrs (5) */
-  const char *arg1590 = "/e2attrs6";
-  int ret1589;
-  ret1589 = guestfs_touch (g, arg1590);
-  if (ret1589 == -1)
+  const char *arg1597 = "/e2attrs6";
+  int ret1596;
+  ret1596 = guestfs_touch (g, arg1597);
+  if (ret1596 == -1)
     return -1;
-  const char *arg1593 = "/e2attrs6";
-  const char *arg1594 = "v";
-  struct guestfs_set_e2attrs_argv optargs1595;
-  optargs1595.clear = 0;
-  optargs1595.bitmask = UINT64_C(0x1);
-  int ret1592;
+  const char *arg1600 = "/e2attrs6";
+  const char *arg1601 = "v";
+  struct guestfs_set_e2attrs_argv optargs1602;
+  optargs1602.clear = 0;
+  optargs1602.bitmask = UINT64_C(0x1);
+  int ret1599;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret1592 = guestfs_set_e2attrs_argv (g, arg1593, arg1594, &optargs1595);
+  ret1599 = guestfs_set_e2attrs_argv (g, arg1600, arg1601, &optargs1602);
   guestfs_pop_error_handler (g);
-  if (ret1592 != -1)
+  if (ret1599 != -1)
     return -1;
   return 0;
 }
@@ -13389,21 +13537,21 @@ static int
 test_get_e2attrs_6_perform (guestfs_h *g)
 {
   /* TestLastFail for get_e2attrs (6) */
-  const char *arg1597 = "/e2attrs7";
-  int ret1596;
-  ret1596 = guestfs_touch (g, arg1597);
-  if (ret1596 == -1)
+  const char *arg1604 = "/e2attrs7";
+  int ret1603;
+  ret1603 = guestfs_touch (g, arg1604);
+  if (ret1603 == -1)
     return -1;
-  const char *arg1600 = "/e2attrs7";
-  const char *arg1601 = "aa";
-  struct guestfs_set_e2attrs_argv optargs1602;
-  optargs1602.clear = 0;
-  optargs1602.bitmask = UINT64_C(0x1);
-  int ret1599;
+  const char *arg1607 = "/e2attrs7";
+  const char *arg1608 = "aa";
+  struct guestfs_set_e2attrs_argv optargs1609;
+  optargs1609.clear = 0;
+  optargs1609.bitmask = UINT64_C(0x1);
+  int ret1606;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret1599 = guestfs_set_e2attrs_argv (g, arg1600, arg1601, &optargs1602);
+  ret1606 = guestfs_set_e2attrs_argv (g, arg1607, arg1608, &optargs1609);
   guestfs_pop_error_handler (g);
-  if (ret1599 != -1)
+  if (ret1606 != -1)
     return -1;
   return 0;
 }
@@ -13444,21 +13592,21 @@ static int
 test_get_e2attrs_7_perform (guestfs_h *g)
 {
   /* TestLastFail for get_e2attrs (7) */
-  const char *arg1604 = "/e2attrs8";
-  int ret1603;
-  ret1603 = guestfs_touch (g, arg1604);
-  if (ret1603 == -1)
+  const char *arg1611 = "/e2attrs8";
+  int ret1610;
+  ret1610 = guestfs_touch (g, arg1611);
+  if (ret1610 == -1)
     return -1;
-  const char *arg1607 = "/e2attrs8";
-  const char *arg1608 = "BabcdB";
-  struct guestfs_set_e2attrs_argv optargs1609;
-  optargs1609.clear = 0;
-  optargs1609.bitmask = UINT64_C(0x1);
-  int ret1606;
+  const char *arg1614 = "/e2attrs8";
+  const char *arg1615 = "BabcdB";
+  struct guestfs_set_e2attrs_argv optargs1616;
+  optargs1616.clear = 0;
+  optargs1616.bitmask = UINT64_C(0x1);
+  int ret1613;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret1606 = guestfs_set_e2attrs_argv (g, arg1607, arg1608, &optargs1609);
+  ret1613 = guestfs_set_e2attrs_argv (g, arg1614, arg1615, &optargs1616);
   guestfs_pop_error_handler (g);
-  if (ret1606 != -1)
+  if (ret1613 != -1)
     return -1;
   return 0;
 }
@@ -13499,19 +13647,19 @@ static int
 test_get_e2generation_0_perform (guestfs_h *g)
 {
   /* TestResult for get_e2generation (0) */
-  const char *arg1610 = "/e2generation";
+  const char *arg1617 = "/e2generation";
   int ret2;
-  ret2 = guestfs_touch (g, arg1610);
+  ret2 = guestfs_touch (g, arg1617);
   if (ret2 == -1)
     return -1;
-  const char *arg1612 = "/e2generation";
+  const char *arg1619 = "/e2generation";
   int ret1;
-  ret1 = guestfs_set_e2generation (g, arg1612, 123456);
+  ret1 = guestfs_set_e2generation (g, arg1619, 123456);
   if (ret1 == -1)
     return -1;
-  const char *arg1615 = "/e2generation";
+  const char *arg1622 = "/e2generation";
   int64_t ret;
-  ret = guestfs_get_e2generation (g, arg1615);
+  ret = guestfs_get_e2generation (g, arg1622);
   if (ret == -1)
     return -1;
   if (! (ret == 123456)) {
@@ -13560,15 +13708,15 @@ static int
 test_get_e2uuid_0_perform (guestfs_h *g)
 {
   /* TestRun for get_e2uuid (0) */
-  const char *arg1619 = "/dev/sdc";
-  int ret1617;
-  ret1617 = guestfs_mke2journal (g, 1024, arg1619);
-  if (ret1617 == -1)
+  const char *arg1626 = "/dev/sdc";
+  int ret1624;
+  ret1624 = guestfs_mke2journal (g, 1024, arg1626);
+  if (ret1624 == -1)
     return -1;
-  const char *arg1622 = "/dev/sdc";
-  CLEANUP_FREE char *ret1621;
-  ret1621 = guestfs_get_e2uuid (g, arg1622);
-  if (ret1621 == NULL)
+  const char *arg1629 = "/dev/sdc";
+  CLEANUP_FREE char *ret1628;
+  ret1628 = guestfs_get_e2uuid (g, arg1629);
+  if (ret1628 == NULL)
       return -1;
   return 0;
 }
@@ -13609,9 +13757,9 @@ static int
 test_get_hv_0_perform (guestfs_h *g)
 {
   /* TestRun for get_hv (0) */
-  CLEANUP_FREE char *ret1624;
-  ret1624 = guestfs_get_hv (g);
-  if (ret1624 == NULL)
+  CLEANUP_FREE char *ret1631;
+  ret1631 = guestfs_get_hv (g);
+  if (ret1631 == NULL)
       return -1;
   return 0;
 }
@@ -13652,9 +13800,9 @@ static int
 test_get_identifier_0_perform (guestfs_h *g)
 {
   /* TestRun for get_identifier (0) */
-  const char *ret1626;
-  ret1626 = guestfs_get_identifier (g);
-  if (ret1626 == NULL)
+  const char *ret1633;
+  ret1633 = guestfs_get_identifier (g);
+  if (ret1633 == NULL)
       return -1;
   return 0;
 }
@@ -13745,9 +13893,9 @@ static int
 test_get_path_0_perform (guestfs_h *g)
 {
   /* TestRun for get_path (0) */
-  const char *ret1629;
-  ret1629 = guestfs_get_path (g);
-  if (ret1629 == NULL)
+  const char *ret1636;
+  ret1636 = guestfs_get_path (g);
+  if (ret1636 == NULL)
       return -1;
   return 0;
 }
@@ -13788,9 +13936,9 @@ static int
 test_get_program_0_perform (guestfs_h *g)
 {
   /* TestRun for get_program (0) */
-  const char *ret1631;
-  ret1631 = guestfs_get_program (g);
-  if (ret1631 == NULL)
+  const char *ret1638;
+  ret1638 = guestfs_get_program (g);
+  if (ret1638 == NULL)
       return -1;
   return 0;
 }
@@ -13831,9 +13979,9 @@ static int
 test_get_qemu_0_perform (guestfs_h *g)
 {
   /* TestRun for get_qemu (0) */
-  const char *ret1633;
-  ret1633 = guestfs_get_qemu (g);
-  if (ret1633 == NULL)
+  const char *ret1640;
+  ret1640 = guestfs_get_qemu (g);
+  if (ret1640 == NULL)
       return -1;
   return 0;
 }
@@ -13924,26 +14072,26 @@ static int
 test_glob_expand_0_perform (guestfs_h *g)
 {
   /* TestResult for glob_expand (0) */
-  const char *arg1636 = "/glob_expand/b/c";
+  const char *arg1643 = "/glob_expand/b/c";
   int ret3;
-  ret3 = guestfs_mkdir_p (g, arg1636);
+  ret3 = guestfs_mkdir_p (g, arg1643);
   if (ret3 == -1)
     return -1;
-  const char *arg1638 = "/glob_expand/b/c/d";
+  const char *arg1645 = "/glob_expand/b/c/d";
   int ret2;
-  ret2 = guestfs_touch (g, arg1638);
+  ret2 = guestfs_touch (g, arg1645);
   if (ret2 == -1)
     return -1;
-  const char *arg1640 = "/glob_expand/b/c/e";
+  const char *arg1647 = "/glob_expand/b/c/e";
   int ret1;
-  ret1 = guestfs_touch (g, arg1640);
+  ret1 = guestfs_touch (g, arg1647);
   if (ret1 == -1)
     return -1;
-  const char *arg1642 = "/glob_expand/b/c/*";
-  struct guestfs_glob_expand_opts_argv optargs1643;
-  optargs1643.bitmask = UINT64_C(0x0);
+  const char *arg1649 = "/glob_expand/b/c/*";
+  struct guestfs_glob_expand_opts_argv optargs1650;
+  optargs1650.bitmask = UINT64_C(0x0);
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_glob_expand_opts_argv (g, arg1642, &optargs1643);
+  ret = guestfs_glob_expand_opts_argv (g, arg1649, &optargs1650);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 2, "/glob_expand/b/c/d", "/glob_expand/b/c/e"))) {
@@ -13992,26 +14140,26 @@ static int
 test_glob_expand_1_perform (guestfs_h *g)
 {
   /* TestResult for glob_expand (1) */
-  const char *arg1644 = "/glob_expand2/b/c";
+  const char *arg1651 = "/glob_expand2/b/c";
   int ret3;
-  ret3 = guestfs_mkdir_p (g, arg1644);
+  ret3 = guestfs_mkdir_p (g, arg1651);
   if (ret3 == -1)
     return -1;
-  const char *arg1646 = "/glob_expand2/b/c/d";
+  const char *arg1653 = "/glob_expand2/b/c/d";
   int ret2;
-  ret2 = guestfs_touch (g, arg1646);
+  ret2 = guestfs_touch (g, arg1653);
   if (ret2 == -1)
     return -1;
-  const char *arg1648 = "/glob_expand2/b/c/e";
+  const char *arg1655 = "/glob_expand2/b/c/e";
   int ret1;
-  ret1 = guestfs_touch (g, arg1648);
+  ret1 = guestfs_touch (g, arg1655);
   if (ret1 == -1)
     return -1;
-  const char *arg1650 = "/glob_expand2/*/c/*";
-  struct guestfs_glob_expand_opts_argv optargs1651;
-  optargs1651.bitmask = UINT64_C(0x0);
+  const char *arg1657 = "/glob_expand2/*/c/*";
+  struct guestfs_glob_expand_opts_argv optargs1658;
+  optargs1658.bitmask = UINT64_C(0x0);
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_glob_expand_opts_argv (g, arg1650, &optargs1651);
+  ret = guestfs_glob_expand_opts_argv (g, arg1657, &optargs1658);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 2, "/glob_expand2/b/c/d", "/glob_expand2/b/c/e"))) {
@@ -14060,26 +14208,26 @@ static int
 test_glob_expand_2_perform (guestfs_h *g)
 {
   /* TestResult for glob_expand (2) */
-  const char *arg1652 = "/glob_expand3/b/c";
+  const char *arg1659 = "/glob_expand3/b/c";
   int ret3;
-  ret3 = guestfs_mkdir_p (g, arg1652);
+  ret3 = guestfs_mkdir_p (g, arg1659);
   if (ret3 == -1)
     return -1;
-  const char *arg1654 = "/glob_expand3/b/c/d";
+  const char *arg1661 = "/glob_expand3/b/c/d";
   int ret2;
-  ret2 = guestfs_touch (g, arg1654);
+  ret2 = guestfs_touch (g, arg1661);
   if (ret2 == -1)
     return -1;
-  const char *arg1656 = "/glob_expand3/b/c/e";
+  const char *arg1663 = "/glob_expand3/b/c/e";
   int ret1;
-  ret1 = guestfs_touch (g, arg1656);
+  ret1 = guestfs_touch (g, arg1663);
   if (ret1 == -1)
     return -1;
-  const char *arg1658 = "/glob_expand3/*/x/*";
-  struct guestfs_glob_expand_opts_argv optargs1659;
-  optargs1659.bitmask = UINT64_C(0x0);
+  const char *arg1665 = "/glob_expand3/*/x/*";
+  struct guestfs_glob_expand_opts_argv optargs1666;
+  optargs1666.bitmask = UINT64_C(0x0);
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_glob_expand_opts_argv (g, arg1658, &optargs1659);
+  ret = guestfs_glob_expand_opts_argv (g, arg1665, &optargs1666);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 0))) {
@@ -14128,27 +14276,27 @@ static int
 test_glob_expand_3_perform (guestfs_h *g)
 {
   /* TestResult for glob_expand (3) */
-  const char *arg1660 = "/glob_expand4/b/c";
+  const char *arg1667 = "/glob_expand4/b/c";
   int ret3;
-  ret3 = guestfs_mkdir_p (g, arg1660);
+  ret3 = guestfs_mkdir_p (g, arg1667);
   if (ret3 == -1)
     return -1;
-  const char *arg1662 = "/glob_expand4/b1";
+  const char *arg1669 = "/glob_expand4/b1";
   int ret2;
-  ret2 = guestfs_touch (g, arg1662);
+  ret2 = guestfs_touch (g, arg1669);
   if (ret2 == -1)
     return -1;
-  const char *arg1664 = "/glob_expand4/c1";
+  const char *arg1671 = "/glob_expand4/c1";
   int ret1;
-  ret1 = guestfs_touch (g, arg1664);
+  ret1 = guestfs_touch (g, arg1671);
   if (ret1 == -1)
     return -1;
-  const char *arg1666 = "/glob_expand4/b*";
-  struct guestfs_glob_expand_opts_argv optargs1667;
-  optargs1667.directoryslash = 0;
-  optargs1667.bitmask = UINT64_C(0x1);
+  const char *arg1673 = "/glob_expand4/b*";
+  struct guestfs_glob_expand_opts_argv optargs1674;
+  optargs1674.directoryslash = 0;
+  optargs1674.bitmask = UINT64_C(0x1);
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_glob_expand_opts_argv (g, arg1666, &optargs1667);
+  ret = guestfs_glob_expand_opts_argv (g, arg1673, &optargs1674);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 2, "/glob_expand4/b", "/glob_expand4/b1"))) {
@@ -14197,12 +14345,12 @@ static int
 test_grep_0_perform (guestfs_h *g)
 {
   /* TestResult for grep (0) */
-  const char *arg1668 = "abc";
-  const char *arg1669 = "/test-grep.txt";
-  struct guestfs_grep_opts_argv optargs1670;
-  optargs1670.bitmask = UINT64_C(0x0);
+  const char *arg1675 = "abc";
+  const char *arg1676 = "/test-grep.txt";
+  struct guestfs_grep_opts_argv optargs1677;
+  optargs1677.bitmask = UINT64_C(0x0);
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_grep_opts_argv (g, arg1668, arg1669, &optargs1670);
+  ret = guestfs_grep_opts_argv (g, arg1675, arg1676, &optargs1677);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 2, "abc", "abc123"))) {
@@ -14251,12 +14399,12 @@ static int
 test_grep_1_perform (guestfs_h *g)
 {
   /* TestResult for grep (1) */
-  const char *arg1671 = "nomatch";
-  const char *arg1672 = "/test-grep.txt";
-  struct guestfs_grep_opts_argv optargs1673;
-  optargs1673.bitmask = UINT64_C(0x0);
+  const char *arg1678 = "nomatch";
+  const char *arg1679 = "/test-grep.txt";
+  struct guestfs_grep_opts_argv optargs1680;
+  optargs1680.bitmask = UINT64_C(0x0);
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_grep_opts_argv (g, arg1671, arg1672, &optargs1673);
+  ret = guestfs_grep_opts_argv (g, arg1678, arg1679, &optargs1680);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 0))) {
@@ -14305,12 +14453,12 @@ static int
 test_grep_2_perform (guestfs_h *g)
 {
   /* TestResult for grep (2) */
-  const char *arg1674 = "nomatch";
-  const char *arg1675 = "/abssymlink";
-  struct guestfs_grep_opts_argv optargs1676;
-  optargs1676.bitmask = UINT64_C(0x0);
+  const char *arg1681 = "nomatch";
+  const char *arg1682 = "/abssymlink";
+  struct guestfs_grep_opts_argv optargs1683;
+  optargs1683.bitmask = UINT64_C(0x0);
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_grep_opts_argv (g, arg1674, arg1675, &optargs1676);
+  ret = guestfs_grep_opts_argv (g, arg1681, arg1682, &optargs1683);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 0))) {
@@ -14359,13 +14507,13 @@ static int
 test_grep_3_perform (guestfs_h *g)
 {
   /* TestResult for grep (3) */
-  const char *arg1677 = "abc";
-  const char *arg1678 = "/test-grep.txt";
-  struct guestfs_grep_opts_argv optargs1679;
-  optargs1679.extended = 1;
-  optargs1679.bitmask = UINT64_C(0x1);
+  const char *arg1684 = "abc";
+  const char *arg1685 = "/test-grep.txt";
+  struct guestfs_grep_opts_argv optargs1686;
+  optargs1686.extended = 1;
+  optargs1686.bitmask = UINT64_C(0x1);
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_grep_opts_argv (g, arg1677, arg1678, &optargs1679);
+  ret = guestfs_grep_opts_argv (g, arg1684, arg1685, &optargs1686);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 2, "abc", "abc123"))) {
@@ -14414,13 +14562,13 @@ static int
 test_grep_4_perform (guestfs_h *g)
 {
   /* TestResult for grep (4) */
-  const char *arg1680 = "abc";
-  const char *arg1681 = "/test-grep.txt";
-  struct guestfs_grep_opts_argv optargs1682;
-  optargs1682.fixed = 1;
-  optargs1682.bitmask = UINT64_C(0x2);
+  const char *arg1687 = "abc";
+  const char *arg1688 = "/test-grep.txt";
+  struct guestfs_grep_opts_argv optargs1689;
+  optargs1689.fixed = 1;
+  optargs1689.bitmask = UINT64_C(0x2);
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_grep_opts_argv (g, arg1680, arg1681, &optargs1682);
+  ret = guestfs_grep_opts_argv (g, arg1687, arg1688, &optargs1689);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 2, "abc", "abc123"))) {
@@ -14469,13 +14617,13 @@ static int
 test_grep_5_perform (guestfs_h *g)
 {
   /* TestResult for grep (5) */
-  const char *arg1683 = "abc";
-  const char *arg1684 = "/test-grep.txt";
-  struct guestfs_grep_opts_argv optargs1685;
-  optargs1685.insensitive = 1;
-  optargs1685.bitmask = UINT64_C(0x4);
+  const char *arg1690 = "abc";
+  const char *arg1691 = "/test-grep.txt";
+  struct guestfs_grep_opts_argv optargs1692;
+  optargs1692.insensitive = 1;
+  optargs1692.bitmask = UINT64_C(0x4);
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_grep_opts_argv (g, arg1683, arg1684, &optargs1685);
+  ret = guestfs_grep_opts_argv (g, arg1690, arg1691, &optargs1692);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 3, "abc", "abc123", "ABC"))) {
@@ -14524,14 +14672,14 @@ static int
 test_grep_6_perform (guestfs_h *g)
 {
   /* TestResult for grep (6) */
-  const char *arg1686 = "abc";
-  const char *arg1687 = "/test-grep.txt";
-  struct guestfs_grep_opts_argv optargs1688;
-  optargs1688.extended = 1;
-  optargs1688.insensitive = 1;
-  optargs1688.bitmask = UINT64_C(0x5);
+  const char *arg1693 = "abc";
+  const char *arg1694 = "/test-grep.txt";
+  struct guestfs_grep_opts_argv optargs1695;
+  optargs1695.extended = 1;
+  optargs1695.insensitive = 1;
+  optargs1695.bitmask = UINT64_C(0x5);
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_grep_opts_argv (g, arg1686, arg1687, &optargs1688);
+  ret = guestfs_grep_opts_argv (g, arg1693, arg1694, &optargs1695);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 3, "abc", "abc123", "ABC"))) {
@@ -14580,14 +14728,14 @@ static int
 test_grep_7_perform (guestfs_h *g)
 {
   /* TestResult for grep (7) */
-  const char *arg1689 = "abc";
-  const char *arg1690 = "/test-grep.txt";
-  struct guestfs_grep_opts_argv optargs1691;
-  optargs1691.fixed = 1;
-  optargs1691.insensitive = 1;
-  optargs1691.bitmask = UINT64_C(0x6);
+  const char *arg1696 = "abc";
+  const char *arg1697 = "/test-grep.txt";
+  struct guestfs_grep_opts_argv optargs1698;
+  optargs1698.fixed = 1;
+  optargs1698.insensitive = 1;
+  optargs1698.bitmask = UINT64_C(0x6);
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_grep_opts_argv (g, arg1689, arg1690, &optargs1691);
+  ret = guestfs_grep_opts_argv (g, arg1696, arg1697, &optargs1698);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 3, "abc", "abc123", "ABC"))) {
@@ -14636,13 +14784,13 @@ static int
 test_grep_8_perform (guestfs_h *g)
 {
   /* TestResult for grep (8) */
-  const char *arg1692 = "abc";
-  const char *arg1693 = "/test-grep.txt.gz";
-  struct guestfs_grep_opts_argv optargs1694;
-  optargs1694.compressed = 1;
-  optargs1694.bitmask = UINT64_C(0x8);
+  const char *arg1699 = "abc";
+  const char *arg1700 = "/test-grep.txt.gz";
+  struct guestfs_grep_opts_argv optargs1701;
+  optargs1701.compressed = 1;
+  optargs1701.bitmask = UINT64_C(0x8);
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_grep_opts_argv (g, arg1692, arg1693, &optargs1694);
+  ret = guestfs_grep_opts_argv (g, arg1699, arg1700, &optargs1701);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 2, "abc", "abc123"))) {
@@ -14691,14 +14839,14 @@ static int
 test_grep_9_perform (guestfs_h *g)
 {
   /* TestResult for grep (9) */
-  const char *arg1695 = "abc";
-  const char *arg1696 = "/test-grep.txt.gz";
-  struct guestfs_grep_opts_argv optargs1697;
-  optargs1697.extended = 1;
-  optargs1697.compressed = 1;
-  optargs1697.bitmask = UINT64_C(0x9);
+  const char *arg1702 = "abc";
+  const char *arg1703 = "/test-grep.txt.gz";
+  struct guestfs_grep_opts_argv optargs1704;
+  optargs1704.extended = 1;
+  optargs1704.compressed = 1;
+  optargs1704.bitmask = UINT64_C(0x9);
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_grep_opts_argv (g, arg1695, arg1696, &optargs1697);
+  ret = guestfs_grep_opts_argv (g, arg1702, arg1703, &optargs1704);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 2, "abc", "abc123"))) {
@@ -14747,14 +14895,14 @@ static int
 test_grep_10_perform (guestfs_h *g)
 {
   /* TestResult for grep (10) */
-  const char *arg1698 = "abc";
-  const char *arg1699 = "/test-grep.txt.gz";
-  struct guestfs_grep_opts_argv optargs1700;
-  optargs1700.fixed = 1;
-  optargs1700.compressed = 1;
-  optargs1700.bitmask = UINT64_C(0xa);
+  const char *arg1705 = "abc";
+  const char *arg1706 = "/test-grep.txt.gz";
+  struct guestfs_grep_opts_argv optargs1707;
+  optargs1707.fixed = 1;
+  optargs1707.compressed = 1;
+  optargs1707.bitmask = UINT64_C(0xa);
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_grep_opts_argv (g, arg1698, arg1699, &optargs1700);
+  ret = guestfs_grep_opts_argv (g, arg1705, arg1706, &optargs1707);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 2, "abc", "abc123"))) {
@@ -14803,14 +14951,14 @@ static int
 test_grep_11_perform (guestfs_h *g)
 {
   /* TestResult for grep (11) */
-  const char *arg1701 = "abc";
-  const char *arg1702 = "/test-grep.txt.gz";
-  struct guestfs_grep_opts_argv optargs1703;
-  optargs1703.insensitive = 1;
-  optargs1703.compressed = 1;
-  optargs1703.bitmask = UINT64_C(0xc);
+  const char *arg1708 = "abc";
+  const char *arg1709 = "/test-grep.txt.gz";
+  struct guestfs_grep_opts_argv optargs1710;
+  optargs1710.insensitive = 1;
+  optargs1710.compressed = 1;
+  optargs1710.bitmask = UINT64_C(0xc);
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_grep_opts_argv (g, arg1701, arg1702, &optargs1703);
+  ret = guestfs_grep_opts_argv (g, arg1708, arg1709, &optargs1710);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 3, "abc", "abc123", "ABC"))) {
@@ -14859,15 +15007,15 @@ static int
 test_grep_12_perform (guestfs_h *g)
 {
   /* TestResult for grep (12) */
-  const char *arg1704 = "abc";
-  const char *arg1705 = "/test-grep.txt.gz";
-  struct guestfs_grep_opts_argv optargs1706;
-  optargs1706.extended = 1;
-  optargs1706.insensitive = 1;
-  optargs1706.compressed = 1;
-  optargs1706.bitmask = UINT64_C(0xd);
+  const char *arg1711 = "abc";
+  const char *arg1712 = "/test-grep.txt.gz";
+  struct guestfs_grep_opts_argv optargs1713;
+  optargs1713.extended = 1;
+  optargs1713.insensitive = 1;
+  optargs1713.compressed = 1;
+  optargs1713.bitmask = UINT64_C(0xd);
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_grep_opts_argv (g, arg1704, arg1705, &optargs1706);
+  ret = guestfs_grep_opts_argv (g, arg1711, arg1712, &optargs1713);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 3, "abc", "abc123", "ABC"))) {
@@ -14916,15 +15064,15 @@ static int
 test_grep_13_perform (guestfs_h *g)
 {
   /* TestResult for grep (13) */
-  const char *arg1707 = "abc";
-  const char *arg1708 = "/test-grep.txt.gz";
-  struct guestfs_grep_opts_argv optargs1709;
-  optargs1709.fixed = 1;
-  optargs1709.insensitive = 1;
-  optargs1709.compressed = 1;
-  optargs1709.bitmask = UINT64_C(0xe);
+  const char *arg1714 = "abc";
+  const char *arg1715 = "/test-grep.txt.gz";
+  struct guestfs_grep_opts_argv optargs1716;
+  optargs1716.fixed = 1;
+  optargs1716.insensitive = 1;
+  optargs1716.compressed = 1;
+  optargs1716.bitmask = UINT64_C(0xe);
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_grep_opts_argv (g, arg1707, arg1708, &optargs1709);
+  ret = guestfs_grep_opts_argv (g, arg1714, arg1715, &optargs1716);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 3, "abc", "abc123", "ABC"))) {
@@ -14973,10 +15121,10 @@ static int
 test_grepi_0_perform (guestfs_h *g)
 {
   /* TestResult for grepi (0) */
-  const char *arg1710 = "abc";
-  const char *arg1711 = "/test-grep.txt";
+  const char *arg1717 = "abc";
+  const char *arg1718 = "/test-grep.txt";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_grepi (g, arg1710, arg1711);
+  ret = guestfs_grepi (g, arg1717, arg1718);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 3, "abc", "abc123", "ABC"))) {
@@ -15000,10 +15148,10 @@ test_grub_install_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features1713[] = { "grub", NULL };
-  if (!guestfs_feature_available (g, (char **) features1713)) {
+  const char *features1720[] = { "grub", NULL };
+  if (!guestfs_feature_available (g, (char **) features1720)) {
     skipped ("test_grub_install_0", "group %s not available in daemon",
-             features1713[0]);
+             features1720[0]);
     return 0;
   }
 
@@ -15032,29 +15180,29 @@ static int
 test_grub_install_0_perform (guestfs_h *g)
 {
   /* TestResultTrue for grub_install (0) */
-  const char *arg1715 = "/boot/grub";
-  int ret1714;
-  ret1714 = guestfs_mkdir_p (g, arg1715);
-  if (ret1714 == -1)
-    return -1;
-  const char *arg1718 = "/boot/grub/device.map";
-  const char *arg1719 = "(hd0) /dev/sda";
-  size_t arg1719_size = 14;
-  int ret1717;
-  ret1717 = guestfs_write (g, arg1718, arg1719, arg1719_size);
-  if (ret1717 == -1)
-    return -1;
-  const char *arg1722 = "/";
-  const char *arg1723 = "/dev/sda";
+  const char *arg1722 = "/boot/grub";
   int ret1721;
-  ret1721 = guestfs_grub_install (g, arg1722, arg1723);
+  ret1721 = guestfs_mkdir_p (g, arg1722);
   if (ret1721 == -1)
     return -1;
-  const char *arg1725 = "/boot";
-  struct guestfs_is_dir_opts_argv optargs1726;
-  optargs1726.bitmask = UINT64_C(0x0);
+  const char *arg1725 = "/boot/grub/device.map";
+  const char *arg1726 = "(hd0) /dev/sda";
+  size_t arg1726_size = 14;
+  int ret1724;
+  ret1724 = guestfs_write (g, arg1725, arg1726, arg1726_size);
+  if (ret1724 == -1)
+    return -1;
+  const char *arg1729 = "/";
+  const char *arg1730 = "/dev/sda";
+  int ret1728;
+  ret1728 = guestfs_grub_install (g, arg1729, arg1730);
+  if (ret1728 == -1)
+    return -1;
+  const char *arg1732 = "/boot";
+  struct guestfs_is_dir_opts_argv optargs1733;
+  optargs1733.bitmask = UINT64_C(0x0);
   int ret;
-  ret = guestfs_is_dir_opts_argv (g, arg1725, &optargs1726);
+  ret = guestfs_is_dir_opts_argv (g, arg1732, &optargs1733);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -15101,9 +15249,9 @@ static int
 test_head_0_perform (guestfs_h *g)
 {
   /* TestResult for head (0) */
-  const char *arg1727 = "/10klines";
+  const char *arg1734 = "/10klines";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_head (g, arg1727);
+  ret = guestfs_head (g, arg1734);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 10, "0abcdefghijklmnopqrstuvwxyz", "1abcdefghijklmnopqrstuvwxyz", "2abcdefghijklmnopqrstuvwxyz", "3abcdefghijklmnopqrstuvwxyz", "4abcdefghijklmnopqrstuvwxyz", "5abcdefghijklmnopqrstuvwxyz", "6abcdefghijklmnopqrstuvwxyz", "7abcdefghijklmnopqrstuvwxyz", "8abcdefghijklmnopqrstuvwxyz", "9abcdefghijklmnopqrstuvwxyz"))) {
@@ -15152,9 +15300,9 @@ static int
 test_head_1_perform (guestfs_h *g)
 {
   /* TestResult for head (1) */
-  const char *arg1729 = "/abssymlink";
+  const char *arg1736 = "/abssymlink";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_head (g, arg1729);
+  ret = guestfs_head (g, arg1736);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 10, "0abcdefghijklmnopqrstuvwxyz", "1abcdefghijklmnopqrstuvwxyz", "2abcdefghijklmnopqrstuvwxyz", "3abcdefghijklmnopqrstuvwxyz", "4abcdefghijklmnopqrstuvwxyz", "5abcdefghijklmnopqrstuvwxyz", "6abcdefghijklmnopqrstuvwxyz", "7abcdefghijklmnopqrstuvwxyz", "8abcdefghijklmnopqrstuvwxyz", "9abcdefghijklmnopqrstuvwxyz"))) {
@@ -15203,9 +15351,9 @@ static int
 test_head_n_0_perform (guestfs_h *g)
 {
   /* TestResult for head_n (0) */
-  const char *arg1732 = "/10klines";
+  const char *arg1739 = "/10klines";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_head_n (g, 3, arg1732);
+  ret = guestfs_head_n (g, 3, arg1739);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 3, "0abcdefghijklmnopqrstuvwxyz", "1abcdefghijklmnopqrstuvwxyz", "2abcdefghijklmnopqrstuvwxyz"))) {
@@ -15254,9 +15402,9 @@ static int
 test_head_n_1_perform (guestfs_h *g)
 {
   /* TestResult for head_n (1) */
-  const char *arg1735 = "/10klines";
+  const char *arg1742 = "/10klines";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_head_n (g, -9997, arg1735);
+  ret = guestfs_head_n (g, -9997, arg1742);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 3, "0abcdefghijklmnopqrstuvwxyz", "1abcdefghijklmnopqrstuvwxyz", "2abcdefghijklmnopqrstuvwxyz"))) {
@@ -15305,9 +15453,9 @@ static int
 test_head_n_2_perform (guestfs_h *g)
 {
   /* TestResult for head_n (2) */
-  const char *arg1738 = "/10klines";
+  const char *arg1745 = "/10klines";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_head_n (g, 0, arg1738);
+  ret = guestfs_head_n (g, 0, arg1745);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 0))) {
@@ -15356,9 +15504,9 @@ static int
 test_hexdump_0_perform (guestfs_h *g)
 {
   /* TestResultString for hexdump (0) */
-  const char *arg1740 = "/known-4";
+  const char *arg1747 = "/known-4";
   CLEANUP_FREE char *ret;
-  ret = guestfs_hexdump (g, arg1740);
+  ret = guestfs_hexdump (g, arg1747);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "00000000  61 62 63 0a 64 65 66 0a  67 68 69                 |abc.def.ghi|\n0000000b\n")) {
@@ -15405,10 +15553,10 @@ static int
 test_hexdump_1_perform (guestfs_h *g)
 {
   /* TestRun for hexdump (1) */
-  const char *arg1743 = "/100krandom";
-  CLEANUP_FREE char *ret1742;
-  ret1742 = guestfs_hexdump (g, arg1743);
-  if (ret1742 == NULL)
+  const char *arg1750 = "/100krandom";
+  CLEANUP_FREE char *ret1749;
+  ret1749 = guestfs_hexdump (g, arg1750);
+  if (ret1749 == NULL)
       return -1;
   return 0;
 }
@@ -15449,10 +15597,10 @@ static int
 test_hexdump_2_perform (guestfs_h *g)
 {
   /* TestRun for hexdump (2) */
-  const char *arg1746 = "/abssymlink";
-  CLEANUP_FREE char *ret1745;
-  ret1745 = guestfs_hexdump (g, arg1746);
-  if (ret1745 == NULL)
+  const char *arg1753 = "/abssymlink";
+  CLEANUP_FREE char *ret1752;
+  ret1752 = guestfs_hexdump (g, arg1753);
+  if (ret1752 == NULL)
       return -1;
   return 0;
 }
@@ -15469,10 +15617,10 @@ test_hivex_commit_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features1748[] = { "hivex", NULL };
-  if (!guestfs_feature_available (g, (char **) features1748)) {
+  const char *features1755[] = { "hivex", NULL };
+  if (!guestfs_feature_available (g, (char **) features1755)) {
     skipped ("test_hivex_commit_0", "group %s not available in daemon",
-             features1748[0]);
+             features1755[0]);
     return 0;
   }
 
@@ -15507,23 +15655,23 @@ static int
 test_hivex_commit_0_perform (guestfs_h *g)
 {
   /* TestRun for hivex_commit (0) */
-  CLEANUP_FREE char *arg1750 = substitute_srcdir ("$srcdir/../test-data/files/minimal");
-  const char *arg1751 = "/hivex_commit1";
-  int ret1749;
-  ret1749 = guestfs_upload (g, arg1750, arg1751);
-  if (ret1749 == -1)
-    return -1;
-  const char *arg1754 = "/hivex_commit1";
-  struct guestfs_hivex_open_argv optargs1755;
-  optargs1755.write = 1;
-  optargs1755.bitmask = UINT64_C(0x4);
-  int ret1753;
-  ret1753 = guestfs_hivex_open_argv (g, arg1754, &optargs1755);
-  if (ret1753 == -1)
-    return -1;
+  CLEANUP_FREE char *arg1757 = substitute_srcdir ("$srcdir/../test-data/files/minimal");
+  const char *arg1758 = "/hivex_commit1";
   int ret1756;
-  ret1756 = guestfs_hivex_commit (g, NULL);
+  ret1756 = guestfs_upload (g, arg1757, arg1758);
   if (ret1756 == -1)
+    return -1;
+  const char *arg1761 = "/hivex_commit1";
+  struct guestfs_hivex_open_argv optargs1762;
+  optargs1762.write = 1;
+  optargs1762.bitmask = UINT64_C(0x4);
+  int ret1760;
+  ret1760 = guestfs_hivex_open_argv (g, arg1761, &optargs1762);
+  if (ret1760 == -1)
+    return -1;
+  int ret1763;
+  ret1763 = guestfs_hivex_commit (g, NULL);
+  if (ret1763 == -1)
     return -1;
   return 0;
 }
@@ -15531,9 +15679,9 @@ test_hivex_commit_0_perform (guestfs_h *g)
 static int
 test_hivex_commit_0_cleanup (guestfs_h *g)
 {
-  int ret1759;
-  ret1759 = guestfs_hivex_close (g);
-  if (ret1759 == -1)
+  int ret1766;
+  ret1766 = guestfs_hivex_close (g);
+  if (ret1766 == -1)
     return -1;
   return 0;
 }
@@ -15550,10 +15698,10 @@ test_hivex_commit_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features1761[] = { "hivex", NULL };
-  if (!guestfs_feature_available (g, (char **) features1761)) {
+  const char *features1768[] = { "hivex", NULL };
+  if (!guestfs_feature_available (g, (char **) features1768)) {
     skipped ("test_hivex_commit_1", "group %s not available in daemon",
-             features1761[0]);
+             features1768[0]);
     return 0;
   }
 
@@ -15588,31 +15736,31 @@ static int
 test_hivex_commit_1_perform (guestfs_h *g)
 {
   /* TestResultTrue for hivex_commit (1) */
-  CLEANUP_FREE char *arg1763 = substitute_srcdir ("$srcdir/../test-data/files/minimal");
-  const char *arg1764 = "/hivex_commit2";
-  int ret1762;
-  ret1762 = guestfs_upload (g, arg1763, arg1764);
-  if (ret1762 == -1)
-    return -1;
-  const char *arg1767 = "/hivex_commit2";
-  struct guestfs_hivex_open_argv optargs1768;
-  optargs1768.write = 1;
-  optargs1768.bitmask = UINT64_C(0x4);
-  int ret1766;
-  ret1766 = guestfs_hivex_open_argv (g, arg1767, &optargs1768);
-  if (ret1766 == -1)
-    return -1;
-  const char *arg1770 = "/hivex_commit2_copy";
+  CLEANUP_FREE char *arg1770 = substitute_srcdir ("$srcdir/../test-data/files/minimal");
+  const char *arg1771 = "/hivex_commit2";
   int ret1769;
-  ret1769 = guestfs_hivex_commit (g, arg1770);
+  ret1769 = guestfs_upload (g, arg1770, arg1771);
   if (ret1769 == -1)
     return -1;
-  const char *arg1772 = "/hivex_commit2_copy";
-  struct guestfs_is_file_opts_argv optargs1773;
-  optargs1773.followsymlinks = 0;
-  optargs1773.bitmask = UINT64_C(0x1);
+  const char *arg1774 = "/hivex_commit2";
+  struct guestfs_hivex_open_argv optargs1775;
+  optargs1775.write = 1;
+  optargs1775.bitmask = UINT64_C(0x4);
+  int ret1773;
+  ret1773 = guestfs_hivex_open_argv (g, arg1774, &optargs1775);
+  if (ret1773 == -1)
+    return -1;
+  const char *arg1777 = "/hivex_commit2_copy";
+  int ret1776;
+  ret1776 = guestfs_hivex_commit (g, arg1777);
+  if (ret1776 == -1)
+    return -1;
+  const char *arg1779 = "/hivex_commit2_copy";
+  struct guestfs_is_file_opts_argv optargs1780;
+  optargs1780.followsymlinks = 0;
+  optargs1780.bitmask = UINT64_C(0x1);
   int ret;
-  ret = guestfs_is_file_opts_argv (g, arg1772, &optargs1773);
+  ret = guestfs_is_file_opts_argv (g, arg1779, &optargs1780);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -15626,9 +15774,9 @@ test_hivex_commit_1_perform (guestfs_h *g)
 static int
 test_hivex_commit_1_cleanup (guestfs_h *g)
 {
-  int ret1774;
-  ret1774 = guestfs_hivex_close (g);
-  if (ret1774 == -1)
+  int ret1781;
+  ret1781 = guestfs_hivex_close (g);
+  if (ret1781 == -1)
     return -1;
   return 0;
 }
@@ -15645,10 +15793,10 @@ test_hivex_open_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features1776[] = { "hivex", NULL };
-  if (!guestfs_feature_available (g, (char **) features1776)) {
+  const char *features1783[] = { "hivex", NULL };
+  if (!guestfs_feature_available (g, (char **) features1783)) {
     skipped ("test_hivex_open_0", "group %s not available in daemon",
-             features1776[0]);
+             features1783[0]);
     return 0;
   }
 
@@ -15683,35 +15831,35 @@ static int
 test_hivex_open_0_perform (guestfs_h *g)
 {
   /* TestRun for hivex_open (0) */
-  CLEANUP_FREE char *arg1778 = substitute_srcdir ("$srcdir/../test-data/files/minimal");
-  const char *arg1779 = "/hivex_open";
-  int ret1777;
-  ret1777 = guestfs_upload (g, arg1778, arg1779);
-  if (ret1777 == -1)
-    return -1;
-  const char *arg1782 = "/hivex_open";
-  struct guestfs_hivex_open_argv optargs1783;
-  optargs1783.write = 0;
-  optargs1783.bitmask = UINT64_C(0x4);
-  int ret1781;
-  ret1781 = guestfs_hivex_open_argv (g, arg1782, &optargs1783);
-  if (ret1781 == -1)
-    return -1;
-  int64_t ret1784;
-  ret1784 = guestfs_hivex_root (g);
+  CLEANUP_FREE char *arg1785 = substitute_srcdir ("$srcdir/../test-data/files/minimal");
+  const char *arg1786 = "/hivex_open";
+  int ret1784;
+  ret1784 = guestfs_upload (g, arg1785, arg1786);
   if (ret1784 == -1)
     return -1;
-  CLEANUP_FREE char *ret1786;
-  ret1786 = guestfs_hivex_node_name (g, 4128);
-  if (ret1786 == NULL)
+  const char *arg1789 = "/hivex_open";
+  struct guestfs_hivex_open_argv optargs1790;
+  optargs1790.write = 0;
+  optargs1790.bitmask = UINT64_C(0x4);
+  int ret1788;
+  ret1788 = guestfs_hivex_open_argv (g, arg1789, &optargs1790);
+  if (ret1788 == -1)
+    return -1;
+  int64_t ret1791;
+  ret1791 = guestfs_hivex_root (g);
+  if (ret1791 == -1)
+    return -1;
+  CLEANUP_FREE char *ret1793;
+  ret1793 = guestfs_hivex_node_name (g, 4128);
+  if (ret1793 == NULL)
       return -1;
-  CLEANUP_FREE_HIVEX_NODE_LIST struct guestfs_hivex_node_list *ret1789;
-  ret1789 = guestfs_hivex_node_children (g, 4128);
-  if (ret1789 == NULL)
+  CLEANUP_FREE_HIVEX_NODE_LIST struct guestfs_hivex_node_list *ret1796;
+  ret1796 = guestfs_hivex_node_children (g, 4128);
+  if (ret1796 == NULL)
       return -1;
-  CLEANUP_FREE_HIVEX_VALUE_LIST struct guestfs_hivex_value_list *ret1792;
-  ret1792 = guestfs_hivex_node_values (g, 4128);
-  if (ret1792 == NULL)
+  CLEANUP_FREE_HIVEX_VALUE_LIST struct guestfs_hivex_value_list *ret1799;
+  ret1799 = guestfs_hivex_node_values (g, 4128);
+  if (ret1799 == NULL)
       return -1;
   return 0;
 }
@@ -15719,9 +15867,9 @@ test_hivex_open_0_perform (guestfs_h *g)
 static int
 test_hivex_open_0_cleanup (guestfs_h *g)
 {
-  int ret1795;
-  ret1795 = guestfs_hivex_close (g);
-  if (ret1795 == -1)
+  int ret1802;
+  ret1802 = guestfs_hivex_close (g);
+  if (ret1802 == -1)
     return -1;
   return 0;
 }
@@ -15762,11 +15910,11 @@ static int
 test_initrd_cat_0_perform (guestfs_h *g)
 {
   /* TestResult for initrd_cat (0) */
-  const char *arg1797 = "/initrd";
-  const char *arg1798 = "known-4";
+  const char *arg1804 = "/initrd";
+  const char *arg1805 = "known-4";
   CLEANUP_FREE char *ret;
   size_t size;
-  ret = guestfs_initrd_cat (g, arg1797, arg1798, &size);
+  ret = guestfs_initrd_cat (g, arg1804, arg1805, &size);
   if (ret == NULL)
       return -1;
   if (! (compare_buffers (ret, size, "abc\ndef\nghi", 11) == 0)) {
@@ -15815,9 +15963,9 @@ static int
 test_initrd_list_0_perform (guestfs_h *g)
 {
   /* TestResult for initrd_list (0) */
-  const char *arg1800 = "/initrd";
+  const char *arg1807 = "/initrd";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_initrd_list (g, arg1800);
+  ret = guestfs_initrd_list (g, arg1807);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 6, "empty", "known-1", "known-2", "known-3", "known-4", "known-5"))) {
@@ -15841,10 +15989,10 @@ test_inotify_add_watch_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features1802[] = { "inotify", NULL };
-  if (!guestfs_feature_available (g, (char **) features1802)) {
+  const char *features1809[] = { "inotify", NULL };
+  if (!guestfs_feature_available (g, (char **) features1809)) {
     skipped ("test_inotify_add_watch_0", "group %s not available in daemon",
-             features1802[0]);
+             features1809[0]);
     return 0;
   }
 
@@ -15873,28 +16021,28 @@ static int
 test_inotify_add_watch_0_perform (guestfs_h *g)
 {
   /* TestResult for inotify_add_watch (0) */
-  const char *arg1803 = "/inotify_add_watch";
+  const char *arg1810 = "/inotify_add_watch";
   int ret5;
-  ret5 = guestfs_mkdir (g, arg1803);
+  ret5 = guestfs_mkdir (g, arg1810);
   if (ret5 == -1)
     return -1;
   int ret4;
   ret4 = guestfs_inotify_init (g, 0);
   if (ret4 == -1)
     return -1;
-  const char *arg1807 = "/inotify_add_watch";
+  const char *arg1814 = "/inotify_add_watch";
   int64_t ret3;
-  ret3 = guestfs_inotify_add_watch (g, arg1807, 4095);
+  ret3 = guestfs_inotify_add_watch (g, arg1814, 4095);
   if (ret3 == -1)
     return -1;
-  const char *arg1810 = "/inotify_add_watch/a";
+  const char *arg1817 = "/inotify_add_watch/a";
   int ret2;
-  ret2 = guestfs_touch (g, arg1810);
+  ret2 = guestfs_touch (g, arg1817);
   if (ret2 == -1)
     return -1;
-  const char *arg1812 = "/inotify_add_watch/b";
+  const char *arg1819 = "/inotify_add_watch/b";
   int ret1;
-  ret1 = guestfs_touch (g, arg1812);
+  ret1 = guestfs_touch (g, arg1819);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -15922,10 +16070,10 @@ test_inotify_init_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features1815[] = { "inotify", NULL };
-  if (!guestfs_feature_available (g, (char **) features1815)) {
+  const char *features1822[] = { "inotify", NULL };
+  if (!guestfs_feature_available (g, (char **) features1822)) {
     skipped ("test_inotify_init_0", "group %s not available in daemon",
-             features1815[0]);
+             features1822[0]);
     return 0;
   }
 
@@ -15954,9 +16102,9 @@ static int
 test_inotify_init_0_perform (guestfs_h *g)
 {
   /* TestRun for inotify_init (0) */
-  int ret1816;
-  ret1816 = guestfs_inotify_init (g, 0);
-  if (ret1816 == -1)
+  int ret1823;
+  ret1823 = guestfs_inotify_init (g, 0);
+  if (ret1823 == -1)
     return -1;
   return 0;
 }
@@ -15997,16 +16145,16 @@ static int
 test_internal_write_0_perform (guestfs_h *g)
 {
   /* TestResultString for internal_write (0) */
-  const char *arg1820 = "/internal_write";
-  const char *arg1821 = "new file contents";
-  size_t arg1821_size = 17;
-  int ret1819;
-  ret1819 = guestfs_internal_write (g, arg1820, arg1821, arg1821_size);
-  if (ret1819 == -1)
+  const char *arg1827 = "/internal_write";
+  const char *arg1828 = "new file contents";
+  size_t arg1828_size = 17;
+  int ret1826;
+  ret1826 = guestfs_internal_write (g, arg1827, arg1828, arg1828_size);
+  if (ret1826 == -1)
     return -1;
-  const char *arg1823 = "/internal_write";
+  const char *arg1830 = "/internal_write";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg1823);
+  ret = guestfs_cat (g, arg1830);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "new file contents")) {
@@ -16053,16 +16201,16 @@ static int
 test_internal_write_1_perform (guestfs_h *g)
 {
   /* TestResultString for internal_write (1) */
-  const char *arg1826 = "/internal_write2";
-  const char *arg1827 = "\nnew file contents\n";
-  size_t arg1827_size = 19;
-  int ret1825;
-  ret1825 = guestfs_internal_write (g, arg1826, arg1827, arg1827_size);
-  if (ret1825 == -1)
+  const char *arg1833 = "/internal_write2";
+  const char *arg1834 = "\nnew file contents\n";
+  size_t arg1834_size = 19;
+  int ret1832;
+  ret1832 = guestfs_internal_write (g, arg1833, arg1834, arg1834_size);
+  if (ret1832 == -1)
     return -1;
-  const char *arg1829 = "/internal_write2";
+  const char *arg1836 = "/internal_write2";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg1829);
+  ret = guestfs_cat (g, arg1836);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "\nnew file contents\n")) {
@@ -16109,16 +16257,16 @@ static int
 test_internal_write_2_perform (guestfs_h *g)
 {
   /* TestResultString for internal_write (2) */
-  const char *arg1832 = "/internal_write3";
-  const char *arg1833 = "\n\n";
-  size_t arg1833_size = 2;
-  int ret1831;
-  ret1831 = guestfs_internal_write (g, arg1832, arg1833, arg1833_size);
-  if (ret1831 == -1)
+  const char *arg1839 = "/internal_write3";
+  const char *arg1840 = "\n\n";
+  size_t arg1840_size = 2;
+  int ret1838;
+  ret1838 = guestfs_internal_write (g, arg1839, arg1840, arg1840_size);
+  if (ret1838 == -1)
     return -1;
-  const char *arg1835 = "/internal_write3";
+  const char *arg1842 = "/internal_write3";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg1835);
+  ret = guestfs_cat (g, arg1842);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "\n\n")) {
@@ -16165,16 +16313,16 @@ static int
 test_internal_write_3_perform (guestfs_h *g)
 {
   /* TestResultString for internal_write (3) */
-  const char *arg1838 = "/internal_write4";
-  const char *arg1839 = "";
-  size_t arg1839_size = 0;
-  int ret1837;
-  ret1837 = guestfs_internal_write (g, arg1838, arg1839, arg1839_size);
-  if (ret1837 == -1)
+  const char *arg1845 = "/internal_write4";
+  const char *arg1846 = "";
+  size_t arg1846_size = 0;
+  int ret1844;
+  ret1844 = guestfs_internal_write (g, arg1845, arg1846, arg1846_size);
+  if (ret1844 == -1)
     return -1;
-  const char *arg1841 = "/internal_write4";
+  const char *arg1848 = "/internal_write4";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg1841);
+  ret = guestfs_cat (g, arg1848);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "")) {
@@ -16221,16 +16369,16 @@ static int
 test_internal_write_4_perform (guestfs_h *g)
 {
   /* TestResultString for internal_write (4) */
-  const char *arg1844 = "/internal_write5";
-  const char *arg1845 = "\n\n\n";
-  size_t arg1845_size = 3;
-  int ret1843;
-  ret1843 = guestfs_internal_write (g, arg1844, arg1845, arg1845_size);
-  if (ret1843 == -1)
+  const char *arg1851 = "/internal_write5";
+  const char *arg1852 = "\n\n\n";
+  size_t arg1852_size = 3;
+  int ret1850;
+  ret1850 = guestfs_internal_write (g, arg1851, arg1852, arg1852_size);
+  if (ret1850 == -1)
     return -1;
-  const char *arg1847 = "/internal_write5";
+  const char *arg1854 = "/internal_write5";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg1847);
+  ret = guestfs_cat (g, arg1854);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "\n\n\n")) {
@@ -16277,16 +16425,16 @@ static int
 test_internal_write_5_perform (guestfs_h *g)
 {
   /* TestResultString for internal_write (5) */
-  const char *arg1850 = "/internal_write6";
-  const char *arg1851 = "\n";
-  size_t arg1851_size = 1;
-  int ret1849;
-  ret1849 = guestfs_internal_write (g, arg1850, arg1851, arg1851_size);
-  if (ret1849 == -1)
+  const char *arg1857 = "/internal_write6";
+  const char *arg1858 = "\n";
+  size_t arg1858_size = 1;
+  int ret1856;
+  ret1856 = guestfs_internal_write (g, arg1857, arg1858, arg1858_size);
+  if (ret1856 == -1)
     return -1;
-  const char *arg1853 = "/internal_write6";
+  const char *arg1860 = "/internal_write6";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg1853);
+  ret = guestfs_cat (g, arg1860);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "\n")) {
@@ -16333,37 +16481,37 @@ static int
 test_internal_write_append_0_perform (guestfs_h *g)
 {
   /* TestResultString for internal_write_append (0) */
-  const char *arg1856 = "/internal_write_append";
-  const char *arg1857 = "line1\n";
-  size_t arg1857_size = 6;
-  int ret1855;
-  ret1855 = guestfs_write (g, arg1856, arg1857, arg1857_size);
-  if (ret1855 == -1)
+  const char *arg1863 = "/internal_write_append";
+  const char *arg1864 = "line1\n";
+  size_t arg1864_size = 6;
+  int ret1862;
+  ret1862 = guestfs_write (g, arg1863, arg1864, arg1864_size);
+  if (ret1862 == -1)
     return -1;
-  const char *arg1860 = "/internal_write_append";
-  const char *arg1861 = "line2\n";
-  size_t arg1861_size = 6;
-  int ret1859;
-  ret1859 = guestfs_internal_write_append (g, arg1860, arg1861, arg1861_size);
-  if (ret1859 == -1)
-    return -1;
-  const char *arg1864 = "/internal_write_append";
-  const char *arg1865 = "line3a";
-  size_t arg1865_size = 6;
-  int ret1863;
-  ret1863 = guestfs_internal_write_append (g, arg1864, arg1865, arg1865_size);
-  if (ret1863 == -1)
-    return -1;
-  const char *arg1868 = "/internal_write_append";
-  const char *arg1869 = "line3b\n";
-  size_t arg1869_size = 7;
-  int ret1867;
-  ret1867 = guestfs_internal_write_append (g, arg1868, arg1869, arg1869_size);
-  if (ret1867 == -1)
+  const char *arg1867 = "/internal_write_append";
+  const char *arg1868 = "line2\n";
+  size_t arg1868_size = 6;
+  int ret1866;
+  ret1866 = guestfs_internal_write_append (g, arg1867, arg1868, arg1868_size);
+  if (ret1866 == -1)
     return -1;
   const char *arg1871 = "/internal_write_append";
+  const char *arg1872 = "line3a";
+  size_t arg1872_size = 6;
+  int ret1870;
+  ret1870 = guestfs_internal_write_append (g, arg1871, arg1872, arg1872_size);
+  if (ret1870 == -1)
+    return -1;
+  const char *arg1875 = "/internal_write_append";
+  const char *arg1876 = "line3b\n";
+  size_t arg1876_size = 7;
+  int ret1874;
+  ret1874 = guestfs_internal_write_append (g, arg1875, arg1876, arg1876_size);
+  if (ret1874 == -1)
+    return -1;
+  const char *arg1878 = "/internal_write_append";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg1871);
+  ret = guestfs_cat (g, arg1878);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "line1\nline2\nline3aline3b\n")) {
@@ -16410,11 +16558,11 @@ static int
 test_is_blockdev_0_perform (guestfs_h *g)
 {
   /* TestResultFalse for is_blockdev (0) */
-  const char *arg1873 = "/directory";
-  struct guestfs_is_blockdev_opts_argv optargs1874;
-  optargs1874.bitmask = UINT64_C(0x0);
+  const char *arg1880 = "/directory";
+  struct guestfs_is_blockdev_opts_argv optargs1881;
+  optargs1881.bitmask = UINT64_C(0x0);
   int ret;
-  ret = guestfs_is_blockdev_opts_argv (g, arg1873, &optargs1874);
+  ret = guestfs_is_blockdev_opts_argv (g, arg1880, &optargs1881);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -16461,16 +16609,16 @@ static int
 test_is_blockdev_1_perform (guestfs_h *g)
 {
   /* TestResultTrue for is_blockdev (1) */
-  const char *arg1879 = "/is_blockdev";
-  int ret1875;
-  ret1875 = guestfs_mknod_b (g, 511, 99, 66, arg1879);
-  if (ret1875 == -1)
+  const char *arg1886 = "/is_blockdev";
+  int ret1882;
+  ret1882 = guestfs_mknod_b (g, 511, 99, 66, arg1886);
+  if (ret1882 == -1)
     return -1;
-  const char *arg1881 = "/is_blockdev";
-  struct guestfs_is_blockdev_opts_argv optargs1882;
-  optargs1882.bitmask = UINT64_C(0x0);
+  const char *arg1888 = "/is_blockdev";
+  struct guestfs_is_blockdev_opts_argv optargs1889;
+  optargs1889.bitmask = UINT64_C(0x0);
   int ret;
-  ret = guestfs_is_blockdev_opts_argv (g, arg1881, &optargs1882);
+  ret = guestfs_is_blockdev_opts_argv (g, arg1888, &optargs1889);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -16565,11 +16713,11 @@ static int
 test_is_chardev_0_perform (guestfs_h *g)
 {
   /* TestResultFalse for is_chardev (0) */
-  const char *arg1884 = "/directory";
-  struct guestfs_is_chardev_opts_argv optargs1885;
-  optargs1885.bitmask = UINT64_C(0x0);
+  const char *arg1891 = "/directory";
+  struct guestfs_is_chardev_opts_argv optargs1892;
+  optargs1892.bitmask = UINT64_C(0x0);
   int ret;
-  ret = guestfs_is_chardev_opts_argv (g, arg1884, &optargs1885);
+  ret = guestfs_is_chardev_opts_argv (g, arg1891, &optargs1892);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -16616,16 +16764,16 @@ static int
 test_is_chardev_1_perform (guestfs_h *g)
 {
   /* TestResultTrue for is_chardev (1) */
-  const char *arg1890 = "/is_chardev";
-  int ret1886;
-  ret1886 = guestfs_mknod_c (g, 511, 99, 66, arg1890);
-  if (ret1886 == -1)
+  const char *arg1897 = "/is_chardev";
+  int ret1893;
+  ret1893 = guestfs_mknod_c (g, 511, 99, 66, arg1897);
+  if (ret1893 == -1)
     return -1;
-  const char *arg1892 = "/is_chardev";
-  struct guestfs_is_chardev_opts_argv optargs1893;
-  optargs1893.bitmask = UINT64_C(0x0);
+  const char *arg1899 = "/is_chardev";
+  struct guestfs_is_chardev_opts_argv optargs1900;
+  optargs1900.bitmask = UINT64_C(0x0);
   int ret;
-  ret = guestfs_is_chardev_opts_argv (g, arg1892, &optargs1893);
+  ret = guestfs_is_chardev_opts_argv (g, arg1899, &optargs1900);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -16720,11 +16868,11 @@ static int
 test_is_dir_0_perform (guestfs_h *g)
 {
   /* TestResultFalse for is_dir (0) */
-  const char *arg1895 = "/known-3";
-  struct guestfs_is_dir_opts_argv optargs1896;
-  optargs1896.bitmask = UINT64_C(0x0);
+  const char *arg1902 = "/known-3";
+  struct guestfs_is_dir_opts_argv optargs1903;
+  optargs1903.bitmask = UINT64_C(0x0);
   int ret;
-  ret = guestfs_is_dir_opts_argv (g, arg1895, &optargs1896);
+  ret = guestfs_is_dir_opts_argv (g, arg1902, &optargs1903);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -16771,11 +16919,11 @@ static int
 test_is_dir_1_perform (guestfs_h *g)
 {
   /* TestResultTrue for is_dir (1) */
-  const char *arg1897 = "/directory";
-  struct guestfs_is_dir_opts_argv optargs1898;
-  optargs1898.bitmask = UINT64_C(0x0);
+  const char *arg1904 = "/directory";
+  struct guestfs_is_dir_opts_argv optargs1905;
+  optargs1905.bitmask = UINT64_C(0x0);
   int ret;
-  ret = guestfs_is_dir_opts_argv (g, arg1897, &optargs1898);
+  ret = guestfs_is_dir_opts_argv (g, arg1904, &optargs1905);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -16822,11 +16970,11 @@ static int
 test_is_fifo_0_perform (guestfs_h *g)
 {
   /* TestResultFalse for is_fifo (0) */
-  const char *arg1899 = "/directory";
-  struct guestfs_is_fifo_opts_argv optargs1900;
-  optargs1900.bitmask = UINT64_C(0x0);
+  const char *arg1906 = "/directory";
+  struct guestfs_is_fifo_opts_argv optargs1907;
+  optargs1907.bitmask = UINT64_C(0x0);
   int ret;
-  ret = guestfs_is_fifo_opts_argv (g, arg1899, &optargs1900);
+  ret = guestfs_is_fifo_opts_argv (g, arg1906, &optargs1907);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -16873,16 +17021,16 @@ static int
 test_is_fifo_1_perform (guestfs_h *g)
 {
   /* TestResultTrue for is_fifo (1) */
-  const char *arg1903 = "/is_fifo";
-  int ret1901;
-  ret1901 = guestfs_mkfifo (g, 511, arg1903);
-  if (ret1901 == -1)
+  const char *arg1910 = "/is_fifo";
+  int ret1908;
+  ret1908 = guestfs_mkfifo (g, 511, arg1910);
+  if (ret1908 == -1)
     return -1;
-  const char *arg1905 = "/is_fifo";
-  struct guestfs_is_fifo_opts_argv optargs1906;
-  optargs1906.bitmask = UINT64_C(0x0);
+  const char *arg1912 = "/is_fifo";
+  struct guestfs_is_fifo_opts_argv optargs1913;
+  optargs1913.bitmask = UINT64_C(0x0);
   int ret;
-  ret = guestfs_is_fifo_opts_argv (g, arg1905, &optargs1906);
+  ret = guestfs_is_fifo_opts_argv (g, arg1912, &optargs1913);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -16929,11 +17077,11 @@ static int
 test_is_file_0_perform (guestfs_h *g)
 {
   /* TestResultTrue for is_file (0) */
-  const char *arg1907 = "/known-1";
-  struct guestfs_is_file_opts_argv optargs1908;
-  optargs1908.bitmask = UINT64_C(0x0);
+  const char *arg1914 = "/known-1";
+  struct guestfs_is_file_opts_argv optargs1915;
+  optargs1915.bitmask = UINT64_C(0x0);
   int ret;
-  ret = guestfs_is_file_opts_argv (g, arg1907, &optargs1908);
+  ret = guestfs_is_file_opts_argv (g, arg1914, &optargs1915);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -16980,11 +17128,11 @@ static int
 test_is_file_1_perform (guestfs_h *g)
 {
   /* TestResultFalse for is_file (1) */
-  const char *arg1909 = "/directory";
-  struct guestfs_is_file_opts_argv optargs1910;
-  optargs1910.bitmask = UINT64_C(0x0);
+  const char *arg1916 = "/directory";
+  struct guestfs_is_file_opts_argv optargs1917;
+  optargs1917.bitmask = UINT64_C(0x0);
   int ret;
-  ret = guestfs_is_file_opts_argv (g, arg1909, &optargs1910);
+  ret = guestfs_is_file_opts_argv (g, arg1916, &optargs1917);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -17031,12 +17179,12 @@ static int
 test_is_file_2_perform (guestfs_h *g)
 {
   /* TestResultTrue for is_file (2) */
-  const char *arg1911 = "/abssymlink";
-  struct guestfs_is_file_opts_argv optargs1912;
-  optargs1912.followsymlinks = 1;
-  optargs1912.bitmask = UINT64_C(0x1);
+  const char *arg1918 = "/abssymlink";
+  struct guestfs_is_file_opts_argv optargs1919;
+  optargs1919.followsymlinks = 1;
+  optargs1919.bitmask = UINT64_C(0x1);
   int ret;
-  ret = guestfs_is_file_opts_argv (g, arg1911, &optargs1912);
+  ret = guestfs_is_file_opts_argv (g, arg1918, &optargs1919);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -17131,9 +17279,9 @@ static int
 test_is_lv_0_perform (guestfs_h *g)
 {
   /* TestResultTrue for is_lv (0) */
-  const char *arg1914 = "/dev/VG/LV";
+  const char *arg1921 = "/dev/VG/LV";
   int ret;
-  ret = guestfs_is_lv (g, arg1914);
+  ret = guestfs_is_lv (g, arg1921);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -17180,9 +17328,9 @@ static int
 test_is_lv_1_perform (guestfs_h *g)
 {
   /* TestResultFalse for is_lv (1) */
-  const char *arg1916 = "/dev/sda1";
+  const char *arg1923 = "/dev/sda1";
   int ret;
-  ret = guestfs_is_lv (g, arg1916);
+  ret = guestfs_is_lv (g, arg1923);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -17277,11 +17425,11 @@ static int
 test_is_socket_0_perform (guestfs_h *g)
 {
   /* TestResultFalse for is_socket (0) */
-  const char *arg1919 = "/directory";
-  struct guestfs_is_socket_opts_argv optargs1920;
-  optargs1920.bitmask = UINT64_C(0x0);
+  const char *arg1926 = "/directory";
+  struct guestfs_is_socket_opts_argv optargs1927;
+  optargs1927.bitmask = UINT64_C(0x0);
   int ret;
-  ret = guestfs_is_socket_opts_argv (g, arg1919, &optargs1920);
+  ret = guestfs_is_socket_opts_argv (g, arg1926, &optargs1927);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -17328,9 +17476,9 @@ static int
 test_is_symlink_0_perform (guestfs_h *g)
 {
   /* TestResultFalse for is_symlink (0) */
-  const char *arg1921 = "/directory";
+  const char *arg1928 = "/directory";
   int ret;
-  ret = guestfs_is_symlink (g, arg1921);
+  ret = guestfs_is_symlink (g, arg1928);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -17377,9 +17525,9 @@ static int
 test_is_symlink_1_perform (guestfs_h *g)
 {
   /* TestResultTrue for is_symlink (1) */
-  const char *arg1923 = "/abssymlink";
+  const char *arg1930 = "/abssymlink";
   int ret;
-  ret = guestfs_is_symlink (g, arg1923);
+  ret = guestfs_is_symlink (g, arg1930);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -17426,9 +17574,9 @@ static int
 test_is_whole_device_0_perform (guestfs_h *g)
 {
   /* TestResultTrue for is_whole_device (0) */
-  const char *arg1925 = "/dev/sda";
+  const char *arg1932 = "/dev/sda";
   int ret;
-  ret = guestfs_is_whole_device (g, arg1925);
+  ret = guestfs_is_whole_device (g, arg1932);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -17475,9 +17623,9 @@ static int
 test_is_whole_device_1_perform (guestfs_h *g)
 {
   /* TestResultFalse for is_whole_device (1) */
-  const char *arg1927 = "/dev/sda1";
+  const char *arg1934 = "/dev/sda1";
   int ret;
-  ret = guestfs_is_whole_device (g, arg1927);
+  ret = guestfs_is_whole_device (g, arg1934);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -17524,9 +17672,9 @@ static int
 test_is_whole_device_2_perform (guestfs_h *g)
 {
   /* TestResultFalse for is_whole_device (2) */
-  const char *arg1929 = "/dev/VG/LV";
+  const char *arg1936 = "/dev/VG/LV";
   int ret;
-  ret = guestfs_is_whole_device (g, arg1929);
+  ret = guestfs_is_whole_device (g, arg1936);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -17573,9 +17721,9 @@ static int
 test_is_zero_0_perform (guestfs_h *g)
 {
   /* TestResultTrue for is_zero (0) */
-  const char *arg1931 = "/100kallzeroes";
+  const char *arg1938 = "/100kallzeroes";
   int ret;
-  ret = guestfs_is_zero (g, arg1931);
+  ret = guestfs_is_zero (g, arg1938);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -17622,9 +17770,9 @@ static int
 test_is_zero_1_perform (guestfs_h *g)
 {
   /* TestResultFalse for is_zero (1) */
-  const char *arg1933 = "/100kallspaces";
+  const char *arg1940 = "/100kallspaces";
   int ret;
-  ret = guestfs_is_zero (g, arg1933);
+  ret = guestfs_is_zero (g, arg1940);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -17671,23 +17819,23 @@ static int
 test_is_zero_device_0_perform (guestfs_h *g)
 {
   /* TestResultTrue for is_zero_device (0) */
-  const char *arg1936 = "/dev/sda1";
-  struct guestfs_umount_opts_argv optargs1937;
-  optargs1937.force = 0;
-  optargs1937.lazyunmount = 0;
-  optargs1937.bitmask = UINT64_C(0x3);
-  int ret1935;
-  ret1935 = guestfs_umount_opts_argv (g, arg1936, &optargs1937);
-  if (ret1935 == -1)
+  const char *arg1943 = "/dev/sda1";
+  struct guestfs_umount_opts_argv optargs1944;
+  optargs1944.force = 0;
+  optargs1944.lazyunmount = 0;
+  optargs1944.bitmask = UINT64_C(0x3);
+  int ret1942;
+  ret1942 = guestfs_umount_opts_argv (g, arg1943, &optargs1944);
+  if (ret1942 == -1)
     return -1;
-  const char *arg1939 = "/dev/sda1";
-  int ret1938;
-  ret1938 = guestfs_zero_device (g, arg1939);
-  if (ret1938 == -1)
+  const char *arg1946 = "/dev/sda1";
+  int ret1945;
+  ret1945 = guestfs_zero_device (g, arg1946);
+  if (ret1945 == -1)
     return -1;
-  const char *arg1941 = "/dev/sda1";
+  const char *arg1948 = "/dev/sda1";
   int ret;
-  ret = guestfs_is_zero_device (g, arg1941);
+  ret = guestfs_is_zero_device (g, arg1948);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -17734,9 +17882,9 @@ static int
 test_is_zero_device_1_perform (guestfs_h *g)
 {
   /* TestResultFalse for is_zero_device (1) */
-  const char *arg1943 = "/dev/sda1";
+  const char *arg1950 = "/dev/sda1";
   int ret;
-  ret = guestfs_is_zero_device (g, arg1943);
+  ret = guestfs_is_zero_device (g, arg1950);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -17783,9 +17931,9 @@ static int
 test_isoinfo_device_0_perform (guestfs_h *g)
 {
   /* TestResult for isoinfo_device (0) */
-  const char *arg1945 = "/dev/sdd";
+  const char *arg1952 = "/dev/sdd";
   CLEANUP_FREE_ISOINFO struct guestfs_isoinfo *ret;
-  ret = guestfs_isoinfo_device (g, arg1945);
+  ret = guestfs_isoinfo_device (g, arg1952);
   if (ret == NULL)
       return -1;
   if (! ((STREQ (ret->iso_volume_id, "CDROM") ||  STREQ (ret->iso_volume_id, "ISOIMAGE")) && STREQ (ret->iso_volume_set_id, "") && ret->iso_volume_set_size == 1 && ret->iso_volume_sequence_number == 1 && ret->iso_logical_block_size == 2048)) {
@@ -17984,28 +18132,28 @@ static int
 test_list_partitions_1_perform (guestfs_h *g)
 {
   /* TestResult for list_partitions (1) */
-  const char *arg1950 = "/dev/sda";
-  const char *arg1951 = "mbr";
+  const char *arg1957 = "/dev/sda";
+  const char *arg1958 = "mbr";
   int ret4;
-  ret4 = guestfs_part_init (g, arg1950, arg1951);
+  ret4 = guestfs_part_init (g, arg1957, arg1958);
   if (ret4 == -1)
     return -1;
-  const char *arg1953 = "/dev/sda";
-  const char *arg1954 = "p";
+  const char *arg1960 = "/dev/sda";
+  const char *arg1961 = "p";
   int ret3;
-  ret3 = guestfs_part_add (g, arg1953, arg1954, 64, 204799);
+  ret3 = guestfs_part_add (g, arg1960, arg1961, 64, 204799);
   if (ret3 == -1)
     return -1;
-  const char *arg1958 = "/dev/sda";
-  const char *arg1959 = "p";
+  const char *arg1965 = "/dev/sda";
+  const char *arg1966 = "p";
   int ret2;
-  ret2 = guestfs_part_add (g, arg1958, arg1959, 204800, 409599);
+  ret2 = guestfs_part_add (g, arg1965, arg1966, 204800, 409599);
   if (ret2 == -1)
     return -1;
-  const char *arg1963 = "/dev/sda";
-  const char *arg1964 = "p";
+  const char *arg1970 = "/dev/sda";
+  const char *arg1971 = "p";
   int ret1;
-  ret1 = guestfs_part_add (g, arg1963, arg1964, 409600, -64);
+  ret1 = guestfs_part_add (g, arg1970, arg1971, 409600, -64);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -18058,25 +18206,25 @@ static int
 test_ln_0_perform (guestfs_h *g)
 {
   /* TestResult for ln (0) */
-  const char *arg1969 = "/ln";
+  const char *arg1976 = "/ln";
   int ret3;
-  ret3 = guestfs_mkdir (g, arg1969);
+  ret3 = guestfs_mkdir (g, arg1976);
   if (ret3 == -1)
     return -1;
-  const char *arg1971 = "/ln/a";
+  const char *arg1978 = "/ln/a";
   int ret2;
-  ret2 = guestfs_touch (g, arg1971);
+  ret2 = guestfs_touch (g, arg1978);
   if (ret2 == -1)
     return -1;
-  const char *arg1973 = "/ln/a";
-  const char *arg1974 = "/ln/b";
+  const char *arg1980 = "/ln/a";
+  const char *arg1981 = "/ln/b";
   int ret1;
-  ret1 = guestfs_ln (g, arg1973, arg1974);
+  ret1 = guestfs_ln (g, arg1980, arg1981);
   if (ret1 == -1)
     return -1;
-  const char *arg1976 = "/ln/b";
+  const char *arg1983 = "/ln/b";
   CLEANUP_FREE_STAT struct guestfs_stat *ret;
-  ret = guestfs_stat (g, arg1976);
+  ret = guestfs_stat (g, arg1983);
   if (ret == NULL)
       return -1;
   if (! (ret->nlink == 2)) {
@@ -18125,30 +18273,30 @@ static int
 test_ln_f_0_perform (guestfs_h *g)
 {
   /* TestResult for ln_f (0) */
-  const char *arg1978 = "/ln_f";
+  const char *arg1985 = "/ln_f";
   int ret4;
-  ret4 = guestfs_mkdir (g, arg1978);
+  ret4 = guestfs_mkdir (g, arg1985);
   if (ret4 == -1)
     return -1;
-  const char *arg1980 = "/ln_f/a";
+  const char *arg1987 = "/ln_f/a";
   int ret3;
-  ret3 = guestfs_touch (g, arg1980);
+  ret3 = guestfs_touch (g, arg1987);
   if (ret3 == -1)
     return -1;
-  const char *arg1982 = "/ln_f/b";
+  const char *arg1989 = "/ln_f/b";
   int ret2;
-  ret2 = guestfs_touch (g, arg1982);
+  ret2 = guestfs_touch (g, arg1989);
   if (ret2 == -1)
     return -1;
-  const char *arg1984 = "/ln_f/a";
-  const char *arg1985 = "/ln_f/b";
+  const char *arg1991 = "/ln_f/a";
+  const char *arg1992 = "/ln_f/b";
   int ret1;
-  ret1 = guestfs_ln_f (g, arg1984, arg1985);
+  ret1 = guestfs_ln_f (g, arg1991, arg1992);
   if (ret1 == -1)
     return -1;
-  const char *arg1987 = "/ln_f/b";
+  const char *arg1994 = "/ln_f/b";
   CLEANUP_FREE_STAT struct guestfs_stat *ret;
-  ret = guestfs_stat (g, arg1987);
+  ret = guestfs_stat (g, arg1994);
   if (ret == NULL)
       return -1;
   if (! (ret->nlink == 2)) {
@@ -18197,25 +18345,25 @@ static int
 test_ln_s_0_perform (guestfs_h *g)
 {
   /* TestResult for ln_s (0) */
-  const char *arg1989 = "/ln_s";
+  const char *arg1996 = "/ln_s";
   int ret3;
-  ret3 = guestfs_mkdir (g, arg1989);
+  ret3 = guestfs_mkdir (g, arg1996);
   if (ret3 == -1)
     return -1;
-  const char *arg1991 = "/ln_s/a";
+  const char *arg1998 = "/ln_s/a";
   int ret2;
-  ret2 = guestfs_touch (g, arg1991);
+  ret2 = guestfs_touch (g, arg1998);
   if (ret2 == -1)
     return -1;
-  const char *arg1993 = "a";
-  const char *arg1994 = "/ln_s/b";
+  const char *arg2000 = "a";
+  const char *arg2001 = "/ln_s/b";
   int ret1;
-  ret1 = guestfs_ln_s (g, arg1993, arg1994);
+  ret1 = guestfs_ln_s (g, arg2000, arg2001);
   if (ret1 == -1)
     return -1;
-  const char *arg1996 = "/ln_s/b";
+  const char *arg2003 = "/ln_s/b";
   CLEANUP_FREE_STAT struct guestfs_stat *ret;
-  ret = guestfs_lstat (g, arg1996);
+  ret = guestfs_lstat (g, arg2003);
   if (ret == NULL)
       return -1;
   if (! (S_ISLNK (ret->mode) && (ret->mode & 0777) == 0777)) {
@@ -18264,25 +18412,25 @@ static int
 test_ln_sf_0_perform (guestfs_h *g)
 {
   /* TestResultString for ln_sf (0) */
-  const char *arg1999 = "/ln_sf/b";
-  int ret1998;
-  ret1998 = guestfs_mkdir_p (g, arg1999);
-  if (ret1998 == -1)
+  const char *arg2006 = "/ln_sf/b";
+  int ret2005;
+  ret2005 = guestfs_mkdir_p (g, arg2006);
+  if (ret2005 == -1)
     return -1;
-  const char *arg2002 = "/ln_sf/b/c";
-  int ret2001;
-  ret2001 = guestfs_touch (g, arg2002);
-  if (ret2001 == -1)
+  const char *arg2009 = "/ln_sf/b/c";
+  int ret2008;
+  ret2008 = guestfs_touch (g, arg2009);
+  if (ret2008 == -1)
     return -1;
-  const char *arg2005 = "../d";
-  const char *arg2006 = "/ln_sf/b/c";
-  int ret2004;
-  ret2004 = guestfs_ln_sf (g, arg2005, arg2006);
-  if (ret2004 == -1)
+  const char *arg2012 = "../d";
+  const char *arg2013 = "/ln_sf/b/c";
+  int ret2011;
+  ret2011 = guestfs_ln_sf (g, arg2012, arg2013);
+  if (ret2011 == -1)
     return -1;
-  const char *arg2008 = "/ln_sf/b/c";
+  const char *arg2015 = "/ln_sf/b/c";
   CLEANUP_FREE char *ret;
-  ret = guestfs_readlink (g, arg2008);
+  ret = guestfs_readlink (g, arg2015);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "../d")) {
@@ -18329,29 +18477,29 @@ static int
 test_ls_0_perform (guestfs_h *g)
 {
   /* TestResult for ls (0) */
-  const char *arg2010 = "/ls";
+  const char *arg2017 = "/ls";
   int ret4;
-  ret4 = guestfs_mkdir (g, arg2010);
+  ret4 = guestfs_mkdir (g, arg2017);
   if (ret4 == -1)
     return -1;
-  const char *arg2012 = "/ls/new";
+  const char *arg2019 = "/ls/new";
   int ret3;
-  ret3 = guestfs_touch (g, arg2012);
+  ret3 = guestfs_touch (g, arg2019);
   if (ret3 == -1)
     return -1;
-  const char *arg2014 = "/ls/newer";
+  const char *arg2021 = "/ls/newer";
   int ret2;
-  ret2 = guestfs_touch (g, arg2014);
+  ret2 = guestfs_touch (g, arg2021);
   if (ret2 == -1)
     return -1;
-  const char *arg2016 = "/ls/newest";
+  const char *arg2023 = "/ls/newest";
   int ret1;
-  ret1 = guestfs_touch (g, arg2016);
+  ret1 = guestfs_touch (g, arg2023);
   if (ret1 == -1)
     return -1;
-  const char *arg2018 = "/ls";
+  const char *arg2025 = "/ls";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_ls (g, arg2018);
+  ret = guestfs_ls (g, arg2025);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 3, "new", "newer", "newest"))) {
@@ -18400,9 +18548,9 @@ static int
 test_lstat_0_perform (guestfs_h *g)
 {
   /* TestResult for lstat (0) */
-  const char *arg2020 = "/empty";
+  const char *arg2027 = "/empty";
   CLEANUP_FREE_STAT struct guestfs_stat *ret;
-  ret = guestfs_lstat (g, arg2020);
+  ret = guestfs_lstat (g, arg2027);
   if (ret == NULL)
       return -1;
   if (! (ret->size == 0)) {
@@ -18451,9 +18599,9 @@ static int
 test_lstatns_0_perform (guestfs_h *g)
 {
   /* TestResult for lstatns (0) */
-  const char *arg2022 = "/empty";
+  const char *arg2029 = "/empty";
   CLEANUP_FREE_STATNS struct guestfs_statns *ret;
-  ret = guestfs_lstatns (g, arg2022);
+  ret = guestfs_lstatns (g, arg2029);
   if (ret == NULL)
       return -1;
   if (! (ret->st_size == 0)) {
@@ -18477,10 +18625,10 @@ test_lvcreate_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2024[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features2024)) {
+  const char *features2031[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features2031)) {
     skipped ("test_lvcreate_0", "group %s not available in daemon",
-             features2024[0]);
+             features2031[0]);
     return 0;
   }
 
@@ -18509,95 +18657,95 @@ static int
 test_lvcreate_0_perform (guestfs_h *g)
 {
   /* TestResult for lvcreate (0) */
-  const char *arg2025 = "/dev/sda";
-  const char *arg2026 = "mbr";
+  const char *arg2032 = "/dev/sda";
+  const char *arg2033 = "mbr";
   int ret14;
-  ret14 = guestfs_part_init (g, arg2025, arg2026);
+  ret14 = guestfs_part_init (g, arg2032, arg2033);
   if (ret14 == -1)
     return -1;
-  const char *arg2028 = "/dev/sda";
-  const char *arg2029 = "p";
+  const char *arg2035 = "/dev/sda";
+  const char *arg2036 = "p";
   int ret13;
-  ret13 = guestfs_part_add (g, arg2028, arg2029, 64, 204799);
+  ret13 = guestfs_part_add (g, arg2035, arg2036, 64, 204799);
   if (ret13 == -1)
     return -1;
-  const char *arg2033 = "/dev/sda";
-  const char *arg2034 = "p";
+  const char *arg2040 = "/dev/sda";
+  const char *arg2041 = "p";
   int ret12;
-  ret12 = guestfs_part_add (g, arg2033, arg2034, 204800, 409599);
+  ret12 = guestfs_part_add (g, arg2040, arg2041, 204800, 409599);
   if (ret12 == -1)
     return -1;
-  const char *arg2038 = "/dev/sda";
-  const char *arg2039 = "p";
+  const char *arg2045 = "/dev/sda";
+  const char *arg2046 = "p";
   int ret11;
-  ret11 = guestfs_part_add (g, arg2038, arg2039, 409600, -64);
+  ret11 = guestfs_part_add (g, arg2045, arg2046, 409600, -64);
   if (ret11 == -1)
     return -1;
-  const char *arg2043 = "/dev/sda1";
+  const char *arg2050 = "/dev/sda1";
   int ret10;
-  ret10 = guestfs_pvcreate (g, arg2043);
+  ret10 = guestfs_pvcreate (g, arg2050);
   if (ret10 == -1)
     return -1;
-  const char *arg2045 = "/dev/sda2";
+  const char *arg2052 = "/dev/sda2";
   int ret9;
-  ret9 = guestfs_pvcreate (g, arg2045);
+  ret9 = guestfs_pvcreate (g, arg2052);
   if (ret9 == -1)
     return -1;
-  const char *arg2047 = "/dev/sda3";
+  const char *arg2054 = "/dev/sda3";
   int ret8;
-  ret8 = guestfs_pvcreate (g, arg2047);
+  ret8 = guestfs_pvcreate (g, arg2054);
   if (ret8 == -1)
     return -1;
-  const char *arg2049 = "VG1";
-  const char *arg2050_0 = "/dev/sda1";
-  const char *arg2050_1 = "/dev/sda2";
-  const char *const arg2050[] = {
-    arg2050_0,
-    arg2050_1,
+  const char *arg2056 = "VG1";
+  const char *arg2057_0 = "/dev/sda1";
+  const char *arg2057_1 = "/dev/sda2";
+  const char *const arg2057[] = {
+    arg2057_0,
+    arg2057_1,
     NULL
   };
   int ret7;
-  ret7 = guestfs_vgcreate (g, arg2049, (char **) arg2050);
+  ret7 = guestfs_vgcreate (g, arg2056, (char **) arg2057);
   if (ret7 == -1)
     return -1;
-  const char *arg2052 = "VG2";
-  const char *arg2053_0 = "/dev/sda3";
-  const char *const arg2053[] = {
-    arg2053_0,
+  const char *arg2059 = "VG2";
+  const char *arg2060_0 = "/dev/sda3";
+  const char *const arg2060[] = {
+    arg2060_0,
     NULL
   };
   int ret6;
-  ret6 = guestfs_vgcreate (g, arg2052, (char **) arg2053);
+  ret6 = guestfs_vgcreate (g, arg2059, (char **) arg2060);
   if (ret6 == -1)
     return -1;
-  const char *arg2055 = "LV1";
-  const char *arg2056 = "VG1";
+  const char *arg2062 = "LV1";
+  const char *arg2063 = "VG1";
   int ret5;
-  ret5 = guestfs_lvcreate (g, arg2055, arg2056, 50);
+  ret5 = guestfs_lvcreate (g, arg2062, arg2063, 50);
   if (ret5 == -1)
     return -1;
-  const char *arg2059 = "LV2";
-  const char *arg2060 = "VG1";
+  const char *arg2066 = "LV2";
+  const char *arg2067 = "VG1";
   int ret4;
-  ret4 = guestfs_lvcreate (g, arg2059, arg2060, 50);
+  ret4 = guestfs_lvcreate (g, arg2066, arg2067, 50);
   if (ret4 == -1)
     return -1;
-  const char *arg2063 = "LV3";
-  const char *arg2064 = "VG2";
+  const char *arg2070 = "LV3";
+  const char *arg2071 = "VG2";
   int ret3;
-  ret3 = guestfs_lvcreate (g, arg2063, arg2064, 50);
+  ret3 = guestfs_lvcreate (g, arg2070, arg2071, 50);
   if (ret3 == -1)
     return -1;
-  const char *arg2067 = "LV4";
-  const char *arg2068 = "VG2";
+  const char *arg2074 = "LV4";
+  const char *arg2075 = "VG2";
   int ret2;
-  ret2 = guestfs_lvcreate (g, arg2067, arg2068, 50);
+  ret2 = guestfs_lvcreate (g, arg2074, arg2075, 50);
   if (ret2 == -1)
     return -1;
-  const char *arg2071 = "LV5";
-  const char *arg2072 = "VG2";
+  const char *arg2078 = "LV5";
+  const char *arg2079 = "VG2";
   int ret1;
-  ret1 = guestfs_lvcreate (g, arg2071, arg2072, 50);
+  ret1 = guestfs_lvcreate (g, arg2078, arg2079, 50);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -18625,10 +18773,10 @@ test_lvcreate_free_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2076[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features2076)) {
+  const char *features2083[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features2083)) {
     skipped ("test_lvcreate_free_0", "group %s not available in daemon",
-             features2076[0]);
+             features2083[0]);
     return 0;
   }
 
@@ -18657,49 +18805,49 @@ static int
 test_lvcreate_free_0_perform (guestfs_h *g)
 {
   /* TestResult for lvcreate_free (0) */
-  const char *arg2077 = "/dev/sda";
-  const char *arg2078 = "mbr";
+  const char *arg2084 = "/dev/sda";
+  const char *arg2085 = "mbr";
   int ret7;
-  ret7 = guestfs_part_disk (g, arg2077, arg2078);
+  ret7 = guestfs_part_disk (g, arg2084, arg2085);
   if (ret7 == -1)
     return -1;
-  const char *arg2080 = "/dev/sda1";
+  const char *arg2087 = "/dev/sda1";
   int ret6;
-  ret6 = guestfs_pvcreate (g, arg2080);
+  ret6 = guestfs_pvcreate (g, arg2087);
   if (ret6 == -1)
     return -1;
-  const char *arg2082 = "VG";
-  const char *arg2083_0 = "/dev/sda1";
-  const char *const arg2083[] = {
-    arg2083_0,
+  const char *arg2089 = "VG";
+  const char *arg2090_0 = "/dev/sda1";
+  const char *const arg2090[] = {
+    arg2090_0,
     NULL
   };
   int ret5;
-  ret5 = guestfs_vgcreate (g, arg2082, (char **) arg2083);
+  ret5 = guestfs_vgcreate (g, arg2089, (char **) arg2090);
   if (ret5 == -1)
     return -1;
-  const char *arg2085 = "LV1";
-  const char *arg2086 = "VG";
+  const char *arg2092 = "LV1";
+  const char *arg2093 = "VG";
   int ret4;
-  ret4 = guestfs_lvcreate_free (g, arg2085, arg2086, 50);
+  ret4 = guestfs_lvcreate_free (g, arg2092, arg2093, 50);
   if (ret4 == -1)
     return -1;
-  const char *arg2089 = "LV2";
-  const char *arg2090 = "VG";
+  const char *arg2096 = "LV2";
+  const char *arg2097 = "VG";
   int ret3;
-  ret3 = guestfs_lvcreate_free (g, arg2089, arg2090, 50);
+  ret3 = guestfs_lvcreate_free (g, arg2096, arg2097, 50);
   if (ret3 == -1)
     return -1;
-  const char *arg2093 = "LV3";
-  const char *arg2094 = "VG";
+  const char *arg2100 = "LV3";
+  const char *arg2101 = "VG";
   int ret2;
-  ret2 = guestfs_lvcreate_free (g, arg2093, arg2094, 50);
+  ret2 = guestfs_lvcreate_free (g, arg2100, arg2101, 50);
   if (ret2 == -1)
     return -1;
-  const char *arg2097 = "LV4";
-  const char *arg2098 = "VG";
+  const char *arg2104 = "LV4";
+  const char *arg2105 = "VG";
   int ret1;
-  ret1 = guestfs_lvcreate_free (g, arg2097, arg2098, 100);
+  ret1 = guestfs_lvcreate_free (g, arg2104, arg2105, 100);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -18727,10 +18875,10 @@ test_lvm_canonical_lv_name_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2102[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features2102)) {
+  const char *features2109[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features2109)) {
     skipped ("test_lvm_canonical_lv_name_0", "group %s not available in daemon",
-             features2102[0]);
+             features2109[0]);
     return 0;
   }
 
@@ -18759,9 +18907,9 @@ static int
 test_lvm_canonical_lv_name_0_perform (guestfs_h *g)
 {
   /* TestResultString for lvm_canonical_lv_name (0) */
-  const char *arg2103 = "/dev/mapper/VG-LV";
+  const char *arg2110 = "/dev/mapper/VG-LV";
   CLEANUP_FREE char *ret;
-  ret = guestfs_lvm_canonical_lv_name (g, arg2103);
+  ret = guestfs_lvm_canonical_lv_name (g, arg2110);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "/dev/VG/LV")) {
@@ -18783,10 +18931,10 @@ test_lvm_canonical_lv_name_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2105[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features2105)) {
+  const char *features2112[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features2112)) {
     skipped ("test_lvm_canonical_lv_name_1", "group %s not available in daemon",
-             features2105[0]);
+             features2112[0]);
     return 0;
   }
 
@@ -18815,9 +18963,9 @@ static int
 test_lvm_canonical_lv_name_1_perform (guestfs_h *g)
 {
   /* TestResultString for lvm_canonical_lv_name (1) */
-  const char *arg2106 = "/dev/VG/LV";
+  const char *arg2113 = "/dev/VG/LV";
   CLEANUP_FREE char *ret;
-  ret = guestfs_lvm_canonical_lv_name (g, arg2106);
+  ret = guestfs_lvm_canonical_lv_name (g, arg2113);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "/dev/VG/LV")) {
@@ -18864,9 +19012,9 @@ static int
 test_lvm_scan_0_perform (guestfs_h *g)
 {
   /* TestRun for lvm_scan (0) */
-  int ret2108;
-  ret2108 = guestfs_lvm_scan (g, 1);
-  if (ret2108 == -1)
+  int ret2115;
+  ret2115 = guestfs_lvm_scan (g, 1);
+  if (ret2115 == -1)
     return -1;
   return 0;
 }
@@ -18882,10 +19030,10 @@ test_lvremove_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2111[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features2111)) {
+  const char *features2118[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features2118)) {
     skipped ("test_lvremove_0", "group %s not available in daemon",
-             features2111[0]);
+             features2118[0]);
     return 0;
   }
 
@@ -18914,42 +19062,42 @@ static int
 test_lvremove_0_perform (guestfs_h *g)
 {
   /* TestResult for lvremove (0) */
-  const char *arg2112 = "/dev/sda";
-  const char *arg2113 = "mbr";
+  const char *arg2119 = "/dev/sda";
+  const char *arg2120 = "mbr";
   int ret6;
-  ret6 = guestfs_part_disk (g, arg2112, arg2113);
+  ret6 = guestfs_part_disk (g, arg2119, arg2120);
   if (ret6 == -1)
     return -1;
-  const char *arg2115 = "/dev/sda1";
+  const char *arg2122 = "/dev/sda1";
   int ret5;
-  ret5 = guestfs_pvcreate (g, arg2115);
+  ret5 = guestfs_pvcreate (g, arg2122);
   if (ret5 == -1)
     return -1;
-  const char *arg2117 = "VG";
-  const char *arg2118_0 = "/dev/sda1";
-  const char *const arg2118[] = {
-    arg2118_0,
+  const char *arg2124 = "VG";
+  const char *arg2125_0 = "/dev/sda1";
+  const char *const arg2125[] = {
+    arg2125_0,
     NULL
   };
   int ret4;
-  ret4 = guestfs_vgcreate (g, arg2117, (char **) arg2118);
+  ret4 = guestfs_vgcreate (g, arg2124, (char **) arg2125);
   if (ret4 == -1)
     return -1;
-  const char *arg2120 = "LV1";
-  const char *arg2121 = "VG";
+  const char *arg2127 = "LV1";
+  const char *arg2128 = "VG";
   int ret3;
-  ret3 = guestfs_lvcreate (g, arg2120, arg2121, 50);
+  ret3 = guestfs_lvcreate (g, arg2127, arg2128, 50);
   if (ret3 == -1)
     return -1;
-  const char *arg2124 = "LV2";
-  const char *arg2125 = "VG";
+  const char *arg2131 = "LV2";
+  const char *arg2132 = "VG";
   int ret2;
-  ret2 = guestfs_lvcreate (g, arg2124, arg2125, 50);
+  ret2 = guestfs_lvcreate (g, arg2131, arg2132, 50);
   if (ret2 == -1)
     return -1;
-  const char *arg2128 = "/dev/VG/LV1";
+  const char *arg2135 = "/dev/VG/LV1";
   int ret1;
-  ret1 = guestfs_lvremove (g, arg2128);
+  ret1 = guestfs_lvremove (g, arg2135);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -18977,10 +19125,10 @@ test_lvremove_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2131[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features2131)) {
+  const char *features2138[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features2138)) {
     skipped ("test_lvremove_1", "group %s not available in daemon",
-             features2131[0]);
+             features2138[0]);
     return 0;
   }
 
@@ -19009,42 +19157,42 @@ static int
 test_lvremove_1_perform (guestfs_h *g)
 {
   /* TestResult for lvremove (1) */
-  const char *arg2132 = "/dev/sda";
-  const char *arg2133 = "mbr";
+  const char *arg2139 = "/dev/sda";
+  const char *arg2140 = "mbr";
   int ret6;
-  ret6 = guestfs_part_disk (g, arg2132, arg2133);
+  ret6 = guestfs_part_disk (g, arg2139, arg2140);
   if (ret6 == -1)
     return -1;
-  const char *arg2135 = "/dev/sda1";
+  const char *arg2142 = "/dev/sda1";
   int ret5;
-  ret5 = guestfs_pvcreate (g, arg2135);
+  ret5 = guestfs_pvcreate (g, arg2142);
   if (ret5 == -1)
     return -1;
-  const char *arg2137 = "VG";
-  const char *arg2138_0 = "/dev/sda1";
-  const char *const arg2138[] = {
-    arg2138_0,
+  const char *arg2144 = "VG";
+  const char *arg2145_0 = "/dev/sda1";
+  const char *const arg2145[] = {
+    arg2145_0,
     NULL
   };
   int ret4;
-  ret4 = guestfs_vgcreate (g, arg2137, (char **) arg2138);
+  ret4 = guestfs_vgcreate (g, arg2144, (char **) arg2145);
   if (ret4 == -1)
     return -1;
-  const char *arg2140 = "LV1";
-  const char *arg2141 = "VG";
+  const char *arg2147 = "LV1";
+  const char *arg2148 = "VG";
   int ret3;
-  ret3 = guestfs_lvcreate (g, arg2140, arg2141, 50);
+  ret3 = guestfs_lvcreate (g, arg2147, arg2148, 50);
   if (ret3 == -1)
     return -1;
-  const char *arg2144 = "LV2";
-  const char *arg2145 = "VG";
+  const char *arg2151 = "LV2";
+  const char *arg2152 = "VG";
   int ret2;
-  ret2 = guestfs_lvcreate (g, arg2144, arg2145, 50);
+  ret2 = guestfs_lvcreate (g, arg2151, arg2152, 50);
   if (ret2 == -1)
     return -1;
-  const char *arg2148 = "/dev/VG";
+  const char *arg2155 = "/dev/VG";
   int ret1;
-  ret1 = guestfs_lvremove (g, arg2148);
+  ret1 = guestfs_lvremove (g, arg2155);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -19072,10 +19220,10 @@ test_lvremove_2 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2151[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features2151)) {
+  const char *features2158[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features2158)) {
     skipped ("test_lvremove_2", "group %s not available in daemon",
-             features2151[0]);
+             features2158[0]);
     return 0;
   }
 
@@ -19104,42 +19252,42 @@ static int
 test_lvremove_2_perform (guestfs_h *g)
 {
   /* TestResult for lvremove (2) */
-  const char *arg2152 = "/dev/sda";
-  const char *arg2153 = "mbr";
+  const char *arg2159 = "/dev/sda";
+  const char *arg2160 = "mbr";
   int ret6;
-  ret6 = guestfs_part_disk (g, arg2152, arg2153);
+  ret6 = guestfs_part_disk (g, arg2159, arg2160);
   if (ret6 == -1)
     return -1;
-  const char *arg2155 = "/dev/sda1";
+  const char *arg2162 = "/dev/sda1";
   int ret5;
-  ret5 = guestfs_pvcreate (g, arg2155);
+  ret5 = guestfs_pvcreate (g, arg2162);
   if (ret5 == -1)
     return -1;
-  const char *arg2157 = "VG";
-  const char *arg2158_0 = "/dev/sda1";
-  const char *const arg2158[] = {
-    arg2158_0,
+  const char *arg2164 = "VG";
+  const char *arg2165_0 = "/dev/sda1";
+  const char *const arg2165[] = {
+    arg2165_0,
     NULL
   };
   int ret4;
-  ret4 = guestfs_vgcreate (g, arg2157, (char **) arg2158);
+  ret4 = guestfs_vgcreate (g, arg2164, (char **) arg2165);
   if (ret4 == -1)
     return -1;
-  const char *arg2160 = "LV1";
-  const char *arg2161 = "VG";
+  const char *arg2167 = "LV1";
+  const char *arg2168 = "VG";
   int ret3;
-  ret3 = guestfs_lvcreate (g, arg2160, arg2161, 50);
+  ret3 = guestfs_lvcreate (g, arg2167, arg2168, 50);
   if (ret3 == -1)
     return -1;
-  const char *arg2164 = "LV2";
-  const char *arg2165 = "VG";
+  const char *arg2171 = "LV2";
+  const char *arg2172 = "VG";
   int ret2;
-  ret2 = guestfs_lvcreate (g, arg2164, arg2165, 50);
+  ret2 = guestfs_lvcreate (g, arg2171, arg2172, 50);
   if (ret2 == -1)
     return -1;
-  const char *arg2168 = "/dev/VG";
+  const char *arg2175 = "/dev/VG";
   int ret1;
-  ret1 = guestfs_lvremove (g, arg2168);
+  ret1 = guestfs_lvremove (g, arg2175);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -19192,10 +19340,10 @@ static int
 test_lvrename_0_perform (guestfs_h *g)
 {
   /* TestResult for lvrename (0) */
-  const char *arg2171 = "/dev/VG/LV";
-  const char *arg2172 = "/dev/VG/LV2";
+  const char *arg2178 = "/dev/VG/LV";
+  const char *arg2179 = "/dev/VG/LV2";
   int ret1;
-  ret1 = guestfs_lvrename (g, arg2171, arg2172);
+  ret1 = guestfs_lvrename (g, arg2178, arg2179);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -19223,10 +19371,10 @@ test_lvresize_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2175[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features2175)) {
+  const char *features2182[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features2182)) {
     skipped ("test_lvresize_0", "group %s not available in daemon",
-             features2175[0]);
+             features2182[0]);
     return 0;
   }
 
@@ -19255,105 +19403,105 @@ static int
 test_lvresize_0_perform (guestfs_h *g)
 {
   /* TestResultString for lvresize (0) */
-  const char *arg2177 = "/dev/sda";
-  const char *arg2178 = "mbr";
-  int ret2176;
-  ret2176 = guestfs_part_disk (g, arg2177, arg2178);
-  if (ret2176 == -1)
-    return -1;
-  const char *arg2181 = "/dev/sda1";
-  int ret2180;
-  ret2180 = guestfs_pvcreate (g, arg2181);
-  if (ret2180 == -1)
-    return -1;
-  const char *arg2184 = "VG";
-  const char *arg2185_0 = "/dev/sda1";
-  const char *const arg2185[] = {
-    arg2185_0,
-    NULL
-  };
+  const char *arg2184 = "/dev/sda";
+  const char *arg2185 = "mbr";
   int ret2183;
-  ret2183 = guestfs_vgcreate (g, arg2184, (char **) arg2185);
+  ret2183 = guestfs_part_disk (g, arg2184, arg2185);
   if (ret2183 == -1)
     return -1;
-  const char *arg2188 = "LV";
-  const char *arg2189 = "VG";
+  const char *arg2188 = "/dev/sda1";
   int ret2187;
-  ret2187 = guestfs_lvcreate (g, arg2188, arg2189, 10);
+  ret2187 = guestfs_pvcreate (g, arg2188);
   if (ret2187 == -1)
     return -1;
-  const char *arg2193 = "ext2";
-  const char *arg2194 = "/dev/VG/LV";
-  struct guestfs_mkfs_opts_argv optargs2195;
-  optargs2195.bitmask = UINT64_C(0x0);
-  int ret2192;
-  ret2192 = guestfs_mkfs_opts_argv (g, arg2193, arg2194, &optargs2195);
-  if (ret2192 == -1)
+  const char *arg2191 = "VG";
+  const char *arg2192_0 = "/dev/sda1";
+  const char *const arg2192[] = {
+    arg2192_0,
+    NULL
+  };
+  int ret2190;
+  ret2190 = guestfs_vgcreate (g, arg2191, (char **) arg2192);
+  if (ret2190 == -1)
     return -1;
-  const char *arg2197 = "/dev/VG/LV";
-  const char *arg2198 = "/";
-  int ret2196;
-  ret2196 = guestfs_mount (g, arg2197, arg2198);
-  if (ret2196 == -1)
+  const char *arg2195 = "LV";
+  const char *arg2196 = "VG";
+  int ret2194;
+  ret2194 = guestfs_lvcreate (g, arg2195, arg2196, 10);
+  if (ret2194 == -1)
     return -1;
-  const char *arg2201 = "/new";
-  const char *arg2202 = "test content";
-  size_t arg2202_size = 12;
-  int ret2200;
-  ret2200 = guestfs_write (g, arg2201, arg2202, arg2202_size);
-  if (ret2200 == -1)
+  const char *arg2200 = "ext2";
+  const char *arg2201 = "/dev/VG/LV";
+  struct guestfs_mkfs_opts_argv optargs2202;
+  optargs2202.bitmask = UINT64_C(0x0);
+  int ret2199;
+  ret2199 = guestfs_mkfs_opts_argv (g, arg2200, arg2201, &optargs2202);
+  if (ret2199 == -1)
     return -1;
+  const char *arg2204 = "/dev/VG/LV";
   const char *arg2205 = "/";
-  struct guestfs_umount_opts_argv optargs2206;
-  optargs2206.force = 0;
-  optargs2206.lazyunmount = 0;
-  optargs2206.bitmask = UINT64_C(0x3);
-  int ret2204;
-  ret2204 = guestfs_umount_opts_argv (g, arg2205, &optargs2206);
-  if (ret2204 == -1)
+  int ret2203;
+  ret2203 = guestfs_mount (g, arg2204, arg2205);
+  if (ret2203 == -1)
     return -1;
-  const char *arg2208 = "/dev/VG/LV";
+  const char *arg2208 = "/new";
+  const char *arg2209 = "test content";
+  size_t arg2209_size = 12;
   int ret2207;
-  ret2207 = guestfs_lvresize (g, arg2208, 20);
+  ret2207 = guestfs_write (g, arg2208, arg2209, arg2209_size);
   if (ret2207 == -1)
     return -1;
-  const char *arg2212 = "/dev/VG/LV";
+  const char *arg2212 = "/";
+  struct guestfs_umount_opts_argv optargs2213;
+  optargs2213.force = 0;
+  optargs2213.lazyunmount = 0;
+  optargs2213.bitmask = UINT64_C(0x3);
   int ret2211;
-  ret2211 = guestfs_e2fsck_f (g, arg2212);
+  ret2211 = guestfs_umount_opts_argv (g, arg2212, &optargs2213);
   if (ret2211 == -1)
     return -1;
   const char *arg2215 = "/dev/VG/LV";
-  struct guestfs_e2fsck_argv optargs2216;
-  optargs2216.correct = 1;
-  optargs2216.forceall = 0;
-  optargs2216.bitmask = UINT64_C(0x3);
   int ret2214;
-  ret2214 = guestfs_e2fsck_argv (g, arg2215, &optargs2216);
+  ret2214 = guestfs_lvresize (g, arg2215, 20);
   if (ret2214 == -1)
     return -1;
-  const char *arg2218 = "/dev/VG/LV";
-  struct guestfs_e2fsck_argv optargs2219;
-  optargs2219.correct = 0;
-  optargs2219.forceall = 1;
-  optargs2219.bitmask = UINT64_C(0x3);
-  int ret2217;
-  ret2217 = guestfs_e2fsck_argv (g, arg2218, &optargs2219);
-  if (ret2217 == -1)
+  const char *arg2219 = "/dev/VG/LV";
+  int ret2218;
+  ret2218 = guestfs_e2fsck_f (g, arg2219);
+  if (ret2218 == -1)
     return -1;
-  const char *arg2221 = "/dev/VG/LV";
-  int ret2220;
-  ret2220 = guestfs_resize2fs (g, arg2221);
-  if (ret2220 == -1)
+  const char *arg2222 = "/dev/VG/LV";
+  struct guestfs_e2fsck_argv optargs2223;
+  optargs2223.correct = 1;
+  optargs2223.forceall = 0;
+  optargs2223.bitmask = UINT64_C(0x3);
+  int ret2221;
+  ret2221 = guestfs_e2fsck_argv (g, arg2222, &optargs2223);
+  if (ret2221 == -1)
     return -1;
-  const char *arg2224 = "/dev/VG/LV";
-  const char *arg2225 = "/";
-  int ret2223;
-  ret2223 = guestfs_mount (g, arg2224, arg2225);
-  if (ret2223 == -1)
+  const char *arg2225 = "/dev/VG/LV";
+  struct guestfs_e2fsck_argv optargs2226;
+  optargs2226.correct = 0;
+  optargs2226.forceall = 1;
+  optargs2226.bitmask = UINT64_C(0x3);
+  int ret2224;
+  ret2224 = guestfs_e2fsck_argv (g, arg2225, &optargs2226);
+  if (ret2224 == -1)
     return -1;
-  const char *arg2227 = "/new";
+  const char *arg2228 = "/dev/VG/LV";
+  int ret2227;
+  ret2227 = guestfs_resize2fs (g, arg2228);
+  if (ret2227 == -1)
+    return -1;
+  const char *arg2231 = "/dev/VG/LV";
+  const char *arg2232 = "/";
+  int ret2230;
+  ret2230 = guestfs_mount (g, arg2231, arg2232);
+  if (ret2230 == -1)
+    return -1;
+  const char *arg2234 = "/new";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg2227);
+  ret = guestfs_cat (g, arg2234);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "test content")) {
@@ -19375,10 +19523,10 @@ test_lvresize_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2229[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features2229)) {
+  const char *features2236[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features2236)) {
     skipped ("test_lvresize_1", "group %s not available in daemon",
-             features2229[0]);
+             features2236[0]);
     return 0;
   }
 
@@ -19407,37 +19555,37 @@ static int
 test_lvresize_1_perform (guestfs_h *g)
 {
   /* TestRun for lvresize (1) */
-  const char *arg2231 = "/dev/sda";
-  const char *arg2232 = "mbr";
-  int ret2230;
-  ret2230 = guestfs_part_disk (g, arg2231, arg2232);
-  if (ret2230 == -1)
-    return -1;
-  const char *arg2235 = "/dev/sda1";
-  int ret2234;
-  ret2234 = guestfs_pvcreate (g, arg2235);
-  if (ret2234 == -1)
-    return -1;
-  const char *arg2238 = "VG";
-  const char *arg2239_0 = "/dev/sda1";
-  const char *const arg2239[] = {
-    arg2239_0,
-    NULL
-  };
+  const char *arg2238 = "/dev/sda";
+  const char *arg2239 = "mbr";
   int ret2237;
-  ret2237 = guestfs_vgcreate (g, arg2238, (char **) arg2239);
+  ret2237 = guestfs_part_disk (g, arg2238, arg2239);
   if (ret2237 == -1)
     return -1;
-  const char *arg2242 = "LV";
-  const char *arg2243 = "VG";
+  const char *arg2242 = "/dev/sda1";
   int ret2241;
-  ret2241 = guestfs_lvcreate (g, arg2242, arg2243, 20);
+  ret2241 = guestfs_pvcreate (g, arg2242);
   if (ret2241 == -1)
     return -1;
-  const char *arg2247 = "/dev/VG/LV";
-  int ret2246;
-  ret2246 = guestfs_lvresize (g, arg2247, 10);
-  if (ret2246 == -1)
+  const char *arg2245 = "VG";
+  const char *arg2246_0 = "/dev/sda1";
+  const char *const arg2246[] = {
+    arg2246_0,
+    NULL
+  };
+  int ret2244;
+  ret2244 = guestfs_vgcreate (g, arg2245, (char **) arg2246);
+  if (ret2244 == -1)
+    return -1;
+  const char *arg2249 = "LV";
+  const char *arg2250 = "VG";
+  int ret2248;
+  ret2248 = guestfs_lvcreate (g, arg2249, arg2250, 20);
+  if (ret2248 == -1)
+    return -1;
+  const char *arg2254 = "/dev/VG/LV";
+  int ret2253;
+  ret2253 = guestfs_lvresize (g, arg2254, 10);
+  if (ret2253 == -1)
     return -1;
   return 0;
 }
@@ -19453,10 +19601,10 @@ test_lvresize_free_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2250[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features2250)) {
+  const char *features2257[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features2257)) {
     skipped ("test_lvresize_free_0", "group %s not available in daemon",
-             features2250[0]);
+             features2257[0]);
     return 0;
   }
 
@@ -19485,37 +19633,37 @@ static int
 test_lvresize_free_0_perform (guestfs_h *g)
 {
   /* TestRun for lvresize_free (0) */
-  const char *arg2252 = "/dev/sda";
-  const char *arg2253 = "mbr";
-  int ret2251;
-  ret2251 = guestfs_part_disk (g, arg2252, arg2253);
-  if (ret2251 == -1)
-    return -1;
-  const char *arg2256 = "/dev/sda1";
-  int ret2255;
-  ret2255 = guestfs_pvcreate (g, arg2256);
-  if (ret2255 == -1)
-    return -1;
-  const char *arg2259 = "VG";
-  const char *arg2260_0 = "/dev/sda1";
-  const char *const arg2260[] = {
-    arg2260_0,
-    NULL
-  };
+  const char *arg2259 = "/dev/sda";
+  const char *arg2260 = "mbr";
   int ret2258;
-  ret2258 = guestfs_vgcreate (g, arg2259, (char **) arg2260);
+  ret2258 = guestfs_part_disk (g, arg2259, arg2260);
   if (ret2258 == -1)
     return -1;
-  const char *arg2263 = "LV";
-  const char *arg2264 = "VG";
+  const char *arg2263 = "/dev/sda1";
   int ret2262;
-  ret2262 = guestfs_lvcreate (g, arg2263, arg2264, 10);
+  ret2262 = guestfs_pvcreate (g, arg2263);
   if (ret2262 == -1)
     return -1;
-  const char *arg2268 = "/dev/VG/LV";
-  int ret2267;
-  ret2267 = guestfs_lvresize_free (g, arg2268, 100);
-  if (ret2267 == -1)
+  const char *arg2266 = "VG";
+  const char *arg2267_0 = "/dev/sda1";
+  const char *const arg2267[] = {
+    arg2267_0,
+    NULL
+  };
+  int ret2265;
+  ret2265 = guestfs_vgcreate (g, arg2266, (char **) arg2267);
+  if (ret2265 == -1)
+    return -1;
+  const char *arg2270 = "LV";
+  const char *arg2271 = "VG";
+  int ret2269;
+  ret2269 = guestfs_lvcreate (g, arg2270, arg2271, 10);
+  if (ret2269 == -1)
+    return -1;
+  const char *arg2275 = "/dev/VG/LV";
+  int ret2274;
+  ret2274 = guestfs_lvresize_free (g, arg2275, 100);
+  if (ret2274 == -1)
     return -1;
   return 0;
 }
@@ -19531,10 +19679,10 @@ test_lvs_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2271[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features2271)) {
+  const char *features2278[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features2278)) {
     skipped ("test_lvs_0", "group %s not available in daemon",
-             features2271[0]);
+             features2278[0]);
     return 0;
   }
 
@@ -19588,10 +19736,10 @@ test_lvs_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2273[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features2273)) {
+  const char *features2280[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features2280)) {
     skipped ("test_lvs_1", "group %s not available in daemon",
-             features2273[0]);
+             features2280[0]);
     return 0;
   }
 
@@ -19620,83 +19768,83 @@ static int
 test_lvs_1_perform (guestfs_h *g)
 {
   /* TestResult for lvs (1) */
-  const char *arg2274 = "/dev/sda";
-  const char *arg2275 = "mbr";
+  const char *arg2281 = "/dev/sda";
+  const char *arg2282 = "mbr";
   int ret12;
-  ret12 = guestfs_part_init (g, arg2274, arg2275);
+  ret12 = guestfs_part_init (g, arg2281, arg2282);
   if (ret12 == -1)
     return -1;
-  const char *arg2277 = "/dev/sda";
-  const char *arg2278 = "p";
+  const char *arg2284 = "/dev/sda";
+  const char *arg2285 = "p";
   int ret11;
-  ret11 = guestfs_part_add (g, arg2277, arg2278, 64, 204799);
+  ret11 = guestfs_part_add (g, arg2284, arg2285, 64, 204799);
   if (ret11 == -1)
     return -1;
-  const char *arg2282 = "/dev/sda";
-  const char *arg2283 = "p";
+  const char *arg2289 = "/dev/sda";
+  const char *arg2290 = "p";
   int ret10;
-  ret10 = guestfs_part_add (g, arg2282, arg2283, 204800, 409599);
+  ret10 = guestfs_part_add (g, arg2289, arg2290, 204800, 409599);
   if (ret10 == -1)
     return -1;
-  const char *arg2287 = "/dev/sda";
-  const char *arg2288 = "p";
+  const char *arg2294 = "/dev/sda";
+  const char *arg2295 = "p";
   int ret9;
-  ret9 = guestfs_part_add (g, arg2287, arg2288, 409600, -64);
+  ret9 = guestfs_part_add (g, arg2294, arg2295, 409600, -64);
   if (ret9 == -1)
     return -1;
-  const char *arg2292 = "/dev/sda1";
+  const char *arg2299 = "/dev/sda1";
   int ret8;
-  ret8 = guestfs_pvcreate (g, arg2292);
+  ret8 = guestfs_pvcreate (g, arg2299);
   if (ret8 == -1)
     return -1;
-  const char *arg2294 = "/dev/sda2";
+  const char *arg2301 = "/dev/sda2";
   int ret7;
-  ret7 = guestfs_pvcreate (g, arg2294);
+  ret7 = guestfs_pvcreate (g, arg2301);
   if (ret7 == -1)
     return -1;
-  const char *arg2296 = "/dev/sda3";
+  const char *arg2303 = "/dev/sda3";
   int ret6;
-  ret6 = guestfs_pvcreate (g, arg2296);
+  ret6 = guestfs_pvcreate (g, arg2303);
   if (ret6 == -1)
     return -1;
-  const char *arg2298 = "VG1";
-  const char *arg2299_0 = "/dev/sda1";
-  const char *arg2299_1 = "/dev/sda2";
-  const char *const arg2299[] = {
-    arg2299_0,
-    arg2299_1,
+  const char *arg2305 = "VG1";
+  const char *arg2306_0 = "/dev/sda1";
+  const char *arg2306_1 = "/dev/sda2";
+  const char *const arg2306[] = {
+    arg2306_0,
+    arg2306_1,
     NULL
   };
   int ret5;
-  ret5 = guestfs_vgcreate (g, arg2298, (char **) arg2299);
+  ret5 = guestfs_vgcreate (g, arg2305, (char **) arg2306);
   if (ret5 == -1)
     return -1;
-  const char *arg2301 = "VG2";
-  const char *arg2302_0 = "/dev/sda3";
-  const char *const arg2302[] = {
-    arg2302_0,
+  const char *arg2308 = "VG2";
+  const char *arg2309_0 = "/dev/sda3";
+  const char *const arg2309[] = {
+    arg2309_0,
     NULL
   };
   int ret4;
-  ret4 = guestfs_vgcreate (g, arg2301, (char **) arg2302);
+  ret4 = guestfs_vgcreate (g, arg2308, (char **) arg2309);
   if (ret4 == -1)
     return -1;
-  const char *arg2304 = "LV1";
-  const char *arg2305 = "VG1";
+  const char *arg2311 = "LV1";
+  const char *arg2312 = "VG1";
   int ret3;
-  ret3 = guestfs_lvcreate (g, arg2304, arg2305, 50);
+  ret3 = guestfs_lvcreate (g, arg2311, arg2312, 50);
   if (ret3 == -1)
     return -1;
-  const char *arg2308 = "LV2";
-  const char *arg2309 = "VG1";
+  const char *arg2315 = "LV2";
+  const char *arg2316 = "VG1";
   int ret2;
-  ret2 = guestfs_lvcreate (g, arg2308, arg2309, 50);
+  ret2 = guestfs_lvcreate (g, arg2315, arg2316, 50);
   if (ret2 == -1)
     return -1;
-  const char *arg2312 = "LV3";
-  const char *arg2313 = "VG2";
+  const char *arg2319 = "LV3";
+  const char *arg2320 = "VG2";
   int ret1;
-  ret1 = guestfs_lvcreate (g, arg2312, arg2313, 50);
+  ret1 = guestfs_lvcreate (g, arg2319, arg2320, 50);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -19749,16 +19897,16 @@ static int
 test_mkdir_0_perform (guestfs_h *g)
 {
   /* TestResultTrue for mkdir (0) */
-  const char *arg2318 = "/mkdir";
-  int ret2317;
-  ret2317 = guestfs_mkdir (g, arg2318);
-  if (ret2317 == -1)
+  const char *arg2325 = "/mkdir";
+  int ret2324;
+  ret2324 = guestfs_mkdir (g, arg2325);
+  if (ret2324 == -1)
     return -1;
-  const char *arg2320 = "/mkdir";
-  struct guestfs_is_dir_opts_argv optargs2321;
-  optargs2321.bitmask = UINT64_C(0x0);
+  const char *arg2327 = "/mkdir";
+  struct guestfs_is_dir_opts_argv optargs2328;
+  optargs2328.bitmask = UINT64_C(0x0);
   int ret;
-  ret = guestfs_is_dir_opts_argv (g, arg2320, &optargs2321);
+  ret = guestfs_is_dir_opts_argv (g, arg2327, &optargs2328);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -19805,12 +19953,12 @@ static int
 test_mkdir_1_perform (guestfs_h *g)
 {
   /* TestLastFail for mkdir (1) */
-  const char *arg2323 = "/mkdir2/foo/bar";
-  int ret2322;
+  const char *arg2330 = "/mkdir2/foo/bar";
+  int ret2329;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret2322 = guestfs_mkdir (g, arg2323);
+  ret2329 = guestfs_mkdir (g, arg2330);
   guestfs_pop_error_handler (g);
-  if (ret2322 != -1)
+  if (ret2329 != -1)
     return -1;
   return 0;
 }
@@ -19851,14 +19999,14 @@ static int
 test_mkdir_mode_0_perform (guestfs_h *g)
 {
   /* TestResult for mkdir_mode (0) */
-  const char *arg2325 = "/mkdir_mode";
+  const char *arg2332 = "/mkdir_mode";
   int ret1;
-  ret1 = guestfs_mkdir_mode (g, arg2325, 73);
+  ret1 = guestfs_mkdir_mode (g, arg2332, 73);
   if (ret1 == -1)
     return -1;
-  const char *arg2328 = "/mkdir_mode";
+  const char *arg2335 = "/mkdir_mode";
   CLEANUP_FREE_STAT struct guestfs_stat *ret;
-  ret = guestfs_stat (g, arg2328);
+  ret = guestfs_stat (g, arg2335);
   if (ret == NULL)
       return -1;
   if (! (S_ISDIR (ret->mode) && (ret->mode & 0777) == 0111)) {
@@ -19907,16 +20055,16 @@ static int
 test_mkdir_p_0_perform (guestfs_h *g)
 {
   /* TestResultTrue for mkdir_p (0) */
-  const char *arg2331 = "/mkdir_p/foo/bar";
-  int ret2330;
-  ret2330 = guestfs_mkdir_p (g, arg2331);
-  if (ret2330 == -1)
+  const char *arg2338 = "/mkdir_p/foo/bar";
+  int ret2337;
+  ret2337 = guestfs_mkdir_p (g, arg2338);
+  if (ret2337 == -1)
     return -1;
-  const char *arg2333 = "/mkdir_p/foo/bar";
-  struct guestfs_is_dir_opts_argv optargs2334;
-  optargs2334.bitmask = UINT64_C(0x0);
+  const char *arg2340 = "/mkdir_p/foo/bar";
+  struct guestfs_is_dir_opts_argv optargs2341;
+  optargs2341.bitmask = UINT64_C(0x0);
   int ret;
-  ret = guestfs_is_dir_opts_argv (g, arg2333, &optargs2334);
+  ret = guestfs_is_dir_opts_argv (g, arg2340, &optargs2341);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -19963,16 +20111,16 @@ static int
 test_mkdir_p_1_perform (guestfs_h *g)
 {
   /* TestResultTrue for mkdir_p (1) */
-  const char *arg2336 = "/mkdir_p2/foo/bar";
-  int ret2335;
-  ret2335 = guestfs_mkdir_p (g, arg2336);
-  if (ret2335 == -1)
+  const char *arg2343 = "/mkdir_p2/foo/bar";
+  int ret2342;
+  ret2342 = guestfs_mkdir_p (g, arg2343);
+  if (ret2342 == -1)
     return -1;
-  const char *arg2338 = "/mkdir_p2/foo";
-  struct guestfs_is_dir_opts_argv optargs2339;
-  optargs2339.bitmask = UINT64_C(0x0);
+  const char *arg2345 = "/mkdir_p2/foo";
+  struct guestfs_is_dir_opts_argv optargs2346;
+  optargs2346.bitmask = UINT64_C(0x0);
   int ret;
-  ret = guestfs_is_dir_opts_argv (g, arg2338, &optargs2339);
+  ret = guestfs_is_dir_opts_argv (g, arg2345, &optargs2346);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -20019,16 +20167,16 @@ static int
 test_mkdir_p_2_perform (guestfs_h *g)
 {
   /* TestResultTrue for mkdir_p (2) */
-  const char *arg2341 = "/mkdir_p3/foo/bar";
-  int ret2340;
-  ret2340 = guestfs_mkdir_p (g, arg2341);
-  if (ret2340 == -1)
+  const char *arg2348 = "/mkdir_p3/foo/bar";
+  int ret2347;
+  ret2347 = guestfs_mkdir_p (g, arg2348);
+  if (ret2347 == -1)
     return -1;
-  const char *arg2343 = "/mkdir_p3";
-  struct guestfs_is_dir_opts_argv optargs2344;
-  optargs2344.bitmask = UINT64_C(0x0);
+  const char *arg2350 = "/mkdir_p3";
+  struct guestfs_is_dir_opts_argv optargs2351;
+  optargs2351.bitmask = UINT64_C(0x0);
   int ret;
-  ret = guestfs_is_dir_opts_argv (g, arg2343, &optargs2344);
+  ret = guestfs_is_dir_opts_argv (g, arg2350, &optargs2351);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -20075,15 +20223,15 @@ static int
 test_mkdir_p_3_perform (guestfs_h *g)
 {
   /* TestRun for mkdir_p (3) */
-  const char *arg2346 = "/mkdir_p4";
-  int ret2345;
-  ret2345 = guestfs_mkdir (g, arg2346);
-  if (ret2345 == -1)
+  const char *arg2353 = "/mkdir_p4";
+  int ret2352;
+  ret2352 = guestfs_mkdir (g, arg2353);
+  if (ret2352 == -1)
     return -1;
-  const char *arg2349 = "/mkdir_p4";
-  int ret2348;
-  ret2348 = guestfs_mkdir_p (g, arg2349);
-  if (ret2348 == -1)
+  const char *arg2356 = "/mkdir_p4";
+  int ret2355;
+  ret2355 = guestfs_mkdir_p (g, arg2356);
+  if (ret2355 == -1)
     return -1;
   return 0;
 }
@@ -20124,17 +20272,17 @@ static int
 test_mkdir_p_4_perform (guestfs_h *g)
 {
   /* TestLastFail for mkdir_p (4) */
-  const char *arg2352 = "/mkdir_p5";
-  int ret2351;
-  ret2351 = guestfs_touch (g, arg2352);
-  if (ret2351 == -1)
+  const char *arg2359 = "/mkdir_p5";
+  int ret2358;
+  ret2358 = guestfs_touch (g, arg2359);
+  if (ret2358 == -1)
     return -1;
-  const char *arg2355 = "/mkdir_p5";
-  int ret2354;
+  const char *arg2362 = "/mkdir_p5";
+  int ret2361;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret2354 = guestfs_mkdir_p (g, arg2355);
+  ret2361 = guestfs_mkdir_p (g, arg2362);
   guestfs_pop_error_handler (g);
-  if (ret2354 != -1)
+  if (ret2361 != -1)
     return -1;
   return 0;
 }
@@ -20175,15 +20323,15 @@ static int
 test_mkdtemp_0_perform (guestfs_h *g)
 {
   /* TestRun for mkdtemp (0) */
-  const char *arg2358 = "/mkdtemp";
-  int ret2357;
-  ret2357 = guestfs_mkdir (g, arg2358);
-  if (ret2357 == -1)
+  const char *arg2365 = "/mkdtemp";
+  int ret2364;
+  ret2364 = guestfs_mkdir (g, arg2365);
+  if (ret2364 == -1)
     return -1;
-  const char *arg2361 = "/mkdtemp/tmpXXXXXX";
-  CLEANUP_FREE char *ret2360;
-  ret2360 = guestfs_mkdtemp (g, arg2361);
-  if (ret2360 == NULL)
+  const char *arg2368 = "/mkdtemp/tmpXXXXXX";
+  CLEANUP_FREE char *ret2367;
+  ret2367 = guestfs_mkdtemp (g, arg2368);
+  if (ret2367 == NULL)
       return -1;
   return 0;
 }
@@ -20224,59 +20372,59 @@ static int
 test_mke2fs_0_perform (guestfs_h *g)
 {
   /* TestResultString for mke2fs (0) */
-  const char *arg2364 = "/dev/sda";
-  const char *arg2365 = "mbr";
-  int ret2363;
-  ret2363 = guestfs_part_init (g, arg2364, arg2365);
-  if (ret2363 == -1)
+  const char *arg2371 = "/dev/sda";
+  const char *arg2372 = "mbr";
+  int ret2370;
+  ret2370 = guestfs_part_init (g, arg2371, arg2372);
+  if (ret2370 == -1)
     return -1;
-  const char *arg2368 = "/dev/sda";
-  const char *arg2369 = "p";
-  int ret2367;
-  ret2367 = guestfs_part_add (g, arg2368, arg2369, 64, 204799);
-  if (ret2367 == -1)
+  const char *arg2375 = "/dev/sda";
+  const char *arg2376 = "p";
+  int ret2374;
+  ret2374 = guestfs_part_add (g, arg2375, arg2376, 64, 204799);
+  if (ret2374 == -1)
     return -1;
-  const char *arg2374 = "/dev/sda";
-  const char *arg2375 = "p";
-  int ret2373;
-  ret2373 = guestfs_part_add (g, arg2374, arg2375, 204800, -64);
-  if (ret2373 == -1)
+  const char *arg2381 = "/dev/sda";
+  const char *arg2382 = "p";
+  int ret2380;
+  ret2380 = guestfs_part_add (g, arg2381, arg2382, 204800, -64);
+  if (ret2380 == -1)
     return -1;
-  const char *arg2380 = "/dev/sda1";
-  struct guestfs_mke2fs_argv optargs2381;
-  optargs2381.blocksize = 4096;
-  optargs2381.journaldev = 1;
-  optargs2381.bitmask = UINT64_C(0x100000002);
-  int ret2379;
-  ret2379 = guestfs_mke2fs_argv (g, arg2380, &optargs2381);
-  if (ret2379 == -1)
+  const char *arg2387 = "/dev/sda1";
+  struct guestfs_mke2fs_argv optargs2388;
+  optargs2388.blocksize = 4096;
+  optargs2388.journaldev = 1;
+  optargs2388.bitmask = UINT64_C(0x100000002);
+  int ret2386;
+  ret2386 = guestfs_mke2fs_argv (g, arg2387, &optargs2388);
+  if (ret2386 == -1)
     return -1;
-  const char *arg2383 = "/dev/sda2";
-  struct guestfs_mke2fs_argv optargs2384;
-  optargs2384.blocksize = 4096;
-  optargs2384.journaldevice = "/dev/sda1";
-  optargs2384.fstype = "ext2";
-  optargs2384.bitmask = UINT64_C(0x44002);
-  int ret2382;
-  ret2382 = guestfs_mke2fs_argv (g, arg2383, &optargs2384);
-  if (ret2382 == -1)
-    return -1;
-  const char *arg2386 = "/dev/sda2";
-  const char *arg2387 = "/";
-  int ret2385;
-  ret2385 = guestfs_mount (g, arg2386, arg2387);
-  if (ret2385 == -1)
-    return -1;
-  const char *arg2390 = "/new";
-  const char *arg2391 = "new file contents";
-  size_t arg2391_size = 17;
+  const char *arg2390 = "/dev/sda2";
+  struct guestfs_mke2fs_argv optargs2391;
+  optargs2391.blocksize = 4096;
+  optargs2391.journaldevice = "/dev/sda1";
+  optargs2391.fstype = "ext2";
+  optargs2391.bitmask = UINT64_C(0x44002);
   int ret2389;
-  ret2389 = guestfs_write (g, arg2390, arg2391, arg2391_size);
+  ret2389 = guestfs_mke2fs_argv (g, arg2390, &optargs2391);
   if (ret2389 == -1)
     return -1;
-  const char *arg2393 = "/new";
+  const char *arg2393 = "/dev/sda2";
+  const char *arg2394 = "/";
+  int ret2392;
+  ret2392 = guestfs_mount (g, arg2393, arg2394);
+  if (ret2392 == -1)
+    return -1;
+  const char *arg2397 = "/new";
+  const char *arg2398 = "new file contents";
+  size_t arg2398_size = 17;
+  int ret2396;
+  ret2396 = guestfs_write (g, arg2397, arg2398, arg2398_size);
+  if (ret2396 == -1)
+    return -1;
+  const char *arg2400 = "/new";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg2393);
+  ret = guestfs_cat (g, arg2400);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "new file contents")) {
@@ -20323,63 +20471,63 @@ static int
 test_mke2fs_1_perform (guestfs_h *g)
 {
   /* TestResultString for mke2fs (1) */
-  const char *arg2396 = "/dev/sda";
-  const char *arg2397 = "mbr";
-  int ret2395;
-  ret2395 = guestfs_part_init (g, arg2396, arg2397);
-  if (ret2395 == -1)
+  const char *arg2403 = "/dev/sda";
+  const char *arg2404 = "mbr";
+  int ret2402;
+  ret2402 = guestfs_part_init (g, arg2403, arg2404);
+  if (ret2402 == -1)
     return -1;
-  const char *arg2400 = "/dev/sda";
-  const char *arg2401 = "p";
-  int ret2399;
-  ret2399 = guestfs_part_add (g, arg2400, arg2401, 64, 204799);
-  if (ret2399 == -1)
+  const char *arg2407 = "/dev/sda";
+  const char *arg2408 = "p";
+  int ret2406;
+  ret2406 = guestfs_part_add (g, arg2407, arg2408, 64, 204799);
+  if (ret2406 == -1)
     return -1;
-  const char *arg2406 = "/dev/sda";
-  const char *arg2407 = "p";
-  int ret2405;
-  ret2405 = guestfs_part_add (g, arg2406, arg2407, 204800, -64);
-  if (ret2405 == -1)
+  const char *arg2413 = "/dev/sda";
+  const char *arg2414 = "p";
+  int ret2412;
+  ret2412 = guestfs_part_add (g, arg2413, arg2414, 204800, -64);
+  if (ret2412 == -1)
     return -1;
-  const char *arg2412 = "/dev/sda1";
-  struct guestfs_mke2fs_argv optargs2413;
-  optargs2413.blocksize = 4096;
-  optargs2413.journaldevice = "/dev/sda1";
-  optargs2413.label = "JOURNAL";
-  optargs2413.fstype = "ext2";
-  optargs2413.journaldev = 1;
-  optargs2413.bitmask = UINT64_C(0x10004c002);
-  int ret2411;
-  ret2411 = guestfs_mke2fs_argv (g, arg2412, &optargs2413);
-  if (ret2411 == -1)
+  const char *arg2419 = "/dev/sda1";
+  struct guestfs_mke2fs_argv optargs2420;
+  optargs2420.blocksize = 4096;
+  optargs2420.journaldevice = "/dev/sda1";
+  optargs2420.label = "JOURNAL";
+  optargs2420.fstype = "ext2";
+  optargs2420.journaldev = 1;
+  optargs2420.bitmask = UINT64_C(0x10004c002);
+  int ret2418;
+  ret2418 = guestfs_mke2fs_argv (g, arg2419, &optargs2420);
+  if (ret2418 == -1)
     return -1;
-  const char *arg2415 = "/dev/sda2";
-  struct guestfs_mke2fs_argv optargs2416;
-  optargs2416.blocksize = 4096;
-  optargs2416.journaldevice = "LABEL=JOURNAL";
-  optargs2416.label = "JOURNAL";
-  optargs2416.fstype = "ext2";
-  optargs2416.bitmask = UINT64_C(0x4c002);
-  int ret2414;
-  ret2414 = guestfs_mke2fs_argv (g, arg2415, &optargs2416);
-  if (ret2414 == -1)
-    return -1;
-  const char *arg2418 = "/dev/sda2";
-  const char *arg2419 = "/";
-  int ret2417;
-  ret2417 = guestfs_mount (g, arg2418, arg2419);
-  if (ret2417 == -1)
-    return -1;
-  const char *arg2422 = "/new";
-  const char *arg2423 = "new file contents";
-  size_t arg2423_size = 17;
+  const char *arg2422 = "/dev/sda2";
+  struct guestfs_mke2fs_argv optargs2423;
+  optargs2423.blocksize = 4096;
+  optargs2423.journaldevice = "LABEL=JOURNAL";
+  optargs2423.label = "JOURNAL";
+  optargs2423.fstype = "ext2";
+  optargs2423.bitmask = UINT64_C(0x4c002);
   int ret2421;
-  ret2421 = guestfs_write (g, arg2422, arg2423, arg2423_size);
+  ret2421 = guestfs_mke2fs_argv (g, arg2422, &optargs2423);
   if (ret2421 == -1)
     return -1;
-  const char *arg2425 = "/new";
+  const char *arg2425 = "/dev/sda2";
+  const char *arg2426 = "/";
+  int ret2424;
+  ret2424 = guestfs_mount (g, arg2425, arg2426);
+  if (ret2424 == -1)
+    return -1;
+  const char *arg2429 = "/new";
+  const char *arg2430 = "new file contents";
+  size_t arg2430_size = 17;
+  int ret2428;
+  ret2428 = guestfs_write (g, arg2429, arg2430, arg2430_size);
+  if (ret2428 == -1)
+    return -1;
+  const char *arg2432 = "/new";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg2425);
+  ret = guestfs_cat (g, arg2432);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "new file contents")) {
@@ -20426,62 +20574,62 @@ static int
 test_mke2fs_2_perform (guestfs_h *g)
 {
   /* TestResultString for mke2fs (2) */
-  const char *arg2428 = "/dev/sda";
-  const char *arg2429 = "mbr";
-  int ret2427;
-  ret2427 = guestfs_part_init (g, arg2428, arg2429);
-  if (ret2427 == -1)
+  const char *arg2435 = "/dev/sda";
+  const char *arg2436 = "mbr";
+  int ret2434;
+  ret2434 = guestfs_part_init (g, arg2435, arg2436);
+  if (ret2434 == -1)
     return -1;
-  const char *arg2432 = "/dev/sda";
-  const char *arg2433 = "p";
-  int ret2431;
-  ret2431 = guestfs_part_add (g, arg2432, arg2433, 64, 204799);
-  if (ret2431 == -1)
+  const char *arg2439 = "/dev/sda";
+  const char *arg2440 = "p";
+  int ret2438;
+  ret2438 = guestfs_part_add (g, arg2439, arg2440, 64, 204799);
+  if (ret2438 == -1)
     return -1;
-  const char *arg2438 = "/dev/sda";
-  const char *arg2439 = "p";
-  int ret2437;
-  ret2437 = guestfs_part_add (g, arg2438, arg2439, 204800, -64);
-  if (ret2437 == -1)
+  const char *arg2445 = "/dev/sda";
+  const char *arg2446 = "p";
+  int ret2444;
+  ret2444 = guestfs_part_add (g, arg2445, arg2446, 204800, -64);
+  if (ret2444 == -1)
     return -1;
-  const char *arg2444 = "/dev/sda1";
-  struct guestfs_mke2fs_argv optargs2445;
-  optargs2445.blocksize = 4096;
-  optargs2445.uuid = "d306427c-371d-3832-d8f7-eaad61dc6244";
-  optargs2445.journaldev = 1;
-  optargs2445.bitmask = UINT64_C(0x100100002);
-  int ret2443;
-  ret2443 = guestfs_mke2fs_argv (g, arg2444, &optargs2445);
-  if (ret2443 == -1)
+  const char *arg2451 = "/dev/sda1";
+  struct guestfs_mke2fs_argv optargs2452;
+  optargs2452.blocksize = 4096;
+  optargs2452.uuid = "76802f61-6cde-0f8b-e149-6849b3cb42b6";
+  optargs2452.journaldev = 1;
+  optargs2452.bitmask = UINT64_C(0x100100002);
+  int ret2450;
+  ret2450 = guestfs_mke2fs_argv (g, arg2451, &optargs2452);
+  if (ret2450 == -1)
     return -1;
-  const char *arg2447 = "/dev/sda2";
-  struct guestfs_mke2fs_argv optargs2448;
-  optargs2448.blocksize = 4096;
-  optargs2448.journaldevice = "UUID=d306427c-371d-3832-d8f7-eaad61dc6244";
-  optargs2448.label = "JOURNAL";
-  optargs2448.fstype = "ext2";
-  optargs2448.forcecreate = 1;
-  optargs2448.bitmask = UINT64_C(0x24c002);
-  int ret2446;
-  ret2446 = guestfs_mke2fs_argv (g, arg2447, &optargs2448);
-  if (ret2446 == -1)
-    return -1;
-  const char *arg2450 = "/dev/sda2";
-  const char *arg2451 = "/";
-  int ret2449;
-  ret2449 = guestfs_mount (g, arg2450, arg2451);
-  if (ret2449 == -1)
-    return -1;
-  const char *arg2454 = "/new";
-  const char *arg2455 = "new file contents";
-  size_t arg2455_size = 17;
+  const char *arg2454 = "/dev/sda2";
+  struct guestfs_mke2fs_argv optargs2455;
+  optargs2455.blocksize = 4096;
+  optargs2455.journaldevice = "UUID=76802f61-6cde-0f8b-e149-6849b3cb42b6";
+  optargs2455.label = "JOURNAL";
+  optargs2455.fstype = "ext2";
+  optargs2455.forcecreate = 1;
+  optargs2455.bitmask = UINT64_C(0x24c002);
   int ret2453;
-  ret2453 = guestfs_write (g, arg2454, arg2455, arg2455_size);
+  ret2453 = guestfs_mke2fs_argv (g, arg2454, &optargs2455);
   if (ret2453 == -1)
     return -1;
-  const char *arg2457 = "/new";
+  const char *arg2457 = "/dev/sda2";
+  const char *arg2458 = "/";
+  int ret2456;
+  ret2456 = guestfs_mount (g, arg2457, arg2458);
+  if (ret2456 == -1)
+    return -1;
+  const char *arg2461 = "/new";
+  const char *arg2462 = "new file contents";
+  size_t arg2462_size = 17;
+  int ret2460;
+  ret2460 = guestfs_write (g, arg2461, arg2462, arg2462_size);
+  if (ret2460 == -1)
+    return -1;
+  const char *arg2464 = "/new";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg2457);
+  ret = guestfs_cat (g, arg2464);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "new file contents")) {
@@ -20528,52 +20676,52 @@ static int
 test_mke2journal_0_perform (guestfs_h *g)
 {
   /* TestResultString for mke2journal (0) */
-  const char *arg2460 = "/dev/sda";
-  const char *arg2461 = "mbr";
-  int ret2459;
-  ret2459 = guestfs_part_init (g, arg2460, arg2461);
-  if (ret2459 == -1)
+  const char *arg2467 = "/dev/sda";
+  const char *arg2468 = "mbr";
+  int ret2466;
+  ret2466 = guestfs_part_init (g, arg2467, arg2468);
+  if (ret2466 == -1)
     return -1;
-  const char *arg2464 = "/dev/sda";
-  const char *arg2465 = "p";
-  int ret2463;
-  ret2463 = guestfs_part_add (g, arg2464, arg2465, 64, 204799);
-  if (ret2463 == -1)
+  const char *arg2471 = "/dev/sda";
+  const char *arg2472 = "p";
+  int ret2470;
+  ret2470 = guestfs_part_add (g, arg2471, arg2472, 64, 204799);
+  if (ret2470 == -1)
     return -1;
-  const char *arg2470 = "/dev/sda";
-  const char *arg2471 = "p";
-  int ret2469;
-  ret2469 = guestfs_part_add (g, arg2470, arg2471, 204800, -64);
-  if (ret2469 == -1)
+  const char *arg2477 = "/dev/sda";
+  const char *arg2478 = "p";
+  int ret2476;
+  ret2476 = guestfs_part_add (g, arg2477, arg2478, 204800, -64);
+  if (ret2476 == -1)
     return -1;
-  const char *arg2477 = "/dev/sda1";
-  int ret2475;
-  ret2475 = guestfs_mke2journal (g, 4096, arg2477);
-  if (ret2475 == -1)
+  const char *arg2484 = "/dev/sda1";
+  int ret2482;
+  ret2482 = guestfs_mke2journal (g, 4096, arg2484);
+  if (ret2482 == -1)
     return -1;
-  const char *arg2480 = "ext2";
-  const char *arg2482 = "/dev/sda2";
-  const char *arg2483 = "/dev/sda1";
-  int ret2479;
-  ret2479 = guestfs_mke2fs_J (g, arg2480, 4096, arg2482, arg2483);
-  if (ret2479 == -1)
+  const char *arg2487 = "ext2";
+  const char *arg2489 = "/dev/sda2";
+  const char *arg2490 = "/dev/sda1";
+  int ret2486;
+  ret2486 = guestfs_mke2fs_J (g, arg2487, 4096, arg2489, arg2490);
+  if (ret2486 == -1)
     return -1;
-  const char *arg2486 = "/dev/sda2";
-  const char *arg2487 = "/";
-  int ret2485;
-  ret2485 = guestfs_mount (g, arg2486, arg2487);
-  if (ret2485 == -1)
+  const char *arg2493 = "/dev/sda2";
+  const char *arg2494 = "/";
+  int ret2492;
+  ret2492 = guestfs_mount (g, arg2493, arg2494);
+  if (ret2492 == -1)
     return -1;
-  const char *arg2490 = "/new";
-  const char *arg2491 = "new file contents";
-  size_t arg2491_size = 17;
-  int ret2489;
-  ret2489 = guestfs_write (g, arg2490, arg2491, arg2491_size);
-  if (ret2489 == -1)
+  const char *arg2497 = "/new";
+  const char *arg2498 = "new file contents";
+  size_t arg2498_size = 17;
+  int ret2496;
+  ret2496 = guestfs_write (g, arg2497, arg2498, arg2498_size);
+  if (ret2496 == -1)
     return -1;
-  const char *arg2493 = "/new";
+  const char *arg2500 = "/new";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg2493);
+  ret = guestfs_cat (g, arg2500);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "new file contents")) {
@@ -20620,53 +20768,53 @@ static int
 test_mke2journal_L_0_perform (guestfs_h *g)
 {
   /* TestResultString for mke2journal_L (0) */
-  const char *arg2496 = "/dev/sda";
-  const char *arg2497 = "mbr";
-  int ret2495;
-  ret2495 = guestfs_part_init (g, arg2496, arg2497);
-  if (ret2495 == -1)
+  const char *arg2503 = "/dev/sda";
+  const char *arg2504 = "mbr";
+  int ret2502;
+  ret2502 = guestfs_part_init (g, arg2503, arg2504);
+  if (ret2502 == -1)
     return -1;
-  const char *arg2500 = "/dev/sda";
-  const char *arg2501 = "p";
-  int ret2499;
-  ret2499 = guestfs_part_add (g, arg2500, arg2501, 64, 204799);
-  if (ret2499 == -1)
+  const char *arg2507 = "/dev/sda";
+  const char *arg2508 = "p";
+  int ret2506;
+  ret2506 = guestfs_part_add (g, arg2507, arg2508, 64, 204799);
+  if (ret2506 == -1)
     return -1;
-  const char *arg2506 = "/dev/sda";
-  const char *arg2507 = "p";
-  int ret2505;
-  ret2505 = guestfs_part_add (g, arg2506, arg2507, 204800, -64);
-  if (ret2505 == -1)
+  const char *arg2513 = "/dev/sda";
+  const char *arg2514 = "p";
+  int ret2512;
+  ret2512 = guestfs_part_add (g, arg2513, arg2514, 204800, -64);
+  if (ret2512 == -1)
     return -1;
-  const char *arg2513 = "JOURNAL";
-  const char *arg2514 = "/dev/sda1";
-  int ret2511;
-  ret2511 = guestfs_mke2journal_L (g, 4096, arg2513, arg2514);
-  if (ret2511 == -1)
-    return -1;
-  const char *arg2517 = "ext2";
-  const char *arg2519 = "/dev/sda2";
   const char *arg2520 = "JOURNAL";
-  int ret2516;
-  ret2516 = guestfs_mke2fs_JL (g, arg2517, 4096, arg2519, arg2520);
-  if (ret2516 == -1)
+  const char *arg2521 = "/dev/sda1";
+  int ret2518;
+  ret2518 = guestfs_mke2journal_L (g, 4096, arg2520, arg2521);
+  if (ret2518 == -1)
     return -1;
-  const char *arg2523 = "/dev/sda2";
-  const char *arg2524 = "/";
-  int ret2522;
-  ret2522 = guestfs_mount (g, arg2523, arg2524);
-  if (ret2522 == -1)
+  const char *arg2524 = "ext2";
+  const char *arg2526 = "/dev/sda2";
+  const char *arg2527 = "JOURNAL";
+  int ret2523;
+  ret2523 = guestfs_mke2fs_JL (g, arg2524, 4096, arg2526, arg2527);
+  if (ret2523 == -1)
     return -1;
-  const char *arg2527 = "/new";
-  const char *arg2528 = "new file contents";
-  size_t arg2528_size = 17;
-  int ret2526;
-  ret2526 = guestfs_write (g, arg2527, arg2528, arg2528_size);
-  if (ret2526 == -1)
+  const char *arg2530 = "/dev/sda2";
+  const char *arg2531 = "/";
+  int ret2529;
+  ret2529 = guestfs_mount (g, arg2530, arg2531);
+  if (ret2529 == -1)
     return -1;
-  const char *arg2530 = "/new";
+  const char *arg2534 = "/new";
+  const char *arg2535 = "new file contents";
+  size_t arg2535_size = 17;
+  int ret2533;
+  ret2533 = guestfs_write (g, arg2534, arg2535, arg2535_size);
+  if (ret2533 == -1)
+    return -1;
+  const char *arg2537 = "/new";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg2530);
+  ret = guestfs_cat (g, arg2537);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "new file contents")) {
@@ -20688,10 +20836,10 @@ test_mke2journal_U_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2532[] = { "linuxfsuuid", NULL };
-  if (!guestfs_feature_available (g, (char **) features2532)) {
+  const char *features2539[] = { "linuxfsuuid", NULL };
+  if (!guestfs_feature_available (g, (char **) features2539)) {
     skipped ("test_mke2journal_U_0", "group %s not available in daemon",
-             features2532[0]);
+             features2539[0]);
     return 0;
   }
 
@@ -20720,53 +20868,53 @@ static int
 test_mke2journal_U_0_perform (guestfs_h *g)
 {
   /* TestResultString for mke2journal_U (0) */
-  const char *arg2534 = "/dev/sda";
-  const char *arg2535 = "mbr";
-  int ret2533;
-  ret2533 = guestfs_part_init (g, arg2534, arg2535);
-  if (ret2533 == -1)
+  const char *arg2541 = "/dev/sda";
+  const char *arg2542 = "mbr";
+  int ret2540;
+  ret2540 = guestfs_part_init (g, arg2541, arg2542);
+  if (ret2540 == -1)
     return -1;
-  const char *arg2538 = "/dev/sda";
-  const char *arg2539 = "p";
-  int ret2537;
-  ret2537 = guestfs_part_add (g, arg2538, arg2539, 64, 204799);
-  if (ret2537 == -1)
+  const char *arg2545 = "/dev/sda";
+  const char *arg2546 = "p";
+  int ret2544;
+  ret2544 = guestfs_part_add (g, arg2545, arg2546, 64, 204799);
+  if (ret2544 == -1)
     return -1;
-  const char *arg2544 = "/dev/sda";
-  const char *arg2545 = "p";
-  int ret2543;
-  ret2543 = guestfs_part_add (g, arg2544, arg2545, 204800, -64);
-  if (ret2543 == -1)
+  const char *arg2551 = "/dev/sda";
+  const char *arg2552 = "p";
+  int ret2550;
+  ret2550 = guestfs_part_add (g, arg2551, arg2552, 204800, -64);
+  if (ret2550 == -1)
     return -1;
-  const char *arg2551 = "d306427c-371d-3832-d8f7-eaad61dc6244";
-  const char *arg2552 = "/dev/sda1";
-  int ret2549;
-  ret2549 = guestfs_mke2journal_U (g, 4096, arg2551, arg2552);
-  if (ret2549 == -1)
+  const char *arg2558 = "76802f61-6cde-0f8b-e149-6849b3cb42b6";
+  const char *arg2559 = "/dev/sda1";
+  int ret2556;
+  ret2556 = guestfs_mke2journal_U (g, 4096, arg2558, arg2559);
+  if (ret2556 == -1)
     return -1;
-  const char *arg2555 = "ext2";
-  const char *arg2557 = "/dev/sda2";
-  const char *arg2558 = "d306427c-371d-3832-d8f7-eaad61dc6244";
-  int ret2554;
-  ret2554 = guestfs_mke2fs_JU (g, arg2555, 4096, arg2557, arg2558);
-  if (ret2554 == -1)
+  const char *arg2562 = "ext2";
+  const char *arg2564 = "/dev/sda2";
+  const char *arg2565 = "76802f61-6cde-0f8b-e149-6849b3cb42b6";
+  int ret2561;
+  ret2561 = guestfs_mke2fs_JU (g, arg2562, 4096, arg2564, arg2565);
+  if (ret2561 == -1)
     return -1;
-  const char *arg2561 = "/dev/sda2";
-  const char *arg2562 = "/";
-  int ret2560;
-  ret2560 = guestfs_mount (g, arg2561, arg2562);
-  if (ret2560 == -1)
+  const char *arg2568 = "/dev/sda2";
+  const char *arg2569 = "/";
+  int ret2567;
+  ret2567 = guestfs_mount (g, arg2568, arg2569);
+  if (ret2567 == -1)
     return -1;
-  const char *arg2565 = "/new";
-  const char *arg2566 = "new file contents";
-  size_t arg2566_size = 17;
-  int ret2564;
-  ret2564 = guestfs_write (g, arg2565, arg2566, arg2566_size);
-  if (ret2564 == -1)
+  const char *arg2572 = "/new";
+  const char *arg2573 = "new file contents";
+  size_t arg2573_size = 17;
+  int ret2571;
+  ret2571 = guestfs_write (g, arg2572, arg2573, arg2573_size);
+  if (ret2571 == -1)
     return -1;
-  const char *arg2568 = "/new";
+  const char *arg2575 = "/new";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg2568);
+  ret = guestfs_cat (g, arg2575);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "new file contents")) {
@@ -20788,10 +20936,10 @@ test_mkfifo_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2570[] = { "mknod", NULL };
-  if (!guestfs_feature_available (g, (char **) features2570)) {
+  const char *features2577[] = { "mknod", NULL };
+  if (!guestfs_feature_available (g, (char **) features2577)) {
     skipped ("test_mkfifo_0", "group %s not available in daemon",
-             features2570[0]);
+             features2577[0]);
     return 0;
   }
 
@@ -20820,14 +20968,14 @@ static int
 test_mkfifo_0_perform (guestfs_h *g)
 {
   /* TestResult for mkfifo (0) */
-  const char *arg2572 = "/mkfifo";
+  const char *arg2579 = "/mkfifo";
   int ret1;
-  ret1 = guestfs_mkfifo (g, 511, arg2572);
+  ret1 = guestfs_mkfifo (g, 511, arg2579);
   if (ret1 == -1)
     return -1;
-  const char *arg2574 = "/mkfifo";
+  const char *arg2581 = "/mkfifo";
   CLEANUP_FREE_STAT struct guestfs_stat *ret;
-  ret = guestfs_stat (g, arg2574);
+  ret = guestfs_stat (g, arg2581);
   if (ret == NULL)
       return -1;
   if (! (S_ISFIFO (ret->mode) && (ret->mode & 0777) == 0755)) {
@@ -20851,10 +20999,10 @@ test_mkfifo_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2576[] = { "mknod", NULL };
-  if (!guestfs_feature_available (g, (char **) features2576)) {
+  const char *features2583[] = { "mknod", NULL };
+  if (!guestfs_feature_available (g, (char **) features2583)) {
     skipped ("test_mkfifo_1", "group %s not available in daemon",
-             features2576[0]);
+             features2583[0]);
     return 0;
   }
 
@@ -20883,12 +21031,12 @@ static int
 test_mkfifo_1_perform (guestfs_h *g)
 {
   /* TestLastFail for mkfifo (1) */
-  const char *arg2579 = "/mkfifo-2";
-  int ret2577;
+  const char *arg2586 = "/mkfifo-2";
+  int ret2584;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret2577 = guestfs_mkfifo (g, 8703, arg2579);
+  ret2584 = guestfs_mkfifo (g, 8703, arg2586);
   guestfs_pop_error_handler (g);
-  if (ret2577 != -1)
+  if (ret2584 != -1)
     return -1;
   return 0;
 }
@@ -20929,36 +21077,36 @@ static int
 test_mkfs_0_perform (guestfs_h *g)
 {
   /* TestResultString for mkfs (0) */
-  const char *arg2582 = "/dev/sda";
-  const char *arg2583 = "mbr";
-  int ret2581;
-  ret2581 = guestfs_part_disk (g, arg2582, arg2583);
-  if (ret2581 == -1)
+  const char *arg2589 = "/dev/sda";
+  const char *arg2590 = "mbr";
+  int ret2588;
+  ret2588 = guestfs_part_disk (g, arg2589, arg2590);
+  if (ret2588 == -1)
     return -1;
-  const char *arg2586 = "ext2";
-  const char *arg2587 = "/dev/sda1";
-  struct guestfs_mkfs_opts_argv optargs2588;
-  optargs2588.bitmask = UINT64_C(0x0);
-  int ret2585;
-  ret2585 = guestfs_mkfs_opts_argv (g, arg2586, arg2587, &optargs2588);
-  if (ret2585 == -1)
+  const char *arg2593 = "ext2";
+  const char *arg2594 = "/dev/sda1";
+  struct guestfs_mkfs_opts_argv optargs2595;
+  optargs2595.bitmask = UINT64_C(0x0);
+  int ret2592;
+  ret2592 = guestfs_mkfs_opts_argv (g, arg2593, arg2594, &optargs2595);
+  if (ret2592 == -1)
     return -1;
-  const char *arg2590 = "/dev/sda1";
-  const char *arg2591 = "/";
-  int ret2589;
-  ret2589 = guestfs_mount (g, arg2590, arg2591);
-  if (ret2589 == -1)
+  const char *arg2597 = "/dev/sda1";
+  const char *arg2598 = "/";
+  int ret2596;
+  ret2596 = guestfs_mount (g, arg2597, arg2598);
+  if (ret2596 == -1)
     return -1;
-  const char *arg2594 = "/new";
-  const char *arg2595 = "new file contents";
-  size_t arg2595_size = 17;
-  int ret2593;
-  ret2593 = guestfs_write (g, arg2594, arg2595, arg2595_size);
-  if (ret2593 == -1)
+  const char *arg2601 = "/new";
+  const char *arg2602 = "new file contents";
+  size_t arg2602_size = 17;
+  int ret2600;
+  ret2600 = guestfs_write (g, arg2601, arg2602, arg2602_size);
+  if (ret2600 == -1)
     return -1;
-  const char *arg2597 = "/new";
+  const char *arg2604 = "/new";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg2597);
+  ret = guestfs_cat (g, arg2604);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "new file contents")) {
@@ -21005,34 +21153,34 @@ static int
 test_mkfs_b_0_perform (guestfs_h *g)
 {
   /* TestResultString for mkfs_b (0) */
-  const char *arg2600 = "/dev/sda";
-  const char *arg2601 = "mbr";
-  int ret2599;
-  ret2599 = guestfs_part_disk (g, arg2600, arg2601);
-  if (ret2599 == -1)
+  const char *arg2607 = "/dev/sda";
+  const char *arg2608 = "mbr";
+  int ret2606;
+  ret2606 = guestfs_part_disk (g, arg2607, arg2608);
+  if (ret2606 == -1)
     return -1;
-  const char *arg2604 = "ext2";
-  const char *arg2606 = "/dev/sda1";
-  int ret2603;
-  ret2603 = guestfs_mkfs_b (g, arg2604, 4096, arg2606);
-  if (ret2603 == -1)
+  const char *arg2611 = "ext2";
+  const char *arg2613 = "/dev/sda1";
+  int ret2610;
+  ret2610 = guestfs_mkfs_b (g, arg2611, 4096, arg2613);
+  if (ret2610 == -1)
     return -1;
-  const char *arg2609 = "/dev/sda1";
-  const char *arg2610 = "/";
-  int ret2608;
-  ret2608 = guestfs_mount (g, arg2609, arg2610);
-  if (ret2608 == -1)
+  const char *arg2616 = "/dev/sda1";
+  const char *arg2617 = "/";
+  int ret2615;
+  ret2615 = guestfs_mount (g, arg2616, arg2617);
+  if (ret2615 == -1)
     return -1;
-  const char *arg2613 = "/new";
-  const char *arg2614 = "new file contents";
-  size_t arg2614_size = 17;
-  int ret2612;
-  ret2612 = guestfs_write (g, arg2613, arg2614, arg2614_size);
-  if (ret2612 == -1)
+  const char *arg2620 = "/new";
+  const char *arg2621 = "new file contents";
+  size_t arg2621_size = 17;
+  int ret2619;
+  ret2619 = guestfs_write (g, arg2620, arg2621, arg2621_size);
+  if (ret2619 == -1)
     return -1;
-  const char *arg2616 = "/new";
+  const char *arg2623 = "/new";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg2616);
+  ret = guestfs_cat (g, arg2623);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "new file contents")) {
@@ -21079,23 +21227,23 @@ static int
 test_mkfs_b_1_perform (guestfs_h *g)
 {
   /* TestRun for mkfs_b (1) */
-  const char *arg2619 = "/dev/sda";
-  const char *arg2620 = "mbr";
-  int ret2618;
-  ret2618 = guestfs_part_init (g, arg2619, arg2620);
-  if (ret2618 == -1)
+  const char *arg2626 = "/dev/sda";
+  const char *arg2627 = "mbr";
+  int ret2625;
+  ret2625 = guestfs_part_init (g, arg2626, arg2627);
+  if (ret2625 == -1)
     return -1;
-  const char *arg2623 = "/dev/sda";
-  const char *arg2624 = "p";
-  int ret2622;
-  ret2622 = guestfs_part_add (g, arg2623, arg2624, 64, 204799);
-  if (ret2622 == -1)
+  const char *arg2630 = "/dev/sda";
+  const char *arg2631 = "p";
+  int ret2629;
+  ret2629 = guestfs_part_add (g, arg2630, arg2631, 64, 204799);
+  if (ret2629 == -1)
     return -1;
-  const char *arg2629 = "vfat";
-  const char *arg2631 = "/dev/sda1";
-  int ret2628;
-  ret2628 = guestfs_mkfs_b (g, arg2629, 32768, arg2631);
-  if (ret2628 == -1)
+  const char *arg2636 = "vfat";
+  const char *arg2638 = "/dev/sda1";
+  int ret2635;
+  ret2635 = guestfs_mkfs_b (g, arg2636, 32768, arg2638);
+  if (ret2635 == -1)
     return -1;
   return 0;
 }
@@ -21136,25 +21284,25 @@ static int
 test_mkfs_b_2_perform (guestfs_h *g)
 {
   /* TestLastFail for mkfs_b (2) */
-  const char *arg2634 = "/dev/sda";
-  const char *arg2635 = "mbr";
-  int ret2633;
-  ret2633 = guestfs_part_init (g, arg2634, arg2635);
-  if (ret2633 == -1)
+  const char *arg2641 = "/dev/sda";
+  const char *arg2642 = "mbr";
+  int ret2640;
+  ret2640 = guestfs_part_init (g, arg2641, arg2642);
+  if (ret2640 == -1)
     return -1;
-  const char *arg2638 = "/dev/sda";
-  const char *arg2639 = "p";
-  int ret2637;
-  ret2637 = guestfs_part_add (g, arg2638, arg2639, 64, 204799);
-  if (ret2637 == -1)
+  const char *arg2645 = "/dev/sda";
+  const char *arg2646 = "p";
+  int ret2644;
+  ret2644 = guestfs_part_add (g, arg2645, arg2646, 64, 204799);
+  if (ret2644 == -1)
     return -1;
-  const char *arg2644 = "vfat";
-  const char *arg2646 = "/dev/sda1";
-  int ret2643;
+  const char *arg2651 = "vfat";
+  const char *arg2653 = "/dev/sda1";
+  int ret2650;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret2643 = guestfs_mkfs_b (g, arg2644, 32769, arg2646);
+  ret2650 = guestfs_mkfs_b (g, arg2651, 32769, arg2653);
   guestfs_pop_error_handler (g);
-  if (ret2643 != -1)
+  if (ret2650 != -1)
     return -1;
   return 0;
 }
@@ -21195,25 +21343,25 @@ static int
 test_mkfs_b_3_perform (guestfs_h *g)
 {
   /* TestLastFail for mkfs_b (3) */
-  const char *arg2649 = "/dev/sda";
-  const char *arg2650 = "mbr";
-  int ret2648;
-  ret2648 = guestfs_part_init (g, arg2649, arg2650);
-  if (ret2648 == -1)
+  const char *arg2656 = "/dev/sda";
+  const char *arg2657 = "mbr";
+  int ret2655;
+  ret2655 = guestfs_part_init (g, arg2656, arg2657);
+  if (ret2655 == -1)
     return -1;
-  const char *arg2653 = "/dev/sda";
-  const char *arg2654 = "p";
-  int ret2652;
-  ret2652 = guestfs_part_add (g, arg2653, arg2654, 64, 204799);
-  if (ret2652 == -1)
+  const char *arg2660 = "/dev/sda";
+  const char *arg2661 = "p";
+  int ret2659;
+  ret2659 = guestfs_part_add (g, arg2660, arg2661, 64, 204799);
+  if (ret2659 == -1)
     return -1;
-  const char *arg2659 = "vfat";
-  const char *arg2661 = "/dev/sda1";
-  int ret2658;
+  const char *arg2666 = "vfat";
+  const char *arg2668 = "/dev/sda1";
+  int ret2665;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret2658 = guestfs_mkfs_b (g, arg2659, 33280, arg2661);
+  ret2665 = guestfs_mkfs_b (g, arg2666, 33280, arg2668);
   guestfs_pop_error_handler (g);
-  if (ret2658 != -1)
+  if (ret2665 != -1)
     return -1;
   return 0;
 }
@@ -21229,10 +21377,10 @@ test_mkfs_b_4 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2663[] = { "ntfsprogs", NULL };
-  if (!guestfs_feature_available (g, (char **) features2663)) {
+  const char *features2670[] = { "ntfsprogs", NULL };
+  if (!guestfs_feature_available (g, (char **) features2670)) {
     skipped ("test_mkfs_b_4", "group %s not available in daemon",
-             features2663[0]);
+             features2670[0]);
     return 0;
   }
 
@@ -21261,17 +21409,17 @@ static int
 test_mkfs_b_4_perform (guestfs_h *g)
 {
   /* TestRun for mkfs_b (4) */
-  const char *arg2665 = "/dev/sda";
-  const char *arg2666 = "mbr";
-  int ret2664;
-  ret2664 = guestfs_part_disk (g, arg2665, arg2666);
-  if (ret2664 == -1)
+  const char *arg2672 = "/dev/sda";
+  const char *arg2673 = "mbr";
+  int ret2671;
+  ret2671 = guestfs_part_disk (g, arg2672, arg2673);
+  if (ret2671 == -1)
     return -1;
-  const char *arg2669 = "ntfs";
-  const char *arg2671 = "/dev/sda1";
-  int ret2668;
-  ret2668 = guestfs_mkfs_b (g, arg2669, 32768, arg2671);
-  if (ret2668 == -1)
+  const char *arg2676 = "ntfs";
+  const char *arg2678 = "/dev/sda1";
+  int ret2675;
+  ret2675 = guestfs_mkfs_b (g, arg2676, 32768, arg2678);
+  if (ret2675 == -1)
     return -1;
   return 0;
 }
@@ -21287,10 +21435,10 @@ test_mkfs_btrfs_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2673[] = { "btrfs", NULL };
-  if (!guestfs_feature_available (g, (char **) features2673)) {
+  const char *features2680[] = { "btrfs", NULL };
+  if (!guestfs_feature_available (g, (char **) features2680)) {
     skipped ("test_mkfs_btrfs_0", "group %s not available in daemon",
-             features2673[0]);
+             features2680[0]);
     return 0;
   }
 
@@ -21319,29 +21467,29 @@ static int
 test_mkfs_btrfs_0_perform (guestfs_h *g)
 {
   /* TestRun for mkfs_btrfs (0) */
-  const char *arg2675 = "/dev/sda";
-  const char *arg2676 = "mbr";
-  int ret2674;
-  ret2674 = guestfs_part_disk (g, arg2675, arg2676);
-  if (ret2674 == -1)
+  const char *arg2682 = "/dev/sda";
+  const char *arg2683 = "mbr";
+  int ret2681;
+  ret2681 = guestfs_part_disk (g, arg2682, arg2683);
+  if (ret2681 == -1)
     return -1;
-  const char *arg2679_0 = "/dev/sda1";
-  const char *const arg2679[] = {
-    arg2679_0,
+  const char *arg2686_0 = "/dev/sda1";
+  const char *const arg2686[] = {
+    arg2686_0,
     NULL
   };
-  struct guestfs_mkfs_btrfs_argv optargs2680;
-  optargs2680.allocstart = 0;
-  optargs2680.bytecount = 268435456;
-  optargs2680.datatype = "single";
-  optargs2680.label = "test";
-  optargs2680.metadata = "single";
-  optargs2680.nodesize = 65536;
-  optargs2680.sectorsize = 4096;
-  optargs2680.bitmask = UINT64_C(0xf7);
-  int ret2678;
-  ret2678 = guestfs_mkfs_btrfs_argv (g, (char **) arg2679, &optargs2680);
-  if (ret2678 == -1)
+  struct guestfs_mkfs_btrfs_argv optargs2687;
+  optargs2687.allocstart = 0;
+  optargs2687.bytecount = 268435456;
+  optargs2687.datatype = "single";
+  optargs2687.label = "test";
+  optargs2687.metadata = "single";
+  optargs2687.nodesize = 65536;
+  optargs2687.sectorsize = 4096;
+  optargs2687.bitmask = UINT64_C(0xf7);
+  int ret2685;
+  ret2685 = guestfs_mkfs_btrfs_argv (g, (char **) arg2686, &optargs2687);
+  if (ret2685 == -1)
     return -1;
   return 0;
 }
@@ -21382,15 +21530,15 @@ static int
 test_mklost_and_found_0_perform (guestfs_h *g)
 {
   /* TestRun for mklost_and_found (0) */
-  const char *arg2682 = "/lost+found";
-  int ret2681;
-  ret2681 = guestfs_rm_rf (g, arg2682);
-  if (ret2681 == -1)
+  const char *arg2689 = "/lost+found";
+  int ret2688;
+  ret2688 = guestfs_rm_rf (g, arg2689);
+  if (ret2688 == -1)
     return -1;
-  const char *arg2685 = "/";
-  int ret2684;
-  ret2684 = guestfs_mklost_and_found (g, arg2685);
-  if (ret2684 == -1)
+  const char *arg2692 = "/";
+  int ret2691;
+  ret2691 = guestfs_mklost_and_found (g, arg2692);
+  if (ret2691 == -1)
     return -1;
   return 0;
 }
@@ -21406,10 +21554,10 @@ test_mknod_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2687[] = { "mknod", NULL };
-  if (!guestfs_feature_available (g, (char **) features2687)) {
+  const char *features2694[] = { "mknod", NULL };
+  if (!guestfs_feature_available (g, (char **) features2694)) {
     skipped ("test_mknod_0", "group %s not available in daemon",
-             features2687[0]);
+             features2694[0]);
     return 0;
   }
 
@@ -21438,14 +21586,14 @@ static int
 test_mknod_0_perform (guestfs_h *g)
 {
   /* TestResult for mknod (0) */
-  const char *arg2691 = "/mknod";
+  const char *arg2698 = "/mknod";
   int ret1;
-  ret1 = guestfs_mknod (g, 4607, 0, 0, arg2691);
+  ret1 = guestfs_mknod (g, 4607, 0, 0, arg2698);
   if (ret1 == -1)
     return -1;
-  const char *arg2693 = "/mknod";
+  const char *arg2700 = "/mknod";
   CLEANUP_FREE_STAT struct guestfs_stat *ret;
-  ret = guestfs_stat (g, arg2693);
+  ret = guestfs_stat (g, arg2700);
   if (ret == NULL)
       return -1;
   if (! (S_ISFIFO (ret->mode) && (ret->mode & 0777) == 0755)) {
@@ -21469,10 +21617,10 @@ test_mknod_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2695[] = { "mknod", NULL };
-  if (!guestfs_feature_available (g, (char **) features2695)) {
+  const char *features2702[] = { "mknod", NULL };
+  if (!guestfs_feature_available (g, (char **) features2702)) {
     skipped ("test_mknod_1", "group %s not available in daemon",
-             features2695[0]);
+             features2702[0]);
     return 0;
   }
 
@@ -21501,14 +21649,14 @@ static int
 test_mknod_1_perform (guestfs_h *g)
 {
   /* TestResult for mknod (1) */
-  const char *arg2699 = "/mknod2";
+  const char *arg2706 = "/mknod2";
   int ret1;
-  ret1 = guestfs_mknod (g, 25087, 66, 99, arg2699);
+  ret1 = guestfs_mknod (g, 25087, 66, 99, arg2706);
   if (ret1 == -1)
     return -1;
-  const char *arg2701 = "/mknod2";
+  const char *arg2708 = "/mknod2";
   CLEANUP_FREE_STAT struct guestfs_stat *ret;
-  ret = guestfs_stat (g, arg2701);
+  ret = guestfs_stat (g, arg2708);
   if (ret == NULL)
       return -1;
   if (! (S_ISBLK (ret->mode) && (ret->mode & 0777) == 0755)) {
@@ -21532,10 +21680,10 @@ test_mknod_b_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2703[] = { "mknod", NULL };
-  if (!guestfs_feature_available (g, (char **) features2703)) {
+  const char *features2710[] = { "mknod", NULL };
+  if (!guestfs_feature_available (g, (char **) features2710)) {
     skipped ("test_mknod_b_0", "group %s not available in daemon",
-             features2703[0]);
+             features2710[0]);
     return 0;
   }
 
@@ -21564,14 +21712,14 @@ static int
 test_mknod_b_0_perform (guestfs_h *g)
 {
   /* TestResult for mknod_b (0) */
-  const char *arg2707 = "/mknod_b";
+  const char *arg2714 = "/mknod_b";
   int ret1;
-  ret1 = guestfs_mknod_b (g, 511, 99, 66, arg2707);
+  ret1 = guestfs_mknod_b (g, 511, 99, 66, arg2714);
   if (ret1 == -1)
     return -1;
-  const char *arg2709 = "/mknod_b";
+  const char *arg2716 = "/mknod_b";
   CLEANUP_FREE_STAT struct guestfs_stat *ret;
-  ret = guestfs_stat (g, arg2709);
+  ret = guestfs_stat (g, arg2716);
   if (ret == NULL)
       return -1;
   if (! (S_ISBLK (ret->mode) && (ret->mode & 0777) == 0755)) {
@@ -21595,10 +21743,10 @@ test_mknod_b_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2711[] = { "mknod", NULL };
-  if (!guestfs_feature_available (g, (char **) features2711)) {
+  const char *features2718[] = { "mknod", NULL };
+  if (!guestfs_feature_available (g, (char **) features2718)) {
     skipped ("test_mknod_b_1", "group %s not available in daemon",
-             features2711[0]);
+             features2718[0]);
     return 0;
   }
 
@@ -21627,12 +21775,12 @@ static int
 test_mknod_b_1_perform (guestfs_h *g)
 {
   /* TestLastFail for mknod_b (1) */
-  const char *arg2716 = "/mknod_b-2";
-  int ret2712;
+  const char *arg2723 = "/mknod_b-2";
+  int ret2719;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret2712 = guestfs_mknod_b (g, 4607, 99, 66, arg2716);
+  ret2719 = guestfs_mknod_b (g, 4607, 99, 66, arg2723);
   guestfs_pop_error_handler (g);
-  if (ret2712 != -1)
+  if (ret2719 != -1)
     return -1;
   return 0;
 }
@@ -21648,10 +21796,10 @@ test_mknod_c_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2718[] = { "mknod", NULL };
-  if (!guestfs_feature_available (g, (char **) features2718)) {
+  const char *features2725[] = { "mknod", NULL };
+  if (!guestfs_feature_available (g, (char **) features2725)) {
     skipped ("test_mknod_c_0", "group %s not available in daemon",
-             features2718[0]);
+             features2725[0]);
     return 0;
   }
 
@@ -21680,14 +21828,14 @@ static int
 test_mknod_c_0_perform (guestfs_h *g)
 {
   /* TestResult for mknod_c (0) */
-  const char *arg2722 = "/mknod_c";
+  const char *arg2729 = "/mknod_c";
   int ret1;
-  ret1 = guestfs_mknod_c (g, 511, 99, 66, arg2722);
+  ret1 = guestfs_mknod_c (g, 511, 99, 66, arg2729);
   if (ret1 == -1)
     return -1;
-  const char *arg2724 = "/mknod_c";
+  const char *arg2731 = "/mknod_c";
   CLEANUP_FREE_STAT struct guestfs_stat *ret;
-  ret = guestfs_stat (g, arg2724);
+  ret = guestfs_stat (g, arg2731);
   if (ret == NULL)
       return -1;
   if (! (S_ISCHR (ret->mode) && (ret->mode & 0777) == 0755)) {
@@ -21711,10 +21859,10 @@ test_mknod_c_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2726[] = { "mknod", NULL };
-  if (!guestfs_feature_available (g, (char **) features2726)) {
+  const char *features2733[] = { "mknod", NULL };
+  if (!guestfs_feature_available (g, (char **) features2733)) {
     skipped ("test_mknod_c_1", "group %s not available in daemon",
-             features2726[0]);
+             features2733[0]);
     return 0;
   }
 
@@ -21743,12 +21891,12 @@ static int
 test_mknod_c_1_perform (guestfs_h *g)
 {
   /* TestLastFail for mknod_c (1) */
-  const char *arg2731 = "/mknod_c-2";
-  int ret2727;
+  const char *arg2738 = "/mknod_c-2";
+  int ret2734;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret2727 = guestfs_mknod_c (g, 8703, 99, 66, arg2731);
+  ret2734 = guestfs_mknod_c (g, 8703, 99, 66, arg2738);
   guestfs_pop_error_handler (g);
-  if (ret2727 != -1)
+  if (ret2734 != -1)
     return -1;
   return 0;
 }
@@ -21789,18 +21937,18 @@ static int
 test_mkswap_0_perform (guestfs_h *g)
 {
   /* TestRun for mkswap (0) */
-  const char *arg2734 = "/dev/sda";
-  const char *arg2735 = "mbr";
-  int ret2733;
-  ret2733 = guestfs_part_disk (g, arg2734, arg2735);
-  if (ret2733 == -1)
+  const char *arg2741 = "/dev/sda";
+  const char *arg2742 = "mbr";
+  int ret2740;
+  ret2740 = guestfs_part_disk (g, arg2741, arg2742);
+  if (ret2740 == -1)
     return -1;
-  const char *arg2738 = "/dev/sda1";
-  struct guestfs_mkswap_opts_argv optargs2739;
-  optargs2739.bitmask = UINT64_C(0x0);
-  int ret2737;
-  ret2737 = guestfs_mkswap_opts_argv (g, arg2738, &optargs2739);
-  if (ret2737 == -1)
+  const char *arg2745 = "/dev/sda1";
+  struct guestfs_mkswap_opts_argv optargs2746;
+  optargs2746.bitmask = UINT64_C(0x0);
+  int ret2744;
+  ret2744 = guestfs_mkswap_opts_argv (g, arg2745, &optargs2746);
+  if (ret2744 == -1)
     return -1;
   return 0;
 }
@@ -21841,19 +21989,19 @@ static int
 test_mkswap_1_perform (guestfs_h *g)
 {
   /* TestRun for mkswap (1) */
-  const char *arg2741 = "/dev/sda";
-  const char *arg2742 = "mbr";
-  int ret2740;
-  ret2740 = guestfs_part_disk (g, arg2741, arg2742);
-  if (ret2740 == -1)
+  const char *arg2748 = "/dev/sda";
+  const char *arg2749 = "mbr";
+  int ret2747;
+  ret2747 = guestfs_part_disk (g, arg2748, arg2749);
+  if (ret2747 == -1)
     return -1;
-  const char *arg2745 = "/dev/sda1";
-  struct guestfs_mkswap_opts_argv optargs2746;
-  optargs2746.label = "hello";
-  optargs2746.bitmask = UINT64_C(0x1);
-  int ret2744;
-  ret2744 = guestfs_mkswap_opts_argv (g, arg2745, &optargs2746);
-  if (ret2744 == -1)
+  const char *arg2752 = "/dev/sda1";
+  struct guestfs_mkswap_opts_argv optargs2753;
+  optargs2753.label = "hello";
+  optargs2753.bitmask = UINT64_C(0x1);
+  int ret2751;
+  ret2751 = guestfs_mkswap_opts_argv (g, arg2752, &optargs2753);
+  if (ret2751 == -1)
     return -1;
   return 0;
 }
@@ -21894,28 +22042,28 @@ static int
 test_mkswap_2_perform (guestfs_h *g)
 {
   /* TestResultString for mkswap (2) */
-  const char *arg2748 = "/dev/sda";
-  const char *arg2749 = "mbr";
-  int ret2747;
-  ret2747 = guestfs_part_disk (g, arg2748, arg2749);
-  if (ret2747 == -1)
+  const char *arg2755 = "/dev/sda";
+  const char *arg2756 = "mbr";
+  int ret2754;
+  ret2754 = guestfs_part_disk (g, arg2755, arg2756);
+  if (ret2754 == -1)
     return -1;
-  const char *arg2752 = "/dev/sda1";
-  struct guestfs_mkswap_opts_argv optargs2753;
-  optargs2753.uuid = "d306427c-371d-3832-d8f7-eaad61dc6244";
-  optargs2753.bitmask = UINT64_C(0x2);
-  int ret2751;
-  ret2751 = guestfs_mkswap_opts_argv (g, arg2752, &optargs2753);
-  if (ret2751 == -1)
+  const char *arg2759 = "/dev/sda1";
+  struct guestfs_mkswap_opts_argv optargs2760;
+  optargs2760.uuid = "76802f61-6cde-0f8b-e149-6849b3cb42b6";
+  optargs2760.bitmask = UINT64_C(0x2);
+  int ret2758;
+  ret2758 = guestfs_mkswap_opts_argv (g, arg2759, &optargs2760);
+  if (ret2758 == -1)
     return -1;
-  const char *arg2754 = "/dev/sda1";
+  const char *arg2761 = "/dev/sda1";
   CLEANUP_FREE char *ret;
-  ret = guestfs_vfs_uuid (g, arg2754);
+  ret = guestfs_vfs_uuid (g, arg2761);
   if (ret == NULL)
       return -1;
-  if (! STREQ (ret, "d306427c-371d-3832-d8f7-eaad61dc6244")) {
+  if (! STREQ (ret, "76802f61-6cde-0f8b-e149-6849b3cb42b6")) {
     fprintf (stderr, "%s: test failed: expected last command %s to return \"%s\" but it returned \"%s\"\n",
-             "test_mkswap_2", "vfs_uuid", "d306427c-371d-3832-d8f7-eaad61dc6244", ret);
+             "test_mkswap_2", "vfs_uuid", "76802f61-6cde-0f8b-e149-6849b3cb42b6", ret);
     return -1;
   }
   return 0;
@@ -21957,24 +22105,24 @@ static int
 test_mkswap_3_perform (guestfs_h *g)
 {
   /* TestResultString for mkswap (3) */
-  const char *arg2757 = "/dev/sda";
-  const char *arg2758 = "mbr";
-  int ret2756;
-  ret2756 = guestfs_part_disk (g, arg2757, arg2758);
-  if (ret2756 == -1)
+  const char *arg2764 = "/dev/sda";
+  const char *arg2765 = "mbr";
+  int ret2763;
+  ret2763 = guestfs_part_disk (g, arg2764, arg2765);
+  if (ret2763 == -1)
     return -1;
-  const char *arg2761 = "/dev/sda1";
-  struct guestfs_mkswap_opts_argv optargs2762;
-  optargs2762.label = "hello";
-  optargs2762.uuid = "d306427c-371d-3832-d8f7-eaad61dc6244";
-  optargs2762.bitmask = UINT64_C(0x3);
-  int ret2760;
-  ret2760 = guestfs_mkswap_opts_argv (g, arg2761, &optargs2762);
-  if (ret2760 == -1)
+  const char *arg2768 = "/dev/sda1";
+  struct guestfs_mkswap_opts_argv optargs2769;
+  optargs2769.label = "hello";
+  optargs2769.uuid = "76802f61-6cde-0f8b-e149-6849b3cb42b6";
+  optargs2769.bitmask = UINT64_C(0x3);
+  int ret2767;
+  ret2767 = guestfs_mkswap_opts_argv (g, arg2768, &optargs2769);
+  if (ret2767 == -1)
     return -1;
-  const char *arg2763 = "/dev/sda1";
+  const char *arg2770 = "/dev/sda1";
   CLEANUP_FREE char *ret;
-  ret = guestfs_vfs_label (g, arg2763);
+  ret = guestfs_vfs_label (g, arg2770);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "hello")) {
@@ -22021,17 +22169,17 @@ static int
 test_mkswap_L_0_perform (guestfs_h *g)
 {
   /* TestRun for mkswap_L (0) */
-  const char *arg2766 = "/dev/sda";
-  const char *arg2767 = "mbr";
-  int ret2765;
-  ret2765 = guestfs_part_disk (g, arg2766, arg2767);
-  if (ret2765 == -1)
+  const char *arg2773 = "/dev/sda";
+  const char *arg2774 = "mbr";
+  int ret2772;
+  ret2772 = guestfs_part_disk (g, arg2773, arg2774);
+  if (ret2772 == -1)
     return -1;
-  const char *arg2770 = "hello";
-  const char *arg2771 = "/dev/sda1";
-  int ret2769;
-  ret2769 = guestfs_mkswap_L (g, arg2770, arg2771);
-  if (ret2769 == -1)
+  const char *arg2777 = "hello";
+  const char *arg2778 = "/dev/sda1";
+  int ret2776;
+  ret2776 = guestfs_mkswap_L (g, arg2777, arg2778);
+  if (ret2776 == -1)
     return -1;
   return 0;
 }
@@ -22047,10 +22195,10 @@ test_mkswap_U_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2773[] = { "linuxfsuuid", NULL };
-  if (!guestfs_feature_available (g, (char **) features2773)) {
+  const char *features2780[] = { "linuxfsuuid", NULL };
+  if (!guestfs_feature_available (g, (char **) features2780)) {
     skipped ("test_mkswap_U_0", "group %s not available in daemon",
-             features2773[0]);
+             features2780[0]);
     return 0;
   }
 
@@ -22079,17 +22227,17 @@ static int
 test_mkswap_U_0_perform (guestfs_h *g)
 {
   /* TestRun for mkswap_U (0) */
-  const char *arg2775 = "/dev/sda";
-  const char *arg2776 = "mbr";
-  int ret2774;
-  ret2774 = guestfs_part_disk (g, arg2775, arg2776);
-  if (ret2774 == -1)
+  const char *arg2782 = "/dev/sda";
+  const char *arg2783 = "mbr";
+  int ret2781;
+  ret2781 = guestfs_part_disk (g, arg2782, arg2783);
+  if (ret2781 == -1)
     return -1;
-  const char *arg2779 = "d306427c-371d-3832-d8f7-eaad61dc6244";
-  const char *arg2780 = "/dev/sda1";
-  int ret2778;
-  ret2778 = guestfs_mkswap_U (g, arg2779, arg2780);
-  if (ret2778 == -1)
+  const char *arg2786 = "76802f61-6cde-0f8b-e149-6849b3cb42b6";
+  const char *arg2787 = "/dev/sda1";
+  int ret2785;
+  ret2785 = guestfs_mkswap_U (g, arg2786, arg2787);
+  if (ret2785 == -1)
     return -1;
   return 0;
 }
@@ -22130,20 +22278,20 @@ static int
 test_mkswap_file_0_perform (guestfs_h *g)
 {
   /* TestRun for mkswap_file (0) */
-  const char *arg2783 = "/mkswap_file";
-  int ret2782;
-  ret2782 = guestfs_fallocate (g, arg2783, 8388608);
-  if (ret2782 == -1)
-    return -1;
-  const char *arg2787 = "/mkswap_file";
-  int ret2786;
-  ret2786 = guestfs_mkswap_file (g, arg2787);
-  if (ret2786 == -1)
-    return -1;
   const char *arg2790 = "/mkswap_file";
   int ret2789;
-  ret2789 = guestfs_rm (g, arg2790);
+  ret2789 = guestfs_fallocate (g, arg2790, 8388608);
   if (ret2789 == -1)
+    return -1;
+  const char *arg2794 = "/mkswap_file";
+  int ret2793;
+  ret2793 = guestfs_mkswap_file (g, arg2794);
+  if (ret2793 == -1)
+    return -1;
+  const char *arg2797 = "/mkswap_file";
+  int ret2796;
+  ret2796 = guestfs_rm (g, arg2797);
+  if (ret2796 == -1)
     return -1;
   return 0;
 }
@@ -22184,25 +22332,25 @@ static int
 test_mktemp_0_perform (guestfs_h *g)
 {
   /* TestRun for mktemp (0) */
-  const char *arg2793 = "/mktemp";
-  int ret2792;
-  ret2792 = guestfs_mkdir (g, arg2793);
-  if (ret2792 == -1)
+  const char *arg2800 = "/mktemp";
+  int ret2799;
+  ret2799 = guestfs_mkdir (g, arg2800);
+  if (ret2799 == -1)
     return -1;
-  const char *arg2796 = "/mktemp/tmpXXXXXX";
-  struct guestfs_mktemp_argv optargs2797;
-  optargs2797.bitmask = UINT64_C(0x0);
-  CLEANUP_FREE char *ret2795;
-  ret2795 = guestfs_mktemp_argv (g, arg2796, &optargs2797);
-  if (ret2795 == NULL)
+  const char *arg2803 = "/mktemp/tmpXXXXXX";
+  struct guestfs_mktemp_argv optargs2804;
+  optargs2804.bitmask = UINT64_C(0x0);
+  CLEANUP_FREE char *ret2802;
+  ret2802 = guestfs_mktemp_argv (g, arg2803, &optargs2804);
+  if (ret2802 == NULL)
       return -1;
-  const char *arg2799 = "/mktemp/tmpXXXXXX";
-  struct guestfs_mktemp_argv optargs2800;
-  optargs2800.suffix = "suff";
-  optargs2800.bitmask = UINT64_C(0x1);
-  CLEANUP_FREE char *ret2798;
-  ret2798 = guestfs_mktemp_argv (g, arg2799, &optargs2800);
-  if (ret2798 == NULL)
+  const char *arg2806 = "/mktemp/tmpXXXXXX";
+  struct guestfs_mktemp_argv optargs2807;
+  optargs2807.suffix = "suff";
+  optargs2807.bitmask = UINT64_C(0x1);
+  CLEANUP_FREE char *ret2805;
+  ret2805 = guestfs_mktemp_argv (g, arg2806, &optargs2807);
+  if (ret2805 == NULL)
       return -1;
   return 0;
 }
@@ -22218,10 +22366,10 @@ test_modprobe_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2801[] = { "linuxmodules", NULL };
-  if (!guestfs_feature_available (g, (char **) features2801)) {
+  const char *features2808[] = { "linuxmodules", NULL };
+  if (!guestfs_feature_available (g, (char **) features2808)) {
     skipped ("test_modprobe_0", "group %s not available in daemon",
-             features2801[0]);
+             features2808[0]);
     return 0;
   }
 
@@ -22250,10 +22398,10 @@ static int
 test_modprobe_0_perform (guestfs_h *g)
 {
   /* TestRun for modprobe (0) */
-  const char *arg2803 = "fat";
-  int ret2802;
-  ret2802 = guestfs_modprobe (g, arg2803);
-  if (ret2802 == -1)
+  const char *arg2810 = "fat";
+  int ret2809;
+  ret2809 = guestfs_modprobe (g, arg2810);
+  if (ret2809 == -1)
     return -1;
   return 0;
 }
@@ -22294,36 +22442,36 @@ static int
 test_mount_0_perform (guestfs_h *g)
 {
   /* TestResultString for mount (0) */
-  const char *arg2806 = "/dev/sda";
-  const char *arg2807 = "mbr";
-  int ret2805;
-  ret2805 = guestfs_part_disk (g, arg2806, arg2807);
-  if (ret2805 == -1)
+  const char *arg2813 = "/dev/sda";
+  const char *arg2814 = "mbr";
+  int ret2812;
+  ret2812 = guestfs_part_disk (g, arg2813, arg2814);
+  if (ret2812 == -1)
     return -1;
-  const char *arg2810 = "ext2";
-  const char *arg2811 = "/dev/sda1";
-  struct guestfs_mkfs_opts_argv optargs2812;
-  optargs2812.bitmask = UINT64_C(0x0);
-  int ret2809;
-  ret2809 = guestfs_mkfs_opts_argv (g, arg2810, arg2811, &optargs2812);
-  if (ret2809 == -1)
+  const char *arg2817 = "ext2";
+  const char *arg2818 = "/dev/sda1";
+  struct guestfs_mkfs_opts_argv optargs2819;
+  optargs2819.bitmask = UINT64_C(0x0);
+  int ret2816;
+  ret2816 = guestfs_mkfs_opts_argv (g, arg2817, arg2818, &optargs2819);
+  if (ret2816 == -1)
     return -1;
-  const char *arg2814 = "/dev/sda1";
-  const char *arg2815 = "/";
-  int ret2813;
-  ret2813 = guestfs_mount (g, arg2814, arg2815);
-  if (ret2813 == -1)
+  const char *arg2821 = "/dev/sda1";
+  const char *arg2822 = "/";
+  int ret2820;
+  ret2820 = guestfs_mount (g, arg2821, arg2822);
+  if (ret2820 == -1)
     return -1;
-  const char *arg2818 = "/new";
-  const char *arg2819 = "new file contents";
-  size_t arg2819_size = 17;
-  int ret2817;
-  ret2817 = guestfs_write (g, arg2818, arg2819, arg2819_size);
-  if (ret2817 == -1)
+  const char *arg2825 = "/new";
+  const char *arg2826 = "new file contents";
+  size_t arg2826_size = 17;
+  int ret2824;
+  ret2824 = guestfs_write (g, arg2825, arg2826, arg2826_size);
+  if (ret2824 == -1)
     return -1;
-  const char *arg2821 = "/new";
+  const char *arg2828 = "/new";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg2821);
+  ret = guestfs_cat (g, arg2828);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "new file contents")) {
@@ -22370,27 +22518,27 @@ static int
 test_mount_ro_0_perform (guestfs_h *g)
 {
   /* TestLastFail for mount_ro (0) */
-  const char *arg2824 = "/";
-  struct guestfs_umount_opts_argv optargs2825;
-  optargs2825.force = 0;
-  optargs2825.lazyunmount = 0;
-  optargs2825.bitmask = UINT64_C(0x3);
-  int ret2823;
-  ret2823 = guestfs_umount_opts_argv (g, arg2824, &optargs2825);
-  if (ret2823 == -1)
-    return -1;
-  const char *arg2827 = "/dev/sda1";
-  const char *arg2828 = "/";
-  int ret2826;
-  ret2826 = guestfs_mount_ro (g, arg2827, arg2828);
-  if (ret2826 == -1)
-    return -1;
-  const char *arg2831 = "/new";
+  const char *arg2831 = "/";
+  struct guestfs_umount_opts_argv optargs2832;
+  optargs2832.force = 0;
+  optargs2832.lazyunmount = 0;
+  optargs2832.bitmask = UINT64_C(0x3);
   int ret2830;
+  ret2830 = guestfs_umount_opts_argv (g, arg2831, &optargs2832);
+  if (ret2830 == -1)
+    return -1;
+  const char *arg2834 = "/dev/sda1";
+  const char *arg2835 = "/";
+  int ret2833;
+  ret2833 = guestfs_mount_ro (g, arg2834, arg2835);
+  if (ret2833 == -1)
+    return -1;
+  const char *arg2838 = "/new";
+  int ret2837;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret2830 = guestfs_touch (g, arg2831);
+  ret2837 = guestfs_touch (g, arg2838);
   guestfs_pop_error_handler (g);
-  if (ret2830 != -1)
+  if (ret2837 != -1)
     return -1;
   return 0;
 }
@@ -22431,31 +22579,31 @@ static int
 test_mount_ro_1_perform (guestfs_h *g)
 {
   /* TestResultString for mount_ro (1) */
-  const char *arg2834 = "/new";
-  const char *arg2835 = "data";
-  size_t arg2835_size = 4;
-  int ret2833;
-  ret2833 = guestfs_write (g, arg2834, arg2835, arg2835_size);
-  if (ret2833 == -1)
-    return -1;
-  const char *arg2838 = "/";
-  struct guestfs_umount_opts_argv optargs2839;
-  optargs2839.force = 0;
-  optargs2839.lazyunmount = 0;
-  optargs2839.bitmask = UINT64_C(0x3);
-  int ret2837;
-  ret2837 = guestfs_umount_opts_argv (g, arg2838, &optargs2839);
-  if (ret2837 == -1)
-    return -1;
-  const char *arg2841 = "/dev/sda1";
-  const char *arg2842 = "/";
+  const char *arg2841 = "/new";
+  const char *arg2842 = "data";
+  size_t arg2842_size = 4;
   int ret2840;
-  ret2840 = guestfs_mount_ro (g, arg2841, arg2842);
+  ret2840 = guestfs_write (g, arg2841, arg2842, arg2842_size);
   if (ret2840 == -1)
     return -1;
-  const char *arg2844 = "/new";
+  const char *arg2845 = "/";
+  struct guestfs_umount_opts_argv optargs2846;
+  optargs2846.force = 0;
+  optargs2846.lazyunmount = 0;
+  optargs2846.bitmask = UINT64_C(0x3);
+  int ret2844;
+  ret2844 = guestfs_umount_opts_argv (g, arg2845, &optargs2846);
+  if (ret2844 == -1)
+    return -1;
+  const char *arg2848 = "/dev/sda1";
+  const char *arg2849 = "/";
+  int ret2847;
+  ret2847 = guestfs_mount_ro (g, arg2848, arg2849);
+  if (ret2847 == -1)
+    return -1;
+  const char *arg2851 = "/new";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg2844);
+  ret = guestfs_cat (g, arg2851);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "data")) {
@@ -22552,27 +22700,27 @@ static int
 test_mv_0_perform (guestfs_h *g)
 {
   /* TestResultString for mv (0) */
-  const char *arg2848 = "/mv";
-  int ret2847;
-  ret2847 = guestfs_mkdir (g, arg2848);
-  if (ret2847 == -1)
-    return -1;
-  const char *arg2851 = "/mv/old";
-  const char *arg2852 = "file content";
-  size_t arg2852_size = 12;
-  int ret2850;
-  ret2850 = guestfs_write (g, arg2851, arg2852, arg2852_size);
-  if (ret2850 == -1)
-    return -1;
-  const char *arg2855 = "/mv/old";
-  const char *arg2856 = "/mv/new";
+  const char *arg2855 = "/mv";
   int ret2854;
-  ret2854 = guestfs_mv (g, arg2855, arg2856);
+  ret2854 = guestfs_mkdir (g, arg2855);
   if (ret2854 == -1)
     return -1;
-  const char *arg2858 = "/mv/new";
+  const char *arg2858 = "/mv/old";
+  const char *arg2859 = "file content";
+  size_t arg2859_size = 12;
+  int ret2857;
+  ret2857 = guestfs_write (g, arg2858, arg2859, arg2859_size);
+  if (ret2857 == -1)
+    return -1;
+  const char *arg2862 = "/mv/old";
+  const char *arg2863 = "/mv/new";
+  int ret2861;
+  ret2861 = guestfs_mv (g, arg2862, arg2863);
+  if (ret2861 == -1)
+    return -1;
+  const char *arg2865 = "/mv/new";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg2858);
+  ret = guestfs_cat (g, arg2865);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "file content")) {
@@ -22619,29 +22767,29 @@ static int
 test_mv_1_perform (guestfs_h *g)
 {
   /* TestResultFalse for mv (1) */
-  const char *arg2861 = "/mv2";
-  int ret2860;
-  ret2860 = guestfs_mkdir (g, arg2861);
-  if (ret2860 == -1)
-    return -1;
-  const char *arg2864 = "/mv2/old";
-  const char *arg2865 = "file content";
-  size_t arg2865_size = 12;
-  int ret2863;
-  ret2863 = guestfs_write (g, arg2864, arg2865, arg2865_size);
-  if (ret2863 == -1)
-    return -1;
-  const char *arg2868 = "/mv2/old";
-  const char *arg2869 = "/mv2/new";
+  const char *arg2868 = "/mv2";
   int ret2867;
-  ret2867 = guestfs_mv (g, arg2868, arg2869);
+  ret2867 = guestfs_mkdir (g, arg2868);
   if (ret2867 == -1)
     return -1;
   const char *arg2871 = "/mv2/old";
-  struct guestfs_is_file_opts_argv optargs2872;
-  optargs2872.bitmask = UINT64_C(0x0);
+  const char *arg2872 = "file content";
+  size_t arg2872_size = 12;
+  int ret2870;
+  ret2870 = guestfs_write (g, arg2871, arg2872, arg2872_size);
+  if (ret2870 == -1)
+    return -1;
+  const char *arg2875 = "/mv2/old";
+  const char *arg2876 = "/mv2/new";
+  int ret2874;
+  ret2874 = guestfs_mv (g, arg2875, arg2876);
+  if (ret2874 == -1)
+    return -1;
+  const char *arg2878 = "/mv2/old";
+  struct guestfs_is_file_opts_argv optargs2879;
+  optargs2879.bitmask = UINT64_C(0x0);
   int ret;
-  ret = guestfs_is_file_opts_argv (g, arg2871, &optargs2872);
+  ret = guestfs_is_file_opts_argv (g, arg2878, &optargs2879);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -22713,10 +22861,10 @@ test_ntfs_3g_probe_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2874[] = { "ntfs3g", NULL };
-  if (!guestfs_feature_available (g, (char **) features2874)) {
+  const char *features2881[] = { "ntfs3g", NULL };
+  if (!guestfs_feature_available (g, (char **) features2881)) {
     skipped ("test_ntfs_3g_probe_0", "group %s not available in daemon",
-             features2874[0]);
+             features2881[0]);
     return 0;
   }
 
@@ -22745,23 +22893,23 @@ static int
 test_ntfs_3g_probe_0_perform (guestfs_h *g)
 {
   /* TestResult for ntfs_3g_probe (0) */
-  const char *arg2875 = "/dev/sda";
-  const char *arg2876 = "mbr";
+  const char *arg2882 = "/dev/sda";
+  const char *arg2883 = "mbr";
   int ret2;
-  ret2 = guestfs_part_disk (g, arg2875, arg2876);
+  ret2 = guestfs_part_disk (g, arg2882, arg2883);
   if (ret2 == -1)
     return -1;
-  const char *arg2878 = "ntfs";
-  const char *arg2879 = "/dev/sda1";
-  struct guestfs_mkfs_opts_argv optargs2880;
-  optargs2880.bitmask = UINT64_C(0x0);
+  const char *arg2885 = "ntfs";
+  const char *arg2886 = "/dev/sda1";
+  struct guestfs_mkfs_opts_argv optargs2887;
+  optargs2887.bitmask = UINT64_C(0x0);
   int ret1;
-  ret1 = guestfs_mkfs_opts_argv (g, arg2878, arg2879, &optargs2880);
+  ret1 = guestfs_mkfs_opts_argv (g, arg2885, arg2886, &optargs2887);
   if (ret1 == -1)
     return -1;
-  const char *arg2882 = "/dev/sda1";
+  const char *arg2889 = "/dev/sda1";
   int ret;
-  ret = guestfs_ntfs_3g_probe (g, 1, arg2882);
+  ret = guestfs_ntfs_3g_probe (g, 1, arg2889);
   if (ret == -1)
     return -1;
   if (! (ret == 0)) {
@@ -22785,10 +22933,10 @@ test_ntfs_3g_probe_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2884[] = { "ntfs3g", NULL };
-  if (!guestfs_feature_available (g, (char **) features2884)) {
+  const char *features2891[] = { "ntfs3g", NULL };
+  if (!guestfs_feature_available (g, (char **) features2891)) {
     skipped ("test_ntfs_3g_probe_1", "group %s not available in daemon",
-             features2884[0]);
+             features2891[0]);
     return 0;
   }
 
@@ -22817,23 +22965,23 @@ static int
 test_ntfs_3g_probe_1_perform (guestfs_h *g)
 {
   /* TestResult for ntfs_3g_probe (1) */
-  const char *arg2885 = "/dev/sda";
-  const char *arg2886 = "mbr";
+  const char *arg2892 = "/dev/sda";
+  const char *arg2893 = "mbr";
   int ret2;
-  ret2 = guestfs_part_disk (g, arg2885, arg2886);
+  ret2 = guestfs_part_disk (g, arg2892, arg2893);
   if (ret2 == -1)
     return -1;
-  const char *arg2888 = "ext2";
-  const char *arg2889 = "/dev/sda1";
-  struct guestfs_mkfs_opts_argv optargs2890;
-  optargs2890.bitmask = UINT64_C(0x0);
+  const char *arg2895 = "ext2";
+  const char *arg2896 = "/dev/sda1";
+  struct guestfs_mkfs_opts_argv optargs2897;
+  optargs2897.bitmask = UINT64_C(0x0);
   int ret1;
-  ret1 = guestfs_mkfs_opts_argv (g, arg2888, arg2889, &optargs2890);
+  ret1 = guestfs_mkfs_opts_argv (g, arg2895, arg2896, &optargs2897);
   if (ret1 == -1)
     return -1;
-  const char *arg2892 = "/dev/sda1";
+  const char *arg2899 = "/dev/sda1";
   int ret;
-  ret = guestfs_ntfs_3g_probe (g, 1, arg2892);
+  ret = guestfs_ntfs_3g_probe (g, 1, arg2899);
   if (ret == -1)
     return -1;
   if (! (ret == 12)) {
@@ -22857,10 +23005,10 @@ test_ntfsfix_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2894[] = { "ntfs3g", NULL };
-  if (!guestfs_feature_available (g, (char **) features2894)) {
+  const char *features2901[] = { "ntfs3g", NULL };
+  if (!guestfs_feature_available (g, (char **) features2901)) {
     skipped ("test_ntfsfix_0", "group %s not available in daemon",
-             features2894[0]);
+             features2901[0]);
     return 0;
   }
 
@@ -22889,21 +23037,21 @@ static int
 test_ntfsfix_0_perform (guestfs_h *g)
 {
   /* TestRun for ntfsfix (0) */
-  const char *arg2896 = "ntfs";
-  const char *arg2897 = "/dev/sda1";
-  struct guestfs_mkfs_opts_argv optargs2898;
-  optargs2898.bitmask = UINT64_C(0x0);
-  int ret2895;
-  ret2895 = guestfs_mkfs_opts_argv (g, arg2896, arg2897, &optargs2898);
-  if (ret2895 == -1)
+  const char *arg2903 = "ntfs";
+  const char *arg2904 = "/dev/sda1";
+  struct guestfs_mkfs_opts_argv optargs2905;
+  optargs2905.bitmask = UINT64_C(0x0);
+  int ret2902;
+  ret2902 = guestfs_mkfs_opts_argv (g, arg2903, arg2904, &optargs2905);
+  if (ret2902 == -1)
     return -1;
-  const char *arg2900 = "/dev/sda1";
-  struct guestfs_ntfsfix_argv optargs2901;
-  optargs2901.clearbadsectors = 0;
-  optargs2901.bitmask = UINT64_C(0x1);
-  int ret2899;
-  ret2899 = guestfs_ntfsfix_argv (g, arg2900, &optargs2901);
-  if (ret2899 == -1)
+  const char *arg2907 = "/dev/sda1";
+  struct guestfs_ntfsfix_argv optargs2908;
+  optargs2908.clearbadsectors = 0;
+  optargs2908.bitmask = UINT64_C(0x1);
+  int ret2906;
+  ret2906 = guestfs_ntfsfix_argv (g, arg2907, &optargs2908);
+  if (ret2906 == -1)
     return -1;
   return 0;
 }
@@ -22944,17 +23092,17 @@ static int
 test_part_add_0_perform (guestfs_h *g)
 {
   /* TestRun for part_add (0) */
-  const char *arg2903 = "/dev/sda";
-  const char *arg2904 = "mbr";
-  int ret2902;
-  ret2902 = guestfs_part_init (g, arg2903, arg2904);
-  if (ret2902 == -1)
+  const char *arg2910 = "/dev/sda";
+  const char *arg2911 = "mbr";
+  int ret2909;
+  ret2909 = guestfs_part_init (g, arg2910, arg2911);
+  if (ret2909 == -1)
     return -1;
-  const char *arg2907 = "/dev/sda";
-  const char *arg2908 = "primary";
-  int ret2906;
-  ret2906 = guestfs_part_add (g, arg2907, arg2908, 1, -1);
-  if (ret2906 == -1)
+  const char *arg2914 = "/dev/sda";
+  const char *arg2915 = "primary";
+  int ret2913;
+  ret2913 = guestfs_part_add (g, arg2914, arg2915, 1, -1);
+  if (ret2913 == -1)
     return -1;
   return 0;
 }
@@ -22995,23 +23143,23 @@ static int
 test_part_add_1_perform (guestfs_h *g)
 {
   /* TestRun for part_add (1) */
-  const char *arg2913 = "/dev/sda";
-  const char *arg2914 = "gpt";
-  int ret2912;
-  ret2912 = guestfs_part_init (g, arg2913, arg2914);
-  if (ret2912 == -1)
+  const char *arg2920 = "/dev/sda";
+  const char *arg2921 = "gpt";
+  int ret2919;
+  ret2919 = guestfs_part_init (g, arg2920, arg2921);
+  if (ret2919 == -1)
     return -1;
-  const char *arg2917 = "/dev/sda";
-  const char *arg2918 = "primary";
-  int ret2916;
-  ret2916 = guestfs_part_add (g, arg2917, arg2918, 34, 127);
-  if (ret2916 == -1)
+  const char *arg2924 = "/dev/sda";
+  const char *arg2925 = "primary";
+  int ret2923;
+  ret2923 = guestfs_part_add (g, arg2924, arg2925, 34, 127);
+  if (ret2923 == -1)
     return -1;
-  const char *arg2923 = "/dev/sda";
-  const char *arg2924 = "primary";
-  int ret2922;
-  ret2922 = guestfs_part_add (g, arg2923, arg2924, 128, -34);
-  if (ret2922 == -1)
+  const char *arg2930 = "/dev/sda";
+  const char *arg2931 = "primary";
+  int ret2929;
+  ret2929 = guestfs_part_add (g, arg2930, arg2931, 128, -34);
+  if (ret2929 == -1)
     return -1;
   return 0;
 }
@@ -23052,35 +23200,35 @@ static int
 test_part_add_2_perform (guestfs_h *g)
 {
   /* TestRun for part_add (2) */
-  const char *arg2929 = "/dev/sda";
-  const char *arg2930 = "mbr";
-  int ret2928;
-  ret2928 = guestfs_part_init (g, arg2929, arg2930);
-  if (ret2928 == -1)
+  const char *arg2936 = "/dev/sda";
+  const char *arg2937 = "mbr";
+  int ret2935;
+  ret2935 = guestfs_part_init (g, arg2936, arg2937);
+  if (ret2935 == -1)
     return -1;
-  const char *arg2933 = "/dev/sda";
-  const char *arg2934 = "primary";
-  int ret2932;
-  ret2932 = guestfs_part_add (g, arg2933, arg2934, 32, 127);
-  if (ret2932 == -1)
+  const char *arg2940 = "/dev/sda";
+  const char *arg2941 = "primary";
+  int ret2939;
+  ret2939 = guestfs_part_add (g, arg2940, arg2941, 32, 127);
+  if (ret2939 == -1)
     return -1;
-  const char *arg2939 = "/dev/sda";
-  const char *arg2940 = "primary";
-  int ret2938;
-  ret2938 = guestfs_part_add (g, arg2939, arg2940, 128, 255);
-  if (ret2938 == -1)
+  const char *arg2946 = "/dev/sda";
+  const char *arg2947 = "primary";
+  int ret2945;
+  ret2945 = guestfs_part_add (g, arg2946, arg2947, 128, 255);
+  if (ret2945 == -1)
     return -1;
-  const char *arg2945 = "/dev/sda";
-  const char *arg2946 = "primary";
-  int ret2944;
-  ret2944 = guestfs_part_add (g, arg2945, arg2946, 256, 511);
-  if (ret2944 == -1)
+  const char *arg2952 = "/dev/sda";
+  const char *arg2953 = "primary";
+  int ret2951;
+  ret2951 = guestfs_part_add (g, arg2952, arg2953, 256, 511);
+  if (ret2951 == -1)
     return -1;
-  const char *arg2951 = "/dev/sda";
-  const char *arg2952 = "primary";
-  int ret2950;
-  ret2950 = guestfs_part_add (g, arg2951, arg2952, 512, -1);
-  if (ret2950 == -1)
+  const char *arg2958 = "/dev/sda";
+  const char *arg2959 = "primary";
+  int ret2957;
+  ret2957 = guestfs_part_add (g, arg2958, arg2959, 512, -1);
+  if (ret2957 == -1)
     return -1;
   return 0;
 }
@@ -23121,22 +23269,22 @@ static int
 test_part_del_0_perform (guestfs_h *g)
 {
   /* TestRun for part_del (0) */
-  const char *arg2957 = "/dev/sda";
-  const char *arg2958 = "mbr";
-  int ret2956;
-  ret2956 = guestfs_part_init (g, arg2957, arg2958);
-  if (ret2956 == -1)
+  const char *arg2964 = "/dev/sda";
+  const char *arg2965 = "mbr";
+  int ret2963;
+  ret2963 = guestfs_part_init (g, arg2964, arg2965);
+  if (ret2963 == -1)
     return -1;
-  const char *arg2961 = "/dev/sda";
-  const char *arg2962 = "primary";
-  int ret2960;
-  ret2960 = guestfs_part_add (g, arg2961, arg2962, 1, -1);
-  if (ret2960 == -1)
+  const char *arg2968 = "/dev/sda";
+  const char *arg2969 = "primary";
+  int ret2967;
+  ret2967 = guestfs_part_add (g, arg2968, arg2969, 1, -1);
+  if (ret2967 == -1)
     return -1;
-  const char *arg2967 = "/dev/sda";
-  int ret2966;
-  ret2966 = guestfs_part_del (g, arg2967, 1);
-  if (ret2966 == -1)
+  const char *arg2974 = "/dev/sda";
+  int ret2973;
+  ret2973 = guestfs_part_del (g, arg2974, 1);
+  if (ret2973 == -1)
     return -1;
   return 0;
 }
@@ -23177,11 +23325,11 @@ static int
 test_part_disk_0_perform (guestfs_h *g)
 {
   /* TestRun for part_disk (0) */
-  const char *arg2971 = "/dev/sda";
-  const char *arg2972 = "mbr";
-  int ret2970;
-  ret2970 = guestfs_part_disk (g, arg2971, arg2972);
-  if (ret2970 == -1)
+  const char *arg2978 = "/dev/sda";
+  const char *arg2979 = "mbr";
+  int ret2977;
+  ret2977 = guestfs_part_disk (g, arg2978, arg2979);
+  if (ret2977 == -1)
     return -1;
   return 0;
 }
@@ -23222,11 +23370,11 @@ static int
 test_part_disk_1_perform (guestfs_h *g)
 {
   /* TestRun for part_disk (1) */
-  const char *arg2975 = "/dev/sda";
-  const char *arg2976 = "gpt";
-  int ret2974;
-  ret2974 = guestfs_part_disk (g, arg2975, arg2976);
-  if (ret2974 == -1)
+  const char *arg2982 = "/dev/sda";
+  const char *arg2983 = "gpt";
+  int ret2981;
+  ret2981 = guestfs_part_disk (g, arg2982, arg2983);
+  if (ret2981 == -1)
     return -1;
   return 0;
 }
@@ -23267,26 +23415,26 @@ static int
 test_part_get_bootable_0_perform (guestfs_h *g)
 {
   /* TestResultTrue for part_get_bootable (0) */
-  const char *arg2979 = "/dev/sda";
-  const char *arg2980 = "mbr";
-  int ret2978;
-  ret2978 = guestfs_part_init (g, arg2979, arg2980);
-  if (ret2978 == -1)
+  const char *arg2986 = "/dev/sda";
+  const char *arg2987 = "mbr";
+  int ret2985;
+  ret2985 = guestfs_part_init (g, arg2986, arg2987);
+  if (ret2985 == -1)
     return -1;
-  const char *arg2983 = "/dev/sda";
-  const char *arg2984 = "primary";
-  int ret2982;
-  ret2982 = guestfs_part_add (g, arg2983, arg2984, 1, -1);
-  if (ret2982 == -1)
+  const char *arg2990 = "/dev/sda";
+  const char *arg2991 = "primary";
+  int ret2989;
+  ret2989 = guestfs_part_add (g, arg2990, arg2991, 1, -1);
+  if (ret2989 == -1)
     return -1;
-  const char *arg2989 = "/dev/sda";
-  int ret2988;
-  ret2988 = guestfs_part_set_bootable (g, arg2989, 1, 1);
-  if (ret2988 == -1)
+  const char *arg2996 = "/dev/sda";
+  int ret2995;
+  ret2995 = guestfs_part_set_bootable (g, arg2996, 1, 1);
+  if (ret2995 == -1)
     return -1;
-  const char *arg2993 = "/dev/sda";
+  const char *arg3000 = "/dev/sda";
   int ret;
-  ret = guestfs_part_get_bootable (g, arg2993, 1);
+  ret = guestfs_part_get_bootable (g, arg3000, 1);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -23308,10 +23456,10 @@ test_part_get_disk_guid_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features2996[] = { "gdisk", NULL };
-  if (!guestfs_feature_available (g, (char **) features2996)) {
+  const char *features3003[] = { "gdisk", NULL };
+  if (!guestfs_feature_available (g, (char **) features3003)) {
     skipped ("test_part_get_disk_guid_0", "group %s not available in daemon",
-             features2996[0]);
+             features3003[0]);
     return 0;
   }
 
@@ -23340,15 +23488,15 @@ static int
 test_part_get_disk_guid_0_perform (guestfs_h *g)
 {
   /* TestResultString for part_get_disk_guid (0) */
-  const char *arg2998 = "/dev/sda";
-  const char *arg2999 = "01234567-89AB-CDEF-0123-456789ABCDEF";
-  int ret2997;
-  ret2997 = guestfs_part_set_disk_guid (g, arg2998, arg2999);
-  if (ret2997 == -1)
+  const char *arg3005 = "/dev/sda";
+  const char *arg3006 = "01234567-89AB-CDEF-0123-456789ABCDEF";
+  int ret3004;
+  ret3004 = guestfs_part_set_disk_guid (g, arg3005, arg3006);
+  if (ret3004 == -1)
     return -1;
-  const char *arg3001 = "/dev/sda";
+  const char *arg3008 = "/dev/sda";
   CLEANUP_FREE char *ret;
-  ret = guestfs_part_get_disk_guid (g, arg3001);
+  ret = guestfs_part_get_disk_guid (g, arg3008);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "01234567-89AB-CDEF-0123-456789ABCDEF")) {
@@ -23370,10 +23518,10 @@ test_part_get_gpt_attributes_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3003[] = { "gdisk", NULL };
-  if (!guestfs_feature_available (g, (char **) features3003)) {
+  const char *features3010[] = { "gdisk", NULL };
+  if (!guestfs_feature_available (g, (char **) features3010)) {
     skipped ("test_part_get_gpt_attributes_0", "group %s not available in daemon",
-             features3003[0]);
+             features3010[0]);
     return 0;
   }
 
@@ -23402,14 +23550,14 @@ static int
 test_part_get_gpt_attributes_0_perform (guestfs_h *g)
 {
   /* TestResult for part_get_gpt_attributes (0) */
-  const char *arg3004 = "/dev/sda";
+  const char *arg3011 = "/dev/sda";
   int ret1;
-  ret1 = guestfs_part_set_gpt_attributes (g, arg3004, 1, 0);
+  ret1 = guestfs_part_set_gpt_attributes (g, arg3011, 1, 0);
   if (ret1 == -1)
     return -1;
-  const char *arg3008 = "/dev/sda";
+  const char *arg3015 = "/dev/sda";
   int64_t ret;
-  ret = guestfs_part_get_gpt_attributes (g, arg3008, 1);
+  ret = guestfs_part_get_gpt_attributes (g, arg3015, 1);
   if (ret == -1)
     return -1;
   if (! (ret == 0)) {
@@ -23433,10 +23581,10 @@ test_part_get_gpt_guid_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3011[] = { "gdisk", NULL };
-  if (!guestfs_feature_available (g, (char **) features3011)) {
+  const char *features3018[] = { "gdisk", NULL };
+  if (!guestfs_feature_available (g, (char **) features3018)) {
     skipped ("test_part_get_gpt_guid_0", "group %s not available in daemon",
-             features3011[0]);
+             features3018[0]);
     return 0;
   }
 
@@ -23465,15 +23613,15 @@ static int
 test_part_get_gpt_guid_0_perform (guestfs_h *g)
 {
   /* TestResultString for part_get_gpt_guid (0) */
-  const char *arg3013 = "/dev/sda";
-  const char *arg3015 = "01234567-89AB-CDEF-0123-456789ABCDEF";
-  int ret3012;
-  ret3012 = guestfs_part_set_gpt_guid (g, arg3013, 1, arg3015);
-  if (ret3012 == -1)
+  const char *arg3020 = "/dev/sda";
+  const char *arg3022 = "01234567-89AB-CDEF-0123-456789ABCDEF";
+  int ret3019;
+  ret3019 = guestfs_part_set_gpt_guid (g, arg3020, 1, arg3022);
+  if (ret3019 == -1)
     return -1;
-  const char *arg3017 = "/dev/sda";
+  const char *arg3024 = "/dev/sda";
   CLEANUP_FREE char *ret;
-  ret = guestfs_part_get_gpt_guid (g, arg3017, 1);
+  ret = guestfs_part_get_gpt_guid (g, arg3024, 1);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "01234567-89AB-CDEF-0123-456789ABCDEF")) {
@@ -23495,10 +23643,10 @@ test_part_get_gpt_type_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3020[] = { "gdisk", NULL };
-  if (!guestfs_feature_available (g, (char **) features3020)) {
+  const char *features3027[] = { "gdisk", NULL };
+  if (!guestfs_feature_available (g, (char **) features3027)) {
     skipped ("test_part_get_gpt_type_0", "group %s not available in daemon",
-             features3020[0]);
+             features3027[0]);
     return 0;
   }
 
@@ -23527,15 +23675,15 @@ static int
 test_part_get_gpt_type_0_perform (guestfs_h *g)
 {
   /* TestResultString for part_get_gpt_type (0) */
-  const char *arg3022 = "/dev/sda";
-  const char *arg3024 = "01234567-89AB-CDEF-0123-456789ABCDEF";
-  int ret3021;
-  ret3021 = guestfs_part_set_gpt_type (g, arg3022, 1, arg3024);
-  if (ret3021 == -1)
+  const char *arg3029 = "/dev/sda";
+  const char *arg3031 = "01234567-89AB-CDEF-0123-456789ABCDEF";
+  int ret3028;
+  ret3028 = guestfs_part_set_gpt_type (g, arg3029, 1, arg3031);
+  if (ret3028 == -1)
     return -1;
-  const char *arg3026 = "/dev/sda";
+  const char *arg3033 = "/dev/sda";
   CLEANUP_FREE char *ret;
-  ret = guestfs_part_get_gpt_type (g, arg3026, 1);
+  ret = guestfs_part_get_gpt_type (g, arg3033, 1);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "01234567-89AB-CDEF-0123-456789ABCDEF")) {
@@ -23582,26 +23730,26 @@ static int
 test_part_get_mbr_id_0_perform (guestfs_h *g)
 {
   /* TestResult for part_get_mbr_id (0) */
-  const char *arg3029 = "/dev/sda";
-  const char *arg3030 = "mbr";
+  const char *arg3036 = "/dev/sda";
+  const char *arg3037 = "mbr";
   int ret3;
-  ret3 = guestfs_part_init (g, arg3029, arg3030);
+  ret3 = guestfs_part_init (g, arg3036, arg3037);
   if (ret3 == -1)
     return -1;
-  const char *arg3032 = "/dev/sda";
-  const char *arg3033 = "primary";
+  const char *arg3039 = "/dev/sda";
+  const char *arg3040 = "primary";
   int ret2;
-  ret2 = guestfs_part_add (g, arg3032, arg3033, 1, -1);
+  ret2 = guestfs_part_add (g, arg3039, arg3040, 1, -1);
   if (ret2 == -1)
     return -1;
-  const char *arg3037 = "/dev/sda";
+  const char *arg3044 = "/dev/sda";
   int ret1;
-  ret1 = guestfs_part_set_mbr_id (g, arg3037, 1, 127);
+  ret1 = guestfs_part_set_mbr_id (g, arg3044, 1, 127);
   if (ret1 == -1)
     return -1;
-  const char *arg3041 = "/dev/sda";
+  const char *arg3048 = "/dev/sda";
   int ret;
-  ret = guestfs_part_get_mbr_id (g, arg3041, 1);
+  ret = guestfs_part_get_mbr_id (g, arg3048, 1);
   if (ret == -1)
     return -1;
   if (! (ret == 0x7f)) {
@@ -23650,33 +23798,33 @@ static int
 test_part_get_mbr_part_type_0_perform (guestfs_h *g)
 {
   /* TestResultString for part_get_mbr_part_type (0) */
-  const char *arg3045 = "/dev/sda";
-  const char *arg3046 = "mbr";
-  int ret3044;
-  ret3044 = guestfs_part_init (g, arg3045, arg3046);
-  if (ret3044 == -1)
+  const char *arg3052 = "/dev/sda";
+  const char *arg3053 = "mbr";
+  int ret3051;
+  ret3051 = guestfs_part_init (g, arg3052, arg3053);
+  if (ret3051 == -1)
     return -1;
-  const char *arg3049 = "/dev/sda";
-  const char *arg3050 = "p";
-  int ret3048;
-  ret3048 = guestfs_part_add (g, arg3049, arg3050, 64, 204799);
-  if (ret3048 == -1)
+  const char *arg3056 = "/dev/sda";
+  const char *arg3057 = "p";
+  int ret3055;
+  ret3055 = guestfs_part_add (g, arg3056, arg3057, 64, 204799);
+  if (ret3055 == -1)
     return -1;
-  const char *arg3055 = "/dev/sda";
-  const char *arg3056 = "e";
-  int ret3054;
-  ret3054 = guestfs_part_add (g, arg3055, arg3056, 204800, 614400);
-  if (ret3054 == -1)
+  const char *arg3062 = "/dev/sda";
+  const char *arg3063 = "e";
+  int ret3061;
+  ret3061 = guestfs_part_add (g, arg3062, arg3063, 204800, 614400);
+  if (ret3061 == -1)
     return -1;
-  const char *arg3061 = "/dev/sda";
-  const char *arg3062 = "l";
-  int ret3060;
-  ret3060 = guestfs_part_add (g, arg3061, arg3062, 204864, 205988);
-  if (ret3060 == -1)
+  const char *arg3068 = "/dev/sda";
+  const char *arg3069 = "l";
+  int ret3067;
+  ret3067 = guestfs_part_add (g, arg3068, arg3069, 204864, 205988);
+  if (ret3067 == -1)
     return -1;
-  const char *arg3066 = "/dev/sda";
+  const char *arg3073 = "/dev/sda";
   CLEANUP_FREE char *ret;
-  ret = guestfs_part_get_mbr_part_type (g, arg3066, 5);
+  ret = guestfs_part_get_mbr_part_type (g, arg3073, 5);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "logical")) {
@@ -23723,33 +23871,33 @@ static int
 test_part_get_mbr_part_type_1_perform (guestfs_h *g)
 {
   /* TestResultString for part_get_mbr_part_type (1) */
-  const char *arg3070 = "/dev/sda";
-  const char *arg3071 = "mbr";
-  int ret3069;
-  ret3069 = guestfs_part_init (g, arg3070, arg3071);
-  if (ret3069 == -1)
+  const char *arg3077 = "/dev/sda";
+  const char *arg3078 = "mbr";
+  int ret3076;
+  ret3076 = guestfs_part_init (g, arg3077, arg3078);
+  if (ret3076 == -1)
     return -1;
-  const char *arg3074 = "/dev/sda";
-  const char *arg3075 = "p";
-  int ret3073;
-  ret3073 = guestfs_part_add (g, arg3074, arg3075, 64, 204799);
-  if (ret3073 == -1)
+  const char *arg3081 = "/dev/sda";
+  const char *arg3082 = "p";
+  int ret3080;
+  ret3080 = guestfs_part_add (g, arg3081, arg3082, 64, 204799);
+  if (ret3080 == -1)
     return -1;
-  const char *arg3080 = "/dev/sda";
-  const char *arg3081 = "e";
-  int ret3079;
-  ret3079 = guestfs_part_add (g, arg3080, arg3081, 204800, 614400);
-  if (ret3079 == -1)
+  const char *arg3087 = "/dev/sda";
+  const char *arg3088 = "e";
+  int ret3086;
+  ret3086 = guestfs_part_add (g, arg3087, arg3088, 204800, 614400);
+  if (ret3086 == -1)
     return -1;
-  const char *arg3086 = "/dev/sda";
-  const char *arg3087 = "l";
-  int ret3085;
-  ret3085 = guestfs_part_add (g, arg3086, arg3087, 204864, 205988);
-  if (ret3085 == -1)
+  const char *arg3093 = "/dev/sda";
+  const char *arg3094 = "l";
+  int ret3092;
+  ret3092 = guestfs_part_add (g, arg3093, arg3094, 204864, 205988);
+  if (ret3092 == -1)
     return -1;
-  const char *arg3091 = "/dev/sda";
+  const char *arg3098 = "/dev/sda";
   CLEANUP_FREE char *ret;
-  ret = guestfs_part_get_mbr_part_type (g, arg3091, 2);
+  ret = guestfs_part_get_mbr_part_type (g, arg3098, 2);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "extended")) {
@@ -23796,15 +23944,15 @@ static int
 test_part_get_parttype_0_perform (guestfs_h *g)
 {
   /* TestResultString for part_get_parttype (0) */
-  const char *arg3095 = "/dev/sda";
-  const char *arg3096 = "gpt";
-  int ret3094;
-  ret3094 = guestfs_part_disk (g, arg3095, arg3096);
-  if (ret3094 == -1)
+  const char *arg3102 = "/dev/sda";
+  const char *arg3103 = "gpt";
+  int ret3101;
+  ret3101 = guestfs_part_disk (g, arg3102, arg3103);
+  if (ret3101 == -1)
     return -1;
-  const char *arg3098 = "/dev/sda";
+  const char *arg3105 = "/dev/sda";
   CLEANUP_FREE char *ret;
-  ret = guestfs_part_get_parttype (g, arg3098);
+  ret = guestfs_part_get_parttype (g, arg3105);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "gpt")) {
@@ -23851,11 +23999,11 @@ static int
 test_part_init_0_perform (guestfs_h *g)
 {
   /* TestRun for part_init (0) */
-  const char *arg3101 = "/dev/sda";
-  const char *arg3102 = "gpt";
-  int ret3100;
-  ret3100 = guestfs_part_init (g, arg3101, arg3102);
-  if (ret3100 == -1)
+  const char *arg3108 = "/dev/sda";
+  const char *arg3109 = "gpt";
+  int ret3107;
+  ret3107 = guestfs_part_init (g, arg3108, arg3109);
+  if (ret3107 == -1)
     return -1;
   return 0;
 }
@@ -23896,22 +24044,22 @@ static int
 test_part_resize_0_perform (guestfs_h *g)
 {
   /* TestRun for part_resize (0) */
-  const char *arg3105 = "/dev/sda";
-  const char *arg3106 = "mbr";
-  int ret3104;
-  ret3104 = guestfs_part_init (g, arg3105, arg3106);
-  if (ret3104 == -1)
+  const char *arg3112 = "/dev/sda";
+  const char *arg3113 = "mbr";
+  int ret3111;
+  ret3111 = guestfs_part_init (g, arg3112, arg3113);
+  if (ret3111 == -1)
     return -1;
-  const char *arg3109 = "/dev/sda";
-  const char *arg3110 = "primary";
-  int ret3108;
-  ret3108 = guestfs_part_add (g, arg3109, arg3110, 1, -1025);
-  if (ret3108 == -1)
+  const char *arg3116 = "/dev/sda";
+  const char *arg3117 = "primary";
+  int ret3115;
+  ret3115 = guestfs_part_add (g, arg3116, arg3117, 1, -1025);
+  if (ret3115 == -1)
     return -1;
-  const char *arg3115 = "/dev/sda";
-  int ret3114;
-  ret3114 = guestfs_part_resize (g, arg3115, 1, -1);
-  if (ret3114 == -1)
+  const char *arg3122 = "/dev/sda";
+  int ret3121;
+  ret3121 = guestfs_part_resize (g, arg3122, 1, -1);
+  if (ret3121 == -1)
     return -1;
   return 0;
 }
@@ -23952,16 +24100,16 @@ static int
 test_part_set_bootable_0_perform (guestfs_h *g)
 {
   /* TestRun for part_set_bootable (0) */
-  const char *arg3120 = "/dev/sda";
-  const char *arg3121 = "mbr";
-  int ret3119;
-  ret3119 = guestfs_part_disk (g, arg3120, arg3121);
-  if (ret3119 == -1)
+  const char *arg3127 = "/dev/sda";
+  const char *arg3128 = "mbr";
+  int ret3126;
+  ret3126 = guestfs_part_disk (g, arg3127, arg3128);
+  if (ret3126 == -1)
     return -1;
-  const char *arg3124 = "/dev/sda";
-  int ret3123;
-  ret3123 = guestfs_part_set_bootable (g, arg3124, 1, 1);
-  if (ret3123 == -1)
+  const char *arg3131 = "/dev/sda";
+  int ret3130;
+  ret3130 = guestfs_part_set_bootable (g, arg3131, 1, 1);
+  if (ret3130 == -1)
     return -1;
   return 0;
 }
@@ -23977,10 +24125,10 @@ test_part_set_disk_guid_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3128[] = { "gdisk", NULL };
-  if (!guestfs_feature_available (g, (char **) features3128)) {
+  const char *features3135[] = { "gdisk", NULL };
+  if (!guestfs_feature_available (g, (char **) features3135)) {
     skipped ("test_part_set_disk_guid_0", "group %s not available in daemon",
-             features3128[0]);
+             features3135[0]);
     return 0;
   }
 
@@ -24009,13 +24157,13 @@ static int
 test_part_set_disk_guid_0_perform (guestfs_h *g)
 {
   /* TestLastFail for part_set_disk_guid (0) */
-  const char *arg3130 = "/dev/sda";
-  const char *arg3131 = "f";
-  int ret3129;
+  const char *arg3137 = "/dev/sda";
+  const char *arg3138 = "f";
+  int ret3136;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret3129 = guestfs_part_set_disk_guid (g, arg3130, arg3131);
+  ret3136 = guestfs_part_set_disk_guid (g, arg3137, arg3138);
   guestfs_pop_error_handler (g);
-  if (ret3129 != -1)
+  if (ret3136 != -1)
     return -1;
   return 0;
 }
@@ -24031,10 +24179,10 @@ test_part_set_disk_guid_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3133[] = { "gdisk", NULL };
-  if (!guestfs_feature_available (g, (char **) features3133)) {
+  const char *features3140[] = { "gdisk", NULL };
+  if (!guestfs_feature_available (g, (char **) features3140)) {
     skipped ("test_part_set_disk_guid_1", "group %s not available in daemon",
-             features3133[0]);
+             features3140[0]);
     return 0;
   }
 
@@ -24063,15 +24211,15 @@ static int
 test_part_set_disk_guid_1_perform (guestfs_h *g)
 {
   /* TestResultString for part_set_disk_guid (1) */
-  const char *arg3135 = "/dev/sda";
-  const char *arg3136 = "01234567-89AB-CDEF-0123-456789ABCDEF";
-  int ret3134;
-  ret3134 = guestfs_part_set_disk_guid (g, arg3135, arg3136);
-  if (ret3134 == -1)
+  const char *arg3142 = "/dev/sda";
+  const char *arg3143 = "01234567-89AB-CDEF-0123-456789ABCDEF";
+  int ret3141;
+  ret3141 = guestfs_part_set_disk_guid (g, arg3142, arg3143);
+  if (ret3141 == -1)
     return -1;
-  const char *arg3138 = "/dev/sda";
+  const char *arg3145 = "/dev/sda";
   CLEANUP_FREE char *ret;
-  ret = guestfs_part_get_disk_guid (g, arg3138);
+  ret = guestfs_part_get_disk_guid (g, arg3145);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "01234567-89AB-CDEF-0123-456789ABCDEF")) {
@@ -24093,10 +24241,10 @@ test_part_set_disk_guid_random_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3140[] = { "gdisk", NULL };
-  if (!guestfs_feature_available (g, (char **) features3140)) {
+  const char *features3147[] = { "gdisk", NULL };
+  if (!guestfs_feature_available (g, (char **) features3147)) {
     skipped ("test_part_set_disk_guid_random_0", "group %s not available in daemon",
-             features3140[0]);
+             features3147[0]);
     return 0;
   }
 
@@ -24125,10 +24273,10 @@ static int
 test_part_set_disk_guid_random_0_perform (guestfs_h *g)
 {
   /* TestRun for part_set_disk_guid_random (0) */
-  const char *arg3142 = "/dev/sda";
-  int ret3141;
-  ret3141 = guestfs_part_set_disk_guid_random (g, arg3142);
-  if (ret3141 == -1)
+  const char *arg3149 = "/dev/sda";
+  int ret3148;
+  ret3148 = guestfs_part_set_disk_guid_random (g, arg3149);
+  if (ret3148 == -1)
     return -1;
   return 0;
 }
@@ -24144,10 +24292,10 @@ test_part_set_gpt_attributes_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3144[] = { "gdisk", NULL };
-  if (!guestfs_feature_available (g, (char **) features3144)) {
+  const char *features3151[] = { "gdisk", NULL };
+  if (!guestfs_feature_available (g, (char **) features3151)) {
     skipped ("test_part_set_gpt_attributes_0", "group %s not available in daemon",
-             features3144[0]);
+             features3151[0]);
     return 0;
   }
 
@@ -24176,14 +24324,14 @@ static int
 test_part_set_gpt_attributes_0_perform (guestfs_h *g)
 {
   /* TestResult for part_set_gpt_attributes (0) */
-  const char *arg3145 = "/dev/sda";
+  const char *arg3152 = "/dev/sda";
   int ret1;
-  ret1 = guestfs_part_set_gpt_attributes (g, arg3145, 1, 4);
+  ret1 = guestfs_part_set_gpt_attributes (g, arg3152, 1, 4);
   if (ret1 == -1)
     return -1;
-  const char *arg3149 = "/dev/sda";
+  const char *arg3156 = "/dev/sda";
   int64_t ret;
-  ret = guestfs_part_get_gpt_attributes (g, arg3149, 1);
+  ret = guestfs_part_get_gpt_attributes (g, arg3156, 1);
   if (ret == -1)
     return -1;
   if (! (ret == 4)) {
@@ -24207,10 +24355,10 @@ test_part_set_gpt_guid_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3152[] = { "gdisk", NULL };
-  if (!guestfs_feature_available (g, (char **) features3152)) {
+  const char *features3159[] = { "gdisk", NULL };
+  if (!guestfs_feature_available (g, (char **) features3159)) {
     skipped ("test_part_set_gpt_guid_0", "group %s not available in daemon",
-             features3152[0]);
+             features3159[0]);
     return 0;
   }
 
@@ -24239,13 +24387,13 @@ static int
 test_part_set_gpt_guid_0_perform (guestfs_h *g)
 {
   /* TestLastFail for part_set_gpt_guid (0) */
-  const char *arg3154 = "/dev/sda";
-  const char *arg3156 = "f";
-  int ret3153;
+  const char *arg3161 = "/dev/sda";
+  const char *arg3163 = "f";
+  int ret3160;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret3153 = guestfs_part_set_gpt_guid (g, arg3154, 1, arg3156);
+  ret3160 = guestfs_part_set_gpt_guid (g, arg3161, 1, arg3163);
   guestfs_pop_error_handler (g);
-  if (ret3153 != -1)
+  if (ret3160 != -1)
     return -1;
   return 0;
 }
@@ -24261,10 +24409,10 @@ test_part_set_gpt_guid_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3158[] = { "gdisk", NULL };
-  if (!guestfs_feature_available (g, (char **) features3158)) {
+  const char *features3165[] = { "gdisk", NULL };
+  if (!guestfs_feature_available (g, (char **) features3165)) {
     skipped ("test_part_set_gpt_guid_1", "group %s not available in daemon",
-             features3158[0]);
+             features3165[0]);
     return 0;
   }
 
@@ -24293,15 +24441,15 @@ static int
 test_part_set_gpt_guid_1_perform (guestfs_h *g)
 {
   /* TestResultString for part_set_gpt_guid (1) */
-  const char *arg3160 = "/dev/sda";
-  const char *arg3162 = "01234567-89AB-CDEF-0123-456789ABCDEF";
-  int ret3159;
-  ret3159 = guestfs_part_set_gpt_guid (g, arg3160, 1, arg3162);
-  if (ret3159 == -1)
+  const char *arg3167 = "/dev/sda";
+  const char *arg3169 = "01234567-89AB-CDEF-0123-456789ABCDEF";
+  int ret3166;
+  ret3166 = guestfs_part_set_gpt_guid (g, arg3167, 1, arg3169);
+  if (ret3166 == -1)
     return -1;
-  const char *arg3164 = "/dev/sda";
+  const char *arg3171 = "/dev/sda";
   CLEANUP_FREE char *ret;
-  ret = guestfs_part_get_gpt_guid (g, arg3164, 1);
+  ret = guestfs_part_get_gpt_guid (g, arg3171, 1);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "01234567-89AB-CDEF-0123-456789ABCDEF")) {
@@ -24323,10 +24471,10 @@ test_part_set_gpt_type_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3167[] = { "gdisk", NULL };
-  if (!guestfs_feature_available (g, (char **) features3167)) {
+  const char *features3174[] = { "gdisk", NULL };
+  if (!guestfs_feature_available (g, (char **) features3174)) {
     skipped ("test_part_set_gpt_type_0", "group %s not available in daemon",
-             features3167[0]);
+             features3174[0]);
     return 0;
   }
 
@@ -24355,13 +24503,13 @@ static int
 test_part_set_gpt_type_0_perform (guestfs_h *g)
 {
   /* TestLastFail for part_set_gpt_type (0) */
-  const char *arg3169 = "/dev/sda";
-  const char *arg3171 = "f";
-  int ret3168;
+  const char *arg3176 = "/dev/sda";
+  const char *arg3178 = "f";
+  int ret3175;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret3168 = guestfs_part_set_gpt_type (g, arg3169, 1, arg3171);
+  ret3175 = guestfs_part_set_gpt_type (g, arg3176, 1, arg3178);
   guestfs_pop_error_handler (g);
-  if (ret3168 != -1)
+  if (ret3175 != -1)
     return -1;
   return 0;
 }
@@ -24377,10 +24525,10 @@ test_part_set_gpt_type_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3173[] = { "gdisk", NULL };
-  if (!guestfs_feature_available (g, (char **) features3173)) {
+  const char *features3180[] = { "gdisk", NULL };
+  if (!guestfs_feature_available (g, (char **) features3180)) {
     skipped ("test_part_set_gpt_type_1", "group %s not available in daemon",
-             features3173[0]);
+             features3180[0]);
     return 0;
   }
 
@@ -24409,15 +24557,15 @@ static int
 test_part_set_gpt_type_1_perform (guestfs_h *g)
 {
   /* TestResultString for part_set_gpt_type (1) */
-  const char *arg3175 = "/dev/sda";
-  const char *arg3177 = "01234567-89AB-CDEF-0123-456789ABCDEF";
-  int ret3174;
-  ret3174 = guestfs_part_set_gpt_type (g, arg3175, 1, arg3177);
-  if (ret3174 == -1)
+  const char *arg3182 = "/dev/sda";
+  const char *arg3184 = "01234567-89AB-CDEF-0123-456789ABCDEF";
+  int ret3181;
+  ret3181 = guestfs_part_set_gpt_type (g, arg3182, 1, arg3184);
+  if (ret3181 == -1)
     return -1;
-  const char *arg3179 = "/dev/sda";
+  const char *arg3186 = "/dev/sda";
   CLEANUP_FREE char *ret;
-  ret = guestfs_part_get_gpt_type (g, arg3179, 1);
+  ret = guestfs_part_get_gpt_type (g, arg3186, 1);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "01234567-89AB-CDEF-0123-456789ABCDEF")) {
@@ -24464,17 +24612,17 @@ static int
 test_part_set_name_0_perform (guestfs_h *g)
 {
   /* TestRun for part_set_name (0) */
-  const char *arg3183 = "/dev/sda";
-  const char *arg3184 = "gpt";
-  int ret3182;
-  ret3182 = guestfs_part_disk (g, arg3183, arg3184);
-  if (ret3182 == -1)
+  const char *arg3190 = "/dev/sda";
+  const char *arg3191 = "gpt";
+  int ret3189;
+  ret3189 = guestfs_part_disk (g, arg3190, arg3191);
+  if (ret3189 == -1)
     return -1;
-  const char *arg3187 = "/dev/sda";
-  const char *arg3189 = "thepartname";
-  int ret3186;
-  ret3186 = guestfs_part_set_name (g, arg3187, 1, arg3189);
-  if (ret3186 == -1)
+  const char *arg3194 = "/dev/sda";
+  const char *arg3196 = "thepartname";
+  int ret3193;
+  ret3193 = guestfs_part_set_name (g, arg3194, 1, arg3196);
+  if (ret3193 == -1)
     return -1;
   return 0;
 }
@@ -24515,9 +24663,9 @@ static int
 test_part_to_dev_0_perform (guestfs_h *g)
 {
   /* TestResultDevice for part_to_dev (0) */
-  const char *arg3191 = "/dev/sda1";
+  const char *arg3198 = "/dev/sda1";
   CLEANUP_FREE char *ret;
-  ret = guestfs_part_to_dev (g, arg3191);
+  ret = guestfs_part_to_dev (g, arg3198);
   if (ret == NULL)
       return -1;
   if (compare_devices (ret, "/dev/sda") != 0) {
@@ -24564,12 +24712,12 @@ static int
 test_part_to_dev_1_perform (guestfs_h *g)
 {
   /* TestLastFail for part_to_dev (1) */
-  const char *arg3194 = "/dev/sda";
-  CLEANUP_FREE char *ret3193;
+  const char *arg3201 = "/dev/sda";
+  CLEANUP_FREE char *ret3200;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret3193 = guestfs_part_to_dev (g, arg3194);
+  ret3200 = guestfs_part_to_dev (g, arg3201);
   guestfs_pop_error_handler (g);
-  if (ret3193 != NULL)
+  if (ret3200 != NULL)
     return -1;
   return 0;
 }
@@ -24610,9 +24758,9 @@ static int
 test_part_to_partnum_0_perform (guestfs_h *g)
 {
   /* TestResult for part_to_partnum (0) */
-  const char *arg3196 = "/dev/sda1";
+  const char *arg3203 = "/dev/sda1";
   int ret;
-  ret = guestfs_part_to_partnum (g, arg3196);
+  ret = guestfs_part_to_partnum (g, arg3203);
   if (ret == -1)
     return -1;
   if (! (ret == 1)) {
@@ -24661,12 +24809,12 @@ static int
 test_part_to_partnum_1_perform (guestfs_h *g)
 {
   /* TestLastFail for part_to_partnum (1) */
-  const char *arg3199 = "/dev/sda";
-  int ret3198;
+  const char *arg3206 = "/dev/sda";
+  int ret3205;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret3198 = guestfs_part_to_partnum (g, arg3199);
+  ret3205 = guestfs_part_to_partnum (g, arg3206);
   guestfs_pop_error_handler (g);
-  if (ret3198 != -1)
+  if (ret3205 != -1)
     return -1;
   return 0;
 }
@@ -24707,9 +24855,9 @@ static int
 test_ping_daemon_0_perform (guestfs_h *g)
 {
   /* TestRun for ping_daemon (0) */
-  int ret3201;
-  ret3201 = guestfs_ping_daemon (g);
-  if (ret3201 == -1)
+  int ret3208;
+  ret3208 = guestfs_ping_daemon (g);
+  if (ret3208 == -1)
     return -1;
   return 0;
 }
@@ -24750,10 +24898,10 @@ static int
 test_pread_0_perform (guestfs_h *g)
 {
   /* TestResult for pread (0) */
-  const char *arg3203 = "/known-4";
+  const char *arg3210 = "/known-4";
   CLEANUP_FREE char *ret;
   size_t size;
-  ret = guestfs_pread (g, arg3203, 1, 3, &size);
+  ret = guestfs_pread (g, arg3210, 1, 3, &size);
   if (ret == NULL)
       return -1;
   if (! (compare_buffers (ret, size, "\n", 1) == 0)) {
@@ -24802,10 +24950,10 @@ static int
 test_pread_1_perform (guestfs_h *g)
 {
   /* TestResult for pread (1) */
-  const char *arg3207 = "/empty";
+  const char *arg3214 = "/empty";
   CLEANUP_FREE char *ret;
   size_t size;
-  ret = guestfs_pread (g, arg3207, 0, 100, &size);
+  ret = guestfs_pread (g, arg3214, 0, 100, &size);
   if (ret == NULL)
       return -1;
   if (! (compare_buffers (ret, size, NULL, 0) == 0)) {
@@ -24854,10 +25002,10 @@ static int
 test_pread_device_0_perform (guestfs_h *g)
 {
   /* TestResult for pread_device (0) */
-  const char *arg3211 = "/dev/sdd";
+  const char *arg3218 = "/dev/sdd";
   CLEANUP_FREE char *ret;
   size_t size;
-  ret = guestfs_pread_device (g, arg3211, 8, 32768, &size);
+  ret = guestfs_pread_device (g, arg3218, 8, 32768, &size);
   if (ret == NULL)
       return -1;
   if (! (compare_buffers (ret, size, "\1CD001\1\0", 8) == 0)) {
@@ -24881,10 +25029,10 @@ test_pvchange_uuid_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3215[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features3215)) {
+  const char *features3222[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features3222)) {
     skipped ("test_pvchange_uuid_0", "group %s not available in daemon",
-             features3215[0]);
+             features3222[0]);
     return 0;
   }
 
@@ -24913,21 +25061,21 @@ static int
 test_pvchange_uuid_0_perform (guestfs_h *g)
 {
   /* TestRun for pvchange_uuid (0) */
-  const char *arg3217 = "/dev/sda";
-  const char *arg3218 = "mbr";
-  int ret3216;
-  ret3216 = guestfs_part_disk (g, arg3217, arg3218);
-  if (ret3216 == -1)
-    return -1;
-  const char *arg3221 = "/dev/sda1";
-  int ret3220;
-  ret3220 = guestfs_pvcreate (g, arg3221);
-  if (ret3220 == -1)
-    return -1;
-  const char *arg3224 = "/dev/sda1";
+  const char *arg3224 = "/dev/sda";
+  const char *arg3225 = "mbr";
   int ret3223;
-  ret3223 = guestfs_pvchange_uuid (g, arg3224);
+  ret3223 = guestfs_part_disk (g, arg3224, arg3225);
   if (ret3223 == -1)
+    return -1;
+  const char *arg3228 = "/dev/sda1";
+  int ret3227;
+  ret3227 = guestfs_pvcreate (g, arg3228);
+  if (ret3227 == -1)
+    return -1;
+  const char *arg3231 = "/dev/sda1";
+  int ret3230;
+  ret3230 = guestfs_pvchange_uuid (g, arg3231);
+  if (ret3230 == -1)
     return -1;
   return 0;
 }
@@ -24943,10 +25091,10 @@ test_pvchange_uuid_all_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3226[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features3226)) {
+  const char *features3233[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features3233)) {
     skipped ("test_pvchange_uuid_all_0", "group %s not available in daemon",
-             features3226[0]);
+             features3233[0]);
     return 0;
   }
 
@@ -24975,20 +25123,20 @@ static int
 test_pvchange_uuid_all_0_perform (guestfs_h *g)
 {
   /* TestRun for pvchange_uuid_all (0) */
-  const char *arg3228 = "/dev/sda";
-  const char *arg3229 = "mbr";
-  int ret3227;
-  ret3227 = guestfs_part_disk (g, arg3228, arg3229);
-  if (ret3227 == -1)
-    return -1;
-  const char *arg3232 = "/dev/sda1";
-  int ret3231;
-  ret3231 = guestfs_pvcreate (g, arg3232);
-  if (ret3231 == -1)
-    return -1;
+  const char *arg3235 = "/dev/sda";
+  const char *arg3236 = "mbr";
   int ret3234;
-  ret3234 = guestfs_pvchange_uuid_all (g);
+  ret3234 = guestfs_part_disk (g, arg3235, arg3236);
   if (ret3234 == -1)
+    return -1;
+  const char *arg3239 = "/dev/sda1";
+  int ret3238;
+  ret3238 = guestfs_pvcreate (g, arg3239);
+  if (ret3238 == -1)
+    return -1;
+  int ret3241;
+  ret3241 = guestfs_pvchange_uuid_all (g);
+  if (ret3241 == -1)
     return -1;
   return 0;
 }
@@ -25004,10 +25152,10 @@ test_pvcreate_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3236[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features3236)) {
+  const char *features3243[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features3243)) {
     skipped ("test_pvcreate_0", "group %s not available in daemon",
-             features3236[0]);
+             features3243[0]);
     return 0;
   }
 
@@ -25036,43 +25184,43 @@ static int
 test_pvcreate_0_perform (guestfs_h *g)
 {
   /* TestResult for pvcreate (0) */
-  const char *arg3237 = "/dev/sda";
-  const char *arg3238 = "mbr";
+  const char *arg3244 = "/dev/sda";
+  const char *arg3245 = "mbr";
   int ret7;
-  ret7 = guestfs_part_init (g, arg3237, arg3238);
+  ret7 = guestfs_part_init (g, arg3244, arg3245);
   if (ret7 == -1)
     return -1;
-  const char *arg3240 = "/dev/sda";
-  const char *arg3241 = "p";
+  const char *arg3247 = "/dev/sda";
+  const char *arg3248 = "p";
   int ret6;
-  ret6 = guestfs_part_add (g, arg3240, arg3241, 64, 204799);
+  ret6 = guestfs_part_add (g, arg3247, arg3248, 64, 204799);
   if (ret6 == -1)
     return -1;
-  const char *arg3245 = "/dev/sda";
-  const char *arg3246 = "p";
+  const char *arg3252 = "/dev/sda";
+  const char *arg3253 = "p";
   int ret5;
-  ret5 = guestfs_part_add (g, arg3245, arg3246, 204800, 409599);
+  ret5 = guestfs_part_add (g, arg3252, arg3253, 204800, 409599);
   if (ret5 == -1)
     return -1;
-  const char *arg3250 = "/dev/sda";
-  const char *arg3251 = "p";
+  const char *arg3257 = "/dev/sda";
+  const char *arg3258 = "p";
   int ret4;
-  ret4 = guestfs_part_add (g, arg3250, arg3251, 409600, -64);
+  ret4 = guestfs_part_add (g, arg3257, arg3258, 409600, -64);
   if (ret4 == -1)
     return -1;
-  const char *arg3255 = "/dev/sda1";
+  const char *arg3262 = "/dev/sda1";
   int ret3;
-  ret3 = guestfs_pvcreate (g, arg3255);
+  ret3 = guestfs_pvcreate (g, arg3262);
   if (ret3 == -1)
     return -1;
-  const char *arg3257 = "/dev/sda2";
+  const char *arg3264 = "/dev/sda2";
   int ret2;
-  ret2 = guestfs_pvcreate (g, arg3257);
+  ret2 = guestfs_pvcreate (g, arg3264);
   if (ret2 == -1)
     return -1;
-  const char *arg3259 = "/dev/sda3";
+  const char *arg3266 = "/dev/sda3";
   int ret1;
-  ret1 = guestfs_pvcreate (g, arg3259);
+  ret1 = guestfs_pvcreate (g, arg3266);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -25100,10 +25248,10 @@ test_pvremove_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3262[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features3262)) {
+  const char *features3269[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features3269)) {
     skipped ("test_pvremove_0", "group %s not available in daemon",
-             features3262[0]);
+             features3269[0]);
     return 0;
   }
 
@@ -25132,47 +25280,47 @@ static int
 test_pvremove_0_perform (guestfs_h *g)
 {
   /* TestResult for pvremove (0) */
-  const char *arg3263 = "/dev/sda";
-  const char *arg3264 = "mbr";
+  const char *arg3270 = "/dev/sda";
+  const char *arg3271 = "mbr";
   int ret7;
-  ret7 = guestfs_part_disk (g, arg3263, arg3264);
+  ret7 = guestfs_part_disk (g, arg3270, arg3271);
   if (ret7 == -1)
     return -1;
-  const char *arg3266 = "/dev/sda1";
+  const char *arg3273 = "/dev/sda1";
   int ret6;
-  ret6 = guestfs_pvcreate (g, arg3266);
+  ret6 = guestfs_pvcreate (g, arg3273);
   if (ret6 == -1)
     return -1;
-  const char *arg3268 = "VG";
-  const char *arg3269_0 = "/dev/sda1";
-  const char *const arg3269[] = {
-    arg3269_0,
+  const char *arg3275 = "VG";
+  const char *arg3276_0 = "/dev/sda1";
+  const char *const arg3276[] = {
+    arg3276_0,
     NULL
   };
   int ret5;
-  ret5 = guestfs_vgcreate (g, arg3268, (char **) arg3269);
+  ret5 = guestfs_vgcreate (g, arg3275, (char **) arg3276);
   if (ret5 == -1)
     return -1;
-  const char *arg3271 = "LV1";
-  const char *arg3272 = "VG";
+  const char *arg3278 = "LV1";
+  const char *arg3279 = "VG";
   int ret4;
-  ret4 = guestfs_lvcreate (g, arg3271, arg3272, 50);
+  ret4 = guestfs_lvcreate (g, arg3278, arg3279, 50);
   if (ret4 == -1)
     return -1;
-  const char *arg3275 = "LV2";
-  const char *arg3276 = "VG";
+  const char *arg3282 = "LV2";
+  const char *arg3283 = "VG";
   int ret3;
-  ret3 = guestfs_lvcreate (g, arg3275, arg3276, 50);
+  ret3 = guestfs_lvcreate (g, arg3282, arg3283, 50);
   if (ret3 == -1)
     return -1;
-  const char *arg3279 = "VG";
+  const char *arg3286 = "VG";
   int ret2;
-  ret2 = guestfs_vgremove (g, arg3279);
+  ret2 = guestfs_vgremove (g, arg3286);
   if (ret2 == -1)
     return -1;
-  const char *arg3281 = "/dev/sda1";
+  const char *arg3288 = "/dev/sda1";
   int ret1;
-  ret1 = guestfs_pvremove (g, arg3281);
+  ret1 = guestfs_pvremove (g, arg3288);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -25200,10 +25348,10 @@ test_pvremove_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3284[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features3284)) {
+  const char *features3291[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features3291)) {
     skipped ("test_pvremove_1", "group %s not available in daemon",
-             features3284[0]);
+             features3291[0]);
     return 0;
   }
 
@@ -25232,47 +25380,47 @@ static int
 test_pvremove_1_perform (guestfs_h *g)
 {
   /* TestResult for pvremove (1) */
-  const char *arg3285 = "/dev/sda";
-  const char *arg3286 = "mbr";
+  const char *arg3292 = "/dev/sda";
+  const char *arg3293 = "mbr";
   int ret7;
-  ret7 = guestfs_part_disk (g, arg3285, arg3286);
+  ret7 = guestfs_part_disk (g, arg3292, arg3293);
   if (ret7 == -1)
     return -1;
-  const char *arg3288 = "/dev/sda1";
+  const char *arg3295 = "/dev/sda1";
   int ret6;
-  ret6 = guestfs_pvcreate (g, arg3288);
+  ret6 = guestfs_pvcreate (g, arg3295);
   if (ret6 == -1)
     return -1;
-  const char *arg3290 = "VG";
-  const char *arg3291_0 = "/dev/sda1";
-  const char *const arg3291[] = {
-    arg3291_0,
+  const char *arg3297 = "VG";
+  const char *arg3298_0 = "/dev/sda1";
+  const char *const arg3298[] = {
+    arg3298_0,
     NULL
   };
   int ret5;
-  ret5 = guestfs_vgcreate (g, arg3290, (char **) arg3291);
+  ret5 = guestfs_vgcreate (g, arg3297, (char **) arg3298);
   if (ret5 == -1)
     return -1;
-  const char *arg3293 = "LV1";
-  const char *arg3294 = "VG";
+  const char *arg3300 = "LV1";
+  const char *arg3301 = "VG";
   int ret4;
-  ret4 = guestfs_lvcreate (g, arg3293, arg3294, 50);
+  ret4 = guestfs_lvcreate (g, arg3300, arg3301, 50);
   if (ret4 == -1)
     return -1;
-  const char *arg3297 = "LV2";
-  const char *arg3298 = "VG";
+  const char *arg3304 = "LV2";
+  const char *arg3305 = "VG";
   int ret3;
-  ret3 = guestfs_lvcreate (g, arg3297, arg3298, 50);
+  ret3 = guestfs_lvcreate (g, arg3304, arg3305, 50);
   if (ret3 == -1)
     return -1;
-  const char *arg3301 = "VG";
+  const char *arg3308 = "VG";
   int ret2;
-  ret2 = guestfs_vgremove (g, arg3301);
+  ret2 = guestfs_vgremove (g, arg3308);
   if (ret2 == -1)
     return -1;
-  const char *arg3303 = "/dev/sda1";
+  const char *arg3310 = "/dev/sda1";
   int ret1;
-  ret1 = guestfs_pvremove (g, arg3303);
+  ret1 = guestfs_pvremove (g, arg3310);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -25300,10 +25448,10 @@ test_pvremove_2 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3306[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features3306)) {
+  const char *features3313[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features3313)) {
     skipped ("test_pvremove_2", "group %s not available in daemon",
-             features3306[0]);
+             features3313[0]);
     return 0;
   }
 
@@ -25332,47 +25480,47 @@ static int
 test_pvremove_2_perform (guestfs_h *g)
 {
   /* TestResult for pvremove (2) */
-  const char *arg3307 = "/dev/sda";
-  const char *arg3308 = "mbr";
+  const char *arg3314 = "/dev/sda";
+  const char *arg3315 = "mbr";
   int ret7;
-  ret7 = guestfs_part_disk (g, arg3307, arg3308);
+  ret7 = guestfs_part_disk (g, arg3314, arg3315);
   if (ret7 == -1)
     return -1;
-  const char *arg3310 = "/dev/sda1";
+  const char *arg3317 = "/dev/sda1";
   int ret6;
-  ret6 = guestfs_pvcreate (g, arg3310);
+  ret6 = guestfs_pvcreate (g, arg3317);
   if (ret6 == -1)
     return -1;
-  const char *arg3312 = "VG";
-  const char *arg3313_0 = "/dev/sda1";
-  const char *const arg3313[] = {
-    arg3313_0,
+  const char *arg3319 = "VG";
+  const char *arg3320_0 = "/dev/sda1";
+  const char *const arg3320[] = {
+    arg3320_0,
     NULL
   };
   int ret5;
-  ret5 = guestfs_vgcreate (g, arg3312, (char **) arg3313);
+  ret5 = guestfs_vgcreate (g, arg3319, (char **) arg3320);
   if (ret5 == -1)
     return -1;
-  const char *arg3315 = "LV1";
-  const char *arg3316 = "VG";
+  const char *arg3322 = "LV1";
+  const char *arg3323 = "VG";
   int ret4;
-  ret4 = guestfs_lvcreate (g, arg3315, arg3316, 50);
+  ret4 = guestfs_lvcreate (g, arg3322, arg3323, 50);
   if (ret4 == -1)
     return -1;
-  const char *arg3319 = "LV2";
-  const char *arg3320 = "VG";
+  const char *arg3326 = "LV2";
+  const char *arg3327 = "VG";
   int ret3;
-  ret3 = guestfs_lvcreate (g, arg3319, arg3320, 50);
+  ret3 = guestfs_lvcreate (g, arg3326, arg3327, 50);
   if (ret3 == -1)
     return -1;
-  const char *arg3323 = "VG";
+  const char *arg3330 = "VG";
   int ret2;
-  ret2 = guestfs_vgremove (g, arg3323);
+  ret2 = guestfs_vgremove (g, arg3330);
   if (ret2 == -1)
     return -1;
-  const char *arg3325 = "/dev/sda1";
+  const char *arg3332 = "/dev/sda1";
   int ret1;
-  ret1 = guestfs_pvremove (g, arg3325);
+  ret1 = guestfs_pvremove (g, arg3332);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -25400,10 +25548,10 @@ test_pvs_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3328[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features3328)) {
+  const char *features3335[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features3335)) {
     skipped ("test_pvs_0", "group %s not available in daemon",
-             features3328[0]);
+             features3335[0]);
     return 0;
   }
 
@@ -25457,10 +25605,10 @@ test_pvs_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3330[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features3330)) {
+  const char *features3337[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features3337)) {
     skipped ("test_pvs_1", "group %s not available in daemon",
-             features3330[0]);
+             features3337[0]);
     return 0;
   }
 
@@ -25489,43 +25637,43 @@ static int
 test_pvs_1_perform (guestfs_h *g)
 {
   /* TestResult for pvs (1) */
-  const char *arg3331 = "/dev/sda";
-  const char *arg3332 = "mbr";
+  const char *arg3338 = "/dev/sda";
+  const char *arg3339 = "mbr";
   int ret7;
-  ret7 = guestfs_part_init (g, arg3331, arg3332);
+  ret7 = guestfs_part_init (g, arg3338, arg3339);
   if (ret7 == -1)
     return -1;
-  const char *arg3334 = "/dev/sda";
-  const char *arg3335 = "p";
+  const char *arg3341 = "/dev/sda";
+  const char *arg3342 = "p";
   int ret6;
-  ret6 = guestfs_part_add (g, arg3334, arg3335, 64, 204799);
+  ret6 = guestfs_part_add (g, arg3341, arg3342, 64, 204799);
   if (ret6 == -1)
     return -1;
-  const char *arg3339 = "/dev/sda";
-  const char *arg3340 = "p";
+  const char *arg3346 = "/dev/sda";
+  const char *arg3347 = "p";
   int ret5;
-  ret5 = guestfs_part_add (g, arg3339, arg3340, 204800, 409599);
+  ret5 = guestfs_part_add (g, arg3346, arg3347, 204800, 409599);
   if (ret5 == -1)
     return -1;
-  const char *arg3344 = "/dev/sda";
-  const char *arg3345 = "p";
+  const char *arg3351 = "/dev/sda";
+  const char *arg3352 = "p";
   int ret4;
-  ret4 = guestfs_part_add (g, arg3344, arg3345, 409600, -64);
+  ret4 = guestfs_part_add (g, arg3351, arg3352, 409600, -64);
   if (ret4 == -1)
     return -1;
-  const char *arg3349 = "/dev/sda1";
+  const char *arg3356 = "/dev/sda1";
   int ret3;
-  ret3 = guestfs_pvcreate (g, arg3349);
+  ret3 = guestfs_pvcreate (g, arg3356);
   if (ret3 == -1)
     return -1;
-  const char *arg3351 = "/dev/sda2";
+  const char *arg3358 = "/dev/sda2";
   int ret2;
-  ret2 = guestfs_pvcreate (g, arg3351);
+  ret2 = guestfs_pvcreate (g, arg3358);
   if (ret2 == -1)
     return -1;
-  const char *arg3353 = "/dev/sda3";
+  const char *arg3360 = "/dev/sda3";
   int ret1;
-  ret1 = guestfs_pvcreate (g, arg3353);
+  ret1 = guestfs_pvcreate (g, arg3360);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -25578,23 +25726,23 @@ static int
 test_pwrite_0_perform (guestfs_h *g)
 {
   /* TestResultString for pwrite (0) */
-  const char *arg3357 = "/pwrite";
-  const char *arg3358 = "new file contents";
-  size_t arg3358_size = 17;
-  int ret3356;
-  ret3356 = guestfs_write (g, arg3357, arg3358, arg3358_size);
-  if (ret3356 == -1)
+  const char *arg3364 = "/pwrite";
+  const char *arg3365 = "new file contents";
+  size_t arg3365_size = 17;
+  int ret3363;
+  ret3363 = guestfs_write (g, arg3364, arg3365, arg3365_size);
+  if (ret3363 == -1)
     return -1;
-  const char *arg3361 = "/pwrite";
-  const char *arg3362 = "data";
-  size_t arg3362_size = 4;
-  int ret3360;
-  ret3360 = guestfs_pwrite (g, arg3361, arg3362, arg3362_size, 4);
-  if (ret3360 == -1)
+  const char *arg3368 = "/pwrite";
+  const char *arg3369 = "data";
+  size_t arg3369_size = 4;
+  int ret3367;
+  ret3367 = guestfs_pwrite (g, arg3368, arg3369, arg3369_size, 4);
+  if (ret3367 == -1)
     return -1;
-  const char *arg3365 = "/pwrite";
+  const char *arg3372 = "/pwrite";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg3365);
+  ret = guestfs_cat (g, arg3372);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "new data contents")) {
@@ -25641,23 +25789,23 @@ static int
 test_pwrite_1_perform (guestfs_h *g)
 {
   /* TestResultString for pwrite (1) */
-  const char *arg3368 = "/pwrite2";
-  const char *arg3369 = "new file contents";
-  size_t arg3369_size = 17;
-  int ret3367;
-  ret3367 = guestfs_write (g, arg3368, arg3369, arg3369_size);
-  if (ret3367 == -1)
+  const char *arg3375 = "/pwrite2";
+  const char *arg3376 = "new file contents";
+  size_t arg3376_size = 17;
+  int ret3374;
+  ret3374 = guestfs_write (g, arg3375, arg3376, arg3376_size);
+  if (ret3374 == -1)
     return -1;
-  const char *arg3372 = "/pwrite2";
-  const char *arg3373 = "is extended";
-  size_t arg3373_size = 11;
-  int ret3371;
-  ret3371 = guestfs_pwrite (g, arg3372, arg3373, arg3373_size, 9);
-  if (ret3371 == -1)
+  const char *arg3379 = "/pwrite2";
+  const char *arg3380 = "is extended";
+  size_t arg3380_size = 11;
+  int ret3378;
+  ret3378 = guestfs_pwrite (g, arg3379, arg3380, arg3380_size, 9);
+  if (ret3378 == -1)
     return -1;
-  const char *arg3376 = "/pwrite2";
+  const char *arg3383 = "/pwrite2";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg3376);
+  ret = guestfs_cat (g, arg3383);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "new file is extended")) {
@@ -25704,23 +25852,23 @@ static int
 test_pwrite_2_perform (guestfs_h *g)
 {
   /* TestResultString for pwrite (2) */
-  const char *arg3379 = "/pwrite3";
-  const char *arg3380 = "new file contents";
-  size_t arg3380_size = 17;
-  int ret3378;
-  ret3378 = guestfs_write (g, arg3379, arg3380, arg3380_size);
-  if (ret3378 == -1)
+  const char *arg3386 = "/pwrite3";
+  const char *arg3387 = "new file contents";
+  size_t arg3387_size = 17;
+  int ret3385;
+  ret3385 = guestfs_write (g, arg3386, arg3387, arg3387_size);
+  if (ret3385 == -1)
     return -1;
-  const char *arg3383 = "/pwrite3";
-  const char *arg3384 = "";
-  size_t arg3384_size = 0;
-  int ret3382;
-  ret3382 = guestfs_pwrite (g, arg3383, arg3384, arg3384_size, 4);
-  if (ret3382 == -1)
+  const char *arg3390 = "/pwrite3";
+  const char *arg3391 = "";
+  size_t arg3391_size = 0;
+  int ret3389;
+  ret3389 = guestfs_pwrite (g, arg3390, arg3391, arg3391_size, 4);
+  if (ret3389 == -1)
     return -1;
-  const char *arg3387 = "/pwrite3";
+  const char *arg3394 = "/pwrite3";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg3387);
+  ret = guestfs_cat (g, arg3394);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "new file contents")) {
@@ -25767,16 +25915,16 @@ static int
 test_pwrite_device_0_perform (guestfs_h *g)
 {
   /* TestResult for pwrite_device (0) */
-  const char *arg3389 = "/dev/sda";
-  const char *arg3390 = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
-  size_t arg3390_size = 66;
+  const char *arg3396 = "/dev/sda";
+  const char *arg3397 = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+  size_t arg3397_size = 66;
   int ret2;
-  ret2 = guestfs_pwrite_device (g, arg3389, arg3390, arg3390_size, 446);
+  ret2 = guestfs_pwrite_device (g, arg3396, arg3397, arg3397_size, 446);
   if (ret2 == -1)
     return -1;
-  const char *arg3393 = "/dev/sda";
+  const char *arg3400 = "/dev/sda";
   int ret1;
-  ret1 = guestfs_blockdev_rereadpt (g, arg3393);
+  ret1 = guestfs_blockdev_rereadpt (g, arg3400);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -25829,10 +25977,10 @@ static int
 test_read_file_0_perform (guestfs_h *g)
 {
   /* TestResult for read_file (0) */
-  const char *arg3396 = "/known-4";
+  const char *arg3403 = "/known-4";
   CLEANUP_FREE char *ret;
   size_t size;
-  ret = guestfs_read_file (g, arg3396, &size);
+  ret = guestfs_read_file (g, arg3403, &size);
   if (ret == NULL)
       return -1;
   if (! (compare_buffers (ret, size, "abc\ndef\nghi", 11) == 0)) {
@@ -25881,9 +26029,9 @@ static int
 test_read_lines_0_perform (guestfs_h *g)
 {
   /* TestResult for read_lines (0) */
-  const char *arg3398 = "/known-4";
+  const char *arg3405 = "/known-4";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_read_lines (g, arg3398);
+  ret = guestfs_read_lines (g, arg3405);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 3, "abc", "def", "ghi"))) {
@@ -25932,9 +26080,9 @@ static int
 test_read_lines_1_perform (guestfs_h *g)
 {
   /* TestResult for read_lines (1) */
-  const char *arg3400 = "/empty";
+  const char *arg3407 = "/empty";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_read_lines (g, arg3400);
+  ret = guestfs_read_lines (g, arg3407);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 0))) {
@@ -25983,16 +26131,16 @@ static int
 test_read_lines_2_perform (guestfs_h *g)
 {
   /* TestResult for read_lines (2) */
-  const char *arg3402 = "/read_lines1";
-  const char *arg3403 = "\n";
-  size_t arg3403_size = 1;
+  const char *arg3409 = "/read_lines1";
+  const char *arg3410 = "\n";
+  size_t arg3410_size = 1;
   int ret1;
-  ret1 = guestfs_write (g, arg3402, arg3403, arg3403_size);
+  ret1 = guestfs_write (g, arg3409, arg3410, arg3410_size);
   if (ret1 == -1)
     return -1;
-  const char *arg3405 = "/read_lines1";
+  const char *arg3412 = "/read_lines1";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_read_lines (g, arg3405);
+  ret = guestfs_read_lines (g, arg3412);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 1, ""))) {
@@ -26041,16 +26189,16 @@ static int
 test_read_lines_3_perform (guestfs_h *g)
 {
   /* TestResult for read_lines (3) */
-  const char *arg3407 = "/read_lines2";
-  const char *arg3408 = "\r\n";
-  size_t arg3408_size = 2;
+  const char *arg3414 = "/read_lines2";
+  const char *arg3415 = "\r\n";
+  size_t arg3415_size = 2;
   int ret1;
-  ret1 = guestfs_write (g, arg3407, arg3408, arg3408_size);
+  ret1 = guestfs_write (g, arg3414, arg3415, arg3415_size);
   if (ret1 == -1)
     return -1;
-  const char *arg3410 = "/read_lines2";
+  const char *arg3417 = "/read_lines2";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_read_lines (g, arg3410);
+  ret = guestfs_read_lines (g, arg3417);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 1, ""))) {
@@ -26099,16 +26247,16 @@ static int
 test_read_lines_4_perform (guestfs_h *g)
 {
   /* TestResult for read_lines (4) */
-  const char *arg3412 = "/read_lines3";
-  const char *arg3413 = "\n\r\n";
-  size_t arg3413_size = 3;
+  const char *arg3419 = "/read_lines3";
+  const char *arg3420 = "\n\r\n";
+  size_t arg3420_size = 3;
   int ret1;
-  ret1 = guestfs_write (g, arg3412, arg3413, arg3413_size);
+  ret1 = guestfs_write (g, arg3419, arg3420, arg3420_size);
   if (ret1 == -1)
     return -1;
-  const char *arg3415 = "/read_lines3";
+  const char *arg3422 = "/read_lines3";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_read_lines (g, arg3415);
+  ret = guestfs_read_lines (g, arg3422);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 2, "", ""))) {
@@ -26157,16 +26305,16 @@ static int
 test_read_lines_5_perform (guestfs_h *g)
 {
   /* TestResult for read_lines (5) */
-  const char *arg3417 = "/read_lines4";
-  const char *arg3418 = "a";
-  size_t arg3418_size = 1;
+  const char *arg3424 = "/read_lines4";
+  const char *arg3425 = "a";
+  size_t arg3425_size = 1;
   int ret1;
-  ret1 = guestfs_write (g, arg3417, arg3418, arg3418_size);
+  ret1 = guestfs_write (g, arg3424, arg3425, arg3425_size);
   if (ret1 == -1)
     return -1;
-  const char *arg3420 = "/read_lines4";
+  const char *arg3427 = "/read_lines4";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_read_lines (g, arg3420);
+  ret = guestfs_read_lines (g, arg3427);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 1, "a"))) {
@@ -26215,16 +26363,16 @@ static int
 test_read_lines_6_perform (guestfs_h *g)
 {
   /* TestResult for read_lines (6) */
-  const char *arg3422 = "/read_lines5";
-  const char *arg3423 = "a\nb";
-  size_t arg3423_size = 3;
+  const char *arg3429 = "/read_lines5";
+  const char *arg3430 = "a\nb";
+  size_t arg3430_size = 3;
   int ret1;
-  ret1 = guestfs_write (g, arg3422, arg3423, arg3423_size);
+  ret1 = guestfs_write (g, arg3429, arg3430, arg3430_size);
   if (ret1 == -1)
     return -1;
-  const char *arg3425 = "/read_lines5";
+  const char *arg3432 = "/read_lines5";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_read_lines (g, arg3425);
+  ret = guestfs_read_lines (g, arg3432);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 2, "a", "b"))) {
@@ -26273,16 +26421,16 @@ static int
 test_read_lines_7_perform (guestfs_h *g)
 {
   /* TestResult for read_lines (7) */
-  const char *arg3427 = "/read_lines6";
-  const char *arg3428 = "a\nb\n";
-  size_t arg3428_size = 4;
+  const char *arg3434 = "/read_lines6";
+  const char *arg3435 = "a\nb\n";
+  size_t arg3435_size = 4;
   int ret1;
-  ret1 = guestfs_write (g, arg3427, arg3428, arg3428_size);
+  ret1 = guestfs_write (g, arg3434, arg3435, arg3435_size);
   if (ret1 == -1)
     return -1;
-  const char *arg3430 = "/read_lines6";
+  const char *arg3437 = "/read_lines6";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_read_lines (g, arg3430);
+  ret = guestfs_read_lines (g, arg3437);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 2, "a", "b"))) {
@@ -26331,16 +26479,16 @@ static int
 test_read_lines_8_perform (guestfs_h *g)
 {
   /* TestResult for read_lines (8) */
-  const char *arg3432 = "/read_lines7";
-  const char *arg3433 = "a\nb\r\n";
-  size_t arg3433_size = 5;
+  const char *arg3439 = "/read_lines7";
+  const char *arg3440 = "a\nb\r\n";
+  size_t arg3440_size = 5;
   int ret1;
-  ret1 = guestfs_write (g, arg3432, arg3433, arg3433_size);
+  ret1 = guestfs_write (g, arg3439, arg3440, arg3440_size);
   if (ret1 == -1)
     return -1;
-  const char *arg3435 = "/read_lines7";
+  const char *arg3442 = "/read_lines7";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_read_lines (g, arg3435);
+  ret = guestfs_read_lines (g, arg3442);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 2, "a", "b"))) {
@@ -26389,16 +26537,16 @@ static int
 test_read_lines_9_perform (guestfs_h *g)
 {
   /* TestResult for read_lines (9) */
-  const char *arg3437 = "/read_lines8";
-  const char *arg3438 = "a\nb\r\n\n";
-  size_t arg3438_size = 6;
+  const char *arg3444 = "/read_lines8";
+  const char *arg3445 = "a\nb\r\n\n";
+  size_t arg3445_size = 6;
   int ret1;
-  ret1 = guestfs_write (g, arg3437, arg3438, arg3438_size);
+  ret1 = guestfs_write (g, arg3444, arg3445, arg3445_size);
   if (ret1 == -1)
     return -1;
-  const char *arg3440 = "/read_lines8";
+  const char *arg3447 = "/read_lines8";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_read_lines (g, arg3440);
+  ret = guestfs_read_lines (g, arg3447);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 3, "a", "b", ""))) {
@@ -26447,9 +26595,9 @@ static int
 test_realpath_0_perform (guestfs_h *g)
 {
   /* TestResultString for realpath (0) */
-  const char *arg3442 = "/../directory";
+  const char *arg3449 = "/../directory";
   CLEANUP_FREE char *ret;
-  ret = guestfs_realpath (g, arg3442);
+  ret = guestfs_realpath (g, arg3449);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "/directory")) {
@@ -26496,22 +26644,22 @@ static int
 test_remount_0_perform (guestfs_h *g)
 {
   /* TestLastFail for remount (0) */
-  const char *arg3445 = "/";
-  struct guestfs_remount_argv optargs3446;
-  optargs3446.rw = 0;
-  optargs3446.bitmask = UINT64_C(0x1);
-  int ret3444;
-  ret3444 = guestfs_remount_argv (g, arg3445, &optargs3446);
-  if (ret3444 == -1)
+  const char *arg3452 = "/";
+  struct guestfs_remount_argv optargs3453;
+  optargs3453.rw = 0;
+  optargs3453.bitmask = UINT64_C(0x1);
+  int ret3451;
+  ret3451 = guestfs_remount_argv (g, arg3452, &optargs3453);
+  if (ret3451 == -1)
     return -1;
-  const char *arg3448 = "/remount1";
-  const char *arg3449 = "data";
-  size_t arg3449_size = 4;
-  int ret3447;
+  const char *arg3455 = "/remount1";
+  const char *arg3456 = "data";
+  size_t arg3456_size = 4;
+  int ret3454;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret3447 = guestfs_write (g, arg3448, arg3449, arg3449_size);
+  ret3454 = guestfs_write (g, arg3455, arg3456, arg3456_size);
   guestfs_pop_error_handler (g);
-  if (ret3447 != -1)
+  if (ret3454 != -1)
     return -1;
   return 0;
 }
@@ -26552,28 +26700,28 @@ static int
 test_remount_1_perform (guestfs_h *g)
 {
   /* TestRun for remount (1) */
-  const char *arg3452 = "/";
-  struct guestfs_remount_argv optargs3453;
-  optargs3453.rw = 0;
-  optargs3453.bitmask = UINT64_C(0x1);
-  int ret3451;
-  ret3451 = guestfs_remount_argv (g, arg3452, &optargs3453);
-  if (ret3451 == -1)
+  const char *arg3459 = "/";
+  struct guestfs_remount_argv optargs3460;
+  optargs3460.rw = 0;
+  optargs3460.bitmask = UINT64_C(0x1);
+  int ret3458;
+  ret3458 = guestfs_remount_argv (g, arg3459, &optargs3460);
+  if (ret3458 == -1)
     return -1;
-  const char *arg3455 = "/";
-  struct guestfs_remount_argv optargs3456;
-  optargs3456.rw = 1;
-  optargs3456.bitmask = UINT64_C(0x1);
-  int ret3454;
-  ret3454 = guestfs_remount_argv (g, arg3455, &optargs3456);
-  if (ret3454 == -1)
+  const char *arg3462 = "/";
+  struct guestfs_remount_argv optargs3463;
+  optargs3463.rw = 1;
+  optargs3463.bitmask = UINT64_C(0x1);
+  int ret3461;
+  ret3461 = guestfs_remount_argv (g, arg3462, &optargs3463);
+  if (ret3461 == -1)
     return -1;
-  const char *arg3458 = "/remount2";
-  const char *arg3459 = "data";
-  size_t arg3459_size = 4;
-  int ret3457;
-  ret3457 = guestfs_write (g, arg3458, arg3459, arg3459_size);
-  if (ret3457 == -1)
+  const char *arg3465 = "/remount2";
+  const char *arg3466 = "data";
+  size_t arg3466_size = 4;
+  int ret3464;
+  ret3464 = guestfs_write (g, arg3465, arg3466, arg3466_size);
+  if (ret3464 == -1)
     return -1;
   return 0;
 }
@@ -26614,29 +26762,29 @@ static int
 test_rename_0_perform (guestfs_h *g)
 {
   /* TestResultFalse for rename (0) */
-  const char *arg3462 = "/rename";
-  int ret3461;
-  ret3461 = guestfs_mkdir (g, arg3462);
-  if (ret3461 == -1)
-    return -1;
-  const char *arg3465 = "/rename/old";
-  const char *arg3466 = "file content";
-  size_t arg3466_size = 12;
-  int ret3464;
-  ret3464 = guestfs_write (g, arg3465, arg3466, arg3466_size);
-  if (ret3464 == -1)
-    return -1;
-  const char *arg3469 = "/rename/old";
-  const char *arg3470 = "/rename/new";
+  const char *arg3469 = "/rename";
   int ret3468;
-  ret3468 = guestfs_rename (g, arg3469, arg3470);
+  ret3468 = guestfs_mkdir (g, arg3469);
   if (ret3468 == -1)
     return -1;
   const char *arg3472 = "/rename/old";
-  struct guestfs_is_file_opts_argv optargs3473;
-  optargs3473.bitmask = UINT64_C(0x0);
+  const char *arg3473 = "file content";
+  size_t arg3473_size = 12;
+  int ret3471;
+  ret3471 = guestfs_write (g, arg3472, arg3473, arg3473_size);
+  if (ret3471 == -1)
+    return -1;
+  const char *arg3476 = "/rename/old";
+  const char *arg3477 = "/rename/new";
+  int ret3475;
+  ret3475 = guestfs_rename (g, arg3476, arg3477);
+  if (ret3475 == -1)
+    return -1;
+  const char *arg3479 = "/rename/old";
+  struct guestfs_is_file_opts_argv optargs3480;
+  optargs3480.bitmask = UINT64_C(0x0);
   int ret;
-  ret = guestfs_is_file_opts_argv (g, arg3472, &optargs3473);
+  ret = guestfs_is_file_opts_argv (g, arg3479, &optargs3480);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -26683,20 +26831,20 @@ static int
 test_rm_0_perform (guestfs_h *g)
 {
   /* TestRun for rm (0) */
-  const char *arg3475 = "/rm";
-  int ret3474;
-  ret3474 = guestfs_mkdir (g, arg3475);
-  if (ret3474 == -1)
+  const char *arg3482 = "/rm";
+  int ret3481;
+  ret3481 = guestfs_mkdir (g, arg3482);
+  if (ret3481 == -1)
     return -1;
-  const char *arg3478 = "/rm/new";
-  int ret3477;
-  ret3477 = guestfs_touch (g, arg3478);
-  if (ret3477 == -1)
+  const char *arg3485 = "/rm/new";
+  int ret3484;
+  ret3484 = guestfs_touch (g, arg3485);
+  if (ret3484 == -1)
     return -1;
-  const char *arg3481 = "/rm/new";
-  int ret3480;
-  ret3480 = guestfs_rm (g, arg3481);
-  if (ret3480 == -1)
+  const char *arg3488 = "/rm/new";
+  int ret3487;
+  ret3487 = guestfs_rm (g, arg3488);
+  if (ret3487 == -1)
     return -1;
   return 0;
 }
@@ -26737,12 +26885,12 @@ static int
 test_rm_1_perform (guestfs_h *g)
 {
   /* TestLastFail for rm (1) */
-  const char *arg3484 = "/nosuchfile";
-  int ret3483;
+  const char *arg3491 = "/nosuchfile";
+  int ret3490;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret3483 = guestfs_rm (g, arg3484);
+  ret3490 = guestfs_rm (g, arg3491);
   guestfs_pop_error_handler (g);
-  if (ret3483 != -1)
+  if (ret3490 != -1)
     return -1;
   return 0;
 }
@@ -26783,17 +26931,17 @@ static int
 test_rm_2_perform (guestfs_h *g)
 {
   /* TestLastFail for rm (2) */
-  const char *arg3487 = "/rm2";
-  int ret3486;
-  ret3486 = guestfs_mkdir (g, arg3487);
-  if (ret3486 == -1)
+  const char *arg3494 = "/rm2";
+  int ret3493;
+  ret3493 = guestfs_mkdir (g, arg3494);
+  if (ret3493 == -1)
     return -1;
-  const char *arg3490 = "/rm2";
-  int ret3489;
+  const char *arg3497 = "/rm2";
+  int ret3496;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret3489 = guestfs_rm (g, arg3490);
+  ret3496 = guestfs_rm (g, arg3497);
   guestfs_pop_error_handler (g);
-  if (ret3489 != -1)
+  if (ret3496 != -1)
     return -1;
   return 0;
 }
@@ -26834,29 +26982,29 @@ static int
 test_rm_f_0_perform (guestfs_h *g)
 {
   /* TestResultFalse for rm_f (0) */
-  const char *arg3493 = "/rm_f";
-  int ret3492;
-  ret3492 = guestfs_mkdir (g, arg3493);
-  if (ret3492 == -1)
+  const char *arg3500 = "/rm_f";
+  int ret3499;
+  ret3499 = guestfs_mkdir (g, arg3500);
+  if (ret3499 == -1)
     return -1;
-  const char *arg3496 = "/rm_f/foo";
-  int ret3495;
-  ret3495 = guestfs_touch (g, arg3496);
-  if (ret3495 == -1)
+  const char *arg3503 = "/rm_f/foo";
+  int ret3502;
+  ret3502 = guestfs_touch (g, arg3503);
+  if (ret3502 == -1)
     return -1;
-  const char *arg3499 = "/rm_f/foo";
-  int ret3498;
-  ret3498 = guestfs_rm_f (g, arg3499);
-  if (ret3498 == -1)
+  const char *arg3506 = "/rm_f/foo";
+  int ret3505;
+  ret3505 = guestfs_rm_f (g, arg3506);
+  if (ret3505 == -1)
     return -1;
-  const char *arg3502 = "/rm_f/not_exists";
-  int ret3501;
-  ret3501 = guestfs_rm_f (g, arg3502);
-  if (ret3501 == -1)
+  const char *arg3509 = "/rm_f/not_exists";
+  int ret3508;
+  ret3508 = guestfs_rm_f (g, arg3509);
+  if (ret3508 == -1)
     return -1;
-  const char *arg3504 = "/rm_f/foo";
+  const char *arg3511 = "/rm_f/foo";
   int ret;
-  ret = guestfs_exists (g, arg3504);
+  ret = guestfs_exists (g, arg3511);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -26903,22 +27051,22 @@ static int
 test_rm_f_1_perform (guestfs_h *g)
 {
   /* TestLastFail for rm_f (1) */
-  const char *arg3507 = "/rm_f2";
-  int ret3506;
-  ret3506 = guestfs_mkdir (g, arg3507);
-  if (ret3506 == -1)
+  const char *arg3514 = "/rm_f2";
+  int ret3513;
+  ret3513 = guestfs_mkdir (g, arg3514);
+  if (ret3513 == -1)
     return -1;
-  const char *arg3510 = "/rm_f2/foo";
-  int ret3509;
-  ret3509 = guestfs_mkdir (g, arg3510);
-  if (ret3509 == -1)
+  const char *arg3517 = "/rm_f2/foo";
+  int ret3516;
+  ret3516 = guestfs_mkdir (g, arg3517);
+  if (ret3516 == -1)
     return -1;
-  const char *arg3513 = "/rm_f2/foo";
-  int ret3512;
+  const char *arg3520 = "/rm_f2/foo";
+  int ret3519;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret3512 = guestfs_rm_f (g, arg3513);
+  ret3519 = guestfs_rm_f (g, arg3520);
   guestfs_pop_error_handler (g);
-  if (ret3512 != -1)
+  if (ret3519 != -1)
     return -1;
   return 0;
 }
@@ -26959,29 +27107,29 @@ static int
 test_rm_rf_0_perform (guestfs_h *g)
 {
   /* TestResultFalse for rm_rf (0) */
-  const char *arg3516 = "/rm_rf";
-  int ret3515;
-  ret3515 = guestfs_mkdir (g, arg3516);
-  if (ret3515 == -1)
+  const char *arg3523 = "/rm_rf";
+  int ret3522;
+  ret3522 = guestfs_mkdir (g, arg3523);
+  if (ret3522 == -1)
     return -1;
-  const char *arg3519 = "/rm_rf/foo";
-  int ret3518;
-  ret3518 = guestfs_mkdir (g, arg3519);
-  if (ret3518 == -1)
+  const char *arg3526 = "/rm_rf/foo";
+  int ret3525;
+  ret3525 = guestfs_mkdir (g, arg3526);
+  if (ret3525 == -1)
     return -1;
-  const char *arg3522 = "/rm_rf/foo/bar";
-  int ret3521;
-  ret3521 = guestfs_touch (g, arg3522);
-  if (ret3521 == -1)
+  const char *arg3529 = "/rm_rf/foo/bar";
+  int ret3528;
+  ret3528 = guestfs_touch (g, arg3529);
+  if (ret3528 == -1)
     return -1;
-  const char *arg3525 = "/rm_rf";
-  int ret3524;
-  ret3524 = guestfs_rm_rf (g, arg3525);
-  if (ret3524 == -1)
+  const char *arg3532 = "/rm_rf";
+  int ret3531;
+  ret3531 = guestfs_rm_rf (g, arg3532);
+  if (ret3531 == -1)
     return -1;
-  const char *arg3527 = "/rm_rf";
+  const char *arg3534 = "/rm_rf";
   int ret;
-  ret = guestfs_exists (g, arg3527);
+  ret = guestfs_exists (g, arg3534);
   if (ret == -1)
     return -1;
   if (ret) {
@@ -27028,15 +27176,15 @@ static int
 test_rmdir_0_perform (guestfs_h *g)
 {
   /* TestRun for rmdir (0) */
-  const char *arg3530 = "/rmdir";
-  int ret3529;
-  ret3529 = guestfs_mkdir (g, arg3530);
-  if (ret3529 == -1)
+  const char *arg3537 = "/rmdir";
+  int ret3536;
+  ret3536 = guestfs_mkdir (g, arg3537);
+  if (ret3536 == -1)
     return -1;
-  const char *arg3533 = "/rmdir";
-  int ret3532;
-  ret3532 = guestfs_rmdir (g, arg3533);
-  if (ret3532 == -1)
+  const char *arg3540 = "/rmdir";
+  int ret3539;
+  ret3539 = guestfs_rmdir (g, arg3540);
+  if (ret3539 == -1)
     return -1;
   return 0;
 }
@@ -27077,12 +27225,12 @@ static int
 test_rmdir_1_perform (guestfs_h *g)
 {
   /* TestLastFail for rmdir (1) */
-  const char *arg3536 = "/rmdir2";
-  int ret3535;
+  const char *arg3543 = "/rmdir2";
+  int ret3542;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret3535 = guestfs_rmdir (g, arg3536);
+  ret3542 = guestfs_rmdir (g, arg3543);
   guestfs_pop_error_handler (g);
-  if (ret3535 != -1)
+  if (ret3542 != -1)
     return -1;
   return 0;
 }
@@ -27123,22 +27271,22 @@ static int
 test_rmdir_2_perform (guestfs_h *g)
 {
   /* TestLastFail for rmdir (2) */
-  const char *arg3539 = "/rmdir3";
-  int ret3538;
-  ret3538 = guestfs_mkdir (g, arg3539);
-  if (ret3538 == -1)
+  const char *arg3546 = "/rmdir3";
+  int ret3545;
+  ret3545 = guestfs_mkdir (g, arg3546);
+  if (ret3545 == -1)
     return -1;
-  const char *arg3542 = "/rmdir3/new";
-  int ret3541;
-  ret3541 = guestfs_touch (g, arg3542);
-  if (ret3541 == -1)
+  const char *arg3549 = "/rmdir3/new";
+  int ret3548;
+  ret3548 = guestfs_touch (g, arg3549);
+  if (ret3548 == -1)
     return -1;
-  const char *arg3545 = "/rmdir3/new";
-  int ret3544;
+  const char *arg3552 = "/rmdir3/new";
+  int ret3551;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret3544 = guestfs_rmdir (g, arg3545);
+  ret3551 = guestfs_rmdir (g, arg3552);
   guestfs_pop_error_handler (g);
-  if (ret3544 != -1)
+  if (ret3551 != -1)
     return -1;
   return 0;
 }
@@ -27154,10 +27302,10 @@ test_scrub_device_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3547[] = { "scrub", NULL };
-  if (!guestfs_feature_available (g, (char **) features3547)) {
+  const char *features3554[] = { "scrub", NULL };
+  if (!guestfs_feature_available (g, (char **) features3554)) {
     skipped ("test_scrub_device_0", "group %s not available in daemon",
-             features3547[0]);
+             features3554[0]);
     return 0;
   }
 
@@ -27186,10 +27334,10 @@ static int
 test_scrub_device_0_perform (guestfs_h *g)
 {
   /* TestRun for scrub_device (0) */
-  const char *arg3549 = "/dev/sdc";
-  int ret3548;
-  ret3548 = guestfs_scrub_device (g, arg3549);
-  if (ret3548 == -1)
+  const char *arg3556 = "/dev/sdc";
+  int ret3555;
+  ret3555 = guestfs_scrub_device (g, arg3556);
+  if (ret3555 == -1)
     return -1;
   return 0;
 }
@@ -27205,10 +27353,10 @@ test_scrub_file_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3551[] = { "scrub", NULL };
-  if (!guestfs_feature_available (g, (char **) features3551)) {
+  const char *features3558[] = { "scrub", NULL };
+  if (!guestfs_feature_available (g, (char **) features3558)) {
     skipped ("test_scrub_file_0", "group %s not available in daemon",
-             features3551[0]);
+             features3558[0]);
     return 0;
   }
 
@@ -27237,17 +27385,17 @@ static int
 test_scrub_file_0_perform (guestfs_h *g)
 {
   /* TestRun for scrub_file (0) */
-  const char *arg3553 = "/scrub_file";
-  const char *arg3554 = "content";
-  size_t arg3554_size = 7;
-  int ret3552;
-  ret3552 = guestfs_write (g, arg3553, arg3554, arg3554_size);
-  if (ret3552 == -1)
+  const char *arg3560 = "/scrub_file";
+  const char *arg3561 = "content";
+  size_t arg3561_size = 7;
+  int ret3559;
+  ret3559 = guestfs_write (g, arg3560, arg3561, arg3561_size);
+  if (ret3559 == -1)
     return -1;
-  const char *arg3557 = "/scrub_file";
-  int ret3556;
-  ret3556 = guestfs_scrub_file (g, arg3557);
-  if (ret3556 == -1)
+  const char *arg3564 = "/scrub_file";
+  int ret3563;
+  ret3563 = guestfs_scrub_file (g, arg3564);
+  if (ret3563 == -1)
     return -1;
   return 0;
 }
@@ -27263,10 +27411,10 @@ test_scrub_file_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3559[] = { "scrub", NULL };
-  if (!guestfs_feature_available (g, (char **) features3559)) {
+  const char *features3566[] = { "scrub", NULL };
+  if (!guestfs_feature_available (g, (char **) features3566)) {
     skipped ("test_scrub_file_1", "group %s not available in daemon",
-             features3559[0]);
+             features3566[0]);
     return 0;
   }
 
@@ -27295,23 +27443,23 @@ static int
 test_scrub_file_1_perform (guestfs_h *g)
 {
   /* TestRun for scrub_file (1) */
-  const char *arg3561 = "/scrub_file_2";
-  const char *arg3562 = "content";
-  size_t arg3562_size = 7;
-  int ret3560;
-  ret3560 = guestfs_write (g, arg3561, arg3562, arg3562_size);
-  if (ret3560 == -1)
+  const char *arg3568 = "/scrub_file_2";
+  const char *arg3569 = "content";
+  size_t arg3569_size = 7;
+  int ret3567;
+  ret3567 = guestfs_write (g, arg3568, arg3569, arg3569_size);
+  if (ret3567 == -1)
     return -1;
-  const char *arg3565 = "/scrub_file_2";
-  const char *arg3566 = "/scrub_file_2_link";
-  int ret3564;
-  ret3564 = guestfs_ln_s (g, arg3565, arg3566);
-  if (ret3564 == -1)
+  const char *arg3572 = "/scrub_file_2";
+  const char *arg3573 = "/scrub_file_2_link";
+  int ret3571;
+  ret3571 = guestfs_ln_s (g, arg3572, arg3573);
+  if (ret3571 == -1)
     return -1;
-  const char *arg3569 = "/scrub_file_2_link";
-  int ret3568;
-  ret3568 = guestfs_scrub_file (g, arg3569);
-  if (ret3568 == -1)
+  const char *arg3576 = "/scrub_file_2_link";
+  int ret3575;
+  ret3575 = guestfs_scrub_file (g, arg3576);
+  if (ret3575 == -1)
     return -1;
   return 0;
 }
@@ -27327,10 +27475,10 @@ test_scrub_file_2 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3571[] = { "scrub", NULL };
-  if (!guestfs_feature_available (g, (char **) features3571)) {
+  const char *features3578[] = { "scrub", NULL };
+  if (!guestfs_feature_available (g, (char **) features3578)) {
     skipped ("test_scrub_file_2", "group %s not available in daemon",
-             features3571[0]);
+             features3578[0]);
     return 0;
   }
 
@@ -27359,18 +27507,18 @@ static int
 test_scrub_file_2_perform (guestfs_h *g)
 {
   /* TestLastFail for scrub_file (2) */
-  const char *arg3573 = "/scrub_file_3_notexisting";
-  const char *arg3574 = "/scrub_file_3_link";
-  int ret3572;
-  ret3572 = guestfs_ln_s (g, arg3573, arg3574);
-  if (ret3572 == -1)
+  const char *arg3580 = "/scrub_file_3_notexisting";
+  const char *arg3581 = "/scrub_file_3_link";
+  int ret3579;
+  ret3579 = guestfs_ln_s (g, arg3580, arg3581);
+  if (ret3579 == -1)
     return -1;
-  const char *arg3577 = "/scrub_file_3_link";
-  int ret3576;
+  const char *arg3584 = "/scrub_file_3_link";
+  int ret3583;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret3576 = guestfs_scrub_file (g, arg3577);
+  ret3583 = guestfs_scrub_file (g, arg3584);
   guestfs_pop_error_handler (g);
-  if (ret3576 != -1)
+  if (ret3583 != -1)
     return -1;
   return 0;
 }
@@ -27386,10 +27534,10 @@ test_scrub_file_3 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3579[] = { "scrub", NULL };
-  if (!guestfs_feature_available (g, (char **) features3579)) {
+  const char *features3586[] = { "scrub", NULL };
+  if (!guestfs_feature_available (g, (char **) features3586)) {
     skipped ("test_scrub_file_3", "group %s not available in daemon",
-             features3579[0]);
+             features3586[0]);
     return 0;
   }
 
@@ -27418,25 +27566,25 @@ static int
 test_scrub_file_3_perform (guestfs_h *g)
 {
   /* TestLastFail for scrub_file (3) */
-  const char *arg3581 = "/scrub_file_4";
-  const char *arg3582 = "content";
-  size_t arg3582_size = 7;
-  int ret3580;
-  ret3580 = guestfs_write (g, arg3581, arg3582, arg3582_size);
-  if (ret3580 == -1)
+  const char *arg3588 = "/scrub_file_4";
+  const char *arg3589 = "content";
+  size_t arg3589_size = 7;
+  int ret3587;
+  ret3587 = guestfs_write (g, arg3588, arg3589, arg3589_size);
+  if (ret3587 == -1)
     return -1;
-  const char *arg3585 = "../sysroot/scrub_file_4";
-  const char *arg3586 = "/scrub_file_4_link";
-  int ret3584;
-  ret3584 = guestfs_ln_s (g, arg3585, arg3586);
-  if (ret3584 == -1)
+  const char *arg3592 = "../sysroot/scrub_file_4";
+  const char *arg3593 = "/scrub_file_4_link";
+  int ret3591;
+  ret3591 = guestfs_ln_s (g, arg3592, arg3593);
+  if (ret3591 == -1)
     return -1;
-  const char *arg3589 = "/scrub_file_4_link";
-  int ret3588;
+  const char *arg3596 = "/scrub_file_4_link";
+  int ret3595;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret3588 = guestfs_scrub_file (g, arg3589);
+  ret3595 = guestfs_scrub_file (g, arg3596);
   guestfs_pop_error_handler (g);
-  if (ret3588 != -1)
+  if (ret3595 != -1)
     return -1;
   return 0;
 }
@@ -27477,15 +27625,15 @@ static int
 test_set_e2label_0_perform (guestfs_h *g)
 {
   /* TestResultString for set_e2label (0) */
-  const char *arg3592 = "/dev/sda1";
-  const char *arg3593 = "testlabel";
-  int ret3591;
-  ret3591 = guestfs_set_e2label (g, arg3592, arg3593);
-  if (ret3591 == -1)
+  const char *arg3599 = "/dev/sda1";
+  const char *arg3600 = "testlabel";
+  int ret3598;
+  ret3598 = guestfs_set_e2label (g, arg3599, arg3600);
+  if (ret3598 == -1)
     return -1;
-  const char *arg3595 = "/dev/sda1";
+  const char *arg3602 = "/dev/sda1";
   CLEANUP_FREE char *ret;
-  ret = guestfs_get_e2label (g, arg3595);
+  ret = guestfs_get_e2label (g, arg3602);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "testlabel")) {
@@ -27532,20 +27680,20 @@ static int
 test_set_e2uuid_0_perform (guestfs_h *g)
 {
   /* TestResultString for set_e2uuid (0) */
-  const char *arg3598 = "/dev/sda1";
-  const char *arg3599 = "d306427c-371d-3832-d8f7-eaad61dc6244";
-  int ret3597;
-  ret3597 = guestfs_set_e2uuid (g, arg3598, arg3599);
-  if (ret3597 == -1)
+  const char *arg3605 = "/dev/sda1";
+  const char *arg3606 = "76802f61-6cde-0f8b-e149-6849b3cb42b6";
+  int ret3604;
+  ret3604 = guestfs_set_e2uuid (g, arg3605, arg3606);
+  if (ret3604 == -1)
     return -1;
-  const char *arg3601 = "/dev/sda1";
+  const char *arg3608 = "/dev/sda1";
   CLEANUP_FREE char *ret;
-  ret = guestfs_get_e2uuid (g, arg3601);
+  ret = guestfs_get_e2uuid (g, arg3608);
   if (ret == NULL)
       return -1;
-  if (! STREQ (ret, "d306427c-371d-3832-d8f7-eaad61dc6244")) {
+  if (! STREQ (ret, "76802f61-6cde-0f8b-e149-6849b3cb42b6")) {
     fprintf (stderr, "%s: test failed: expected last command %s to return \"%s\" but it returned \"%s\"\n",
-             "test_set_e2uuid_0", "get_e2uuid", "d306427c-371d-3832-d8f7-eaad61dc6244", ret);
+             "test_set_e2uuid_0", "get_e2uuid", "76802f61-6cde-0f8b-e149-6849b3cb42b6", ret);
     return -1;
   }
   return 0;
@@ -27587,15 +27735,15 @@ static int
 test_set_e2uuid_1_perform (guestfs_h *g)
 {
   /* TestResultString for set_e2uuid (1) */
-  const char *arg3604 = "/dev/sda1";
-  const char *arg3605 = "clear";
-  int ret3603;
-  ret3603 = guestfs_set_e2uuid (g, arg3604, arg3605);
-  if (ret3603 == -1)
+  const char *arg3611 = "/dev/sda1";
+  const char *arg3612 = "clear";
+  int ret3610;
+  ret3610 = guestfs_set_e2uuid (g, arg3611, arg3612);
+  if (ret3610 == -1)
     return -1;
-  const char *arg3607 = "/dev/sda1";
+  const char *arg3614 = "/dev/sda1";
   CLEANUP_FREE char *ret;
-  ret = guestfs_get_e2uuid (g, arg3607);
+  ret = guestfs_get_e2uuid (g, arg3614);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "")) {
@@ -27642,11 +27790,11 @@ static int
 test_set_e2uuid_2_perform (guestfs_h *g)
 {
   /* TestRun for set_e2uuid (2) */
-  const char *arg3610 = "/dev/sda1";
-  const char *arg3611 = "random";
-  int ret3609;
-  ret3609 = guestfs_set_e2uuid (g, arg3610, arg3611);
-  if (ret3609 == -1)
+  const char *arg3617 = "/dev/sda1";
+  const char *arg3618 = "random";
+  int ret3616;
+  ret3616 = guestfs_set_e2uuid (g, arg3617, arg3618);
+  if (ret3616 == -1)
     return -1;
   return 0;
 }
@@ -27687,11 +27835,11 @@ static int
 test_set_e2uuid_3_perform (guestfs_h *g)
 {
   /* TestRun for set_e2uuid (3) */
-  const char *arg3614 = "/dev/sda1";
-  const char *arg3615 = "time";
-  int ret3613;
-  ret3613 = guestfs_set_e2uuid (g, arg3614, arg3615);
-  if (ret3613 == -1)
+  const char *arg3621 = "/dev/sda1";
+  const char *arg3622 = "time";
+  int ret3620;
+  ret3620 = guestfs_set_e2uuid (g, arg3621, arg3622);
+  if (ret3620 == -1)
     return -1;
   return 0;
 }
@@ -27732,15 +27880,15 @@ static int
 test_set_label_0_perform (guestfs_h *g)
 {
   /* TestResultString for set_label (0) */
-  const char *arg3618 = "/dev/sda1";
-  const char *arg3619 = "testlabel";
-  int ret3617;
-  ret3617 = guestfs_set_label (g, arg3618, arg3619);
-  if (ret3617 == -1)
+  const char *arg3625 = "/dev/sda1";
+  const char *arg3626 = "testlabel";
+  int ret3624;
+  ret3624 = guestfs_set_label (g, arg3625, arg3626);
+  if (ret3624 == -1)
     return -1;
-  const char *arg3621 = "/dev/sda1";
+  const char *arg3628 = "/dev/sda1";
   CLEANUP_FREE char *ret;
-  ret = guestfs_vfs_label (g, arg3621);
+  ret = guestfs_vfs_label (g, arg3628);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "testlabel")) {
@@ -27762,10 +27910,10 @@ test_set_label_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3623[] = { "ntfs3g", NULL };
-  if (!guestfs_feature_available (g, (char **) features3623)) {
+  const char *features3630[] = { "ntfs3g", NULL };
+  if (!guestfs_feature_available (g, (char **) features3630)) {
     skipped ("test_set_label_1", "group %s not available in daemon",
-             features3623[0]);
+             features3630[0]);
     return 0;
   }
 
@@ -27794,23 +27942,23 @@ static int
 test_set_label_1_perform (guestfs_h *g)
 {
   /* TestResultString for set_label (1) */
-  const char *arg3625 = "ntfs";
-  const char *arg3626 = "/dev/sda1";
-  struct guestfs_mkfs_opts_argv optargs3627;
-  optargs3627.bitmask = UINT64_C(0x0);
-  int ret3624;
-  ret3624 = guestfs_mkfs_opts_argv (g, arg3625, arg3626, &optargs3627);
-  if (ret3624 == -1)
+  const char *arg3632 = "ntfs";
+  const char *arg3633 = "/dev/sda1";
+  struct guestfs_mkfs_opts_argv optargs3634;
+  optargs3634.bitmask = UINT64_C(0x0);
+  int ret3631;
+  ret3631 = guestfs_mkfs_opts_argv (g, arg3632, arg3633, &optargs3634);
+  if (ret3631 == -1)
     return -1;
-  const char *arg3629 = "/dev/sda1";
-  const char *arg3630 = "testlabel2";
-  int ret3628;
-  ret3628 = guestfs_set_label (g, arg3629, arg3630);
-  if (ret3628 == -1)
+  const char *arg3636 = "/dev/sda1";
+  const char *arg3637 = "testlabel2";
+  int ret3635;
+  ret3635 = guestfs_set_label (g, arg3636, arg3637);
+  if (ret3635 == -1)
     return -1;
-  const char *arg3632 = "/dev/sda1";
+  const char *arg3639 = "/dev/sda1";
   CLEANUP_FREE char *ret;
-  ret = guestfs_vfs_label (g, arg3632);
+  ret = guestfs_vfs_label (g, arg3639);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "testlabel2")) {
@@ -27857,18 +28005,18 @@ static int
 test_set_label_2_perform (guestfs_h *g)
 {
   /* TestLastFail for set_label (2) */
-  const char *arg3635 = "/dev/sda1";
-  int ret3634;
-  ret3634 = guestfs_zero (g, arg3635);
-  if (ret3634 == -1)
+  const char *arg3642 = "/dev/sda1";
+  int ret3641;
+  ret3641 = guestfs_zero (g, arg3642);
+  if (ret3641 == -1)
     return -1;
-  const char *arg3638 = "/dev/sda1";
-  const char *arg3639 = "testlabel2";
-  int ret3637;
+  const char *arg3645 = "/dev/sda1";
+  const char *arg3646 = "testlabel2";
+  int ret3644;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret3637 = guestfs_set_label (g, arg3638, arg3639);
+  ret3644 = guestfs_set_label (g, arg3645, arg3646);
   guestfs_pop_error_handler (g);
-  if (ret3637 != -1)
+  if (ret3644 != -1)
     return -1;
   return 0;
 }
@@ -27909,9 +28057,9 @@ static int
 test_set_trace_0_perform (guestfs_h *g)
 {
   /* TestResultFalse for set_trace (0) */
-  int ret3641;
-  ret3641 = guestfs_set_trace (g, 0);
-  if (ret3641 == -1)
+  int ret3648;
+  ret3648 = guestfs_set_trace (g, 0);
+  if (ret3648 == -1)
     return -1;
   int ret;
   ret = guestfs_get_trace (g);
@@ -27961,20 +28109,20 @@ static int
 test_set_uuid_0_perform (guestfs_h *g)
 {
   /* TestResultString for set_uuid (0) */
-  const char *arg3646 = "/dev/sda1";
-  const char *arg3647 = "d306427c-371d-3832-d8f7-eaad61dc6244";
-  int ret3645;
-  ret3645 = guestfs_set_uuid (g, arg3646, arg3647);
-  if (ret3645 == -1)
+  const char *arg3653 = "/dev/sda1";
+  const char *arg3654 = "76802f61-6cde-0f8b-e149-6849b3cb42b6";
+  int ret3652;
+  ret3652 = guestfs_set_uuid (g, arg3653, arg3654);
+  if (ret3652 == -1)
     return -1;
-  const char *arg3649 = "/dev/sda1";
+  const char *arg3656 = "/dev/sda1";
   CLEANUP_FREE char *ret;
-  ret = guestfs_vfs_uuid (g, arg3649);
+  ret = guestfs_vfs_uuid (g, arg3656);
   if (ret == NULL)
       return -1;
-  if (! STREQ (ret, "d306427c-371d-3832-d8f7-eaad61dc6244")) {
+  if (! STREQ (ret, "76802f61-6cde-0f8b-e149-6849b3cb42b6")) {
     fprintf (stderr, "%s: test failed: expected last command %s to return \"%s\" but it returned \"%s\"\n",
-             "test_set_uuid_0", "vfs_uuid", "d306427c-371d-3832-d8f7-eaad61dc6244", ret);
+             "test_set_uuid_0", "vfs_uuid", "76802f61-6cde-0f8b-e149-6849b3cb42b6", ret);
     return -1;
   }
   return 0;
@@ -28016,10 +28164,10 @@ static int
 test_set_uuid_random_0_perform (guestfs_h *g)
 {
   /* TestRun for set_uuid_random (0) */
-  const char *arg3652 = "/dev/sda1";
-  int ret3651;
-  ret3651 = guestfs_set_uuid_random (g, arg3652);
-  if (ret3651 == -1)
+  const char *arg3659 = "/dev/sda1";
+  int ret3658;
+  ret3658 = guestfs_set_uuid_random (g, arg3659);
+  if (ret3658 == -1)
     return -1;
   return 0;
 }
@@ -28060,9 +28208,9 @@ static int
 test_sleep_0_perform (guestfs_h *g)
 {
   /* TestRun for sleep (0) */
-  int ret3654;
-  ret3654 = guestfs_sleep (g, 1);
-  if (ret3654 == -1)
+  int ret3661;
+  ret3661 = guestfs_sleep (g, 1);
+  if (ret3661 == -1)
     return -1;
   return 0;
 }
@@ -28103,9 +28251,9 @@ static int
 test_stat_0_perform (guestfs_h *g)
 {
   /* TestResult for stat (0) */
-  const char *arg3657 = "/empty";
+  const char *arg3664 = "/empty";
   CLEANUP_FREE_STAT struct guestfs_stat *ret;
-  ret = guestfs_stat (g, arg3657);
+  ret = guestfs_stat (g, arg3664);
   if (ret == NULL)
       return -1;
   if (! (ret->size == 0)) {
@@ -28154,9 +28302,9 @@ static int
 test_statns_0_perform (guestfs_h *g)
 {
   /* TestResult for statns (0) */
-  const char *arg3659 = "/empty";
+  const char *arg3666 = "/empty";
   CLEANUP_FREE_STATNS struct guestfs_statns *ret;
-  ret = guestfs_statns (g, arg3659);
+  ret = guestfs_statns (g, arg3666);
   if (ret == NULL)
       return -1;
   if (! (ret->st_size == 0)) {
@@ -28205,9 +28353,9 @@ static int
 test_statvfs_0_perform (guestfs_h *g)
 {
   /* TestResult for statvfs (0) */
-  const char *arg3661 = "/";
+  const char *arg3668 = "/";
   CLEANUP_FREE_STATVFS struct guestfs_statvfs *ret;
-  ret = guestfs_statvfs (g, arg3661);
+  ret = guestfs_statvfs (g, arg3668);
   if (ret == NULL)
       return -1;
   if (! (ret->namemax == 255)) {
@@ -28256,9 +28404,9 @@ static int
 test_strings_0_perform (guestfs_h *g)
 {
   /* TestResult for strings (0) */
-  const char *arg3663 = "/known-5";
+  const char *arg3670 = "/known-5";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_strings (g, arg3663);
+  ret = guestfs_strings (g, arg3670);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 2, "abcdefghi", "jklmnopqr"))) {
@@ -28307,9 +28455,9 @@ static int
 test_strings_1_perform (guestfs_h *g)
 {
   /* TestResult for strings (1) */
-  const char *arg3665 = "/empty";
+  const char *arg3672 = "/empty";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_strings (g, arg3665);
+  ret = guestfs_strings (g, arg3672);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 0))) {
@@ -28358,10 +28506,10 @@ static int
 test_strings_2_perform (guestfs_h *g)
 {
   /* TestRun for strings (2) */
-  const char *arg3668 = "/abssymlink";
-  CLEANUP_FREE_STRING_LIST char **ret3667;
-  ret3667 = guestfs_strings (g, arg3668);
-  if (ret3667 == NULL)
+  const char *arg3675 = "/abssymlink";
+  CLEANUP_FREE_STRING_LIST char **ret3674;
+  ret3674 = guestfs_strings (g, arg3675);
+  if (ret3674 == NULL)
       return -1;
   return 0;
 }
@@ -28402,10 +28550,10 @@ static int
 test_strings_e_0_perform (guestfs_h *g)
 {
   /* TestResult for strings_e (0) */
-  const char *arg3670 = "b";
-  const char *arg3671 = "/known-5";
+  const char *arg3677 = "b";
+  const char *arg3678 = "/known-5";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_strings_e (g, arg3670, arg3671);
+  ret = guestfs_strings_e (g, arg3677, arg3678);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 0))) {
@@ -28454,17 +28602,17 @@ static int
 test_strings_e_1_perform (guestfs_h *g)
 {
   /* TestResult for strings_e (1) */
-  const char *arg3673 = "/strings_e";
-  const char *arg3674 = "\0h\0e\0l\0l\0o\0\n\0w\0o\0r\0l\0d\0\n";
-  size_t arg3674_size = 24;
+  const char *arg3680 = "/strings_e";
+  const char *arg3681 = "\0h\0e\0l\0l\0o\0\n\0w\0o\0r\0l\0d\0\n";
+  size_t arg3681_size = 24;
   int ret1;
-  ret1 = guestfs_write (g, arg3673, arg3674, arg3674_size);
+  ret1 = guestfs_write (g, arg3680, arg3681, arg3681_size);
   if (ret1 == -1)
     return -1;
-  const char *arg3676 = "b";
-  const char *arg3677 = "/strings_e";
+  const char *arg3683 = "b";
+  const char *arg3684 = "/strings_e";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_strings_e (g, arg3676, arg3677);
+  ret = guestfs_strings_e (g, arg3683, arg3684);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 2, "hello", "world"))) {
@@ -28513,22 +28661,22 @@ static int
 test_swapon_device_0_perform (guestfs_h *g)
 {
   /* TestRun for swapon_device (0) */
-  const char *arg3680 = "/dev/sda1";
-  struct guestfs_mkswap_opts_argv optargs3681;
-  optargs3681.bitmask = UINT64_C(0x0);
-  int ret3679;
-  ret3679 = guestfs_mkswap_opts_argv (g, arg3680, &optargs3681);
-  if (ret3679 == -1)
+  const char *arg3687 = "/dev/sda1";
+  struct guestfs_mkswap_opts_argv optargs3688;
+  optargs3688.bitmask = UINT64_C(0x0);
+  int ret3686;
+  ret3686 = guestfs_mkswap_opts_argv (g, arg3687, &optargs3688);
+  if (ret3686 == -1)
     return -1;
-  const char *arg3683 = "/dev/sda1";
-  int ret3682;
-  ret3682 = guestfs_swapon_device (g, arg3683);
-  if (ret3682 == -1)
+  const char *arg3690 = "/dev/sda1";
+  int ret3689;
+  ret3689 = guestfs_swapon_device (g, arg3690);
+  if (ret3689 == -1)
     return -1;
-  const char *arg3686 = "/dev/sda1";
-  int ret3685;
-  ret3685 = guestfs_swapoff_device (g, arg3686);
-  if (ret3685 == -1)
+  const char *arg3693 = "/dev/sda1";
+  int ret3692;
+  ret3692 = guestfs_swapoff_device (g, arg3693);
+  if (ret3692 == -1)
     return -1;
   return 0;
 }
@@ -28569,30 +28717,30 @@ static int
 test_swapon_file_0_perform (guestfs_h *g)
 {
   /* TestRun for swapon_file (0) */
-  const char *arg3689 = "/swapon_file";
-  int ret3688;
-  ret3688 = guestfs_fallocate (g, arg3689, 8388608);
-  if (ret3688 == -1)
-    return -1;
-  const char *arg3693 = "/swapon_file";
-  int ret3692;
-  ret3692 = guestfs_mkswap_file (g, arg3693);
-  if (ret3692 == -1)
-    return -1;
   const char *arg3696 = "/swapon_file";
   int ret3695;
-  ret3695 = guestfs_swapon_file (g, arg3696);
+  ret3695 = guestfs_fallocate (g, arg3696, 8388608);
   if (ret3695 == -1)
     return -1;
-  const char *arg3699 = "/swapon_file";
-  int ret3698;
-  ret3698 = guestfs_swapoff_file (g, arg3699);
-  if (ret3698 == -1)
+  const char *arg3700 = "/swapon_file";
+  int ret3699;
+  ret3699 = guestfs_mkswap_file (g, arg3700);
+  if (ret3699 == -1)
     return -1;
-  const char *arg3702 = "/swapon_file";
-  int ret3701;
-  ret3701 = guestfs_rm (g, arg3702);
-  if (ret3701 == -1)
+  const char *arg3703 = "/swapon_file";
+  int ret3702;
+  ret3702 = guestfs_swapon_file (g, arg3703);
+  if (ret3702 == -1)
+    return -1;
+  const char *arg3706 = "/swapon_file";
+  int ret3705;
+  ret3705 = guestfs_swapoff_file (g, arg3706);
+  if (ret3705 == -1)
+    return -1;
+  const char *arg3709 = "/swapon_file";
+  int ret3708;
+  ret3708 = guestfs_rm (g, arg3709);
+  if (ret3708 == -1)
     return -1;
   return 0;
 }
@@ -28633,39 +28781,39 @@ static int
 test_swapon_label_0_perform (guestfs_h *g)
 {
   /* TestRun for swapon_label (0) */
-  const char *arg3705 = "/dev/sda";
-  const char *arg3706 = "mbr";
-  int ret3704;
-  ret3704 = guestfs_part_disk (g, arg3705, arg3706);
-  if (ret3704 == -1)
-    return -1;
-  const char *arg3709 = "/dev/sda1";
-  struct guestfs_mkswap_opts_argv optargs3710;
-  optargs3710.label = "swapit";
-  optargs3710.bitmask = UINT64_C(0x1);
-  int ret3708;
-  ret3708 = guestfs_mkswap_opts_argv (g, arg3709, &optargs3710);
-  if (ret3708 == -1)
-    return -1;
-  const char *arg3712 = "swapit";
+  const char *arg3712 = "/dev/sda";
+  const char *arg3713 = "mbr";
   int ret3711;
-  ret3711 = guestfs_swapon_label (g, arg3712);
+  ret3711 = guestfs_part_disk (g, arg3712, arg3713);
   if (ret3711 == -1)
     return -1;
-  const char *arg3715 = "swapit";
-  int ret3714;
-  ret3714 = guestfs_swapoff_label (g, arg3715);
-  if (ret3714 == -1)
+  const char *arg3716 = "/dev/sda1";
+  struct guestfs_mkswap_opts_argv optargs3717;
+  optargs3717.label = "swapit";
+  optargs3717.bitmask = UINT64_C(0x1);
+  int ret3715;
+  ret3715 = guestfs_mkswap_opts_argv (g, arg3716, &optargs3717);
+  if (ret3715 == -1)
     return -1;
-  const char *arg3718 = "/dev/sda";
-  int ret3717;
-  ret3717 = guestfs_zero (g, arg3718);
-  if (ret3717 == -1)
+  const char *arg3719 = "swapit";
+  int ret3718;
+  ret3718 = guestfs_swapon_label (g, arg3719);
+  if (ret3718 == -1)
     return -1;
-  const char *arg3721 = "/dev/sda";
-  int ret3720;
-  ret3720 = guestfs_blockdev_rereadpt (g, arg3721);
-  if (ret3720 == -1)
+  const char *arg3722 = "swapit";
+  int ret3721;
+  ret3721 = guestfs_swapoff_label (g, arg3722);
+  if (ret3721 == -1)
+    return -1;
+  const char *arg3725 = "/dev/sda";
+  int ret3724;
+  ret3724 = guestfs_zero (g, arg3725);
+  if (ret3724 == -1)
+    return -1;
+  const char *arg3728 = "/dev/sda";
+  int ret3727;
+  ret3727 = guestfs_blockdev_rereadpt (g, arg3728);
+  if (ret3727 == -1)
     return -1;
   return 0;
 }
@@ -28681,10 +28829,10 @@ test_swapon_uuid_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3723[] = { "linuxfsuuid", NULL };
-  if (!guestfs_feature_available (g, (char **) features3723)) {
+  const char *features3730[] = { "linuxfsuuid", NULL };
+  if (!guestfs_feature_available (g, (char **) features3730)) {
     skipped ("test_swapon_uuid_0", "group %s not available in daemon",
-             features3723[0]);
+             features3730[0]);
     return 0;
   }
 
@@ -28713,23 +28861,23 @@ static int
 test_swapon_uuid_0_perform (guestfs_h *g)
 {
   /* TestRun for swapon_uuid (0) */
-  const char *arg3725 = "/dev/sdc";
-  struct guestfs_mkswap_opts_argv optargs3726;
-  optargs3726.uuid = "d306427c-371d-3832-d8f7-eaad61dc6244";
-  optargs3726.bitmask = UINT64_C(0x2);
-  int ret3724;
-  ret3724 = guestfs_mkswap_opts_argv (g, arg3725, &optargs3726);
-  if (ret3724 == -1)
+  const char *arg3732 = "/dev/sdc";
+  struct guestfs_mkswap_opts_argv optargs3733;
+  optargs3733.uuid = "76802f61-6cde-0f8b-e149-6849b3cb42b6";
+  optargs3733.bitmask = UINT64_C(0x2);
+  int ret3731;
+  ret3731 = guestfs_mkswap_opts_argv (g, arg3732, &optargs3733);
+  if (ret3731 == -1)
     return -1;
-  const char *arg3728 = "d306427c-371d-3832-d8f7-eaad61dc6244";
-  int ret3727;
-  ret3727 = guestfs_swapon_uuid (g, arg3728);
-  if (ret3727 == -1)
+  const char *arg3735 = "76802f61-6cde-0f8b-e149-6849b3cb42b6";
+  int ret3734;
+  ret3734 = guestfs_swapon_uuid (g, arg3735);
+  if (ret3734 == -1)
     return -1;
-  const char *arg3731 = "d306427c-371d-3832-d8f7-eaad61dc6244";
-  int ret3730;
-  ret3730 = guestfs_swapoff_uuid (g, arg3731);
-  if (ret3730 == -1)
+  const char *arg3738 = "76802f61-6cde-0f8b-e149-6849b3cb42b6";
+  int ret3737;
+  ret3737 = guestfs_swapoff_uuid (g, arg3738);
+  if (ret3737 == -1)
     return -1;
   return 0;
 }
@@ -28770,9 +28918,9 @@ static int
 test_sync_0_perform (guestfs_h *g)
 {
   /* TestRun for sync (0) */
-  int ret3733;
-  ret3733 = guestfs_sync (g);
-  if (ret3733 == -1)
+  int ret3740;
+  ret3740 = guestfs_sync (g);
+  if (ret3740 == -1)
     return -1;
   return 0;
 }
@@ -28813,9 +28961,9 @@ static int
 test_tail_0_perform (guestfs_h *g)
 {
   /* TestResult for tail (0) */
-  const char *arg3735 = "/10klines";
+  const char *arg3742 = "/10klines";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_tail (g, arg3735);
+  ret = guestfs_tail (g, arg3742);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 10, "9990abcdefghijklmnopqrstuvwxyz", "9991abcdefghijklmnopqrstuvwxyz", "9992abcdefghijklmnopqrstuvwxyz", "9993abcdefghijklmnopqrstuvwxyz", "9994abcdefghijklmnopqrstuvwxyz", "9995abcdefghijklmnopqrstuvwxyz", "9996abcdefghijklmnopqrstuvwxyz", "9997abcdefghijklmnopqrstuvwxyz", "9998abcdefghijklmnopqrstuvwxyz", "9999abcdefghijklmnopqrstuvwxyz"))) {
@@ -28864,9 +29012,9 @@ static int
 test_tail_n_0_perform (guestfs_h *g)
 {
   /* TestResult for tail_n (0) */
-  const char *arg3738 = "/10klines";
+  const char *arg3745 = "/10klines";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_tail_n (g, 3, arg3738);
+  ret = guestfs_tail_n (g, 3, arg3745);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 3, "9997abcdefghijklmnopqrstuvwxyz", "9998abcdefghijklmnopqrstuvwxyz", "9999abcdefghijklmnopqrstuvwxyz"))) {
@@ -28915,9 +29063,9 @@ static int
 test_tail_n_1_perform (guestfs_h *g)
 {
   /* TestResult for tail_n (1) */
-  const char *arg3741 = "/10klines";
+  const char *arg3748 = "/10klines";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_tail_n (g, -9998, arg3741);
+  ret = guestfs_tail_n (g, -9998, arg3748);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 3, "9997abcdefghijklmnopqrstuvwxyz", "9998abcdefghijklmnopqrstuvwxyz", "9999abcdefghijklmnopqrstuvwxyz"))) {
@@ -28966,9 +29114,9 @@ static int
 test_tail_n_2_perform (guestfs_h *g)
 {
   /* TestResult for tail_n (2) */
-  const char *arg3744 = "/10klines";
+  const char *arg3751 = "/10klines";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_tail_n (g, 0, arg3744);
+  ret = guestfs_tail_n (g, 0, arg3751);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 0))) {
@@ -29017,22 +29165,22 @@ static int
 test_tar_in_0_perform (guestfs_h *g)
 {
   /* TestResultString for tar_in (0) */
-  const char *arg3747 = "/tar_in";
-  int ret3746;
-  ret3746 = guestfs_mkdir (g, arg3747);
-  if (ret3746 == -1)
+  const char *arg3754 = "/tar_in";
+  int ret3753;
+  ret3753 = guestfs_mkdir (g, arg3754);
+  if (ret3753 == -1)
     return -1;
-  CLEANUP_FREE char *arg3750 = substitute_srcdir ("$srcdir/../test-data/files/helloworld.tar");
-  const char *arg3751 = "/tar_in";
-  struct guestfs_tar_in_opts_argv optargs3752;
-  optargs3752.bitmask = UINT64_C(0x0);
-  int ret3749;
-  ret3749 = guestfs_tar_in_opts_argv (g, arg3750, arg3751, &optargs3752);
-  if (ret3749 == -1)
+  CLEANUP_FREE char *arg3757 = substitute_srcdir ("$srcdir/../test-data/files/helloworld.tar");
+  const char *arg3758 = "/tar_in";
+  struct guestfs_tar_in_opts_argv optargs3759;
+  optargs3759.bitmask = UINT64_C(0x0);
+  int ret3756;
+  ret3756 = guestfs_tar_in_opts_argv (g, arg3757, arg3758, &optargs3759);
+  if (ret3756 == -1)
     return -1;
-  const char *arg3753 = "/tar_in/hello";
+  const char *arg3760 = "/tar_in/hello";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg3753);
+  ret = guestfs_cat (g, arg3760);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "hello\n")) {
@@ -29079,23 +29227,23 @@ static int
 test_tar_in_1_perform (guestfs_h *g)
 {
   /* TestResultString for tar_in (1) */
-  const char *arg3756 = "/tar_in_gz";
-  int ret3755;
-  ret3755 = guestfs_mkdir (g, arg3756);
-  if (ret3755 == -1)
+  const char *arg3763 = "/tar_in_gz";
+  int ret3762;
+  ret3762 = guestfs_mkdir (g, arg3763);
+  if (ret3762 == -1)
     return -1;
-  CLEANUP_FREE char *arg3759 = substitute_srcdir ("$srcdir/../test-data/files/helloworld.tar.gz");
-  const char *arg3760 = "/tar_in_gz";
-  struct guestfs_tar_in_opts_argv optargs3761;
-  optargs3761.compress = "gzip";
-  optargs3761.bitmask = UINT64_C(0x1);
-  int ret3758;
-  ret3758 = guestfs_tar_in_opts_argv (g, arg3759, arg3760, &optargs3761);
-  if (ret3758 == -1)
+  CLEANUP_FREE char *arg3766 = substitute_srcdir ("$srcdir/../test-data/files/helloworld.tar.gz");
+  const char *arg3767 = "/tar_in_gz";
+  struct guestfs_tar_in_opts_argv optargs3768;
+  optargs3768.compress = "gzip";
+  optargs3768.bitmask = UINT64_C(0x1);
+  int ret3765;
+  ret3765 = guestfs_tar_in_opts_argv (g, arg3766, arg3767, &optargs3768);
+  if (ret3765 == -1)
     return -1;
-  const char *arg3762 = "/tar_in_gz/hello";
+  const char *arg3769 = "/tar_in_gz/hello";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg3762);
+  ret = guestfs_cat (g, arg3769);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "hello\n")) {
@@ -29117,10 +29265,10 @@ test_tar_in_2 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3764[] = { "xz", NULL };
-  if (!guestfs_feature_available (g, (char **) features3764)) {
+  const char *features3771[] = { "xz", NULL };
+  if (!guestfs_feature_available (g, (char **) features3771)) {
     skipped ("test_tar_in_2", "group %s not available in daemon",
-             features3764[0]);
+             features3771[0]);
     return 0;
   }
 
@@ -29149,23 +29297,23 @@ static int
 test_tar_in_2_perform (guestfs_h *g)
 {
   /* TestResultString for tar_in (2) */
-  const char *arg3766 = "/tar_in_xz";
-  int ret3765;
-  ret3765 = guestfs_mkdir (g, arg3766);
-  if (ret3765 == -1)
+  const char *arg3773 = "/tar_in_xz";
+  int ret3772;
+  ret3772 = guestfs_mkdir (g, arg3773);
+  if (ret3772 == -1)
     return -1;
-  CLEANUP_FREE char *arg3769 = substitute_srcdir ("$srcdir/../test-data/files/helloworld.tar.xz");
-  const char *arg3770 = "/tar_in_xz";
-  struct guestfs_tar_in_opts_argv optargs3771;
-  optargs3771.compress = "xz";
-  optargs3771.bitmask = UINT64_C(0x1);
-  int ret3768;
-  ret3768 = guestfs_tar_in_opts_argv (g, arg3769, arg3770, &optargs3771);
-  if (ret3768 == -1)
+  CLEANUP_FREE char *arg3776 = substitute_srcdir ("$srcdir/../test-data/files/helloworld.tar.xz");
+  const char *arg3777 = "/tar_in_xz";
+  struct guestfs_tar_in_opts_argv optargs3778;
+  optargs3778.compress = "xz";
+  optargs3778.bitmask = UINT64_C(0x1);
+  int ret3775;
+  ret3775 = guestfs_tar_in_opts_argv (g, arg3776, arg3777, &optargs3778);
+  if (ret3775 == -1)
     return -1;
-  const char *arg3772 = "/tar_in_xz/hello";
+  const char *arg3779 = "/tar_in_xz/hello";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg3772);
+  ret = guestfs_cat (g, arg3779);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "hello\n")) {
@@ -29212,20 +29360,20 @@ static int
 test_tgz_in_0_perform (guestfs_h *g)
 {
   /* TestResultString for tgz_in (0) */
-  const char *arg3775 = "/tgz_in";
-  int ret3774;
-  ret3774 = guestfs_mkdir (g, arg3775);
-  if (ret3774 == -1)
+  const char *arg3782 = "/tgz_in";
+  int ret3781;
+  ret3781 = guestfs_mkdir (g, arg3782);
+  if (ret3781 == -1)
     return -1;
-  CLEANUP_FREE char *arg3778 = substitute_srcdir ("$srcdir/../test-data/files/helloworld.tar.gz");
-  const char *arg3779 = "/tgz_in";
-  int ret3777;
-  ret3777 = guestfs_tgz_in (g, arg3778, arg3779);
-  if (ret3777 == -1)
+  CLEANUP_FREE char *arg3785 = substitute_srcdir ("$srcdir/../test-data/files/helloworld.tar.gz");
+  const char *arg3786 = "/tgz_in";
+  int ret3784;
+  ret3784 = guestfs_tgz_in (g, arg3785, arg3786);
+  if (ret3784 == -1)
     return -1;
-  const char *arg3781 = "/tgz_in/hello";
+  const char *arg3788 = "/tgz_in/hello";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg3781);
+  ret = guestfs_cat (g, arg3788);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "hello\n")) {
@@ -29272,14 +29420,14 @@ static int
 test_touch_0_perform (guestfs_h *g)
 {
   /* TestResultTrue for touch (0) */
-  const char *arg3784 = "/touch";
-  int ret3783;
-  ret3783 = guestfs_touch (g, arg3784);
-  if (ret3783 == -1)
+  const char *arg3791 = "/touch";
+  int ret3790;
+  ret3790 = guestfs_touch (g, arg3791);
+  if (ret3790 == -1)
     return -1;
-  const char *arg3786 = "/touch";
+  const char *arg3793 = "/touch";
   int ret;
-  ret = guestfs_exists (g, arg3786);
+  ret = guestfs_exists (g, arg3793);
   if (ret == -1)
     return -1;
   if (!ret) {
@@ -29326,21 +29474,21 @@ static int
 test_truncate_0_perform (guestfs_h *g)
 {
   /* TestResult for truncate (0) */
-  const char *arg3788 = "/truncate";
-  const char *arg3789 = "some stuff so size is not zero";
-  size_t arg3789_size = 30;
+  const char *arg3795 = "/truncate";
+  const char *arg3796 = "some stuff so size is not zero";
+  size_t arg3796_size = 30;
   int ret2;
-  ret2 = guestfs_write (g, arg3788, arg3789, arg3789_size);
+  ret2 = guestfs_write (g, arg3795, arg3796, arg3796_size);
   if (ret2 == -1)
     return -1;
-  const char *arg3791 = "/truncate";
+  const char *arg3798 = "/truncate";
   int ret1;
-  ret1 = guestfs_truncate (g, arg3791);
+  ret1 = guestfs_truncate (g, arg3798);
   if (ret1 == -1)
     return -1;
-  const char *arg3793 = "/truncate";
+  const char *arg3800 = "/truncate";
   CLEANUP_FREE_STAT struct guestfs_stat *ret;
-  ret = guestfs_stat (g, arg3793);
+  ret = guestfs_stat (g, arg3800);
   if (ret == NULL)
       return -1;
   if (! (ret->size == 0)) {
@@ -29389,19 +29537,19 @@ static int
 test_truncate_size_0_perform (guestfs_h *g)
 {
   /* TestResult for truncate_size (0) */
-  const char *arg3795 = "/truncate_size";
+  const char *arg3802 = "/truncate_size";
   int ret2;
-  ret2 = guestfs_touch (g, arg3795);
+  ret2 = guestfs_touch (g, arg3802);
   if (ret2 == -1)
     return -1;
-  const char *arg3797 = "/truncate_size";
+  const char *arg3804 = "/truncate_size";
   int ret1;
-  ret1 = guestfs_truncate_size (g, arg3797, 1000);
+  ret1 = guestfs_truncate_size (g, arg3804, 1000);
   if (ret1 == -1)
     return -1;
-  const char *arg3800 = "/truncate_size";
+  const char *arg3807 = "/truncate_size";
   CLEANUP_FREE_STAT struct guestfs_stat *ret;
-  ret = guestfs_stat (g, arg3800);
+  ret = guestfs_stat (g, arg3807);
   if (ret == NULL)
       return -1;
   if (! (ret->size == 1000)) {
@@ -29450,19 +29598,19 @@ static int
 test_tune2fs_0_perform (guestfs_h *g)
 {
   /* TestResult for tune2fs (0) */
-  const char *arg3802 = "/dev/sdb1";
-  struct guestfs_tune2fs_argv optargs3803;
-  optargs3803.force = 0;
-  optargs3803.maxmountcount = 0;
-  optargs3803.intervalbetweenchecks = 0;
-  optargs3803.bitmask = UINT64_C(0x23);
+  const char *arg3809 = "/dev/sdb1";
+  struct guestfs_tune2fs_argv optargs3810;
+  optargs3810.force = 0;
+  optargs3810.maxmountcount = 0;
+  optargs3810.intervalbetweenchecks = 0;
+  optargs3810.bitmask = UINT64_C(0x23);
   int ret1;
-  ret1 = guestfs_tune2fs_argv (g, arg3802, &optargs3803);
+  ret1 = guestfs_tune2fs_argv (g, arg3809, &optargs3810);
   if (ret1 == -1)
     return -1;
-  const char *arg3804 = "/dev/sdb1";
+  const char *arg3811 = "/dev/sdb1";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_tune2fs_l (g, arg3804);
+  ret = guestfs_tune2fs_l (g, arg3811);
   if (ret == NULL)
       return -1;
   if (! (check_hash (ret, "Check interval", "0 (<none>)") == 0 && check_hash (ret, "Maximum mount count", "-1") == 0)) {
@@ -29511,19 +29659,19 @@ static int
 test_tune2fs_1_perform (guestfs_h *g)
 {
   /* TestResult for tune2fs (1) */
-  const char *arg3806 = "/dev/sdb1";
-  struct guestfs_tune2fs_argv optargs3807;
-  optargs3807.force = 0;
-  optargs3807.maxmountcount = 0;
-  optargs3807.intervalbetweenchecks = 86400;
-  optargs3807.bitmask = UINT64_C(0x23);
+  const char *arg3813 = "/dev/sdb1";
+  struct guestfs_tune2fs_argv optargs3814;
+  optargs3814.force = 0;
+  optargs3814.maxmountcount = 0;
+  optargs3814.intervalbetweenchecks = 86400;
+  optargs3814.bitmask = UINT64_C(0x23);
   int ret1;
-  ret1 = guestfs_tune2fs_argv (g, arg3806, &optargs3807);
+  ret1 = guestfs_tune2fs_argv (g, arg3813, &optargs3814);
   if (ret1 == -1)
     return -1;
-  const char *arg3808 = "/dev/sdb1";
+  const char *arg3815 = "/dev/sdb1";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_tune2fs_l (g, arg3808);
+  ret = guestfs_tune2fs_l (g, arg3815);
   if (ret == NULL)
       return -1;
   if (! (check_hash (ret, "Check interval", "86400 (1 day)") == 0 && check_hash (ret, "Maximum mount count", "-1") == 0)) {
@@ -29572,19 +29720,19 @@ static int
 test_tune2fs_2_perform (guestfs_h *g)
 {
   /* TestResult for tune2fs (2) */
-  const char *arg3810 = "/dev/sdb1";
-  struct guestfs_tune2fs_argv optargs3811;
-  optargs3811.force = 0;
-  optargs3811.group = 1;
-  optargs3811.user = 1;
-  optargs3811.bitmask = UINT64_C(0x211);
+  const char *arg3817 = "/dev/sdb1";
+  struct guestfs_tune2fs_argv optargs3818;
+  optargs3818.force = 0;
+  optargs3818.group = 1;
+  optargs3818.user = 1;
+  optargs3818.bitmask = UINT64_C(0x211);
   int ret1;
-  ret1 = guestfs_tune2fs_argv (g, arg3810, &optargs3811);
+  ret1 = guestfs_tune2fs_argv (g, arg3817, &optargs3818);
   if (ret1 == -1)
     return -1;
-  const char *arg3812 = "/dev/sdb1";
+  const char *arg3819 = "/dev/sdb1";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_tune2fs_l (g, arg3812);
+  ret = guestfs_tune2fs_l (g, arg3819);
   if (ret == NULL)
       return -1;
   if (! (match_re (get_key (ret, "Reserved blocks uid"), "\\d+ \\(user \\S+\\)") && match_re (get_key (ret, "Reserved blocks gid"), "\\d+ \\(group \\S+\\)"))) {
@@ -29633,19 +29781,19 @@ static int
 test_tune2fs_3_perform (guestfs_h *g)
 {
   /* TestResult for tune2fs (3) */
-  const char *arg3814 = "/dev/sdb1";
-  struct guestfs_tune2fs_argv optargs3815;
-  optargs3815.force = 0;
-  optargs3815.group = 0;
-  optargs3815.user = 0;
-  optargs3815.bitmask = UINT64_C(0x211);
+  const char *arg3821 = "/dev/sdb1";
+  struct guestfs_tune2fs_argv optargs3822;
+  optargs3822.force = 0;
+  optargs3822.group = 0;
+  optargs3822.user = 0;
+  optargs3822.bitmask = UINT64_C(0x211);
   int ret1;
-  ret1 = guestfs_tune2fs_argv (g, arg3814, &optargs3815);
+  ret1 = guestfs_tune2fs_argv (g, arg3821, &optargs3822);
   if (ret1 == -1)
     return -1;
-  const char *arg3816 = "/dev/sdb1";
+  const char *arg3823 = "/dev/sdb1";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_tune2fs_l (g, arg3816);
+  ret = guestfs_tune2fs_l (g, arg3823);
   if (ret == NULL)
       return -1;
   if (! (match_re (get_key (ret, "Reserved blocks uid"), "\\d+ \\(user \\S+\\)") && match_re (get_key (ret, "Reserved blocks gid"), "\\d+ \\(group \\S+\\)"))) {
@@ -29694,9 +29842,9 @@ static int
 test_tune2fs_l_0_perform (guestfs_h *g)
 {
   /* TestResult for tune2fs_l (0) */
-  const char *arg3818 = "/dev/sdb1";
+  const char *arg3825 = "/dev/sdb1";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_tune2fs_l (g, arg3818);
+  ret = guestfs_tune2fs_l (g, arg3825);
   if (ret == NULL)
       return -1;
   if (! (check_hash (ret, "Filesystem magic number", "0xEF53") == 0 && check_hash (ret, "Filesystem OS type", "Linux") == 0)) {
@@ -29720,10 +29868,10 @@ test_txz_in_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features3820[] = { "xz", NULL };
-  if (!guestfs_feature_available (g, (char **) features3820)) {
+  const char *features3827[] = { "xz", NULL };
+  if (!guestfs_feature_available (g, (char **) features3827)) {
     skipped ("test_txz_in_0", "group %s not available in daemon",
-             features3820[0]);
+             features3827[0]);
     return 0;
   }
 
@@ -29752,20 +29900,20 @@ static int
 test_txz_in_0_perform (guestfs_h *g)
 {
   /* TestResultString for txz_in (0) */
-  const char *arg3822 = "/txz_in";
-  int ret3821;
-  ret3821 = guestfs_mkdir (g, arg3822);
-  if (ret3821 == -1)
+  const char *arg3829 = "/txz_in";
+  int ret3828;
+  ret3828 = guestfs_mkdir (g, arg3829);
+  if (ret3828 == -1)
     return -1;
-  CLEANUP_FREE char *arg3825 = substitute_srcdir ("$srcdir/../test-data/files/helloworld.tar.xz");
-  const char *arg3826 = "/txz_in";
-  int ret3824;
-  ret3824 = guestfs_txz_in (g, arg3825, arg3826);
-  if (ret3824 == -1)
+  CLEANUP_FREE char *arg3832 = substitute_srcdir ("$srcdir/../test-data/files/helloworld.tar.xz");
+  const char *arg3833 = "/txz_in";
+  int ret3831;
+  ret3831 = guestfs_txz_in (g, arg3832, arg3833);
+  if (ret3831 == -1)
     return -1;
-  const char *arg3828 = "/txz_in/hello";
+  const char *arg3835 = "/txz_in/hello";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg3828);
+  ret = guestfs_cat (g, arg3835);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "hello\n")) {
@@ -29862,24 +30010,24 @@ static int
 test_umount_0_perform (guestfs_h *g)
 {
   /* TestResult for umount (0) */
-  const char *arg3832 = "/dev/sda";
-  const char *arg3833 = "mbr";
+  const char *arg3839 = "/dev/sda";
+  const char *arg3840 = "mbr";
   int ret3;
-  ret3 = guestfs_part_disk (g, arg3832, arg3833);
+  ret3 = guestfs_part_disk (g, arg3839, arg3840);
   if (ret3 == -1)
     return -1;
-  const char *arg3835 = "ext2";
-  const char *arg3836 = "/dev/sda1";
-  struct guestfs_mkfs_opts_argv optargs3837;
-  optargs3837.bitmask = UINT64_C(0x0);
+  const char *arg3842 = "ext2";
+  const char *arg3843 = "/dev/sda1";
+  struct guestfs_mkfs_opts_argv optargs3844;
+  optargs3844.bitmask = UINT64_C(0x0);
   int ret2;
-  ret2 = guestfs_mkfs_opts_argv (g, arg3835, arg3836, &optargs3837);
+  ret2 = guestfs_mkfs_opts_argv (g, arg3842, arg3843, &optargs3844);
   if (ret2 == -1)
     return -1;
-  const char *arg3838 = "/dev/sda1";
-  const char *arg3839 = "/";
+  const char *arg3845 = "/dev/sda1";
+  const char *arg3846 = "/";
   int ret1;
-  ret1 = guestfs_mount (g, arg3838, arg3839);
+  ret1 = guestfs_mount (g, arg3845, arg3846);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -29932,33 +30080,33 @@ static int
 test_umount_1_perform (guestfs_h *g)
 {
   /* TestResult for umount (1) */
-  const char *arg3842 = "/dev/sda";
-  const char *arg3843 = "mbr";
+  const char *arg3849 = "/dev/sda";
+  const char *arg3850 = "mbr";
   int ret4;
-  ret4 = guestfs_part_disk (g, arg3842, arg3843);
+  ret4 = guestfs_part_disk (g, arg3849, arg3850);
   if (ret4 == -1)
     return -1;
-  const char *arg3845 = "ext2";
-  const char *arg3846 = "/dev/sda1";
-  struct guestfs_mkfs_opts_argv optargs3847;
-  optargs3847.bitmask = UINT64_C(0x0);
+  const char *arg3852 = "ext2";
+  const char *arg3853 = "/dev/sda1";
+  struct guestfs_mkfs_opts_argv optargs3854;
+  optargs3854.bitmask = UINT64_C(0x0);
   int ret3;
-  ret3 = guestfs_mkfs_opts_argv (g, arg3845, arg3846, &optargs3847);
+  ret3 = guestfs_mkfs_opts_argv (g, arg3852, arg3853, &optargs3854);
   if (ret3 == -1)
     return -1;
-  const char *arg3848 = "/dev/sda1";
-  const char *arg3849 = "/";
+  const char *arg3855 = "/dev/sda1";
+  const char *arg3856 = "/";
   int ret2;
-  ret2 = guestfs_mount (g, arg3848, arg3849);
+  ret2 = guestfs_mount (g, arg3855, arg3856);
   if (ret2 == -1)
     return -1;
-  const char *arg3851 = "/";
-  struct guestfs_umount_opts_argv optargs3852;
-  optargs3852.force = 0;
-  optargs3852.lazyunmount = 0;
-  optargs3852.bitmask = UINT64_C(0x3);
+  const char *arg3858 = "/";
+  struct guestfs_umount_opts_argv optargs3859;
+  optargs3859.force = 0;
+  optargs3859.lazyunmount = 0;
+  optargs3859.bitmask = UINT64_C(0x3);
   int ret1;
-  ret1 = guestfs_umount_opts_argv (g, arg3851, &optargs3852);
+  ret1 = guestfs_umount_opts_argv (g, arg3858, &optargs3859);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -30065,85 +30213,85 @@ static int
 test_umount_all_1_perform (guestfs_h *g)
 {
   /* TestResult for umount_all (1) */
-  const char *arg3856 = "/dev/sda";
-  const char *arg3857 = "mbr";
+  const char *arg3863 = "/dev/sda";
+  const char *arg3864 = "mbr";
   int ret14;
-  ret14 = guestfs_part_init (g, arg3856, arg3857);
+  ret14 = guestfs_part_init (g, arg3863, arg3864);
   if (ret14 == -1)
     return -1;
-  const char *arg3859 = "/dev/sda";
-  const char *arg3860 = "p";
+  const char *arg3866 = "/dev/sda";
+  const char *arg3867 = "p";
   int ret13;
-  ret13 = guestfs_part_add (g, arg3859, arg3860, 64, 204799);
+  ret13 = guestfs_part_add (g, arg3866, arg3867, 64, 204799);
   if (ret13 == -1)
     return -1;
-  const char *arg3864 = "/dev/sda";
-  const char *arg3865 = "p";
+  const char *arg3871 = "/dev/sda";
+  const char *arg3872 = "p";
   int ret12;
-  ret12 = guestfs_part_add (g, arg3864, arg3865, 204800, 409599);
+  ret12 = guestfs_part_add (g, arg3871, arg3872, 204800, 409599);
   if (ret12 == -1)
     return -1;
-  const char *arg3869 = "/dev/sda";
-  const char *arg3870 = "p";
+  const char *arg3876 = "/dev/sda";
+  const char *arg3877 = "p";
   int ret11;
-  ret11 = guestfs_part_add (g, arg3869, arg3870, 409600, -64);
+  ret11 = guestfs_part_add (g, arg3876, arg3877, 409600, -64);
   if (ret11 == -1)
     return -1;
-  const char *arg3874 = "ext2";
-  const char *arg3875 = "/dev/sda1";
-  struct guestfs_mkfs_opts_argv optargs3876;
-  optargs3876.bitmask = UINT64_C(0x0);
+  const char *arg3881 = "ext2";
+  const char *arg3882 = "/dev/sda1";
+  struct guestfs_mkfs_opts_argv optargs3883;
+  optargs3883.bitmask = UINT64_C(0x0);
   int ret10;
-  ret10 = guestfs_mkfs_opts_argv (g, arg3874, arg3875, &optargs3876);
+  ret10 = guestfs_mkfs_opts_argv (g, arg3881, arg3882, &optargs3883);
   if (ret10 == -1)
     return -1;
-  const char *arg3877 = "ext2";
-  const char *arg3878 = "/dev/sda2";
-  struct guestfs_mkfs_opts_argv optargs3879;
-  optargs3879.bitmask = UINT64_C(0x0);
+  const char *arg3884 = "ext2";
+  const char *arg3885 = "/dev/sda2";
+  struct guestfs_mkfs_opts_argv optargs3886;
+  optargs3886.bitmask = UINT64_C(0x0);
   int ret9;
-  ret9 = guestfs_mkfs_opts_argv (g, arg3877, arg3878, &optargs3879);
+  ret9 = guestfs_mkfs_opts_argv (g, arg3884, arg3885, &optargs3886);
   if (ret9 == -1)
     return -1;
-  const char *arg3880 = "ext2";
-  const char *arg3881 = "/dev/sda3";
-  struct guestfs_mkfs_opts_argv optargs3882;
-  optargs3882.bitmask = UINT64_C(0x0);
+  const char *arg3887 = "ext2";
+  const char *arg3888 = "/dev/sda3";
+  struct guestfs_mkfs_opts_argv optargs3889;
+  optargs3889.bitmask = UINT64_C(0x0);
   int ret8;
-  ret8 = guestfs_mkfs_opts_argv (g, arg3880, arg3881, &optargs3882);
+  ret8 = guestfs_mkfs_opts_argv (g, arg3887, arg3888, &optargs3889);
   if (ret8 == -1)
     return -1;
-  const char *arg3883 = "/dev/sda1";
-  const char *arg3884 = "/";
+  const char *arg3890 = "/dev/sda1";
+  const char *arg3891 = "/";
   int ret7;
-  ret7 = guestfs_mount (g, arg3883, arg3884);
+  ret7 = guestfs_mount (g, arg3890, arg3891);
   if (ret7 == -1)
     return -1;
-  const char *arg3886 = "/mp1";
+  const char *arg3893 = "/mp1";
   int ret6;
-  ret6 = guestfs_mkdir (g, arg3886);
+  ret6 = guestfs_mkdir (g, arg3893);
   if (ret6 == -1)
     return -1;
-  const char *arg3888 = "/dev/sda2";
-  const char *arg3889 = "/mp1";
+  const char *arg3895 = "/dev/sda2";
+  const char *arg3896 = "/mp1";
   int ret5;
-  ret5 = guestfs_mount (g, arg3888, arg3889);
+  ret5 = guestfs_mount (g, arg3895, arg3896);
   if (ret5 == -1)
     return -1;
-  const char *arg3891 = "/mp1/mp2";
+  const char *arg3898 = "/mp1/mp2";
   int ret4;
-  ret4 = guestfs_mkdir (g, arg3891);
+  ret4 = guestfs_mkdir (g, arg3898);
   if (ret4 == -1)
     return -1;
-  const char *arg3893 = "/dev/sda3";
-  const char *arg3894 = "/mp1/mp2";
+  const char *arg3900 = "/dev/sda3";
+  const char *arg3901 = "/mp1/mp2";
   int ret3;
-  ret3 = guestfs_mount (g, arg3893, arg3894);
+  ret3 = guestfs_mount (g, arg3900, arg3901);
   if (ret3 == -1)
     return -1;
-  const char *arg3896 = "/mp1/mp2/mp3";
+  const char *arg3903 = "/mp1/mp2/mp3";
   int ret2;
-  ret2 = guestfs_mkdir (g, arg3896);
+  ret2 = guestfs_mkdir (g, arg3903);
   if (ret2 == -1)
     return -1;
   int ret1;
@@ -30200,21 +30348,21 @@ static int
 test_upload_0_perform (guestfs_h *g)
 {
   /* TestResultString for upload (0) */
-  const char *arg3901 = "/upload";
-  int ret3900;
-  ret3900 = guestfs_mkdir (g, arg3901);
-  if (ret3900 == -1)
+  const char *arg3908 = "/upload";
+  int ret3907;
+  ret3907 = guestfs_mkdir (g, arg3908);
+  if (ret3907 == -1)
     return -1;
-  CLEANUP_FREE char *arg3904 = substitute_srcdir ("$srcdir/../COPYING.LIB");
-  const char *arg3905 = "/upload/COPYING.LIB";
-  int ret3903;
-  ret3903 = guestfs_upload (g, arg3904, arg3905);
-  if (ret3903 == -1)
+  CLEANUP_FREE char *arg3911 = substitute_srcdir ("$srcdir/../COPYING.LIB");
+  const char *arg3912 = "/upload/COPYING.LIB";
+  int ret3910;
+  ret3910 = guestfs_upload (g, arg3911, arg3912);
+  if (ret3910 == -1)
     return -1;
-  const char *arg3907 = "md5";
-  const char *arg3908 = "/upload/COPYING.LIB";
+  const char *arg3914 = "md5";
+  const char *arg3915 = "/upload/COPYING.LIB";
   CLEANUP_FREE char *ret;
-  ret = guestfs_checksum (g, arg3907, arg3908);
+  ret = guestfs_checksum (g, arg3914, arg3915);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "4fbd65380cdd255951079008b364516c")) {
@@ -30261,16 +30409,16 @@ static int
 test_upload_offset_0_perform (guestfs_h *g)
 {
   /* TestResultString for upload_offset (0) */
-  CLEANUP_FREE char *arg3911 = substitute_srcdir ("$srcdir/../COPYING.LIB");
-  const char *arg3912 = "/upload_offset";
-  int ret3910;
-  ret3910 = guestfs_upload_offset (g, arg3911, arg3912, 0);
-  if (ret3910 == -1)
+  CLEANUP_FREE char *arg3918 = substitute_srcdir ("$srcdir/../COPYING.LIB");
+  const char *arg3919 = "/upload_offset";
+  int ret3917;
+  ret3917 = guestfs_upload_offset (g, arg3918, arg3919, 0);
+  if (ret3917 == -1)
     return -1;
-  const char *arg3915 = "md5";
-  const char *arg3916 = "/upload_offset";
+  const char *arg3922 = "md5";
+  const char *arg3923 = "/upload_offset";
   CLEANUP_FREE char *ret;
-  ret = guestfs_checksum (g, arg3915, arg3916);
+  ret = guestfs_checksum (g, arg3922, arg3923);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "4fbd65380cdd255951079008b364516c")) {
@@ -30317,19 +30465,19 @@ static int
 test_utimens_0_perform (guestfs_h *g)
 {
   /* TestResult for utimens (0) */
-  const char *arg3918 = "/utimens-file";
+  const char *arg3925 = "/utimens-file";
   int ret2;
-  ret2 = guestfs_touch (g, arg3918);
+  ret2 = guestfs_touch (g, arg3925);
   if (ret2 == -1)
     return -1;
-  const char *arg3920 = "/utimens-file";
+  const char *arg3927 = "/utimens-file";
   int ret1;
-  ret1 = guestfs_utimens (g, arg3920, 12345, 67890, 9876, 5432);
+  ret1 = guestfs_utimens (g, arg3927, 12345, 67890, 9876, 5432);
   if (ret1 == -1)
     return -1;
-  const char *arg3926 = "/utimens-file";
+  const char *arg3933 = "/utimens-file";
   CLEANUP_FREE_STAT struct guestfs_stat *ret;
-  ret = guestfs_stat (g, arg3926);
+  ret = guestfs_stat (g, arg3933);
   if (ret == NULL)
       return -1;
   if (! (ret->mtime == 9876)) {
@@ -30378,19 +30526,19 @@ static int
 test_utimens_1_perform (guestfs_h *g)
 {
   /* TestResult for utimens (1) */
-  const char *arg3928 = "/utimens-dir";
+  const char *arg3935 = "/utimens-dir";
   int ret2;
-  ret2 = guestfs_mkdir (g, arg3928);
+  ret2 = guestfs_mkdir (g, arg3935);
   if (ret2 == -1)
     return -1;
-  const char *arg3930 = "/utimens-dir";
+  const char *arg3937 = "/utimens-dir";
   int ret1;
-  ret1 = guestfs_utimens (g, arg3930, 12345, 67890, 9876, 5432);
+  ret1 = guestfs_utimens (g, arg3937, 12345, 67890, 9876, 5432);
   if (ret1 == -1)
     return -1;
-  const char *arg3936 = "/utimens-dir";
+  const char *arg3943 = "/utimens-dir";
   CLEANUP_FREE_STAT struct guestfs_stat *ret;
-  ret = guestfs_stat (g, arg3936);
+  ret = guestfs_stat (g, arg3943);
   if (ret == NULL)
       return -1;
   if (! (ret->mtime == 9876)) {
@@ -30439,19 +30587,19 @@ static int
 test_utimens_2_perform (guestfs_h *g)
 {
   /* TestResult for utimens (2) */
-  const char *arg3939 = "/utimens-fifo";
+  const char *arg3946 = "/utimens-fifo";
   int ret2;
-  ret2 = guestfs_mkfifo (g, 420, arg3939);
+  ret2 = guestfs_mkfifo (g, 420, arg3946);
   if (ret2 == -1)
     return -1;
-  const char *arg3941 = "/utimens-fifo";
+  const char *arg3948 = "/utimens-fifo";
   int ret1;
-  ret1 = guestfs_utimens (g, arg3941, 12345, 67890, 9876, 5432);
+  ret1 = guestfs_utimens (g, arg3948, 12345, 67890, 9876, 5432);
   if (ret1 == -1)
     return -1;
-  const char *arg3947 = "/utimens-fifo";
+  const char *arg3954 = "/utimens-fifo";
   CLEANUP_FREE_STAT struct guestfs_stat *ret;
-  ret = guestfs_stat (g, arg3947);
+  ret = guestfs_stat (g, arg3954);
   if (ret == NULL)
       return -1;
   if (! (ret->mtime == 9876)) {
@@ -30500,20 +30648,20 @@ static int
 test_utimens_3_perform (guestfs_h *g)
 {
   /* TestResult for utimens (3) */
-  const char *arg3949 = "/utimens-file";
-  const char *arg3950 = "/utimens-link";
+  const char *arg3956 = "/utimens-file";
+  const char *arg3957 = "/utimens-link";
   int ret2;
-  ret2 = guestfs_ln_sf (g, arg3949, arg3950);
+  ret2 = guestfs_ln_sf (g, arg3956, arg3957);
   if (ret2 == -1)
     return -1;
-  const char *arg3952 = "/utimens-link";
+  const char *arg3959 = "/utimens-link";
   int ret1;
-  ret1 = guestfs_utimens (g, arg3952, 12345, 67890, 9876, 5432);
+  ret1 = guestfs_utimens (g, arg3959, 12345, 67890, 9876, 5432);
   if (ret1 == -1)
     return -1;
-  const char *arg3958 = "/utimens-link";
+  const char *arg3965 = "/utimens-link";
   CLEANUP_FREE_STAT struct guestfs_stat *ret;
-  ret = guestfs_stat (g, arg3958);
+  ret = guestfs_stat (g, arg3965);
   if (ret == NULL)
       return -1;
   if (! (ret->mtime == 9876)) {
@@ -30562,19 +30710,19 @@ static int
 test_utimens_4_perform (guestfs_h *g)
 {
   /* TestResult for utimens (4) */
-  const char *arg3963 = "/utimens-block";
+  const char *arg3970 = "/utimens-block";
   int ret2;
-  ret2 = guestfs_mknod_b (g, 420, 8, 0, arg3963);
+  ret2 = guestfs_mknod_b (g, 420, 8, 0, arg3970);
   if (ret2 == -1)
     return -1;
-  const char *arg3965 = "/utimens-block";
+  const char *arg3972 = "/utimens-block";
   int ret1;
-  ret1 = guestfs_utimens (g, arg3965, 12345, 67890, 9876, 5432);
+  ret1 = guestfs_utimens (g, arg3972, 12345, 67890, 9876, 5432);
   if (ret1 == -1)
     return -1;
-  const char *arg3971 = "/utimens-block";
+  const char *arg3978 = "/utimens-block";
   CLEANUP_FREE_STAT struct guestfs_stat *ret;
-  ret = guestfs_stat (g, arg3971);
+  ret = guestfs_stat (g, arg3978);
   if (ret == NULL)
       return -1;
   if (! (ret->mtime == 9876)) {
@@ -30623,19 +30771,19 @@ static int
 test_utimens_5_perform (guestfs_h *g)
 {
   /* TestResult for utimens (5) */
-  const char *arg3976 = "/utimens-char";
+  const char *arg3983 = "/utimens-char";
   int ret2;
-  ret2 = guestfs_mknod_c (g, 420, 1, 3, arg3976);
+  ret2 = guestfs_mknod_c (g, 420, 1, 3, arg3983);
   if (ret2 == -1)
     return -1;
-  const char *arg3978 = "/utimens-char";
+  const char *arg3985 = "/utimens-char";
   int ret1;
-  ret1 = guestfs_utimens (g, arg3978, 12345, 67890, 9876, 5432);
+  ret1 = guestfs_utimens (g, arg3985, 12345, 67890, 9876, 5432);
   if (ret1 == -1)
     return -1;
-  const char *arg3984 = "/utimens-char";
+  const char *arg3991 = "/utimens-char";
   CLEANUP_FREE_STAT struct guestfs_stat *ret;
-  ret = guestfs_stat (g, arg3984);
+  ret = guestfs_stat (g, arg3991);
   if (ret == NULL)
       return -1;
   if (! (ret->mtime == 9876)) {
@@ -30684,9 +30832,9 @@ static int
 test_utsname_0_perform (guestfs_h *g)
 {
   /* TestRun for utsname (0) */
-  CLEANUP_FREE_UTSNAME struct guestfs_utsname *ret3986;
-  ret3986 = guestfs_utsname (g);
-  if (ret3986 == NULL)
+  CLEANUP_FREE_UTSNAME struct guestfs_utsname *ret3993;
+  ret3993 = guestfs_utsname (g);
+  if (ret3993 == NULL)
       return -1;
   return 0;
 }
@@ -30777,15 +30925,15 @@ static int
 test_vfs_label_0_perform (guestfs_h *g)
 {
   /* TestResultString for vfs_label (0) */
-  const char *arg3990 = "/dev/sda1";
-  const char *arg3991 = "LTEST";
-  int ret3989;
-  ret3989 = guestfs_set_label (g, arg3990, arg3991);
-  if (ret3989 == -1)
+  const char *arg3997 = "/dev/sda1";
+  const char *arg3998 = "LTEST";
+  int ret3996;
+  ret3996 = guestfs_set_label (g, arg3997, arg3998);
+  if (ret3996 == -1)
     return -1;
-  const char *arg3993 = "/dev/sda1";
+  const char *arg4000 = "/dev/sda1";
   CLEANUP_FREE char *ret;
-  ret = guestfs_vfs_label (g, arg3993);
+  ret = guestfs_vfs_label (g, arg4000);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "LTEST")) {
@@ -30832,24 +30980,24 @@ static int
 test_vfs_label_1_perform (guestfs_h *g)
 {
   /* TestResultString for vfs_label (1) */
-  const char *arg3996 = "/dev/sda";
-  const char *arg3997 = "mbr";
-  int ret3995;
-  ret3995 = guestfs_part_disk (g, arg3996, arg3997);
-  if (ret3995 == -1)
+  const char *arg4003 = "/dev/sda";
+  const char *arg4004 = "mbr";
+  int ret4002;
+  ret4002 = guestfs_part_disk (g, arg4003, arg4004);
+  if (ret4002 == -1)
     return -1;
-  const char *arg4000 = "ext2";
-  const char *arg4001 = "/dev/sda1";
-  struct guestfs_mkfs_opts_argv optargs4002;
-  optargs4002.label = "test-label";
-  optargs4002.bitmask = UINT64_C(0x10);
-  int ret3999;
-  ret3999 = guestfs_mkfs_opts_argv (g, arg4000, arg4001, &optargs4002);
-  if (ret3999 == -1)
+  const char *arg4007 = "ext2";
+  const char *arg4008 = "/dev/sda1";
+  struct guestfs_mkfs_opts_argv optargs4009;
+  optargs4009.label = "test-label";
+  optargs4009.bitmask = UINT64_C(0x10);
+  int ret4006;
+  ret4006 = guestfs_mkfs_opts_argv (g, arg4007, arg4008, &optargs4009);
+  if (ret4006 == -1)
     return -1;
-  const char *arg4003 = "/dev/sda1";
+  const char *arg4010 = "/dev/sda1";
   CLEANUP_FREE char *ret;
-  ret = guestfs_vfs_label (g, arg4003);
+  ret = guestfs_vfs_label (g, arg4010);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "test-label")) {
@@ -30871,10 +31019,10 @@ test_vfs_label_2 (guestfs_h *g)
     return 0;
   }
 
-  const char *features4005[] = { "btrfs", NULL };
-  if (!guestfs_feature_available (g, (char **) features4005)) {
+  const char *features4012[] = { "btrfs", NULL };
+  if (!guestfs_feature_available (g, (char **) features4012)) {
     skipped ("test_vfs_label_2", "group %s not available in daemon",
-             features4005[0]);
+             features4012[0]);
     return 0;
   }
 
@@ -30903,30 +31051,30 @@ static int
 test_vfs_label_2_perform (guestfs_h *g)
 {
   /* TestResultString for vfs_label (2) */
-  const char *arg4007 = "/dev/sda";
-  const char *arg4008 = "mbr";
-  int ret4006;
-  ret4006 = guestfs_part_disk (g, arg4007, arg4008);
-  if (ret4006 == -1)
+  const char *arg4014 = "/dev/sda";
+  const char *arg4015 = "mbr";
+  int ret4013;
+  ret4013 = guestfs_part_disk (g, arg4014, arg4015);
+  if (ret4013 == -1)
     return -1;
-  const char *arg4011 = "btrfs";
-  const char *arg4012 = "/dev/sda1";
-  struct guestfs_mkfs_opts_argv optargs4013;
-  optargs4013.label = "";
-  optargs4013.bitmask = UINT64_C(0x10);
-  int ret4010;
-  ret4010 = guestfs_mkfs_opts_argv (g, arg4011, arg4012, &optargs4013);
-  if (ret4010 == -1)
+  const char *arg4018 = "btrfs";
+  const char *arg4019 = "/dev/sda1";
+  struct guestfs_mkfs_opts_argv optargs4020;
+  optargs4020.label = "";
+  optargs4020.bitmask = UINT64_C(0x10);
+  int ret4017;
+  ret4017 = guestfs_mkfs_opts_argv (g, arg4018, arg4019, &optargs4020);
+  if (ret4017 == -1)
     return -1;
-  const char *arg4015 = "/dev/sda1";
-  const char *arg4016 = "test-label-btrfs";
-  int ret4014;
-  ret4014 = guestfs_set_label (g, arg4015, arg4016);
-  if (ret4014 == -1)
+  const char *arg4022 = "/dev/sda1";
+  const char *arg4023 = "test-label-btrfs";
+  int ret4021;
+  ret4021 = guestfs_set_label (g, arg4022, arg4023);
+  if (ret4021 == -1)
     return -1;
-  const char *arg4018 = "/dev/sda1";
+  const char *arg4025 = "/dev/sda1";
   CLEANUP_FREE char *ret;
-  ret = guestfs_vfs_label (g, arg4018);
+  ret = guestfs_vfs_label (g, arg4025);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "test-label-btrfs")) {
@@ -30973,10 +31121,10 @@ static int
 test_vfs_minimum_size_0_perform (guestfs_h *g)
 {
   /* TestRun for vfs_minimum_size (0) */
-  const char *arg4021 = "/dev/sda1";
-  int64_t ret4020;
-  ret4020 = guestfs_vfs_minimum_size (g, arg4021);
-  if (ret4020 == -1)
+  const char *arg4028 = "/dev/sda1";
+  int64_t ret4027;
+  ret4027 = guestfs_vfs_minimum_size (g, arg4028);
+  if (ret4027 == -1)
     return -1;
   return 0;
 }
@@ -30992,10 +31140,10 @@ test_vfs_minimum_size_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features4023[] = { "ntfsprogs", NULL };
-  if (!guestfs_feature_available (g, (char **) features4023)) {
+  const char *features4030[] = { "ntfsprogs", NULL };
+  if (!guestfs_feature_available (g, (char **) features4030)) {
     skipped ("test_vfs_minimum_size_1", "group %s not available in daemon",
-             features4023[0]);
+             features4030[0]);
     return 0;
   }
 
@@ -31024,18 +31172,18 @@ static int
 test_vfs_minimum_size_1_perform (guestfs_h *g)
 {
   /* TestRun for vfs_minimum_size (1) */
-  const char *arg4025 = "ntfs";
-  const char *arg4026 = "/dev/sda1";
-  struct guestfs_mkfs_opts_argv optargs4027;
-  optargs4027.bitmask = UINT64_C(0x0);
-  int ret4024;
-  ret4024 = guestfs_mkfs_opts_argv (g, arg4025, arg4026, &optargs4027);
-  if (ret4024 == -1)
+  const char *arg4032 = "ntfs";
+  const char *arg4033 = "/dev/sda1";
+  struct guestfs_mkfs_opts_argv optargs4034;
+  optargs4034.bitmask = UINT64_C(0x0);
+  int ret4031;
+  ret4031 = guestfs_mkfs_opts_argv (g, arg4032, arg4033, &optargs4034);
+  if (ret4031 == -1)
     return -1;
-  const char *arg4029 = "/dev/sda1";
-  int64_t ret4028;
-  ret4028 = guestfs_vfs_minimum_size (g, arg4029);
-  if (ret4028 == -1)
+  const char *arg4036 = "/dev/sda1";
+  int64_t ret4035;
+  ret4035 = guestfs_vfs_minimum_size (g, arg4036);
+  if (ret4035 == -1)
     return -1;
   return 0;
 }
@@ -31051,10 +31199,10 @@ test_vfs_minimum_size_2 (guestfs_h *g)
     return 0;
   }
 
-  const char *features4031[] = { "btrfs", NULL };
-  if (!guestfs_feature_available (g, (char **) features4031)) {
+  const char *features4038[] = { "btrfs", NULL };
+  if (!guestfs_feature_available (g, (char **) features4038)) {
     skipped ("test_vfs_minimum_size_2", "group %s not available in daemon",
-             features4031[0]);
+             features4038[0]);
     return 0;
   }
 
@@ -31083,24 +31231,24 @@ static int
 test_vfs_minimum_size_2_perform (guestfs_h *g)
 {
   /* TestRunOrUnsupported for vfs_minimum_size (2) */
-  const char *arg4033 = "btrfs";
-  const char *arg4034 = "/dev/sda1";
-  struct guestfs_mkfs_opts_argv optargs4035;
-  optargs4035.bitmask = UINT64_C(0x0);
-  int ret4032;
-  ret4032 = guestfs_mkfs_opts_argv (g, arg4033, arg4034, &optargs4035);
-  if (ret4032 == -1)
+  const char *arg4040 = "btrfs";
+  const char *arg4041 = "/dev/sda1";
+  struct guestfs_mkfs_opts_argv optargs4042;
+  optargs4042.bitmask = UINT64_C(0x0);
+  int ret4039;
+  ret4039 = guestfs_mkfs_opts_argv (g, arg4040, arg4041, &optargs4042);
+  if (ret4039 == -1)
     return -1;
-  const char *arg4037 = "/dev/sda1";
-  const char *arg4038 = "/";
-  int ret4036;
-  ret4036 = guestfs_mount (g, arg4037, arg4038);
-  if (ret4036 == -1)
+  const char *arg4044 = "/dev/sda1";
+  const char *arg4045 = "/";
+  int ret4043;
+  ret4043 = guestfs_mount (g, arg4044, arg4045);
+  if (ret4043 == -1)
     return -1;
-  const char *arg4040 = "/dev/sda1";
+  const char *arg4047 = "/dev/sda1";
   int64_t ret;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret = guestfs_vfs_minimum_size (g, arg4040);
+  ret = guestfs_vfs_minimum_size (g, arg4047);
   guestfs_pop_error_handler (g);
   if (ret == -1) {
     if (guestfs_last_errno (g) == ENOTSUP) {
@@ -31125,10 +31273,10 @@ test_vfs_minimum_size_3 (guestfs_h *g)
     return 0;
   }
 
-  const char *features4042[] = { "xfs", NULL };
-  if (!guestfs_feature_available (g, (char **) features4042)) {
+  const char *features4049[] = { "xfs", NULL };
+  if (!guestfs_feature_available (g, (char **) features4049)) {
     skipped ("test_vfs_minimum_size_3", "group %s not available in daemon",
-             features4042[0]);
+             features4049[0]);
     return 0;
   }
 
@@ -31157,24 +31305,24 @@ static int
 test_vfs_minimum_size_3_perform (guestfs_h *g)
 {
   /* TestRun for vfs_minimum_size (3) */
-  const char *arg4044 = "xfs";
-  const char *arg4045 = "/dev/sda1";
-  struct guestfs_mkfs_opts_argv optargs4046;
-  optargs4046.bitmask = UINT64_C(0x0);
-  int ret4043;
-  ret4043 = guestfs_mkfs_opts_argv (g, arg4044, arg4045, &optargs4046);
-  if (ret4043 == -1)
-    return -1;
-  const char *arg4048 = "/dev/sda1";
-  const char *arg4049 = "/";
-  int ret4047;
-  ret4047 = guestfs_mount (g, arg4048, arg4049);
-  if (ret4047 == -1)
-    return -1;
+  const char *arg4051 = "xfs";
   const char *arg4052 = "/dev/sda1";
-  int64_t ret4051;
-  ret4051 = guestfs_vfs_minimum_size (g, arg4052);
-  if (ret4051 == -1)
+  struct guestfs_mkfs_opts_argv optargs4053;
+  optargs4053.bitmask = UINT64_C(0x0);
+  int ret4050;
+  ret4050 = guestfs_mkfs_opts_argv (g, arg4051, arg4052, &optargs4053);
+  if (ret4050 == -1)
+    return -1;
+  const char *arg4055 = "/dev/sda1";
+  const char *arg4056 = "/";
+  int ret4054;
+  ret4054 = guestfs_mount (g, arg4055, arg4056);
+  if (ret4054 == -1)
+    return -1;
+  const char *arg4059 = "/dev/sda1";
+  int64_t ret4058;
+  ret4058 = guestfs_vfs_minimum_size (g, arg4059);
+  if (ret4058 == -1)
     return -1;
   return 0;
 }
@@ -31215,9 +31363,9 @@ static int
 test_vfs_type_0_perform (guestfs_h *g)
 {
   /* TestResultString for vfs_type (0) */
-  const char *arg4054 = "/dev/sdb1";
+  const char *arg4061 = "/dev/sdb1";
   CLEANUP_FREE char *ret;
-  ret = guestfs_vfs_type (g, arg4054);
+  ret = guestfs_vfs_type (g, arg4061);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "ext2")) {
@@ -31264,20 +31412,20 @@ static int
 test_vfs_uuid_0_perform (guestfs_h *g)
 {
   /* TestResultString for vfs_uuid (0) */
-  const char *arg4057 = "/dev/sda1";
-  const char *arg4058 = "d306427c-371d-3832-d8f7-eaad61dc6244";
-  int ret4056;
-  ret4056 = guestfs_set_e2uuid (g, arg4057, arg4058);
-  if (ret4056 == -1)
+  const char *arg4064 = "/dev/sda1";
+  const char *arg4065 = "76802f61-6cde-0f8b-e149-6849b3cb42b6";
+  int ret4063;
+  ret4063 = guestfs_set_e2uuid (g, arg4064, arg4065);
+  if (ret4063 == -1)
     return -1;
-  const char *arg4060 = "/dev/sda1";
+  const char *arg4067 = "/dev/sda1";
   CLEANUP_FREE char *ret;
-  ret = guestfs_vfs_uuid (g, arg4060);
+  ret = guestfs_vfs_uuid (g, arg4067);
   if (ret == NULL)
       return -1;
-  if (! STREQ (ret, "d306427c-371d-3832-d8f7-eaad61dc6244")) {
+  if (! STREQ (ret, "76802f61-6cde-0f8b-e149-6849b3cb42b6")) {
     fprintf (stderr, "%s: test failed: expected last command %s to return \"%s\" but it returned \"%s\"\n",
-             "test_vfs_uuid_0", "vfs_uuid", "d306427c-371d-3832-d8f7-eaad61dc6244", ret);
+             "test_vfs_uuid_0", "vfs_uuid", "76802f61-6cde-0f8b-e149-6849b3cb42b6", ret);
     return -1;
   }
   return 0;
@@ -31294,10 +31442,10 @@ test_vgchange_uuid_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features4062[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features4062)) {
+  const char *features4069[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features4069)) {
     skipped ("test_vgchange_uuid_0", "group %s not available in daemon",
-             features4062[0]);
+             features4069[0]);
     return 0;
   }
 
@@ -31326,31 +31474,31 @@ static int
 test_vgchange_uuid_0_perform (guestfs_h *g)
 {
   /* TestRun for vgchange_uuid (0) */
-  const char *arg4064 = "/dev/sda";
-  const char *arg4065 = "mbr";
-  int ret4063;
-  ret4063 = guestfs_part_disk (g, arg4064, arg4065);
-  if (ret4063 == -1)
-    return -1;
-  const char *arg4068 = "/dev/sda1";
-  int ret4067;
-  ret4067 = guestfs_pvcreate (g, arg4068);
-  if (ret4067 == -1)
-    return -1;
-  const char *arg4071 = "VG";
-  const char *arg4072_0 = "/dev/sda1";
-  const char *const arg4072[] = {
-    arg4072_0,
-    NULL
-  };
+  const char *arg4071 = "/dev/sda";
+  const char *arg4072 = "mbr";
   int ret4070;
-  ret4070 = guestfs_vgcreate (g, arg4071, (char **) arg4072);
+  ret4070 = guestfs_part_disk (g, arg4071, arg4072);
   if (ret4070 == -1)
     return -1;
-  const char *arg4075 = "/dev/VG";
+  const char *arg4075 = "/dev/sda1";
   int ret4074;
-  ret4074 = guestfs_vgchange_uuid (g, arg4075);
+  ret4074 = guestfs_pvcreate (g, arg4075);
   if (ret4074 == -1)
+    return -1;
+  const char *arg4078 = "VG";
+  const char *arg4079_0 = "/dev/sda1";
+  const char *const arg4079[] = {
+    arg4079_0,
+    NULL
+  };
+  int ret4077;
+  ret4077 = guestfs_vgcreate (g, arg4078, (char **) arg4079);
+  if (ret4077 == -1)
+    return -1;
+  const char *arg4082 = "/dev/VG";
+  int ret4081;
+  ret4081 = guestfs_vgchange_uuid (g, arg4082);
+  if (ret4081 == -1)
     return -1;
   return 0;
 }
@@ -31366,10 +31514,10 @@ test_vgchange_uuid_all_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features4077[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features4077)) {
+  const char *features4084[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features4084)) {
     skipped ("test_vgchange_uuid_all_0", "group %s not available in daemon",
-             features4077[0]);
+             features4084[0]);
     return 0;
   }
 
@@ -31398,30 +31546,30 @@ static int
 test_vgchange_uuid_all_0_perform (guestfs_h *g)
 {
   /* TestRun for vgchange_uuid_all (0) */
-  const char *arg4079 = "/dev/sda";
-  const char *arg4080 = "mbr";
-  int ret4078;
-  ret4078 = guestfs_part_disk (g, arg4079, arg4080);
-  if (ret4078 == -1)
-    return -1;
-  const char *arg4083 = "/dev/sda1";
-  int ret4082;
-  ret4082 = guestfs_pvcreate (g, arg4083);
-  if (ret4082 == -1)
-    return -1;
-  const char *arg4086 = "VG";
-  const char *arg4087_0 = "/dev/sda1";
-  const char *const arg4087[] = {
-    arg4087_0,
-    NULL
-  };
+  const char *arg4086 = "/dev/sda";
+  const char *arg4087 = "mbr";
   int ret4085;
-  ret4085 = guestfs_vgcreate (g, arg4086, (char **) arg4087);
+  ret4085 = guestfs_part_disk (g, arg4086, arg4087);
   if (ret4085 == -1)
     return -1;
+  const char *arg4090 = "/dev/sda1";
   int ret4089;
-  ret4089 = guestfs_vgchange_uuid_all (g);
+  ret4089 = guestfs_pvcreate (g, arg4090);
   if (ret4089 == -1)
+    return -1;
+  const char *arg4093 = "VG";
+  const char *arg4094_0 = "/dev/sda1";
+  const char *const arg4094[] = {
+    arg4094_0,
+    NULL
+  };
+  int ret4092;
+  ret4092 = guestfs_vgcreate (g, arg4093, (char **) arg4094);
+  if (ret4092 == -1)
+    return -1;
+  int ret4096;
+  ret4096 = guestfs_vgchange_uuid_all (g);
+  if (ret4096 == -1)
     return -1;
   return 0;
 }
@@ -31437,10 +31585,10 @@ test_vgcreate_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features4091[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features4091)) {
+  const char *features4098[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features4098)) {
     skipped ("test_vgcreate_0", "group %s not available in daemon",
-             features4091[0]);
+             features4098[0]);
     return 0;
   }
 
@@ -31469,65 +31617,65 @@ static int
 test_vgcreate_0_perform (guestfs_h *g)
 {
   /* TestResult for vgcreate (0) */
-  const char *arg4092 = "/dev/sda";
-  const char *arg4093 = "mbr";
+  const char *arg4099 = "/dev/sda";
+  const char *arg4100 = "mbr";
   int ret9;
-  ret9 = guestfs_part_init (g, arg4092, arg4093);
+  ret9 = guestfs_part_init (g, arg4099, arg4100);
   if (ret9 == -1)
     return -1;
-  const char *arg4095 = "/dev/sda";
-  const char *arg4096 = "p";
+  const char *arg4102 = "/dev/sda";
+  const char *arg4103 = "p";
   int ret8;
-  ret8 = guestfs_part_add (g, arg4095, arg4096, 64, 204799);
+  ret8 = guestfs_part_add (g, arg4102, arg4103, 64, 204799);
   if (ret8 == -1)
     return -1;
-  const char *arg4100 = "/dev/sda";
-  const char *arg4101 = "p";
+  const char *arg4107 = "/dev/sda";
+  const char *arg4108 = "p";
   int ret7;
-  ret7 = guestfs_part_add (g, arg4100, arg4101, 204800, 409599);
+  ret7 = guestfs_part_add (g, arg4107, arg4108, 204800, 409599);
   if (ret7 == -1)
     return -1;
-  const char *arg4105 = "/dev/sda";
-  const char *arg4106 = "p";
+  const char *arg4112 = "/dev/sda";
+  const char *arg4113 = "p";
   int ret6;
-  ret6 = guestfs_part_add (g, arg4105, arg4106, 409600, -64);
+  ret6 = guestfs_part_add (g, arg4112, arg4113, 409600, -64);
   if (ret6 == -1)
     return -1;
-  const char *arg4110 = "/dev/sda1";
+  const char *arg4117 = "/dev/sda1";
   int ret5;
-  ret5 = guestfs_pvcreate (g, arg4110);
+  ret5 = guestfs_pvcreate (g, arg4117);
   if (ret5 == -1)
     return -1;
-  const char *arg4112 = "/dev/sda2";
+  const char *arg4119 = "/dev/sda2";
   int ret4;
-  ret4 = guestfs_pvcreate (g, arg4112);
+  ret4 = guestfs_pvcreate (g, arg4119);
   if (ret4 == -1)
     return -1;
-  const char *arg4114 = "/dev/sda3";
+  const char *arg4121 = "/dev/sda3";
   int ret3;
-  ret3 = guestfs_pvcreate (g, arg4114);
+  ret3 = guestfs_pvcreate (g, arg4121);
   if (ret3 == -1)
     return -1;
-  const char *arg4116 = "VG1";
-  const char *arg4117_0 = "/dev/sda1";
-  const char *arg4117_1 = "/dev/sda2";
-  const char *const arg4117[] = {
-    arg4117_0,
-    arg4117_1,
+  const char *arg4123 = "VG1";
+  const char *arg4124_0 = "/dev/sda1";
+  const char *arg4124_1 = "/dev/sda2";
+  const char *const arg4124[] = {
+    arg4124_0,
+    arg4124_1,
     NULL
   };
   int ret2;
-  ret2 = guestfs_vgcreate (g, arg4116, (char **) arg4117);
+  ret2 = guestfs_vgcreate (g, arg4123, (char **) arg4124);
   if (ret2 == -1)
     return -1;
-  const char *arg4119 = "VG2";
-  const char *arg4120_0 = "/dev/sda3";
-  const char *const arg4120[] = {
-    arg4120_0,
+  const char *arg4126 = "VG2";
+  const char *arg4127_0 = "/dev/sda3";
+  const char *const arg4127[] = {
+    arg4127_0,
     NULL
   };
   int ret1;
-  ret1 = guestfs_vgcreate (g, arg4119, (char **) arg4120);
+  ret1 = guestfs_vgcreate (g, arg4126, (char **) arg4127);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -31555,10 +31703,10 @@ test_vgcreate_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features4123[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features4123)) {
+  const char *features4130[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features4130)) {
     skipped ("test_vgcreate_1", "group %s not available in daemon",
-             features4123[0]);
+             features4130[0]);
     return 0;
   }
 
@@ -31587,58 +31735,58 @@ static int
 test_vgcreate_1_perform (guestfs_h *g)
 {
   /* TestLastFail for vgcreate (1) */
-  const char *arg4125 = "/dev/sda";
-  const char *arg4126 = "mbr";
-  int ret4124;
-  ret4124 = guestfs_part_init (g, arg4125, arg4126);
-  if (ret4124 == -1)
+  const char *arg4132 = "/dev/sda";
+  const char *arg4133 = "mbr";
+  int ret4131;
+  ret4131 = guestfs_part_init (g, arg4132, arg4133);
+  if (ret4131 == -1)
     return -1;
-  const char *arg4129 = "/dev/sda";
-  const char *arg4130 = "p";
-  int ret4128;
-  ret4128 = guestfs_part_add (g, arg4129, arg4130, 64, 204799);
-  if (ret4128 == -1)
+  const char *arg4136 = "/dev/sda";
+  const char *arg4137 = "p";
+  int ret4135;
+  ret4135 = guestfs_part_add (g, arg4136, arg4137, 64, 204799);
+  if (ret4135 == -1)
     return -1;
-  const char *arg4135 = "/dev/sda";
-  const char *arg4136 = "p";
-  int ret4134;
-  ret4134 = guestfs_part_add (g, arg4135, arg4136, 204800, 409599);
-  if (ret4134 == -1)
+  const char *arg4142 = "/dev/sda";
+  const char *arg4143 = "p";
+  int ret4141;
+  ret4141 = guestfs_part_add (g, arg4142, arg4143, 204800, 409599);
+  if (ret4141 == -1)
     return -1;
-  const char *arg4141 = "/dev/sda";
-  const char *arg4142 = "p";
-  int ret4140;
-  ret4140 = guestfs_part_add (g, arg4141, arg4142, 409600, -64);
-  if (ret4140 == -1)
+  const char *arg4148 = "/dev/sda";
+  const char *arg4149 = "p";
+  int ret4147;
+  ret4147 = guestfs_part_add (g, arg4148, arg4149, 409600, -64);
+  if (ret4147 == -1)
     return -1;
-  const char *arg4147 = "/dev/sda1";
-  int ret4146;
-  ret4146 = guestfs_pvcreate (g, arg4147);
-  if (ret4146 == -1)
+  const char *arg4154 = "/dev/sda1";
+  int ret4153;
+  ret4153 = guestfs_pvcreate (g, arg4154);
+  if (ret4153 == -1)
     return -1;
-  const char *arg4150 = "/dev/sda2";
-  int ret4149;
-  ret4149 = guestfs_pvcreate (g, arg4150);
-  if (ret4149 == -1)
+  const char *arg4157 = "/dev/sda2";
+  int ret4156;
+  ret4156 = guestfs_pvcreate (g, arg4157);
+  if (ret4156 == -1)
     return -1;
-  const char *arg4153 = "/dev/sda3";
-  int ret4152;
-  ret4152 = guestfs_pvcreate (g, arg4153);
-  if (ret4152 == -1)
+  const char *arg4160 = "/dev/sda3";
+  int ret4159;
+  ret4159 = guestfs_pvcreate (g, arg4160);
+  if (ret4159 == -1)
     return -1;
-  const char *arg4156 = "VG1";
-  const char *arg4157_0 = "/foo/bar";
-  const char *arg4157_1 = "/dev/sda2";
-  const char *const arg4157[] = {
-    arg4157_0,
-    arg4157_1,
+  const char *arg4163 = "VG1";
+  const char *arg4164_0 = "/foo/bar";
+  const char *arg4164_1 = "/dev/sda2";
+  const char *const arg4164[] = {
+    arg4164_0,
+    arg4164_1,
     NULL
   };
-  int ret4155;
+  int ret4162;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret4155 = guestfs_vgcreate (g, arg4156, (char **) arg4157);
+  ret4162 = guestfs_vgcreate (g, arg4163, (char **) arg4164);
   guestfs_pop_error_handler (g);
-  if (ret4155 != -1)
+  if (ret4162 != -1)
     return -1;
   return 0;
 }
@@ -31654,10 +31802,10 @@ test_vgremove_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features4159[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features4159)) {
+  const char *features4166[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features4166)) {
     skipped ("test_vgremove_0", "group %s not available in daemon",
-             features4159[0]);
+             features4166[0]);
     return 0;
   }
 
@@ -31686,42 +31834,42 @@ static int
 test_vgremove_0_perform (guestfs_h *g)
 {
   /* TestResult for vgremove (0) */
-  const char *arg4160 = "/dev/sda";
-  const char *arg4161 = "mbr";
+  const char *arg4167 = "/dev/sda";
+  const char *arg4168 = "mbr";
   int ret6;
-  ret6 = guestfs_part_disk (g, arg4160, arg4161);
+  ret6 = guestfs_part_disk (g, arg4167, arg4168);
   if (ret6 == -1)
     return -1;
-  const char *arg4163 = "/dev/sda1";
+  const char *arg4170 = "/dev/sda1";
   int ret5;
-  ret5 = guestfs_pvcreate (g, arg4163);
+  ret5 = guestfs_pvcreate (g, arg4170);
   if (ret5 == -1)
     return -1;
-  const char *arg4165 = "VG";
-  const char *arg4166_0 = "/dev/sda1";
-  const char *const arg4166[] = {
-    arg4166_0,
+  const char *arg4172 = "VG";
+  const char *arg4173_0 = "/dev/sda1";
+  const char *const arg4173[] = {
+    arg4173_0,
     NULL
   };
   int ret4;
-  ret4 = guestfs_vgcreate (g, arg4165, (char **) arg4166);
+  ret4 = guestfs_vgcreate (g, arg4172, (char **) arg4173);
   if (ret4 == -1)
     return -1;
-  const char *arg4168 = "LV1";
-  const char *arg4169 = "VG";
+  const char *arg4175 = "LV1";
+  const char *arg4176 = "VG";
   int ret3;
-  ret3 = guestfs_lvcreate (g, arg4168, arg4169, 50);
+  ret3 = guestfs_lvcreate (g, arg4175, arg4176, 50);
   if (ret3 == -1)
     return -1;
-  const char *arg4172 = "LV2";
-  const char *arg4173 = "VG";
+  const char *arg4179 = "LV2";
+  const char *arg4180 = "VG";
   int ret2;
-  ret2 = guestfs_lvcreate (g, arg4172, arg4173, 50);
+  ret2 = guestfs_lvcreate (g, arg4179, arg4180, 50);
   if (ret2 == -1)
     return -1;
-  const char *arg4176 = "VG";
+  const char *arg4183 = "VG";
   int ret1;
-  ret1 = guestfs_vgremove (g, arg4176);
+  ret1 = guestfs_vgremove (g, arg4183);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -31749,10 +31897,10 @@ test_vgremove_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features4179[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features4179)) {
+  const char *features4186[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features4186)) {
     skipped ("test_vgremove_1", "group %s not available in daemon",
-             features4179[0]);
+             features4186[0]);
     return 0;
   }
 
@@ -31781,42 +31929,42 @@ static int
 test_vgremove_1_perform (guestfs_h *g)
 {
   /* TestResult for vgremove (1) */
-  const char *arg4180 = "/dev/sda";
-  const char *arg4181 = "mbr";
+  const char *arg4187 = "/dev/sda";
+  const char *arg4188 = "mbr";
   int ret6;
-  ret6 = guestfs_part_disk (g, arg4180, arg4181);
+  ret6 = guestfs_part_disk (g, arg4187, arg4188);
   if (ret6 == -1)
     return -1;
-  const char *arg4183 = "/dev/sda1";
+  const char *arg4190 = "/dev/sda1";
   int ret5;
-  ret5 = guestfs_pvcreate (g, arg4183);
+  ret5 = guestfs_pvcreate (g, arg4190);
   if (ret5 == -1)
     return -1;
-  const char *arg4185 = "VG";
-  const char *arg4186_0 = "/dev/sda1";
-  const char *const arg4186[] = {
-    arg4186_0,
+  const char *arg4192 = "VG";
+  const char *arg4193_0 = "/dev/sda1";
+  const char *const arg4193[] = {
+    arg4193_0,
     NULL
   };
   int ret4;
-  ret4 = guestfs_vgcreate (g, arg4185, (char **) arg4186);
+  ret4 = guestfs_vgcreate (g, arg4192, (char **) arg4193);
   if (ret4 == -1)
     return -1;
-  const char *arg4188 = "LV1";
-  const char *arg4189 = "VG";
+  const char *arg4195 = "LV1";
+  const char *arg4196 = "VG";
   int ret3;
-  ret3 = guestfs_lvcreate (g, arg4188, arg4189, 50);
+  ret3 = guestfs_lvcreate (g, arg4195, arg4196, 50);
   if (ret3 == -1)
     return -1;
-  const char *arg4192 = "LV2";
-  const char *arg4193 = "VG";
+  const char *arg4199 = "LV2";
+  const char *arg4200 = "VG";
   int ret2;
-  ret2 = guestfs_lvcreate (g, arg4192, arg4193, 50);
+  ret2 = guestfs_lvcreate (g, arg4199, arg4200, 50);
   if (ret2 == -1)
     return -1;
-  const char *arg4196 = "VG";
+  const char *arg4203 = "VG";
   int ret1;
-  ret1 = guestfs_vgremove (g, arg4196);
+  ret1 = guestfs_vgremove (g, arg4203);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -31869,43 +32017,43 @@ static int
 test_vgrename_0_perform (guestfs_h *g)
 {
   /* TestResult for vgrename (0) */
-  const char *arg4199 = "/";
-  struct guestfs_umount_opts_argv optargs4200;
-  optargs4200.force = 0;
-  optargs4200.lazyunmount = 0;
-  optargs4200.bitmask = UINT64_C(0x3);
+  const char *arg4206 = "/";
+  struct guestfs_umount_opts_argv optargs4207;
+  optargs4207.force = 0;
+  optargs4207.lazyunmount = 0;
+  optargs4207.bitmask = UINT64_C(0x3);
   int ret5;
-  ret5 = guestfs_umount_opts_argv (g, arg4199, &optargs4200);
+  ret5 = guestfs_umount_opts_argv (g, arg4206, &optargs4207);
   if (ret5 == -1)
     return -1;
-  const char *arg4202_0 = "VG";
-  const char *const arg4202[] = {
-    arg4202_0,
+  const char *arg4209_0 = "VG";
+  const char *const arg4209[] = {
+    arg4209_0,
     NULL
   };
   int ret4;
-  ret4 = guestfs_vg_activate (g, 0, (char **) arg4202);
+  ret4 = guestfs_vg_activate (g, 0, (char **) arg4209);
   if (ret4 == -1)
     return -1;
-  const char *arg4204 = "VG";
-  const char *arg4205 = "VG2";
+  const char *arg4211 = "VG";
+  const char *arg4212 = "VG2";
   int ret3;
-  ret3 = guestfs_vgrename (g, arg4204, arg4205);
+  ret3 = guestfs_vgrename (g, arg4211, arg4212);
   if (ret3 == -1)
     return -1;
-  const char *arg4208_0 = "VG2";
-  const char *const arg4208[] = {
-    arg4208_0,
+  const char *arg4215_0 = "VG2";
+  const char *const arg4215[] = {
+    arg4215_0,
     NULL
   };
   int ret2;
-  ret2 = guestfs_vg_activate (g, 1, (char **) arg4208);
+  ret2 = guestfs_vg_activate (g, 1, (char **) arg4215);
   if (ret2 == -1)
     return -1;
-  const char *arg4210 = "/dev/VG2/LV";
-  const char *arg4211 = "/";
+  const char *arg4217 = "/dev/VG2/LV";
+  const char *arg4218 = "/";
   int ret1;
-  ret1 = guestfs_mount (g, arg4210, arg4211);
+  ret1 = guestfs_mount (g, arg4217, arg4218);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -31933,10 +32081,10 @@ test_vgs_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features4214[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features4214)) {
+  const char *features4221[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features4221)) {
     skipped ("test_vgs_0", "group %s not available in daemon",
-             features4214[0]);
+             features4221[0]);
     return 0;
   }
 
@@ -31990,10 +32138,10 @@ test_vgs_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features4216[] = { "lvm2", NULL };
-  if (!guestfs_feature_available (g, (char **) features4216)) {
+  const char *features4223[] = { "lvm2", NULL };
+  if (!guestfs_feature_available (g, (char **) features4223)) {
     skipped ("test_vgs_1", "group %s not available in daemon",
-             features4216[0]);
+             features4223[0]);
     return 0;
   }
 
@@ -32022,65 +32170,65 @@ static int
 test_vgs_1_perform (guestfs_h *g)
 {
   /* TestResult for vgs (1) */
-  const char *arg4217 = "/dev/sda";
-  const char *arg4218 = "mbr";
+  const char *arg4224 = "/dev/sda";
+  const char *arg4225 = "mbr";
   int ret9;
-  ret9 = guestfs_part_init (g, arg4217, arg4218);
+  ret9 = guestfs_part_init (g, arg4224, arg4225);
   if (ret9 == -1)
     return -1;
-  const char *arg4220 = "/dev/sda";
-  const char *arg4221 = "p";
+  const char *arg4227 = "/dev/sda";
+  const char *arg4228 = "p";
   int ret8;
-  ret8 = guestfs_part_add (g, arg4220, arg4221, 64, 204799);
+  ret8 = guestfs_part_add (g, arg4227, arg4228, 64, 204799);
   if (ret8 == -1)
     return -1;
-  const char *arg4225 = "/dev/sda";
-  const char *arg4226 = "p";
+  const char *arg4232 = "/dev/sda";
+  const char *arg4233 = "p";
   int ret7;
-  ret7 = guestfs_part_add (g, arg4225, arg4226, 204800, 409599);
+  ret7 = guestfs_part_add (g, arg4232, arg4233, 204800, 409599);
   if (ret7 == -1)
     return -1;
-  const char *arg4230 = "/dev/sda";
-  const char *arg4231 = "p";
+  const char *arg4237 = "/dev/sda";
+  const char *arg4238 = "p";
   int ret6;
-  ret6 = guestfs_part_add (g, arg4230, arg4231, 409600, -64);
+  ret6 = guestfs_part_add (g, arg4237, arg4238, 409600, -64);
   if (ret6 == -1)
     return -1;
-  const char *arg4235 = "/dev/sda1";
+  const char *arg4242 = "/dev/sda1";
   int ret5;
-  ret5 = guestfs_pvcreate (g, arg4235);
+  ret5 = guestfs_pvcreate (g, arg4242);
   if (ret5 == -1)
     return -1;
-  const char *arg4237 = "/dev/sda2";
+  const char *arg4244 = "/dev/sda2";
   int ret4;
-  ret4 = guestfs_pvcreate (g, arg4237);
+  ret4 = guestfs_pvcreate (g, arg4244);
   if (ret4 == -1)
     return -1;
-  const char *arg4239 = "/dev/sda3";
+  const char *arg4246 = "/dev/sda3";
   int ret3;
-  ret3 = guestfs_pvcreate (g, arg4239);
+  ret3 = guestfs_pvcreate (g, arg4246);
   if (ret3 == -1)
     return -1;
-  const char *arg4241 = "VG1";
-  const char *arg4242_0 = "/dev/sda1";
-  const char *arg4242_1 = "/dev/sda2";
-  const char *const arg4242[] = {
-    arg4242_0,
-    arg4242_1,
+  const char *arg4248 = "VG1";
+  const char *arg4249_0 = "/dev/sda1";
+  const char *arg4249_1 = "/dev/sda2";
+  const char *const arg4249[] = {
+    arg4249_0,
+    arg4249_1,
     NULL
   };
   int ret2;
-  ret2 = guestfs_vgcreate (g, arg4241, (char **) arg4242);
+  ret2 = guestfs_vgcreate (g, arg4248, (char **) arg4249);
   if (ret2 == -1)
     return -1;
-  const char *arg4244 = "VG2";
-  const char *arg4245_0 = "/dev/sda3";
-  const char *const arg4245[] = {
-    arg4245_0,
+  const char *arg4251 = "VG2";
+  const char *arg4252_0 = "/dev/sda3";
+  const char *const arg4252[] = {
+    arg4252_0,
     NULL
   };
   int ret1;
-  ret1 = guestfs_vgcreate (g, arg4244, (char **) arg4245);
+  ret1 = guestfs_vgcreate (g, arg4251, (char **) arg4252);
   if (ret1 == -1)
     return -1;
   CLEANUP_FREE_STRING_LIST char **ret;
@@ -32133,9 +32281,9 @@ static int
 test_vgscan_0_perform (guestfs_h *g)
 {
   /* TestRun for vgscan (0) */
-  int ret4248;
-  ret4248 = guestfs_vgscan (g);
-  if (ret4248 == -1)
+  int ret4255;
+  ret4255 = guestfs_vgscan (g);
+  if (ret4255 == -1)
     return -1;
   return 0;
 }
@@ -32176,9 +32324,9 @@ static int
 test_wc_c_0_perform (guestfs_h *g)
 {
   /* TestResult for wc_c (0) */
-  const char *arg4250 = "/100kallspaces";
+  const char *arg4257 = "/100kallspaces";
   int ret;
-  ret = guestfs_wc_c (g, arg4250);
+  ret = guestfs_wc_c (g, arg4257);
   if (ret == -1)
     return -1;
   if (! (ret == 102400)) {
@@ -32227,9 +32375,9 @@ static int
 test_wc_l_0_perform (guestfs_h *g)
 {
   /* TestResult for wc_l (0) */
-  const char *arg4252 = "/10klines";
+  const char *arg4259 = "/10klines";
   int ret;
-  ret = guestfs_wc_l (g, arg4252);
+  ret = guestfs_wc_l (g, arg4259);
   if (ret == -1)
     return -1;
   if (! (ret == 10000)) {
@@ -32278,9 +32426,9 @@ static int
 test_wc_l_1_perform (guestfs_h *g)
 {
   /* TestResult for wc_l (1) */
-  const char *arg4254 = "/abssymlink";
+  const char *arg4261 = "/abssymlink";
   int ret;
-  ret = guestfs_wc_l (g, arg4254);
+  ret = guestfs_wc_l (g, arg4261);
   if (ret == -1)
     return -1;
   if (! (ret == 10000)) {
@@ -32329,9 +32477,9 @@ static int
 test_wc_w_0_perform (guestfs_h *g)
 {
   /* TestResult for wc_w (0) */
-  const char *arg4256 = "/10klines";
+  const char *arg4263 = "/10klines";
   int ret;
-  ret = guestfs_wc_w (g, arg4256);
+  ret = guestfs_wc_w (g, arg4263);
   if (ret == -1)
     return -1;
   if (! (ret == 10000)) {
@@ -32355,10 +32503,10 @@ test_wipefs_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features4258[] = { "wipefs", NULL };
-  if (!guestfs_feature_available (g, (char **) features4258)) {
+  const char *features4265[] = { "wipefs", NULL };
+  if (!guestfs_feature_available (g, (char **) features4265)) {
     skipped ("test_wipefs_0", "group %s not available in daemon",
-             features4258[0]);
+             features4265[0]);
     return 0;
   }
 
@@ -32387,17 +32535,17 @@ static int
 test_wipefs_0_perform (guestfs_h *g)
 {
   /* TestRun for wipefs (0) */
-  const char *arg4260 = "/dev/VG/LV";
-  struct guestfs_umount_opts_argv optargs4261;
-  optargs4261.bitmask = UINT64_C(0x0);
-  int ret4259;
-  ret4259 = guestfs_umount_opts_argv (g, arg4260, &optargs4261);
-  if (ret4259 == -1)
+  const char *arg4267 = "/dev/VG/LV";
+  struct guestfs_umount_opts_argv optargs4268;
+  optargs4268.bitmask = UINT64_C(0x0);
+  int ret4266;
+  ret4266 = guestfs_umount_opts_argv (g, arg4267, &optargs4268);
+  if (ret4266 == -1)
     return -1;
-  const char *arg4263 = "/dev/VG/LV";
-  int ret4262;
-  ret4262 = guestfs_wipefs (g, arg4263);
-  if (ret4262 == -1)
+  const char *arg4270 = "/dev/VG/LV";
+  int ret4269;
+  ret4269 = guestfs_wipefs (g, arg4270);
+  if (ret4269 == -1)
     return -1;
   return 0;
 }
@@ -32438,16 +32586,16 @@ static int
 test_write_0_perform (guestfs_h *g)
 {
   /* TestResultString for write (0) */
-  const char *arg4266 = "/write";
-  const char *arg4267 = "new file contents";
-  size_t arg4267_size = 17;
-  int ret4265;
-  ret4265 = guestfs_write (g, arg4266, arg4267, arg4267_size);
-  if (ret4265 == -1)
+  const char *arg4273 = "/write";
+  const char *arg4274 = "new file contents";
+  size_t arg4274_size = 17;
+  int ret4272;
+  ret4272 = guestfs_write (g, arg4273, arg4274, arg4274_size);
+  if (ret4272 == -1)
     return -1;
-  const char *arg4269 = "/write";
+  const char *arg4276 = "/write";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg4269);
+  ret = guestfs_cat (g, arg4276);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "new file contents")) {
@@ -32494,16 +32642,16 @@ static int
 test_write_1_perform (guestfs_h *g)
 {
   /* TestResultString for write (1) */
-  const char *arg4272 = "/write2";
-  const char *arg4273 = "\nnew file contents\n";
-  size_t arg4273_size = 19;
-  int ret4271;
-  ret4271 = guestfs_write (g, arg4272, arg4273, arg4273_size);
-  if (ret4271 == -1)
+  const char *arg4279 = "/write2";
+  const char *arg4280 = "\nnew file contents\n";
+  size_t arg4280_size = 19;
+  int ret4278;
+  ret4278 = guestfs_write (g, arg4279, arg4280, arg4280_size);
+  if (ret4278 == -1)
     return -1;
-  const char *arg4275 = "/write2";
+  const char *arg4282 = "/write2";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg4275);
+  ret = guestfs_cat (g, arg4282);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "\nnew file contents\n")) {
@@ -32550,16 +32698,16 @@ static int
 test_write_2_perform (guestfs_h *g)
 {
   /* TestResultString for write (2) */
-  const char *arg4278 = "/write3";
-  const char *arg4279 = "\n\n";
-  size_t arg4279_size = 2;
-  int ret4277;
-  ret4277 = guestfs_write (g, arg4278, arg4279, arg4279_size);
-  if (ret4277 == -1)
+  const char *arg4285 = "/write3";
+  const char *arg4286 = "\n\n";
+  size_t arg4286_size = 2;
+  int ret4284;
+  ret4284 = guestfs_write (g, arg4285, arg4286, arg4286_size);
+  if (ret4284 == -1)
     return -1;
-  const char *arg4281 = "/write3";
+  const char *arg4288 = "/write3";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg4281);
+  ret = guestfs_cat (g, arg4288);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "\n\n")) {
@@ -32606,16 +32754,16 @@ static int
 test_write_3_perform (guestfs_h *g)
 {
   /* TestResultString for write (3) */
-  const char *arg4284 = "/write4";
-  const char *arg4285 = "";
-  size_t arg4285_size = 0;
-  int ret4283;
-  ret4283 = guestfs_write (g, arg4284, arg4285, arg4285_size);
-  if (ret4283 == -1)
+  const char *arg4291 = "/write4";
+  const char *arg4292 = "";
+  size_t arg4292_size = 0;
+  int ret4290;
+  ret4290 = guestfs_write (g, arg4291, arg4292, arg4292_size);
+  if (ret4290 == -1)
     return -1;
-  const char *arg4287 = "/write4";
+  const char *arg4294 = "/write4";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg4287);
+  ret = guestfs_cat (g, arg4294);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "")) {
@@ -32662,16 +32810,16 @@ static int
 test_write_4_perform (guestfs_h *g)
 {
   /* TestResultString for write (4) */
-  const char *arg4290 = "/write5";
-  const char *arg4291 = "\n\n\n";
-  size_t arg4291_size = 3;
-  int ret4289;
-  ret4289 = guestfs_write (g, arg4290, arg4291, arg4291_size);
-  if (ret4289 == -1)
+  const char *arg4297 = "/write5";
+  const char *arg4298 = "\n\n\n";
+  size_t arg4298_size = 3;
+  int ret4296;
+  ret4296 = guestfs_write (g, arg4297, arg4298, arg4298_size);
+  if (ret4296 == -1)
     return -1;
-  const char *arg4293 = "/write5";
+  const char *arg4300 = "/write5";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg4293);
+  ret = guestfs_cat (g, arg4300);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "\n\n\n")) {
@@ -32718,16 +32866,16 @@ static int
 test_write_5_perform (guestfs_h *g)
 {
   /* TestResultString for write (5) */
-  const char *arg4296 = "/write6";
-  const char *arg4297 = "\n";
-  size_t arg4297_size = 1;
-  int ret4295;
-  ret4295 = guestfs_write (g, arg4296, arg4297, arg4297_size);
-  if (ret4295 == -1)
+  const char *arg4303 = "/write6";
+  const char *arg4304 = "\n";
+  size_t arg4304_size = 1;
+  int ret4302;
+  ret4302 = guestfs_write (g, arg4303, arg4304, arg4304_size);
+  if (ret4302 == -1)
     return -1;
-  const char *arg4299 = "/write6";
+  const char *arg4306 = "/write6";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg4299);
+  ret = guestfs_cat (g, arg4306);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "\n")) {
@@ -32774,37 +32922,37 @@ static int
 test_write_append_0_perform (guestfs_h *g)
 {
   /* TestResultString for write_append (0) */
-  const char *arg4302 = "/write_append";
-  const char *arg4303 = "line1\n";
-  size_t arg4303_size = 6;
-  int ret4301;
-  ret4301 = guestfs_write (g, arg4302, arg4303, arg4303_size);
-  if (ret4301 == -1)
+  const char *arg4309 = "/write_append";
+  const char *arg4310 = "line1\n";
+  size_t arg4310_size = 6;
+  int ret4308;
+  ret4308 = guestfs_write (g, arg4309, arg4310, arg4310_size);
+  if (ret4308 == -1)
     return -1;
-  const char *arg4306 = "/write_append";
-  const char *arg4307 = "line2\n";
-  size_t arg4307_size = 6;
-  int ret4305;
-  ret4305 = guestfs_write_append (g, arg4306, arg4307, arg4307_size);
-  if (ret4305 == -1)
-    return -1;
-  const char *arg4310 = "/write_append";
-  const char *arg4311 = "line3a";
-  size_t arg4311_size = 6;
-  int ret4309;
-  ret4309 = guestfs_write_append (g, arg4310, arg4311, arg4311_size);
-  if (ret4309 == -1)
-    return -1;
-  const char *arg4314 = "/write_append";
-  const char *arg4315 = "line3b\n";
-  size_t arg4315_size = 7;
-  int ret4313;
-  ret4313 = guestfs_write_append (g, arg4314, arg4315, arg4315_size);
-  if (ret4313 == -1)
+  const char *arg4313 = "/write_append";
+  const char *arg4314 = "line2\n";
+  size_t arg4314_size = 6;
+  int ret4312;
+  ret4312 = guestfs_write_append (g, arg4313, arg4314, arg4314_size);
+  if (ret4312 == -1)
     return -1;
   const char *arg4317 = "/write_append";
+  const char *arg4318 = "line3a";
+  size_t arg4318_size = 6;
+  int ret4316;
+  ret4316 = guestfs_write_append (g, arg4317, arg4318, arg4318_size);
+  if (ret4316 == -1)
+    return -1;
+  const char *arg4321 = "/write_append";
+  const char *arg4322 = "line3b\n";
+  size_t arg4322_size = 7;
+  int ret4320;
+  ret4320 = guestfs_write_append (g, arg4321, arg4322, arg4322_size);
+  if (ret4320 == -1)
+    return -1;
+  const char *arg4324 = "/write_append";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg4317);
+  ret = guestfs_cat (g, arg4324);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "line1\nline2\nline3aline3b\n")) {
@@ -32851,13 +32999,13 @@ static int
 test_write_file_0_perform (guestfs_h *g)
 {
   /* TestLastFail for write_file (0) */
-  const char *arg4320 = "/write_file";
-  const char *arg4321 = "abc";
-  int ret4319;
+  const char *arg4327 = "/write_file";
+  const char *arg4328 = "abc";
+  int ret4326;
   guestfs_push_error_handler (g, NULL, NULL);
-  ret4319 = guestfs_write_file (g, arg4320, arg4321, 10000);
+  ret4326 = guestfs_write_file (g, arg4327, arg4328, 10000);
   guestfs_pop_error_handler (g);
-  if (ret4319 != -1)
+  if (ret4326 != -1)
     return -1;
   return 0;
 }
@@ -32873,10 +33021,10 @@ test_xfs_admin_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features4324[] = { "xfs", NULL };
-  if (!guestfs_feature_available (g, (char **) features4324)) {
+  const char *features4331[] = { "xfs", NULL };
+  if (!guestfs_feature_available (g, (char **) features4331)) {
     skipped ("test_xfs_admin_0", "group %s not available in daemon",
-             features4324[0]);
+             features4331[0]);
     return 0;
   }
 
@@ -32905,36 +33053,36 @@ static int
 test_xfs_admin_0_perform (guestfs_h *g)
 {
   /* TestResultString for xfs_admin (0) */
-  const char *arg4326 = "/dev/sda";
-  const char *arg4327 = "mbr";
-  int ret4325;
-  ret4325 = guestfs_part_disk (g, arg4326, arg4327);
-  if (ret4325 == -1)
+  const char *arg4333 = "/dev/sda";
+  const char *arg4334 = "mbr";
+  int ret4332;
+  ret4332 = guestfs_part_disk (g, arg4333, arg4334);
+  if (ret4332 == -1)
     return -1;
-  const char *arg4330 = "xfs";
-  const char *arg4331 = "/dev/sda1";
-  struct guestfs_mkfs_opts_argv optargs4332;
-  optargs4332.bitmask = UINT64_C(0x0);
-  int ret4329;
-  ret4329 = guestfs_mkfs_opts_argv (g, arg4330, arg4331, &optargs4332);
-  if (ret4329 == -1)
+  const char *arg4337 = "xfs";
+  const char *arg4338 = "/dev/sda1";
+  struct guestfs_mkfs_opts_argv optargs4339;
+  optargs4339.bitmask = UINT64_C(0x0);
+  int ret4336;
+  ret4336 = guestfs_mkfs_opts_argv (g, arg4337, arg4338, &optargs4339);
+  if (ret4336 == -1)
     return -1;
-  const char *arg4334 = "/dev/sda1";
-  struct guestfs_xfs_admin_argv optargs4335;
-  optargs4335.uuid = "d306427c-371d-3832-d8f7-eaad61dc6244";
-  optargs4335.bitmask = UINT64_C(0x40);
-  int ret4333;
-  ret4333 = guestfs_xfs_admin_argv (g, arg4334, &optargs4335);
-  if (ret4333 == -1)
+  const char *arg4341 = "/dev/sda1";
+  struct guestfs_xfs_admin_argv optargs4342;
+  optargs4342.uuid = "76802f61-6cde-0f8b-e149-6849b3cb42b6";
+  optargs4342.bitmask = UINT64_C(0x40);
+  int ret4340;
+  ret4340 = guestfs_xfs_admin_argv (g, arg4341, &optargs4342);
+  if (ret4340 == -1)
     return -1;
-  const char *arg4336 = "/dev/sda1";
+  const char *arg4343 = "/dev/sda1";
   CLEANUP_FREE char *ret;
-  ret = guestfs_vfs_uuid (g, arg4336);
+  ret = guestfs_vfs_uuid (g, arg4343);
   if (ret == NULL)
       return -1;
-  if (! STREQ (ret, "d306427c-371d-3832-d8f7-eaad61dc6244")) {
+  if (! STREQ (ret, "76802f61-6cde-0f8b-e149-6849b3cb42b6")) {
     fprintf (stderr, "%s: test failed: expected last command %s to return \"%s\" but it returned \"%s\"\n",
-             "test_xfs_admin_0", "vfs_uuid", "d306427c-371d-3832-d8f7-eaad61dc6244", ret);
+             "test_xfs_admin_0", "vfs_uuid", "76802f61-6cde-0f8b-e149-6849b3cb42b6", ret);
     return -1;
   }
   return 0;
@@ -32951,10 +33099,10 @@ test_xfs_admin_1 (guestfs_h *g)
     return 0;
   }
 
-  const char *features4338[] = { "xfs", NULL };
-  if (!guestfs_feature_available (g, (char **) features4338)) {
+  const char *features4345[] = { "xfs", NULL };
+  if (!guestfs_feature_available (g, (char **) features4345)) {
     skipped ("test_xfs_admin_1", "group %s not available in daemon",
-             features4338[0]);
+             features4345[0]);
     return 0;
   }
 
@@ -32983,31 +33131,31 @@ static int
 test_xfs_admin_1_perform (guestfs_h *g)
 {
   /* TestResultString for xfs_admin (1) */
-  const char *arg4340 = "/dev/sda";
-  const char *arg4341 = "mbr";
-  int ret4339;
-  ret4339 = guestfs_part_disk (g, arg4340, arg4341);
-  if (ret4339 == -1)
+  const char *arg4347 = "/dev/sda";
+  const char *arg4348 = "mbr";
+  int ret4346;
+  ret4346 = guestfs_part_disk (g, arg4347, arg4348);
+  if (ret4346 == -1)
     return -1;
-  const char *arg4344 = "xfs";
-  const char *arg4345 = "/dev/sda1";
-  struct guestfs_mkfs_opts_argv optargs4346;
-  optargs4346.bitmask = UINT64_C(0x0);
-  int ret4343;
-  ret4343 = guestfs_mkfs_opts_argv (g, arg4344, arg4345, &optargs4346);
-  if (ret4343 == -1)
+  const char *arg4351 = "xfs";
+  const char *arg4352 = "/dev/sda1";
+  struct guestfs_mkfs_opts_argv optargs4353;
+  optargs4353.bitmask = UINT64_C(0x0);
+  int ret4350;
+  ret4350 = guestfs_mkfs_opts_argv (g, arg4351, arg4352, &optargs4353);
+  if (ret4350 == -1)
     return -1;
-  const char *arg4348 = "/dev/sda1";
-  struct guestfs_xfs_admin_argv optargs4349;
-  optargs4349.label = "LBL-TEST";
-  optargs4349.bitmask = UINT64_C(0x20);
-  int ret4347;
-  ret4347 = guestfs_xfs_admin_argv (g, arg4348, &optargs4349);
-  if (ret4347 == -1)
+  const char *arg4355 = "/dev/sda1";
+  struct guestfs_xfs_admin_argv optargs4356;
+  optargs4356.label = "LBL-TEST";
+  optargs4356.bitmask = UINT64_C(0x20);
+  int ret4354;
+  ret4354 = guestfs_xfs_admin_argv (g, arg4355, &optargs4356);
+  if (ret4354 == -1)
     return -1;
-  const char *arg4350 = "/dev/sda1";
+  const char *arg4357 = "/dev/sda1";
   CLEANUP_FREE char *ret;
-  ret = guestfs_vfs_label (g, arg4350);
+  ret = guestfs_vfs_label (g, arg4357);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "LBL-TEST")) {
@@ -33029,10 +33177,10 @@ test_xfs_growfs_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features4352[] = { "xfs", NULL };
-  if (!guestfs_feature_available (g, (char **) features4352)) {
+  const char *features4359[] = { "xfs", NULL };
+  if (!guestfs_feature_available (g, (char **) features4359)) {
     skipped ("test_xfs_growfs_0", "group %s not available in daemon",
-             features4352[0]);
+             features4359[0]);
     return 0;
   }
 
@@ -33061,65 +33209,65 @@ static int
 test_xfs_growfs_0_perform (guestfs_h *g)
 {
   /* TestResult for xfs_growfs (0) */
-  const char *arg4353 = "/dev/sda";
-  const char *arg4354 = "mbr";
+  const char *arg4360 = "/dev/sda";
+  const char *arg4361 = "mbr";
   int ret8;
-  ret8 = guestfs_part_disk (g, arg4353, arg4354);
+  ret8 = guestfs_part_disk (g, arg4360, arg4361);
   if (ret8 == -1)
     return -1;
-  const char *arg4356 = "/dev/sda1";
+  const char *arg4363 = "/dev/sda1";
   int ret7;
-  ret7 = guestfs_pvcreate (g, arg4356);
+  ret7 = guestfs_pvcreate (g, arg4363);
   if (ret7 == -1)
     return -1;
-  const char *arg4358 = "VG";
-  const char *arg4359_0 = "/dev/sda1";
-  const char *const arg4359[] = {
-    arg4359_0,
+  const char *arg4365 = "VG";
+  const char *arg4366_0 = "/dev/sda1";
+  const char *const arg4366[] = {
+    arg4366_0,
     NULL
   };
   int ret6;
-  ret6 = guestfs_vgcreate (g, arg4358, (char **) arg4359);
+  ret6 = guestfs_vgcreate (g, arg4365, (char **) arg4366);
   if (ret6 == -1)
     return -1;
-  const char *arg4361 = "LV";
-  const char *arg4362 = "VG";
+  const char *arg4368 = "LV";
+  const char *arg4369 = "VG";
   int ret5;
-  ret5 = guestfs_lvcreate (g, arg4361, arg4362, 300);
+  ret5 = guestfs_lvcreate (g, arg4368, arg4369, 300);
   if (ret5 == -1)
     return -1;
-  const char *arg4365 = "xfs";
-  const char *arg4366 = "/dev/VG/LV";
-  struct guestfs_mkfs_opts_argv optargs4367;
-  optargs4367.bitmask = UINT64_C(0x0);
+  const char *arg4372 = "xfs";
+  const char *arg4373 = "/dev/VG/LV";
+  struct guestfs_mkfs_opts_argv optargs4374;
+  optargs4374.bitmask = UINT64_C(0x0);
   int ret4;
-  ret4 = guestfs_mkfs_opts_argv (g, arg4365, arg4366, &optargs4367);
+  ret4 = guestfs_mkfs_opts_argv (g, arg4372, arg4373, &optargs4374);
   if (ret4 == -1)
     return -1;
-  const char *arg4368 = "/dev/VG/LV";
+  const char *arg4375 = "/dev/VG/LV";
   int ret3;
-  ret3 = guestfs_lvresize (g, arg4368, 400);
+  ret3 = guestfs_lvresize (g, arg4375, 400);
   if (ret3 == -1)
     return -1;
-  const char *arg4371 = "/dev/VG/LV";
-  const char *arg4372 = "/";
+  const char *arg4378 = "/dev/VG/LV";
+  const char *arg4379 = "/";
   int ret2;
-  ret2 = guestfs_mount (g, arg4371, arg4372);
+  ret2 = guestfs_mount (g, arg4378, arg4379);
   if (ret2 == -1)
     return -1;
-  const char *arg4374 = "/";
-  struct guestfs_xfs_growfs_argv optargs4375;
-  optargs4375.datasec = 1;
-  optargs4375.logsec = 0;
-  optargs4375.rtsec = 0;
-  optargs4375.bitmask = UINT64_C(0x7);
+  const char *arg4381 = "/";
+  struct guestfs_xfs_growfs_argv optargs4382;
+  optargs4382.datasec = 1;
+  optargs4382.logsec = 0;
+  optargs4382.rtsec = 0;
+  optargs4382.bitmask = UINT64_C(0x7);
   int ret1;
-  ret1 = guestfs_xfs_growfs_argv (g, arg4374, &optargs4375);
+  ret1 = guestfs_xfs_growfs_argv (g, arg4381, &optargs4382);
   if (ret1 == -1)
     return -1;
-  const char *arg4376 = "/";
+  const char *arg4383 = "/";
   CLEANUP_FREE_XFSINFO struct guestfs_xfsinfo *ret;
-  ret = guestfs_xfs_info (g, arg4376);
+  ret = guestfs_xfs_info (g, arg4383);
   if (ret == NULL)
       return -1;
   if (! (ret->xfs_blocksize == 4096)) {
@@ -33143,10 +33291,10 @@ test_xfs_info_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features4378[] = { "xfs", NULL };
-  if (!guestfs_feature_available (g, (char **) features4378)) {
+  const char *features4385[] = { "xfs", NULL };
+  if (!guestfs_feature_available (g, (char **) features4385)) {
     skipped ("test_xfs_info_0", "group %s not available in daemon",
-             features4378[0]);
+             features4385[0]);
     return 0;
   }
 
@@ -33175,29 +33323,29 @@ static int
 test_xfs_info_0_perform (guestfs_h *g)
 {
   /* TestResult for xfs_info (0) */
-  const char *arg4379 = "/dev/sda";
-  const char *arg4380 = "mbr";
+  const char *arg4386 = "/dev/sda";
+  const char *arg4387 = "mbr";
   int ret3;
-  ret3 = guestfs_part_disk (g, arg4379, arg4380);
+  ret3 = guestfs_part_disk (g, arg4386, arg4387);
   if (ret3 == -1)
     return -1;
-  const char *arg4382 = "xfs";
-  const char *arg4383 = "/dev/sda1";
-  struct guestfs_mkfs_opts_argv optargs4384;
-  optargs4384.bitmask = UINT64_C(0x0);
+  const char *arg4389 = "xfs";
+  const char *arg4390 = "/dev/sda1";
+  struct guestfs_mkfs_opts_argv optargs4391;
+  optargs4391.bitmask = UINT64_C(0x0);
   int ret2;
-  ret2 = guestfs_mkfs_opts_argv (g, arg4382, arg4383, &optargs4384);
+  ret2 = guestfs_mkfs_opts_argv (g, arg4389, arg4390, &optargs4391);
   if (ret2 == -1)
     return -1;
-  const char *arg4385 = "/dev/sda1";
-  const char *arg4386 = "/";
+  const char *arg4392 = "/dev/sda1";
+  const char *arg4393 = "/";
   int ret1;
-  ret1 = guestfs_mount (g, arg4385, arg4386);
+  ret1 = guestfs_mount (g, arg4392, arg4393);
   if (ret1 == -1)
     return -1;
-  const char *arg4388 = "/";
+  const char *arg4395 = "/";
   CLEANUP_FREE_XFSINFO struct guestfs_xfsinfo *ret;
-  ret = guestfs_xfs_info (g, arg4388);
+  ret = guestfs_xfs_info (g, arg4395);
   if (ret == NULL)
       return -1;
   if (! (ret->xfs_blocksize == 4096)) {
@@ -33221,10 +33369,10 @@ test_xfs_repair_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features4390[] = { "xfs", NULL };
-  if (!guestfs_feature_available (g, (char **) features4390)) {
+  const char *features4397[] = { "xfs", NULL };
+  if (!guestfs_feature_available (g, (char **) features4397)) {
     skipped ("test_xfs_repair_0", "group %s not available in daemon",
-             features4390[0]);
+             features4397[0]);
     return 0;
   }
 
@@ -33253,27 +33401,27 @@ static int
 test_xfs_repair_0_perform (guestfs_h *g)
 {
   /* TestRun for xfs_repair (0) */
-  const char *arg4392 = "/dev/sda";
-  const char *arg4393 = "mbr";
-  int ret4391;
-  ret4391 = guestfs_part_disk (g, arg4392, arg4393);
-  if (ret4391 == -1)
+  const char *arg4399 = "/dev/sda";
+  const char *arg4400 = "mbr";
+  int ret4398;
+  ret4398 = guestfs_part_disk (g, arg4399, arg4400);
+  if (ret4398 == -1)
     return -1;
-  const char *arg4396 = "xfs";
-  const char *arg4397 = "/dev/sda1";
-  struct guestfs_mkfs_opts_argv optargs4398;
-  optargs4398.bitmask = UINT64_C(0x0);
-  int ret4395;
-  ret4395 = guestfs_mkfs_opts_argv (g, arg4396, arg4397, &optargs4398);
-  if (ret4395 == -1)
+  const char *arg4403 = "xfs";
+  const char *arg4404 = "/dev/sda1";
+  struct guestfs_mkfs_opts_argv optargs4405;
+  optargs4405.bitmask = UINT64_C(0x0);
+  int ret4402;
+  ret4402 = guestfs_mkfs_opts_argv (g, arg4403, arg4404, &optargs4405);
+  if (ret4402 == -1)
     return -1;
-  const char *arg4400 = "/dev/sda1";
-  struct guestfs_xfs_repair_argv optargs4401;
-  optargs4401.nomodify = 1;
-  optargs4401.bitmask = UINT64_C(0x2);
-  int ret4399;
-  ret4399 = guestfs_xfs_repair_argv (g, arg4400, &optargs4401);
-  if (ret4399 == -1)
+  const char *arg4407 = "/dev/sda1";
+  struct guestfs_xfs_repair_argv optargs4408;
+  optargs4408.nomodify = 1;
+  optargs4408.bitmask = UINT64_C(0x2);
+  int ret4406;
+  ret4406 = guestfs_xfs_repair_argv (g, arg4407, &optargs4408);
+  if (ret4406 == -1)
     return -1;
   return 0;
 }
@@ -33314,10 +33462,10 @@ static int
 test_zegrep_0_perform (guestfs_h *g)
 {
   /* TestResult for zegrep (0) */
-  const char *arg4402 = "abc";
-  const char *arg4403 = "/test-grep.txt.gz";
+  const char *arg4409 = "abc";
+  const char *arg4410 = "/test-grep.txt.gz";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_zegrep (g, arg4402, arg4403);
+  ret = guestfs_zegrep (g, arg4409, arg4410);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 2, "abc", "abc123"))) {
@@ -33366,10 +33514,10 @@ static int
 test_zegrepi_0_perform (guestfs_h *g)
 {
   /* TestResult for zegrepi (0) */
-  const char *arg4405 = "abc";
-  const char *arg4406 = "/test-grep.txt.gz";
+  const char *arg4412 = "abc";
+  const char *arg4413 = "/test-grep.txt.gz";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_zegrepi (g, arg4405, arg4406);
+  ret = guestfs_zegrepi (g, arg4412, arg4413);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 3, "abc", "abc123", "ABC"))) {
@@ -33418,19 +33566,19 @@ static int
 test_zero_0_perform (guestfs_h *g)
 {
   /* TestRun for zero (0) */
-  const char *arg4409 = "/dev/sda1";
-  struct guestfs_umount_opts_argv optargs4410;
-  optargs4410.force = 0;
-  optargs4410.lazyunmount = 0;
-  optargs4410.bitmask = UINT64_C(0x3);
-  int ret4408;
-  ret4408 = guestfs_umount_opts_argv (g, arg4409, &optargs4410);
-  if (ret4408 == -1)
+  const char *arg4416 = "/dev/sda1";
+  struct guestfs_umount_opts_argv optargs4417;
+  optargs4417.force = 0;
+  optargs4417.lazyunmount = 0;
+  optargs4417.bitmask = UINT64_C(0x3);
+  int ret4415;
+  ret4415 = guestfs_umount_opts_argv (g, arg4416, &optargs4417);
+  if (ret4415 == -1)
     return -1;
-  const char *arg4412 = "/dev/sda1";
-  int ret4411;
-  ret4411 = guestfs_zero (g, arg4412);
-  if (ret4411 == -1)
+  const char *arg4419 = "/dev/sda1";
+  int ret4418;
+  ret4418 = guestfs_zero (g, arg4419);
+  if (ret4418 == -1)
     return -1;
   return 0;
 }
@@ -33471,10 +33619,10 @@ static int
 test_zero_device_0_perform (guestfs_h *g)
 {
   /* TestRun for zero_device (0) */
-  const char *arg4415 = "/dev/VG/LV";
-  int ret4414;
-  ret4414 = guestfs_zero_device (g, arg4415);
-  if (ret4414 == -1)
+  const char *arg4422 = "/dev/VG/LV";
+  int ret4421;
+  ret4421 = guestfs_zero_device (g, arg4422);
+  if (ret4421 == -1)
     return -1;
   return 0;
 }
@@ -33515,10 +33663,10 @@ static int
 test_zero_free_space_0_perform (guestfs_h *g)
 {
   /* TestRun for zero_free_space (0) */
-  const char *arg4418 = "/";
-  int ret4417;
-  ret4417 = guestfs_zero_free_space (g, arg4418);
-  if (ret4417 == -1)
+  const char *arg4425 = "/";
+  int ret4424;
+  ret4424 = guestfs_zero_free_space (g, arg4425);
+  if (ret4424 == -1)
     return -1;
   return 0;
 }
@@ -33534,10 +33682,10 @@ test_zerofree_0 (guestfs_h *g)
     return 0;
   }
 
-  const char *features4420[] = { "zerofree", NULL };
-  if (!guestfs_feature_available (g, (char **) features4420)) {
+  const char *features4427[] = { "zerofree", NULL };
+  if (!guestfs_feature_available (g, (char **) features4427)) {
     skipped ("test_zerofree_0", "group %s not available in daemon",
-             features4420[0]);
+             features4427[0]);
     return 0;
   }
 
@@ -33566,56 +33714,56 @@ static int
 test_zerofree_0_perform (guestfs_h *g)
 {
   /* TestResultString for zerofree (0) */
-  const char *arg4422 = "/dev/sda";
-  const char *arg4423 = "mbr";
-  int ret4421;
-  ret4421 = guestfs_part_disk (g, arg4422, arg4423);
-  if (ret4421 == -1)
+  const char *arg4429 = "/dev/sda";
+  const char *arg4430 = "mbr";
+  int ret4428;
+  ret4428 = guestfs_part_disk (g, arg4429, arg4430);
+  if (ret4428 == -1)
     return -1;
-  const char *arg4426 = "ext3";
-  const char *arg4427 = "/dev/sda1";
-  struct guestfs_mkfs_opts_argv optargs4428;
-  optargs4428.bitmask = UINT64_C(0x0);
-  int ret4425;
-  ret4425 = guestfs_mkfs_opts_argv (g, arg4426, arg4427, &optargs4428);
-  if (ret4425 == -1)
+  const char *arg4433 = "ext3";
+  const char *arg4434 = "/dev/sda1";
+  struct guestfs_mkfs_opts_argv optargs4435;
+  optargs4435.bitmask = UINT64_C(0x0);
+  int ret4432;
+  ret4432 = guestfs_mkfs_opts_argv (g, arg4433, arg4434, &optargs4435);
+  if (ret4432 == -1)
     return -1;
-  const char *arg4430 = "/dev/sda1";
-  const char *arg4431 = "/";
-  int ret4429;
-  ret4429 = guestfs_mount (g, arg4430, arg4431);
-  if (ret4429 == -1)
+  const char *arg4437 = "/dev/sda1";
+  const char *arg4438 = "/";
+  int ret4436;
+  ret4436 = guestfs_mount (g, arg4437, arg4438);
+  if (ret4436 == -1)
     return -1;
-  const char *arg4434 = "/new";
-  const char *arg4435 = "test file";
-  size_t arg4435_size = 9;
-  int ret4433;
-  ret4433 = guestfs_write (g, arg4434, arg4435, arg4435_size);
-  if (ret4433 == -1)
-    return -1;
-  const char *arg4438 = "/dev/sda1";
-  struct guestfs_umount_opts_argv optargs4439;
-  optargs4439.force = 0;
-  optargs4439.lazyunmount = 0;
-  optargs4439.bitmask = UINT64_C(0x3);
-  int ret4437;
-  ret4437 = guestfs_umount_opts_argv (g, arg4438, &optargs4439);
-  if (ret4437 == -1)
-    return -1;
-  const char *arg4441 = "/dev/sda1";
+  const char *arg4441 = "/new";
+  const char *arg4442 = "test file";
+  size_t arg4442_size = 9;
   int ret4440;
-  ret4440 = guestfs_zerofree (g, arg4441);
+  ret4440 = guestfs_write (g, arg4441, arg4442, arg4442_size);
   if (ret4440 == -1)
     return -1;
-  const char *arg4444 = "/dev/sda1";
-  const char *arg4445 = "/";
-  int ret4443;
-  ret4443 = guestfs_mount (g, arg4444, arg4445);
-  if (ret4443 == -1)
+  const char *arg4445 = "/dev/sda1";
+  struct guestfs_umount_opts_argv optargs4446;
+  optargs4446.force = 0;
+  optargs4446.lazyunmount = 0;
+  optargs4446.bitmask = UINT64_C(0x3);
+  int ret4444;
+  ret4444 = guestfs_umount_opts_argv (g, arg4445, &optargs4446);
+  if (ret4444 == -1)
     return -1;
-  const char *arg4447 = "/new";
+  const char *arg4448 = "/dev/sda1";
+  int ret4447;
+  ret4447 = guestfs_zerofree (g, arg4448);
+  if (ret4447 == -1)
+    return -1;
+  const char *arg4451 = "/dev/sda1";
+  const char *arg4452 = "/";
+  int ret4450;
+  ret4450 = guestfs_mount (g, arg4451, arg4452);
+  if (ret4450 == -1)
+    return -1;
+  const char *arg4454 = "/new";
   CLEANUP_FREE char *ret;
-  ret = guestfs_cat (g, arg4447);
+  ret = guestfs_cat (g, arg4454);
   if (ret == NULL)
       return -1;
   if (! STREQ (ret, "test file")) {
@@ -33662,10 +33810,10 @@ static int
 test_zfgrep_0_perform (guestfs_h *g)
 {
   /* TestResult for zfgrep (0) */
-  const char *arg4449 = "abc";
-  const char *arg4450 = "/test-grep.txt.gz";
+  const char *arg4456 = "abc";
+  const char *arg4457 = "/test-grep.txt.gz";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_zfgrep (g, arg4449, arg4450);
+  ret = guestfs_zfgrep (g, arg4456, arg4457);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 2, "abc", "abc123"))) {
@@ -33714,10 +33862,10 @@ static int
 test_zfgrepi_0_perform (guestfs_h *g)
 {
   /* TestResult for zfgrepi (0) */
-  const char *arg4452 = "abc";
-  const char *arg4453 = "/test-grep.txt.gz";
+  const char *arg4459 = "abc";
+  const char *arg4460 = "/test-grep.txt.gz";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_zfgrepi (g, arg4452, arg4453);
+  ret = guestfs_zfgrepi (g, arg4459, arg4460);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 3, "abc", "abc123", "ABC"))) {
@@ -33766,10 +33914,10 @@ static int
 test_zgrep_0_perform (guestfs_h *g)
 {
   /* TestResult for zgrep (0) */
-  const char *arg4455 = "abc";
-  const char *arg4456 = "/test-grep.txt.gz";
+  const char *arg4462 = "abc";
+  const char *arg4463 = "/test-grep.txt.gz";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_zgrep (g, arg4455, arg4456);
+  ret = guestfs_zgrep (g, arg4462, arg4463);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 2, "abc", "abc123"))) {
@@ -33818,10 +33966,10 @@ static int
 test_zgrepi_0_perform (guestfs_h *g)
 {
   /* TestResult for zgrepi (0) */
-  const char *arg4458 = "abc";
-  const char *arg4459 = "/test-grep.txt.gz";
+  const char *arg4465 = "abc";
+  const char *arg4466 = "/test-grep.txt.gz";
   CLEANUP_FREE_STRING_LIST char **ret;
-  ret = guestfs_zgrepi (g, arg4458, arg4459);
+  ret = guestfs_zgrepi (g, arg4465, arg4466);
   if (ret == NULL)
       return -1;
   if (! (is_string_list (ret, 3, "abc", "abc123", "ABC"))) {
@@ -33834,9 +33982,9 @@ test_zgrepi_0_perform (guestfs_h *g)
   return 0;
 }
 
-size_t nr_tests = 550;
+size_t nr_tests = 553;
 
-struct test tests[550] = {
+struct test tests[553] = {
   { .name = "test_acl_delete_def_file_0", .test_fn = test_acl_delete_def_file_0 },
   { .name = "test_acl_delete_def_file_1", .test_fn = test_acl_delete_def_file_1 },
   { .name = "test_acl_set_file_0", .test_fn = test_acl_set_file_0 },
@@ -33961,6 +34109,9 @@ struct test tests[550] = {
   { .name = "test_cp_r_0", .test_fn = test_cp_r_0 },
   { .name = "test_dd_0", .test_fn = test_dd_0 },
   { .name = "test_device_index_0", .test_fn = test_device_index_0 },
+  { .name = "test_device_name_0", .test_fn = test_device_name_0 },
+  { .name = "test_device_name_1", .test_fn = test_device_name_1 },
+  { .name = "test_device_name_2", .test_fn = test_device_name_2 },
   { .name = "test_disk_format_0", .test_fn = test_disk_format_0 },
   { .name = "test_disk_format_1", .test_fn = test_disk_format_1 },
   { .name = "test_disk_format_2", .test_fn = test_disk_format_2 },

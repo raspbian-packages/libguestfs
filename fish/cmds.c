@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -610,6 +610,7 @@ list_commands (void)
   printf ("%-20s %s\n", "chmod", _("change file mode"));
   printf ("%-20s %s\n", "chown", _("change file owner and group"));
   printf ("%-20s %s\n", "clear-backend-setting", _("remove a single per-backend settings string"));
+  printf ("%-20s %s\n", "clevis-luks-unlock", _("open an encrypted LUKS block device with Clevis and Tang"));
   printf ("%-20s %s\n", "command", _("run a command from the guest filesystem"));
   printf ("%-20s %s\n", "command-lines", _("run a command, returning lines"));
   printf ("%-20s %s\n", "compress-device-out", _("output compressed device"));
@@ -635,6 +636,7 @@ list_commands (void)
   printf ("%-20s %s\n", "debug-upload", _("upload a file to the appliance (internal use only)"));
   printf ("%-20s %s\n", "delete-event", _("delete a previously registered event handler"));
   printf ("%-20s %s\n", "device-index", _("convert device to index"));
+  printf ("%-20s %s\n", "device-name", _("convert device index to name"));
   printf ("%-20s %s\n", "df", _("report file system disk space usage"));
   printf ("%-20s %s\n", "df-h", _("report file system disk space usage (human readable)"));
   printf ("%-20s ", "direct");
@@ -771,6 +773,7 @@ list_commands (void)
   printf ("%-20s %s\n", "inotify-read", _("return list of inotify events"));
   printf ("%-20s %s\n", "inotify-rm-watch", _("remove an inotify watch"));
   printf ("%-20s %s\n", "inspect-get-arch", _("get architecture of inspected operating system"));
+  printf ("%-20s %s\n", "inspect-get-build-id", _("get the system build ID"));
   printf ("%-20s %s\n", "inspect-get-distro", _("get distro of inspected operating system"));
   printf ("%-20s %s\n", "inspect-get-drive-mappings", _("get drive letter mappings"));
   printf ("%-20s %s\n", "inspect-get-filesystems", _("get filesystems associated with inspected operating system"));

@@ -7,10 +7,10 @@ Subject: Add fdisk to appliance list
  1 file changed, 1 insertion(+)
 
 diff --git a/appliance/packagelist.in b/appliance/packagelist.in
-index 85d43d6..0a355d4 100644
+index 10406d2..4fa23ed 100644
 --- a/appliance/packagelist.in
 +++ b/appliance/packagelist.in
-@@ -56,6 +56,7 @@ dnl old name used in Jessie and earlier
+@@ -60,6 +60,7 @@ dnl old name used in Jessie and earlier
    cryptsetup
    dash
    extlinux

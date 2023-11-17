@@ -51,7 +51,8 @@ sub run_test {
 
     my $cwd = getcwd ();
     my $server;
-    my $pidfile = "$cwd/nbd.pid";
+    my $pidfile = "$cwd/nbd/nbd.pid";
+    unlink "$pidfile";
     my @qemu_nbd = ("qemu-nbd", $disk, "-t", "--pid-file", $pidfile);
     if ($has_format_opt) {
         push @qemu_nbd, "--format", "raw";
@@ -64,7 +65,7 @@ sub run_test {
     }
     else {
         # qemu-nbd insists the socket path is absolute.
-        my $socket = "$cwd/unix.sock";
+        my $socket = "$cwd/nbd/unix.sock";
         unlink "$socket";
         push @qemu_nbd, "-k", "$socket";
         $server = "unix:$socket";
@@ -84,11 +85,6 @@ sub run_test {
         sleep 1
     }
     die "qemu-nbd did not start up\n" if ! -f $pidfile;
-
-    # XXX qemu-nbd lacks any way to tell if it is awake and listening
-    # for connections.  It could write a pid file or something.  Could
-    # we check that the socket has been opened by looking in netstat?
-    sleep (2);
 
     my $g = Sys::Guestfs->new ();
 

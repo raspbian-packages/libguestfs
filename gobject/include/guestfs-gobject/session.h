@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -225,6 +225,7 @@ gboolean guestfs_session_checksums_out (GuestfsSession *session, const gchar *cs
 gboolean guestfs_session_chmod (GuestfsSession *session, gint32 mode, const gchar *path, GError **err);
 gboolean guestfs_session_chown (GuestfsSession *session, gint32 owner, gint32 group, const gchar *path, GError **err);
 gint32 guestfs_session_clear_backend_setting (GuestfsSession *session, const gchar *name, GError **err);
+gboolean guestfs_session_clevis_luks_unlock (GuestfsSession *session, const gchar *device, const gchar *mapname, GError **err);
 gchar *guestfs_session_command (GuestfsSession *session, gchar *const *arguments, GError **err);
 gchar **guestfs_session_command_lines (GuestfsSession *session, gchar *const *arguments, GError **err);
 gboolean guestfs_session_compress_device_out (GuestfsSession *session, const gchar *ctype, const gchar *device, const gchar *zdevice, GuestfsCompressDeviceOut *optargs, GCancellable *cancellable, GError **err);
@@ -249,6 +250,7 @@ gchar *guestfs_session_debug (GuestfsSession *session, const gchar *subcmd, gcha
 gchar **guestfs_session_debug_drives (GuestfsSession *session, GError **err);
 gboolean guestfs_session_debug_upload (GuestfsSession *session, const gchar *filename, const gchar *tmpname, gint32 mode, GCancellable *cancellable, GError **err);
 gint32 guestfs_session_device_index (GuestfsSession *session, const gchar *device, GError **err);
+gchar *guestfs_session_device_name (GuestfsSession *session, gint32 index, GError **err);
 gchar *guestfs_session_df (GuestfsSession *session, GError **err);
 gchar *guestfs_session_df_h (GuestfsSession *session, GError **err);
 gboolean guestfs_session_disk_create (GuestfsSession *session, const gchar *filename, const gchar *format, gint64 size, GuestfsDiskCreate *optargs, GError **err);
@@ -362,6 +364,7 @@ gboolean guestfs_session_inotify_init (GuestfsSession *session, gint32 maxevents
 GuestfsINotifyEvent **guestfs_session_inotify_read (GuestfsSession *session, GError **err);
 gboolean guestfs_session_inotify_rm_watch (GuestfsSession *session, gint32 wd, GError **err);
 gchar *guestfs_session_inspect_get_arch (GuestfsSession *session, const gchar *root, GError **err);
+gchar *guestfs_session_inspect_get_build_id (GuestfsSession *session, const gchar *root, GError **err);
 gchar *guestfs_session_inspect_get_distro (GuestfsSession *session, const gchar *root, GError **err);
 GHashTable *guestfs_session_inspect_get_drive_mappings (GuestfsSession *session, const gchar *root, GError **err);
 gchar **guestfs_session_inspect_get_filesystems (GuestfsSession *session, const gchar *root, GError **err);
@@ -599,7 +602,7 @@ gint32 guestfs_session_pwrite (GuestfsSession *session, const gchar *path, const
 gint32 guestfs_session_pwrite_device (GuestfsSession *session, const gchar *device, const guint8 *content, gsize content_size, gint64 offset, GError **err);
 guint8 *guestfs_session_read_file (GuestfsSession *session, const gchar *path, gsize *size_r, GError **err);
 gchar **guestfs_session_read_lines (GuestfsSession *session, const gchar *path, GError **err);
-GuestfsDirent **guestfs_session_readdir (GuestfsSession *session, const gchar *dir, GError **err);
+GuestfsDirent **guestfs_session_readdir (GuestfsSession *session, const gchar *dir, GCancellable *cancellable, GError **err);
 gchar *guestfs_session_readlink (GuestfsSession *session, const gchar *path, GError **err);
 gchar **guestfs_session_readlinklist (GuestfsSession *session, const gchar *path, gchar *const *names, GError **err);
 gchar *guestfs_session_realpath (GuestfsSession *session, const gchar *path, GError **err);

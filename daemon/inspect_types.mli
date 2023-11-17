@@ -1,5 +1,5 @@
 (* guestfs-inspection
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,6 +51,7 @@ and inspection_data = {
   mutable version : version option;
   mutable arch : string option;
   mutable hostname : string option;
+  mutable build_id : string option;
   mutable fstab : fstab_entry list;
   mutable windows_systemroot : string option;
   mutable windows_software_hive : string option;

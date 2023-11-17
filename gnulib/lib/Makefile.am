@@ -1,5 +1,5 @@
 # libguestfs
-# Copyright (C) 2017-2021 Red Hat Inc.
+# Copyright (C) 2017-2023 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,12 +23,15 @@ include $(top_srcdir)/subdir-rules.mk
 
 noinst_LTLIBRARIES = libgnu.la
 libgnu_la_SOURCES = \
+	accept4.c \
 	base64.c \
 	base64.h \
 	bitrotate.h \
 	c-ctype.h \
 	cloexec.c \
 	cloexec.h \
+	error.c \
+	error.h \
 	full-read.c \
 	full-read.h \
 	full-write.c \
@@ -41,6 +44,7 @@ libgnu_la_SOURCES = \
 	ignore-value.h \
 	nonblocking.c \
 	nonblocking.h \
+	pipe2.c \
 	safe-read.c \
 	safe-read.h \
 	safe-write.c \

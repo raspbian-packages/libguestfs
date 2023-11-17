@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -124,6 +124,7 @@ extern int run_checksums_out (const char *cmd, size_t argc, char *argv[]);
 extern int run_chmod (const char *cmd, size_t argc, char *argv[]);
 extern int run_chown (const char *cmd, size_t argc, char *argv[]);
 extern int run_clear_backend_setting (const char *cmd, size_t argc, char *argv[]);
+extern int run_clevis_luks_unlock (const char *cmd, size_t argc, char *argv[]);
 extern int run_command (const char *cmd, size_t argc, char *argv[]);
 extern int run_command_lines (const char *cmd, size_t argc, char *argv[]);
 extern int run_compress_device_out (const char *cmd, size_t argc, char *argv[]);
@@ -146,6 +147,7 @@ extern int run_debug (const char *cmd, size_t argc, char *argv[]);
 extern int run_debug_drives (const char *cmd, size_t argc, char *argv[]);
 extern int run_debug_upload (const char *cmd, size_t argc, char *argv[]);
 extern int run_device_index (const char *cmd, size_t argc, char *argv[]);
+extern int run_device_name (const char *cmd, size_t argc, char *argv[]);
 extern int run_df (const char *cmd, size_t argc, char *argv[]);
 extern int run_df_h (const char *cmd, size_t argc, char *argv[]);
 extern int run_disk_create (const char *cmd, size_t argc, char *argv[]);
@@ -258,6 +260,7 @@ extern int run_inotify_init (const char *cmd, size_t argc, char *argv[]);
 extern int run_inotify_read (const char *cmd, size_t argc, char *argv[]);
 extern int run_inotify_rm_watch (const char *cmd, size_t argc, char *argv[]);
 extern int run_inspect_get_arch (const char *cmd, size_t argc, char *argv[]);
+extern int run_inspect_get_build_id (const char *cmd, size_t argc, char *argv[]);
 extern int run_inspect_get_distro (const char *cmd, size_t argc, char *argv[]);
 extern int run_inspect_get_drive_mappings (const char *cmd, size_t argc, char *argv[]);
 extern int run_inspect_get_filesystems (const char *cmd, size_t argc, char *argv[]);

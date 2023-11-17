@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -363,6 +363,33 @@ Java_com_redhat_et_libguestfs_GuestFS__1btrfstune_1enable_1extended_1inode_1refs
 }
 
 
+JNIEXPORT void JNICALL
+Java_com_redhat_et_libguestfs_GuestFS__1clevis_1luks_1unlock  (JNIEnv *env, jobject obj, jlong jg, jstring jdevice, jstring jmapname)
+{
+  guestfs_h *g = (guestfs_h *) (long) jg;
+  int r;
+  const char *device;
+  const char *mapname;
+
+  device = (*env)->GetStringUTFChars (env, jdevice, NULL);
+  mapname = (*env)->GetStringUTFChars (env, jmapname, NULL);
+
+  r = guestfs_clevis_luks_unlock (g, device, mapname);
+
+  (*env)->ReleaseStringUTFChars (env, jdevice, device);
+  (*env)->ReleaseStringUTFChars (env, jmapname, mapname);
+
+  if (r == -1) {
+    throw_exception (env, guestfs_last_error (g));
+    goto ret_error;
+  }
+  return;
+
+ ret_error:
+  return;
+}
+
+
 JNIEXPORT jobjectArray JNICALL
 Java_com_redhat_et_libguestfs_GuestFS__1command_1lines  (JNIEnv *env, jobject obj, jlong jg, jobjectArray jarguments)
 {
@@ -561,6 +588,32 @@ Java_com_redhat_et_libguestfs_GuestFS__1cryptsetup_1close  (JNIEnv *env, jobject
 
  ret_error:
   return;
+}
+
+
+JNIEXPORT jstring JNICALL
+Java_com_redhat_et_libguestfs_GuestFS__1device_1name  (JNIEnv *env, jobject obj, jlong jg, jint jindex)
+{
+  guestfs_h *g = (guestfs_h *) (long) jg;
+  jstring jr;
+  char *r;
+  int index;
+
+  index = jindex;
+
+  r = guestfs_device_name (g, index);
+
+
+  if (r == NULL) {
+    throw_exception (env, guestfs_last_error (g));
+    goto ret_error;
+  }
+  jr = (*env)->NewStringUTF (env, r);
+  free (r);
+  return jr;
+
+ ret_error:
+  return NULL;
 }
 
 

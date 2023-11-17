@@ -847,6 +847,14 @@ JNIEXPORT jint JNICALL Java_com_redhat_et_libguestfs_GuestFS__1clear_1backend_1s
 
 /*
  * Class:     com_redhat_et_libguestfs_GuestFS
+ * Method:    _clevis_luks_unlock
+ * Signature: (JLjava/lang/String;Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_com_redhat_et_libguestfs_GuestFS__1clevis_1luks_1unlock
+  (JNIEnv *, jobject, jlong, jstring, jstring);
+
+/*
+ * Class:     com_redhat_et_libguestfs_GuestFS
  * Method:    _command
  * Signature: (J[Ljava/lang/String;)Ljava/lang/String;
  */
@@ -1036,6 +1044,14 @@ JNIEXPORT void JNICALL Java_com_redhat_et_libguestfs_GuestFS__1debug_1upload
  */
 JNIEXPORT jint JNICALL Java_com_redhat_et_libguestfs_GuestFS__1device_1index
   (JNIEnv *, jobject, jlong, jstring);
+
+/*
+ * Class:     com_redhat_et_libguestfs_GuestFS
+ * Method:    _device_name
+ * Signature: (JI)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_redhat_et_libguestfs_GuestFS__1device_1name
+  (JNIEnv *, jobject, jlong, jint);
 
 /*
  * Class:     com_redhat_et_libguestfs_GuestFS
@@ -1939,6 +1955,14 @@ JNIEXPORT void JNICALL Java_com_redhat_et_libguestfs_GuestFS__1inotify_1rm_1watc
  * Signature: (JLjava/lang/String;)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_com_redhat_et_libguestfs_GuestFS__1inspect_1get_1arch
+  (JNIEnv *, jobject, jlong, jstring);
+
+/*
+ * Class:     com_redhat_et_libguestfs_GuestFS
+ * Method:    _inspect_get_build_id
+ * Signature: (JLjava/lang/String;)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_redhat_et_libguestfs_GuestFS__1inspect_1get_1build_1id
   (JNIEnv *, jobject, jlong, jstring);
 
 /*

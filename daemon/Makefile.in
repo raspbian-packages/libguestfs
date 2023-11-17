@@ -32,7 +32,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 # libguestfs
-# Copyright (C) 2009-2020 Red Hat Inc.
+# Copyright (C) 2009-2023 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -198,12 +198,12 @@ am_guestfsd_OBJECTS = guestfsd-9p.$(OBJEXT) guestfsd-acl.$(OBJEXT) \
 	guestfsd-blkid.$(OBJEXT) guestfsd-blockdev.$(OBJEXT) \
 	guestfsd-btrfs.$(OBJEXT) guestfsd-caml-stubs.$(OBJEXT) \
 	guestfsd-cap.$(OBJEXT) guestfsd-checksum.$(OBJEXT) \
-	guestfsd-cleanups.$(OBJEXT) guestfsd-cmp.$(OBJEXT) \
-	guestfsd-command.$(OBJEXT) guestfsd-compress.$(OBJEXT) \
-	guestfsd-copy.$(OBJEXT) guestfsd-cpio.$(OBJEXT) \
-	guestfsd-cpmv.$(OBJEXT) guestfsd-daemon-c.$(OBJEXT) \
-	guestfsd-dd.$(OBJEXT) guestfsd-debug.$(OBJEXT) \
-	guestfsd-debug-bmap.$(OBJEXT) \
+	guestfsd-cleanups.$(OBJEXT) guestfsd-clevis-luks.$(OBJEXT) \
+	guestfsd-cmp.$(OBJEXT) guestfsd-command.$(OBJEXT) \
+	guestfsd-compress.$(OBJEXT) guestfsd-copy.$(OBJEXT) \
+	guestfsd-cpio.$(OBJEXT) guestfsd-cpmv.$(OBJEXT) \
+	guestfsd-daemon-c.$(OBJEXT) guestfsd-dd.$(OBJEXT) \
+	guestfsd-debug.$(OBJEXT) guestfsd-debug-bmap.$(OBJEXT) \
 	guestfsd-device-name-translation.$(OBJEXT) \
 	guestfsd-devsparts.$(OBJEXT) guestfsd-df.$(OBJEXT) \
 	guestfsd-dir.$(OBJEXT) guestfsd-dispatch.$(OBJEXT) \
@@ -300,8 +300,9 @@ am__depfiles_remade = ./$(DEPDIR)/daemon_utils_tests-command.Po \
 	./$(DEPDIR)/guestfsd-btrfs.Po \
 	./$(DEPDIR)/guestfsd-caml-stubs.Po ./$(DEPDIR)/guestfsd-cap.Po \
 	./$(DEPDIR)/guestfsd-checksum.Po \
-	./$(DEPDIR)/guestfsd-cleanups.Po ./$(DEPDIR)/guestfsd-cmp.Po \
-	./$(DEPDIR)/guestfsd-command.Po \
+	./$(DEPDIR)/guestfsd-cleanups.Po \
+	./$(DEPDIR)/guestfsd-clevis-luks.Po \
+	./$(DEPDIR)/guestfsd-cmp.Po ./$(DEPDIR)/guestfsd-command.Po \
 	./$(DEPDIR)/guestfsd-compress.Po ./$(DEPDIR)/guestfsd-copy.Po \
 	./$(DEPDIR)/guestfsd-cpio.Po ./$(DEPDIR)/guestfsd-cpmv.Po \
 	./$(DEPDIR)/guestfsd-daemon-c.Po ./$(DEPDIR)/guestfsd-dd.Po \
@@ -792,6 +793,7 @@ OCAMLOPT = @OCAMLOPT@
 OCAMLOPTDOTOPT = @OCAMLOPTDOTOPT@
 OCAMLVERSION = @OCAMLVERSION@
 OCAML_FLAGS = @OCAML_FLAGS@
+OCAML_PKG_augeas = @OCAML_PKG_augeas@
 OCAML_PKG_hivex = @OCAML_PKG_hivex@
 OCAML_RUNTIME_VARIANT_PIC_OPTION = @OCAML_RUNTIME_VARIANT_PIC_OPTION@
 OCAML_WARN_ERROR = @OCAML_WARN_ERROR@
@@ -1073,6 +1075,7 @@ guestfsd_SOURCES = \
 	cap.c \
 	checksum.c \
 	cleanups.c \
+	clevis-luks.c \
 	cmp.c \
 	command.c \
 	command.h \
@@ -1189,9 +1192,9 @@ guestfsd_SOURCES = \
 guestfsd_LDFLAGS = \
 	-L$(shell $(OCAMLC) -where) \
 	-L$(shell $(OCAMLFIND) query hivex) \
+	-L$(shell $(OCAMLFIND) query augeas) \
 	-L../common/mlutils \
 	-L../common/mlstdutils \
-	-L../bundled/ocaml-augeas \
 	-L../common/mlpcre
 
 guestfsd_LDADD = \
@@ -1329,8 +1332,7 @@ SOURCES_ML = \
 BOBJECTS = $(SOURCES_ML:.ml=.cmo)
 XOBJECTS = $(BOBJECTS:.cmo=.cmx)
 OCAMLPACKAGES = \
-	-package str,unix,hivex \
-	-I $(top_builddir)/bundled/ocaml-augeas \
+	-package str,unix,augeas,hivex \
 	-I $(top_builddir)/common/mlstdutils \
 	-I $(top_builddir)/common/mlutils \
 	-I $(top_builddir)/common/utils/.libs \
@@ -1389,7 +1391,6 @@ OCAMLLINKFLAGS = \
 	mlpcre.$(MLARCHIVE) \
 	mlstdutils.$(MLARCHIVE) \
 	mlcutils.$(MLARCHIVE) \
-	mlaugeas.$(MLARCHIVE) \
 	$(LINK_CUSTOM_OCAMLC_ONLY)
 
 daemon_utils_tests_DEPENDENCIES = \
@@ -1548,6 +1549,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/guestfsd-cap.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/guestfsd-checksum.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/guestfsd-cleanups.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/guestfsd-clevis-luks.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/guestfsd-cmp.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/guestfsd-command.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/guestfsd-compress.Po@am__quote@ # am--include-marker
@@ -1921,6 +1923,20 @@ guestfsd-cleanups.obj: cleanups.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='cleanups.c' object='guestfsd-cleanups.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(guestfsd_CPPFLAGS) $(CPPFLAGS) $(guestfsd_CFLAGS) $(CFLAGS) -c -o guestfsd-cleanups.obj `if test -f 'cleanups.c'; then $(CYGPATH_W) 'cleanups.c'; else $(CYGPATH_W) '$(srcdir)/cleanups.c'; fi`
+
+guestfsd-clevis-luks.o: clevis-luks.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(guestfsd_CPPFLAGS) $(CPPFLAGS) $(guestfsd_CFLAGS) $(CFLAGS) -MT guestfsd-clevis-luks.o -MD -MP -MF $(DEPDIR)/guestfsd-clevis-luks.Tpo -c -o guestfsd-clevis-luks.o `test -f 'clevis-luks.c' || echo '$(srcdir)/'`clevis-luks.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/guestfsd-clevis-luks.Tpo $(DEPDIR)/guestfsd-clevis-luks.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='clevis-luks.c' object='guestfsd-clevis-luks.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(guestfsd_CPPFLAGS) $(CPPFLAGS) $(guestfsd_CFLAGS) $(CFLAGS) -c -o guestfsd-clevis-luks.o `test -f 'clevis-luks.c' || echo '$(srcdir)/'`clevis-luks.c
+
+guestfsd-clevis-luks.obj: clevis-luks.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(guestfsd_CPPFLAGS) $(CPPFLAGS) $(guestfsd_CFLAGS) $(CFLAGS) -MT guestfsd-clevis-luks.obj -MD -MP -MF $(DEPDIR)/guestfsd-clevis-luks.Tpo -c -o guestfsd-clevis-luks.obj `if test -f 'clevis-luks.c'; then $(CYGPATH_W) 'clevis-luks.c'; else $(CYGPATH_W) '$(srcdir)/clevis-luks.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/guestfsd-clevis-luks.Tpo $(DEPDIR)/guestfsd-clevis-luks.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='clevis-luks.c' object='guestfsd-clevis-luks.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(guestfsd_CPPFLAGS) $(CPPFLAGS) $(guestfsd_CFLAGS) $(CFLAGS) -c -o guestfsd-clevis-luks.obj `if test -f 'clevis-luks.c'; then $(CYGPATH_W) 'clevis-luks.c'; else $(CYGPATH_W) '$(srcdir)/clevis-luks.c'; fi`
 
 guestfsd-cmp.o: cmp.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(guestfsd_CPPFLAGS) $(CPPFLAGS) $(guestfsd_CFLAGS) $(CFLAGS) -MT guestfsd-cmp.o -MD -MP -MF $(DEPDIR)/guestfsd-cmp.Tpo -c -o guestfsd-cmp.o `test -f 'cmp.c' || echo '$(srcdir)/'`cmp.c
@@ -3759,6 +3775,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/guestfsd-cap.Po
 	-rm -f ./$(DEPDIR)/guestfsd-checksum.Po
 	-rm -f ./$(DEPDIR)/guestfsd-cleanups.Po
+	-rm -f ./$(DEPDIR)/guestfsd-clevis-luks.Po
 	-rm -f ./$(DEPDIR)/guestfsd-cmp.Po
 	-rm -f ./$(DEPDIR)/guestfsd-command.Po
 	-rm -f ./$(DEPDIR)/guestfsd-compress.Po
@@ -3926,6 +3943,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/guestfsd-cap.Po
 	-rm -f ./$(DEPDIR)/guestfsd-checksum.Po
 	-rm -f ./$(DEPDIR)/guestfsd-cleanups.Po
+	-rm -f ./$(DEPDIR)/guestfsd-clevis-luks.Po
 	-rm -f ./$(DEPDIR)/guestfsd-cmp.Po
 	-rm -f ./$(DEPDIR)/guestfsd-command.Po
 	-rm -f ./$(DEPDIR)/guestfsd-compress.Po
@@ -4130,7 +4148,6 @@ camldaemon.o: $(OBJECTS)
 	$(OCAMLFIND) $(BEST) -output-obj -o $@ \
 	    $(OCAMLFLAGS) $(OCAMLPACKAGES) \
 	    -linkpkg \
-	    mlaugeas.$(MLARCHIVE) \
 	    mlpcre.$(MLARCHIVE) \
 	    mlstdutils.$(MLARCHIVE) \
 	    mlcutils.$(MLARCHIVE) \

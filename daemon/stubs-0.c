@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -369,6 +369,56 @@ btrfstune_enable_extended_inode_refs_stub (XDR *xdr_in)
   r = do_btrfstune_enable_extended_inode_refs (device);
   if (r == -1)
     /* do_btrfstune_enable_extended_inode_refs has already called reply_with_error */
+    return;
+
+  reply (NULL, NULL);
+}
+
+#ifdef HAVE_ATTRIBUTE_CLEANUP
+
+#define CLEANUP_XDR_FREE_CLEVIS_LUKS_UNLOCK_ARGS \
+    __attribute__((cleanup(cleanup_xdr_free_clevis_luks_unlock_args)))
+
+static void
+cleanup_xdr_free_clevis_luks_unlock_args (struct guestfs_clevis_luks_unlock_args *argsp)
+{
+  xdr_free ((xdrproc_t) xdr_guestfs_clevis_luks_unlock_args, (char *) argsp);
+}
+
+#else /* !HAVE_ATTRIBUTE_CLEANUP */
+#define CLEANUP_XDR_FREE_CLEVIS_LUKS_UNLOCK_ARGS
+#endif /* !HAVE_ATTRIBUTE_CLEANUP */
+
+void
+clevis_luks_unlock_stub (XDR *xdr_in)
+{
+  int r;
+  CLEANUP_XDR_FREE_CLEVIS_LUKS_UNLOCK_ARGS struct guestfs_clevis_luks_unlock_args args;
+  memset (&args, 0, sizeof args);
+  CLEANUP_FREE char *device = NULL;
+  const char *mapname;
+
+  /* The caller should have checked before calling this. */
+  if (! optgroup_clevisluks_available ()) {
+    reply_with_unavailable_feature ("clevisluks");
+    return;
+  }
+
+  if (optargs_bitmask != 0) {
+    reply_with_error ("header optargs_bitmask field must be passed as 0 for calls that don't take optional arguments");
+    return;
+  }
+
+  if (!xdr_guestfs_clevis_luks_unlock_args (xdr_in, &args)) {
+    reply_with_error ("daemon failed to decode procedure arguments");
+    return;
+  }
+  RESOLVE_DEVICE (args.device, device, false);
+  mapname = args.mapname;
+
+  r = do_clevis_luks_unlock (device, mapname);
+  if (r == -1)
+    /* do_clevis_luks_unlock has already called reply_with_error */
     return;
 
   reply (NULL, NULL);
@@ -1418,6 +1468,50 @@ internal_journal_get_stub (XDR *xdr_in)
     return;
 
   /* do_internal_journal_get has already sent a reply */
+}
+
+#ifdef HAVE_ATTRIBUTE_CLEANUP
+
+#define CLEANUP_XDR_FREE_INTERNAL_READDIR_ARGS \
+    __attribute__((cleanup(cleanup_xdr_free_internal_readdir_args)))
+
+static void
+cleanup_xdr_free_internal_readdir_args (struct guestfs_internal_readdir_args *argsp)
+{
+  xdr_free ((xdrproc_t) xdr_guestfs_internal_readdir_args, (char *) argsp);
+}
+
+#else /* !HAVE_ATTRIBUTE_CLEANUP */
+#define CLEANUP_XDR_FREE_INTERNAL_READDIR_ARGS
+#endif /* !HAVE_ATTRIBUTE_CLEANUP */
+
+void
+internal_readdir_stub (XDR *xdr_in)
+{
+  int r;
+  CLEANUP_XDR_FREE_INTERNAL_READDIR_ARGS struct guestfs_internal_readdir_args args;
+  memset (&args, 0, sizeof args);
+  const char *dir;
+
+  if (optargs_bitmask != 0) {
+    reply_with_error ("header optargs_bitmask field must be passed as 0 for calls that don't take optional arguments");
+    return;
+  }
+
+  if (!xdr_guestfs_internal_readdir_args (xdr_in, &args)) {
+    reply_with_error ("daemon failed to decode procedure arguments");
+    return;
+  }
+  dir = args.dir;
+  ABS_PATH (dir, false, return);
+
+  NEED_ROOT (false, return);
+  r = do_internal_readdir (dir);
+  if (r == -1)
+    /* do_internal_readdir has already called reply_with_error */
+    return;
+
+  /* do_internal_readdir has already sent a reply */
 }
 
 void

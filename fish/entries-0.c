@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -166,7 +166,8 @@ struct command_entry add_drive_ro_with_if_cmd_entry = {
           "\n"
           "DESCRIPTION\n"
           "    This is the same as \"add_drive_ro\" but it allows you to specify the QEMU\n"
-          "    interface emulation to use at run time.\n"
+          "    interface emulation to use at run time. Both the direct and the libvirt\n"
+          "    backends ignore \"iface\".\n"
           "\n"
           "    *This function is deprecated.* In new code, use the \"add-drive\" call\n"
           "    instead.\n"
@@ -283,6 +284,51 @@ struct command_entry btrfstune_enable_extended_inode_refs_cmd_entry = {
   .run = run_btrfstune_enable_extended_inode_refs
 };
 
+struct command_entry clevis_luks_unlock_cmd_entry = {
+  .name = "clevis-luks-unlock",
+  .help = "NAME\n"
+          "    clevis-luks-unlock - open an encrypted LUKS block device with Clevis and\n"
+          "    Tang\n"
+          "\n"
+          "SYNOPSIS\n"
+          "     clevis-luks-unlock device mapname\n"
+          "\n"
+          "DESCRIPTION\n"
+          "    This command opens a block device that has been encrypted according to\n"
+          "    the Linux Unified Key Setup (LUKS) standard, using network-bound disk\n"
+          "    encryption (NBDE).\n"
+          "\n"
+          "    \"device\" is the encrypted block device.\n"
+          "\n"
+          "    The appliance will connect to the Tang servers noted in the tree of\n"
+          "    Clevis pins that is bound to a keyslot of the LUKS header. The Clevis\n"
+          "    pin tree may comprise \"sss\" (redudancy) pins as internal nodes\n"
+          "    (optionally), and \"tang\" pins as leaves. \"tpm2\" pins are not supported.\n"
+          "    The appliance unlocks the encrypted block device by combining responses\n"
+          "    from the Tang servers with metadata from the LUKS header; there is no\n"
+          "    \"key\" parameter.\n"
+          "\n"
+          "    This command will fail if networking has not been enabled for the\n"
+          "    appliance. Refer to \"set_network\".\n"
+          "\n"
+          "    The command creates a new block device called /dev/mapper/mapname. Reads\n"
+          "    and writes to this block device are decrypted from and encrypted to the\n"
+          "    underlying \"device\" respectively. Close the decrypted block device with\n"
+          "    \"cryptsetup_close\".\n"
+          "\n"
+          "    \"mapname\" cannot be \"control\" because that name is reserved by\n"
+          "    device-mapper.\n"
+          "\n"
+          "    If this block device contains LVM volume groups, then calling \"lvm_scan\"\n"
+          "    with the \"activate\" parameter \"true\" will make them visible.\n"
+          "\n"
+          "    Use \"list_dm_devices\" to list all device mapper devices.\n"
+          "\n"
+          "",
+  .synopsis = "clevis-luks-unlock device mapname",
+  .run = run_clevis_luks_unlock
+};
+
 struct command_entry command_lines_cmd_entry = {
   .name = "command-lines",
   .help = "NAME\n"
@@ -385,6 +431,27 @@ struct command_entry cryptsetup_close_cmd_entry = {
           "",
   .synopsis = "cryptsetup-close device",
   .run = run_cryptsetup_close
+};
+
+struct command_entry device_name_cmd_entry = {
+  .name = "device-name",
+  .help = "NAME\n"
+          "    device-name - convert device index to name\n"
+          "\n"
+          "SYNOPSIS\n"
+          "     device-name index\n"
+          "\n"
+          "DESCRIPTION\n"
+          "    This function takes a device index and returns the device name. For\n"
+          "    example index 0 will return the string \"/dev/sda\".\n"
+          "\n"
+          "    The drive index must have been added to the handle.\n"
+          "\n"
+          "    See also \"list_devices\", \"part_to_dev\", \"device_index\".\n"
+          "\n"
+          "",
+  .synopsis = "device-name index",
+  .run = run_device_name
 };
 
 struct command_entry df_h_cmd_entry = {

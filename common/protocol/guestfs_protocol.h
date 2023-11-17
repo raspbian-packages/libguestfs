@@ -14,6 +14,9 @@ extern "C" {
 #endif
 
 #include <config.h>
+#ifndef HAVE_XDR_UINT64_T
+#define xdr_uint64_t xdr_int64_t
+#endif
 
 typedef char *guestfs_str;
 
@@ -1121,6 +1124,12 @@ struct guestfs_chown_args {
 };
 typedef struct guestfs_chown_args guestfs_chown_args;
 
+struct guestfs_clevis_luks_unlock_args {
+	char *device;
+	char *mapname;
+};
+typedef struct guestfs_clevis_luks_unlock_args guestfs_clevis_luks_unlock_args;
+
 struct guestfs_command_args {
 	struct {
 		u_int arguments_len;
@@ -1968,6 +1977,16 @@ struct guestfs_inspect_get_arch_ret {
 };
 typedef struct guestfs_inspect_get_arch_ret guestfs_inspect_get_arch_ret;
 
+struct guestfs_inspect_get_build_id_args {
+	char *root;
+};
+typedef struct guestfs_inspect_get_build_id_args guestfs_inspect_get_build_id_args;
+
+struct guestfs_inspect_get_build_id_ret {
+	char *buildid;
+};
+typedef struct guestfs_inspect_get_build_id_ret guestfs_inspect_get_build_id_ret;
+
 struct guestfs_inspect_get_distro_args {
 	char *root;
 };
@@ -2256,6 +2275,11 @@ struct guestfs_internal_parse_mountable_ret {
 	guestfs_int_internal_mountable mountable;
 };
 typedef struct guestfs_internal_parse_mountable_ret guestfs_internal_parse_mountable_ret;
+
+struct guestfs_internal_readdir_args {
+	char *dir;
+};
+typedef struct guestfs_internal_readdir_args guestfs_internal_readdir_args;
 
 struct guestfs_internal_readlinklist_args {
 	char *path;
@@ -3617,16 +3641,6 @@ struct guestfs_pwrite_device_ret {
 };
 typedef struct guestfs_pwrite_device_ret guestfs_pwrite_device_ret;
 
-struct guestfs_readdir_args {
-	char *dir;
-};
-typedef struct guestfs_readdir_args guestfs_readdir_args;
-
-struct guestfs_readdir_ret {
-	guestfs_int_dirent_list entries;
-};
-typedef struct guestfs_readdir_ret guestfs_readdir_ret;
-
 struct guestfs_readlink_args {
 	char *path;
 };
@@ -4583,6 +4597,7 @@ enum guestfs_procedure {
 	GUESTFS_PROC_CHECKSUMS_OUT = 244,
 	GUESTFS_PROC_CHMOD = 34,
 	GUESTFS_PROC_CHOWN = 35,
+	GUESTFS_PROC_CLEVIS_LUKS_UNLOCK = 512,
 	GUESTFS_PROC_COMMAND = 50,
 	GUESTFS_PROC_COMMAND_LINES = 51,
 	GUESTFS_PROC_COMPRESS_DEVICE_OUT = 292,
@@ -4678,6 +4693,7 @@ enum guestfs_procedure {
 	GUESTFS_PROC_INOTIFY_READ = 182,
 	GUESTFS_PROC_INOTIFY_RM_WATCH = 181,
 	GUESTFS_PROC_INSPECT_GET_ARCH = 491,
+	GUESTFS_PROC_INSPECT_GET_BUILD_ID = 513,
 	GUESTFS_PROC_INSPECT_GET_DISTRO = 484,
 	GUESTFS_PROC_INSPECT_GET_DRIVE_MAPPINGS = 502,
 	GUESTFS_PROC_INSPECT_GET_FILESYSTEMS = 501,
@@ -4710,6 +4726,7 @@ enum guestfs_procedure {
 	GUESTFS_PROC_INTERNAL_LSTATNSLIST = 423,
 	GUESTFS_PROC_INTERNAL_LXATTRLIST = 205,
 	GUESTFS_PROC_INTERNAL_PARSE_MOUNTABLE = 396,
+	GUESTFS_PROC_INTERNAL_READDIR = 511,
 	GUESTFS_PROC_INTERNAL_READLINKLIST = 206,
 	GUESTFS_PROC_INTERNAL_RHBZ914931 = 397,
 	GUESTFS_PROC_INTERNAL_UPLOAD = 413,
@@ -4878,7 +4895,6 @@ enum guestfs_procedure {
 	GUESTFS_PROC_PVUUID = 222,
 	GUESTFS_PROC_PWRITE = 247,
 	GUESTFS_PROC_PWRITE_DEVICE = 275,
-	GUESTFS_PROC_READDIR = 138,
 	GUESTFS_PROC_READLINK = 168,
 	GUESTFS_PROC_REALPATH = 163,
 	GUESTFS_PROC_REMOUNT = 402,
@@ -4993,7 +5009,7 @@ enum guestfs_procedure {
 	GUESTFS_PROC_ZGREPI = 160,
 };
 typedef enum guestfs_procedure guestfs_procedure;
-#define GUESTFS_MAX_PROC_NR 510
+#define GUESTFS_MAX_PROC_NR 513
 #define GUESTFS_MESSAGE_MAX 4194304
 #define GUESTFS_PROGRAM 0x2000F5F5
 #define GUESTFS_PROTOCOL_VERSION 4
@@ -5216,6 +5232,7 @@ extern  bool_t xdr_guestfs_checksum_device_ret (XDR *, guestfs_checksum_device_r
 extern  bool_t xdr_guestfs_checksums_out_args (XDR *, guestfs_checksums_out_args*);
 extern  bool_t xdr_guestfs_chmod_args (XDR *, guestfs_chmod_args*);
 extern  bool_t xdr_guestfs_chown_args (XDR *, guestfs_chown_args*);
+extern  bool_t xdr_guestfs_clevis_luks_unlock_args (XDR *, guestfs_clevis_luks_unlock_args*);
 extern  bool_t xdr_guestfs_command_args (XDR *, guestfs_command_args*);
 extern  bool_t xdr_guestfs_command_ret (XDR *, guestfs_command_ret*);
 extern  bool_t xdr_guestfs_command_lines_args (XDR *, guestfs_command_lines_args*);
@@ -5355,6 +5372,8 @@ extern  bool_t xdr_guestfs_inotify_read_ret (XDR *, guestfs_inotify_read_ret*);
 extern  bool_t xdr_guestfs_inotify_rm_watch_args (XDR *, guestfs_inotify_rm_watch_args*);
 extern  bool_t xdr_guestfs_inspect_get_arch_args (XDR *, guestfs_inspect_get_arch_args*);
 extern  bool_t xdr_guestfs_inspect_get_arch_ret (XDR *, guestfs_inspect_get_arch_ret*);
+extern  bool_t xdr_guestfs_inspect_get_build_id_args (XDR *, guestfs_inspect_get_build_id_args*);
+extern  bool_t xdr_guestfs_inspect_get_build_id_ret (XDR *, guestfs_inspect_get_build_id_ret*);
 extern  bool_t xdr_guestfs_inspect_get_distro_args (XDR *, guestfs_inspect_get_distro_args*);
 extern  bool_t xdr_guestfs_inspect_get_distro_ret (XDR *, guestfs_inspect_get_distro_ret*);
 extern  bool_t xdr_guestfs_inspect_get_drive_mappings_args (XDR *, guestfs_inspect_get_drive_mappings_args*);
@@ -5408,6 +5427,7 @@ extern  bool_t xdr_guestfs_internal_lxattrlist_args (XDR *, guestfs_internal_lxa
 extern  bool_t xdr_guestfs_internal_lxattrlist_ret (XDR *, guestfs_internal_lxattrlist_ret*);
 extern  bool_t xdr_guestfs_internal_parse_mountable_args (XDR *, guestfs_internal_parse_mountable_args*);
 extern  bool_t xdr_guestfs_internal_parse_mountable_ret (XDR *, guestfs_internal_parse_mountable_ret*);
+extern  bool_t xdr_guestfs_internal_readdir_args (XDR *, guestfs_internal_readdir_args*);
 extern  bool_t xdr_guestfs_internal_readlinklist_args (XDR *, guestfs_internal_readlinklist_args*);
 extern  bool_t xdr_guestfs_internal_readlinklist_ret (XDR *, guestfs_internal_readlinklist_ret*);
 extern  bool_t xdr_guestfs_internal_rhbz914931_args (XDR *, guestfs_internal_rhbz914931_args*);
@@ -5621,8 +5641,6 @@ extern  bool_t xdr_guestfs_pwrite_args (XDR *, guestfs_pwrite_args*);
 extern  bool_t xdr_guestfs_pwrite_ret (XDR *, guestfs_pwrite_ret*);
 extern  bool_t xdr_guestfs_pwrite_device_args (XDR *, guestfs_pwrite_device_args*);
 extern  bool_t xdr_guestfs_pwrite_device_ret (XDR *, guestfs_pwrite_device_ret*);
-extern  bool_t xdr_guestfs_readdir_args (XDR *, guestfs_readdir_args*);
-extern  bool_t xdr_guestfs_readdir_ret (XDR *, guestfs_readdir_ret*);
 extern  bool_t xdr_guestfs_readlink_args (XDR *, guestfs_readlink_args*);
 extern  bool_t xdr_guestfs_readlink_ret (XDR *, guestfs_readlink_ret*);
 extern  bool_t xdr_guestfs_realpath_args (XDR *, guestfs_realpath_args*);
@@ -5936,6 +5954,7 @@ extern bool_t xdr_guestfs_checksum_device_ret ();
 extern bool_t xdr_guestfs_checksums_out_args ();
 extern bool_t xdr_guestfs_chmod_args ();
 extern bool_t xdr_guestfs_chown_args ();
+extern bool_t xdr_guestfs_clevis_luks_unlock_args ();
 extern bool_t xdr_guestfs_command_args ();
 extern bool_t xdr_guestfs_command_ret ();
 extern bool_t xdr_guestfs_command_lines_args ();
@@ -6075,6 +6094,8 @@ extern bool_t xdr_guestfs_inotify_read_ret ();
 extern bool_t xdr_guestfs_inotify_rm_watch_args ();
 extern bool_t xdr_guestfs_inspect_get_arch_args ();
 extern bool_t xdr_guestfs_inspect_get_arch_ret ();
+extern bool_t xdr_guestfs_inspect_get_build_id_args ();
+extern bool_t xdr_guestfs_inspect_get_build_id_ret ();
 extern bool_t xdr_guestfs_inspect_get_distro_args ();
 extern bool_t xdr_guestfs_inspect_get_distro_ret ();
 extern bool_t xdr_guestfs_inspect_get_drive_mappings_args ();
@@ -6128,6 +6149,7 @@ extern bool_t xdr_guestfs_internal_lxattrlist_args ();
 extern bool_t xdr_guestfs_internal_lxattrlist_ret ();
 extern bool_t xdr_guestfs_internal_parse_mountable_args ();
 extern bool_t xdr_guestfs_internal_parse_mountable_ret ();
+extern bool_t xdr_guestfs_internal_readdir_args ();
 extern bool_t xdr_guestfs_internal_readlinklist_args ();
 extern bool_t xdr_guestfs_internal_readlinklist_ret ();
 extern bool_t xdr_guestfs_internal_rhbz914931_args ();
@@ -6341,8 +6363,6 @@ extern bool_t xdr_guestfs_pwrite_args ();
 extern bool_t xdr_guestfs_pwrite_ret ();
 extern bool_t xdr_guestfs_pwrite_device_args ();
 extern bool_t xdr_guestfs_pwrite_device_ret ();
-extern bool_t xdr_guestfs_readdir_args ();
-extern bool_t xdr_guestfs_readdir_ret ();
 extern bool_t xdr_guestfs_readlink_args ();
 extern bool_t xdr_guestfs_readlink_ret ();
 extern bool_t xdr_guestfs_realpath_args ();

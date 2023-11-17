@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,6 +28,10 @@
  */
 
 %#include <config.h>
+
+%#ifndef HAVE_XDR_UINT64_T
+%#define xdr_uint64_t xdr_int64_t
+%#endif
 
 /* This has to be defined to get around a limitation in Sun's rpcgen. */
 typedef string guestfs_str<>;
@@ -894,6 +898,11 @@ struct guestfs_chown_args {
   string path<>;
 };
 
+struct guestfs_clevis_luks_unlock_args {
+  string device<>;
+  string mapname<>;
+};
+
 struct guestfs_command_args {
   guestfs_str arguments<>;
 };
@@ -1542,6 +1551,14 @@ struct guestfs_inspect_get_arch_ret {
   string arch<>;
 };
 
+struct guestfs_inspect_get_build_id_args {
+  string root<>;
+};
+
+struct guestfs_inspect_get_build_id_ret {
+  string buildid<>;
+};
+
 struct guestfs_inspect_get_distro_args {
   string root<>;
 };
@@ -1755,6 +1772,10 @@ struct guestfs_internal_parse_mountable_args {
 
 struct guestfs_internal_parse_mountable_ret {
   guestfs_int_internal_mountable mountable;
+};
+
+struct guestfs_internal_readdir_args {
+  string dir<>;
 };
 
 struct guestfs_internal_readlinklist_args {
@@ -2805,14 +2826,6 @@ struct guestfs_pwrite_device_ret {
   int nbytes;
 };
 
-struct guestfs_readdir_args {
-  string dir<>;
-};
-
-struct guestfs_readdir_ret {
-  guestfs_int_dirent_list entries;
-};
-
 struct guestfs_readlink_args {
   string path<>;
 };
@@ -3566,6 +3579,7 @@ enum guestfs_procedure {
   GUESTFS_PROC_CHECKSUMS_OUT = 244,
   GUESTFS_PROC_CHMOD = 34,
   GUESTFS_PROC_CHOWN = 35,
+  GUESTFS_PROC_CLEVIS_LUKS_UNLOCK = 512,
   GUESTFS_PROC_COMMAND = 50,
   GUESTFS_PROC_COMMAND_LINES = 51,
   GUESTFS_PROC_COMPRESS_DEVICE_OUT = 292,
@@ -3661,6 +3675,7 @@ enum guestfs_procedure {
   GUESTFS_PROC_INOTIFY_READ = 182,
   GUESTFS_PROC_INOTIFY_RM_WATCH = 181,
   GUESTFS_PROC_INSPECT_GET_ARCH = 491,
+  GUESTFS_PROC_INSPECT_GET_BUILD_ID = 513,
   GUESTFS_PROC_INSPECT_GET_DISTRO = 484,
   GUESTFS_PROC_INSPECT_GET_DRIVE_MAPPINGS = 502,
   GUESTFS_PROC_INSPECT_GET_FILESYSTEMS = 501,
@@ -3693,6 +3708,7 @@ enum guestfs_procedure {
   GUESTFS_PROC_INTERNAL_LSTATNSLIST = 423,
   GUESTFS_PROC_INTERNAL_LXATTRLIST = 205,
   GUESTFS_PROC_INTERNAL_PARSE_MOUNTABLE = 396,
+  GUESTFS_PROC_INTERNAL_READDIR = 511,
   GUESTFS_PROC_INTERNAL_READLINKLIST = 206,
   GUESTFS_PROC_INTERNAL_RHBZ914931 = 397,
   GUESTFS_PROC_INTERNAL_UPLOAD = 413,
@@ -3861,7 +3877,6 @@ enum guestfs_procedure {
   GUESTFS_PROC_PVUUID = 222,
   GUESTFS_PROC_PWRITE = 247,
   GUESTFS_PROC_PWRITE_DEVICE = 275,
-  GUESTFS_PROC_READDIR = 138,
   GUESTFS_PROC_READLINK = 168,
   GUESTFS_PROC_REALPATH = 163,
   GUESTFS_PROC_REMOUNT = 402,
@@ -3976,7 +3991,7 @@ enum guestfs_procedure {
   GUESTFS_PROC_ZGREPI = 160
 };
 
-const GUESTFS_MAX_PROC_NR = 510;
+const GUESTFS_MAX_PROC_NR = 513;
 
 /* The remote procedure call protocol. */
 

@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -111,6 +111,7 @@ const char *function_names[] = {
   [244] = "checksums_out",
   [34] = "chmod",
   [35] = "chown",
+  [512] = "clevis_luks_unlock",
   [50] = "command",
   [51] = "command_lines",
   [292] = "compress_device_out",
@@ -206,6 +207,7 @@ const char *function_names[] = {
   [182] = "inotify_read",
   [181] = "inotify_rm_watch",
   [491] = "inspect_get_arch",
+  [513] = "inspect_get_build_id",
   [484] = "inspect_get_distro",
   [502] = "inspect_get_drive_mappings",
   [501] = "inspect_get_filesystems",
@@ -238,6 +240,7 @@ const char *function_names[] = {
   [423] = "internal_lstatnslist",
   [205] = "internal_lxattrlist",
   [396] = "internal_parse_mountable",
+  [511] = "internal_readdir",
   [206] = "internal_readlinklist",
   [397] = "internal_rhbz914931",
   [413] = "internal_upload",
@@ -406,7 +409,6 @@ const char *function_names[] = {
   [222] = "pvuuid",
   [247] = "pwrite",
   [275] = "pwrite_device",
-  [138] = "readdir",
   [168] = "readlink",
   [163] = "realpath",
   [402] = "remount",

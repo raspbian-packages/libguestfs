@@ -4,7 +4,7 @@
 %           and from the code in the generator/ subdirectory.
 %  ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 % 
-%  Copyright (C) 2009-2020 Red Hat Inc.
+%  Copyright (C) 2009-2023 Red Hat Inc.
 % 
 %  This library is free software; you can redistribute it and/or
 %  modify it under the terms of the GNU Lesser General Public
@@ -124,6 +124,7 @@
 -export([chmod/3]).
 -export([chown/4]).
 -export([clear_backend_setting/2]).
+-export([clevis_luks_unlock/3]).
 -export([command/2]).
 -export([command_lines/2]).
 -export([compress_device_out/4, compress_device_out/5]).
@@ -148,6 +149,7 @@
 -export([debug_drives/1]).
 -export([debug_upload/4]).
 -export([device_index/2]).
+-export([device_name/2]).
 -export([df/1]).
 -export([df_h/1]).
 -export([disk_create/4, disk_create/5]).
@@ -263,6 +265,7 @@
 -export([inotify_read/1]).
 -export([inotify_rm_watch/2]).
 -export([inspect_get_arch/2]).
+-export([inspect_get_build_id/2]).
 -export([inspect_get_distro/2]).
 -export([inspect_get_drive_mappings/2]).
 -export([inspect_get_filesystems/2]).
@@ -1024,6 +1027,9 @@ chown(G, Owner, Group, Path) ->
 clear_backend_setting(G, Name) ->
   call_port(G, {clear_backend_setting, Name}).
 
+clevis_luks_unlock(G, Device, Mapname) ->
+  call_port(G, {clevis_luks_unlock, Device, Mapname}).
+
 command(G, Arguments) ->
   call_port(G, {command, Arguments}).
 
@@ -1113,6 +1119,9 @@ debug_upload(G, Filename, Tmpname, Mode) ->
 
 device_index(G, Device) ->
   call_port(G, {device_index, Device}).
+
+device_name(G, Index) ->
+  call_port(G, {device_name, Index}).
 
 df(G) ->
   call_port(G, {df}).
@@ -1474,6 +1483,9 @@ inotify_rm_watch(G, Wd) ->
 
 inspect_get_arch(G, Root) ->
   call_port(G, {inspect_get_arch, Root}).
+
+inspect_get_build_id(G, Root) ->
+  call_port(G, {inspect_get_build_id, Root}).
 
 inspect_get_distro(G, Root) ->
   call_port(G, {inspect_get_distro, Root}).

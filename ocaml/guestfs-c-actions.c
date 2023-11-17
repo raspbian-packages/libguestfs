@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -819,25 +819,6 @@ copy_yara_detection (const struct guestfs_yara_detection *yara_detection)
 }
 
 static value
-copy_lvm_lv_list (const struct guestfs_lvm_lv_list *lvm_lvs)
-{
-  CAMLparam0 ();
-  CAMLlocal2 (rv, v);
-  unsigned int i;
-
-  if (lvm_lvs->len == 0)
-    CAMLreturn (Atom (0));
-  else {
-    rv = caml_alloc (lvm_lvs->len, 0);
-    for (i = 0; i < lvm_lvs->len; ++i) {
-      v = copy_lvm_lv (&lvm_lvs->val[i]);
-      Store_field (rv, i, v);
-    }
-    CAMLreturn (rv);
-  }
-}
-
-static value
 copy_dirent_list (const struct guestfs_dirent_list *dirents)
 {
   CAMLparam0 ();
@@ -850,6 +831,25 @@ copy_dirent_list (const struct guestfs_dirent_list *dirents)
     rv = caml_alloc (dirents->len, 0);
     for (i = 0; i < dirents->len; ++i) {
       v = copy_dirent (&dirents->val[i]);
+      Store_field (rv, i, v);
+    }
+    CAMLreturn (rv);
+  }
+}
+
+static value
+copy_lvm_lv_list (const struct guestfs_lvm_lv_list *lvm_lvs)
+{
+  CAMLparam0 ();
+  CAMLlocal2 (rv, v);
+  unsigned int i;
+
+  if (lvm_lvs->len == 0)
+    CAMLreturn (Atom (0));
+  else {
+    rv = caml_alloc (lvm_lvs->len, 0);
+    for (i = 0; i < lvm_lvs->len; ++i) {
+      v = copy_lvm_lv (&lvm_lvs->val[i]);
       Store_field (rv, i, v);
     }
     CAMLreturn (rv);
@@ -4791,6 +4791,43 @@ guestfs_int_ocaml_clear_backend_setting (value gv, value namev)
 }
 
 /* Automatically generated wrapper for function
+ * val clevis_luks_unlock : t -> string -> string -> unit
+ */
+
+/* Emit prototype to appease gcc's -Wmissing-prototypes. */
+value guestfs_int_ocaml_clevis_luks_unlock (value gv, value devicev, value mapnamev);
+
+value
+guestfs_int_ocaml_clevis_luks_unlock (value gv, value devicev, value mapnamev)
+{
+  CAMLparam3 (gv, devicev, mapnamev);
+  CAMLlocal1 (rv);
+
+  guestfs_h *g = Guestfs_val (gv);
+  if (g == NULL)
+    guestfs_int_ocaml_raise_closed ("clevis_luks_unlock");
+
+  char *device;
+  device = strdup (String_val (devicev));
+  if (device == NULL) caml_raise_out_of_memory ();
+  char *mapname;
+  mapname = strdup (String_val (mapnamev));
+  if (mapname == NULL) caml_raise_out_of_memory ();
+  int r;
+
+  caml_enter_blocking_section ();
+  r = guestfs_clevis_luks_unlock (g, device, mapname);
+  caml_leave_blocking_section ();
+  free (device);
+  free (mapname);
+  if (r == -1)
+    guestfs_int_ocaml_raise_error (g, "clevis_luks_unlock");
+
+  rv = Val_unit;
+  CAMLreturn (rv);
+}
+
+/* Automatically generated wrapper for function
  * val command : t -> string array -> string
  */
 
@@ -5867,6 +5904,37 @@ guestfs_int_ocaml_device_index (value gv, value devicev)
     guestfs_int_ocaml_raise_error (g, "device_index");
 
   rv = Val_int (r);
+  CAMLreturn (rv);
+}
+
+/* Automatically generated wrapper for function
+ * val device_name : t -> int -> string
+ */
+
+/* Emit prototype to appease gcc's -Wmissing-prototypes. */
+value guestfs_int_ocaml_device_name (value gv, value indexv);
+
+value
+guestfs_int_ocaml_device_name (value gv, value indexv)
+{
+  CAMLparam2 (gv, indexv);
+  CAMLlocal1 (rv);
+
+  guestfs_h *g = Guestfs_val (gv);
+  if (g == NULL)
+    guestfs_int_ocaml_raise_closed ("device_name");
+
+  int index = Int_val (indexv);
+  char *r;
+
+  caml_enter_blocking_section ();
+  r = guestfs_device_name (g, index);
+  caml_leave_blocking_section ();
+  if (r == NULL)
+    guestfs_int_ocaml_raise_error (g, "device_name");
+
+  rv = caml_copy_string (r);
+  free (r);
   CAMLreturn (rv);
 }
 
@@ -9677,6 +9745,40 @@ guestfs_int_ocaml_inspect_get_arch (value gv, value rootv)
   free (root);
   if (r == NULL)
     guestfs_int_ocaml_raise_error (g, "inspect_get_arch");
+
+  rv = caml_copy_string (r);
+  free (r);
+  CAMLreturn (rv);
+}
+
+/* Automatically generated wrapper for function
+ * val inspect_get_build_id : t -> string -> string
+ */
+
+/* Emit prototype to appease gcc's -Wmissing-prototypes. */
+value guestfs_int_ocaml_inspect_get_build_id (value gv, value rootv);
+
+value
+guestfs_int_ocaml_inspect_get_build_id (value gv, value rootv)
+{
+  CAMLparam2 (gv, rootv);
+  CAMLlocal1 (rv);
+
+  guestfs_h *g = Guestfs_val (gv);
+  if (g == NULL)
+    guestfs_int_ocaml_raise_closed ("inspect_get_build_id");
+
+  char *root;
+  root = strdup (String_val (rootv));
+  if (root == NULL) caml_raise_out_of_memory ();
+  char *r;
+
+  caml_enter_blocking_section ();
+  r = guestfs_inspect_get_build_id (g, root);
+  caml_leave_blocking_section ();
+  free (root);
+  if (r == NULL)
+    guestfs_int_ocaml_raise_error (g, "inspect_get_build_id");
 
   rv = caml_copy_string (r);
   free (r);

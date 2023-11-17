@@ -1,5 +1,5 @@
 (* Parse isoinfo or xorriso output.
- * Copyright (C) 2009-2021 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ let iso_parse_datetime str =
     let old_TZ = try Some (getenv "TZ") with Not_found -> None in
     putenv "TZ" "UTC";
     let r = Int64.of_float (fst (mktime tm)) in
-    Option.may (putenv "TZ") old_TZ;
+    Option.iter (putenv "TZ") old_TZ;
 
     (* The final byte is a time zone offset from GMT.
      *

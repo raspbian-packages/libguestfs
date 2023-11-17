@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -137,6 +137,7 @@ extern struct command_entry checksums_out_cmd_entry;
 extern struct command_entry chmod_cmd_entry;
 extern struct command_entry chown_cmd_entry;
 extern struct command_entry clear_backend_setting_cmd_entry;
+extern struct command_entry clevis_luks_unlock_cmd_entry;
 extern struct command_entry command_cmd_entry;
 extern struct command_entry command_lines_cmd_entry;
 extern struct command_entry compress_device_out_cmd_entry;
@@ -162,6 +163,7 @@ extern struct command_entry debug_drives_cmd_entry;
 extern struct command_entry debug_upload_cmd_entry;
 extern struct command_entry delete_event_cmd_entry;
 extern struct command_entry device_index_cmd_entry;
+extern struct command_entry device_name_cmd_entry;
 extern struct command_entry df_cmd_entry;
 extern struct command_entry df_h_cmd_entry;
 extern struct command_entry disk_create_cmd_entry;
@@ -280,6 +282,7 @@ extern struct command_entry inotify_init_cmd_entry;
 extern struct command_entry inotify_read_cmd_entry;
 extern struct command_entry inotify_rm_watch_cmd_entry;
 extern struct command_entry inspect_get_arch_cmd_entry;
+extern struct command_entry inspect_get_build_id_cmd_entry;
 extern struct command_entry inspect_get_distro_cmd_entry;
 extern struct command_entry inspect_get_drive_mappings_cmd_entry;
 extern struct command_entry inspect_get_filesystems_cmd_entry;
@@ -843,6 +846,8 @@ chmod, &chmod_cmd_entry
 chown, &chown_cmd_entry
 clear_backend_setting, &clear_backend_setting_cmd_entry
 clear-backend-setting, &clear_backend_setting_cmd_entry
+clevis_luks_unlock, &clevis_luks_unlock_cmd_entry
+clevis-luks-unlock, &clevis_luks_unlock_cmd_entry
 command, &command_cmd_entry
 command_lines, &command_lines_cmd_entry
 command-lines, &command_lines_cmd_entry
@@ -888,6 +893,8 @@ delete_event, &delete_event_cmd_entry
 delete-event, &delete_event_cmd_entry
 device_index, &device_index_cmd_entry
 device-index, &device_index_cmd_entry
+device_name, &device_name_cmd_entry
+device-name, &device_name_cmd_entry
 df, &df_cmd_entry
 df_h, &df_h_cmd_entry
 df-h, &df_h_cmd_entry
@@ -1095,6 +1102,8 @@ inotify_rm_watch, &inotify_rm_watch_cmd_entry
 inotify-rm-watch, &inotify_rm_watch_cmd_entry
 inspect_get_arch, &inspect_get_arch_cmd_entry
 inspect-get-arch, &inspect_get_arch_cmd_entry
+inspect_get_build_id, &inspect_get_build_id_cmd_entry
+inspect-get-build-id, &inspect_get_build_id_cmd_entry
 inspect_get_distro, &inspect_get_distro_cmd_entry
 inspect-get-distro, &inspect_get_distro_cmd_entry
 inspect_get_drive_mappings, &inspect_get_drive_mappings_cmd_entry

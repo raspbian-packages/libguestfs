@@ -312,66 +312,6 @@ L<http://rwmj.wordpress.com/2013/02/25/multiple-libguestfs-appliances-in-paralle
 
 Часові позначки вказано у секундах (з нарощуванням щодо попереднього рядка).
 
-=head2 Докладний таймінг з використанням SystemTap
-
-Для отримання докладної інформації щодо часових параметрів обробки у програмах libguestfs можете скористатися SystemTap (L<stap(1)>).
-
-Збережіть такий скрипт із назвою F<time.stap>:
-
- global last;
- 
- function display_time () {
-       now = gettimeofday_us ();
-       delta = 0;
-       if (last > 0)
-             delta = now - last;
-       last = now;
- 
-       printf ("%d (+%d):", now, delta);
- }
- 
- probe begin {
-       last = 0;
-       printf ("ready\n");
- }
- 
- /* Показати усі виклики статичних маркерів. */
- probe process("/usr/lib*/libguestfs.so.0")
-           .provider("guestfs").mark("*") ? {
-       display_time();
-       printf ("\t%s %s\n", $$name, $$parms);
- }
- 
- /* Показати усі виклики функцій guestfs_*. */
- probe process("/usr/lib*/libguestfs.so.0")
-           .function("guestfs_[a-z]*") ? {
-       display_time();
-       printf ("\t%s %s\n", probefunc(), $$parms);
- }
-
-Запустіть його у одному вікні від імені користувача root:
-
- # stap time.stap
- ready
-
-Скрипт виведе рядок «ready», коли SystemTap завантажить програму. Запустіть вашу програму libguestfs, guestfish або програму засобів віртуалізації у іншому вікні. Приклад:
-
- $ guestfish -a /dev/null run
-
-У вікні stap ви побачити багато даних, зокрема, буде показано дані щодо часу, потрібного на виконання кожного з кроків (у форматі кількості мілісекунд у дужках). Приклад:
-
- xxxx (+0):	guestfs_create 
- xxxx (+29):	guestfs_set_pgroup g=0x17a9de0 pgroup=0x1
- xxxx (+9):	guestfs_add_drive_opts_argv g=0x17a9de0 [...]
- xxxx (+8):	guestfs_int_safe_strdup g=0x17a9de0 str=0x7f8a153bed5d
- xxxx (+19):	guestfs_int_safe_malloc g=0x17a9de0 nbytes=0x38
- xxxx (+5):	guestfs_int_safe_strdup g=0x17a9de0 str=0x17a9f60
- xxxx (+10):	guestfs_launch g=0x17a9de0
- xxxx (+4):	launch_start 
- [etc]
-
-Вам слід звернутися до початкового коду libguestfs або навіть трохи змінити його, щоб повністю розібратися у виведених даних.
-
 =head2 Докладна діагностика з використанням gdb
 
 Ви можете керувати BIOS або ядром базової системи за допомогою gdb. Якщо ви добре знаєтеся на процесі діагностики за допомогою gdb, це може бути корисним інструментом для виявлення і усування регресій у процесі завантаження.
@@ -427,5 +367,5 @@ Richard W.M. Jones (C<rjones at redhat dot com>)
 
 =head1 АВТОРСЬКІ ПРАВА
 
-© Red Hat Inc., 2012–2020
+Copyright (C) 2012-2023 Red Hat Inc.
 

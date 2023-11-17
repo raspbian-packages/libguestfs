@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -506,6 +506,7 @@ external checksums_out : t -> string -> string -> string -> unit = "guestfs_int_
 external chmod : t -> int -> string -> unit = "guestfs_int_ocaml_chmod"
 external chown : t -> int -> int -> string -> unit = "guestfs_int_ocaml_chown"
 external clear_backend_setting : t -> string -> int = "guestfs_int_ocaml_clear_backend_setting"
+external clevis_luks_unlock : t -> string -> string -> unit = "guestfs_int_ocaml_clevis_luks_unlock"
 external command : t -> string array -> string = "guestfs_int_ocaml_command"
 external command_lines : t -> string array -> string array = "guestfs_int_ocaml_command_lines"
 external compress_device_out : t -> ?level:int -> string -> string -> string -> unit = "guestfs_int_ocaml_compress_device_out"
@@ -530,6 +531,7 @@ external debug : t -> string -> string array -> string = "guestfs_int_ocaml_debu
 external debug_drives : t -> string array = "guestfs_int_ocaml_debug_drives"
 external debug_upload : t -> string -> string -> int -> unit = "guestfs_int_ocaml_debug_upload"
 external device_index : t -> string -> int = "guestfs_int_ocaml_device_index"
+external device_name : t -> int -> string = "guestfs_int_ocaml_device_name"
 external df : t -> string = "guestfs_int_ocaml_df"
 external df_h : t -> string = "guestfs_int_ocaml_df_h"
 external disk_create : t -> ?backingfile:string -> ?backingformat:string -> ?preallocation:string -> ?compat:string -> ?clustersize:int -> string -> string -> int64 -> unit = "guestfs_int_ocaml_disk_create_byte" "guestfs_int_ocaml_disk_create"
@@ -645,6 +647,7 @@ external inotify_init : t -> int -> unit = "guestfs_int_ocaml_inotify_init"
 external inotify_read : t -> inotify_event array = "guestfs_int_ocaml_inotify_read"
 external inotify_rm_watch : t -> int -> unit = "guestfs_int_ocaml_inotify_rm_watch"
 external inspect_get_arch : t -> string -> string = "guestfs_int_ocaml_inspect_get_arch"
+external inspect_get_build_id : t -> string -> string = "guestfs_int_ocaml_inspect_get_build_id"
 external inspect_get_distro : t -> string -> string = "guestfs_int_ocaml_inspect_get_distro"
 external inspect_get_drive_mappings : t -> string -> (string * string) list = "guestfs_int_ocaml_inspect_get_drive_mappings"
 external inspect_get_filesystems : t -> string -> string array = "guestfs_int_ocaml_inspect_get_filesystems"
@@ -1151,6 +1154,7 @@ class guestfs ?environment ?close_on_exit () =
     method chmod = chmod g
     method chown = chown g
     method clear_backend_setting = clear_backend_setting g
+    method clevis_luks_unlock = clevis_luks_unlock g
     method command = command g
     method command_lines = command_lines g
     method compress_device_out = compress_device_out g
@@ -1175,6 +1179,7 @@ class guestfs ?environment ?close_on_exit () =
     method debug_drives () = debug_drives g
     method debug_upload = debug_upload g
     method device_index = device_index g
+    method device_name = device_name g
     method df () = df g
     method df_h () = df_h g
     method disk_create = disk_create g
@@ -1290,6 +1295,7 @@ class guestfs ?environment ?close_on_exit () =
     method inotify_read () = inotify_read g
     method inotify_rm_watch = inotify_rm_watch g
     method inspect_get_arch = inspect_get_arch g
+    method inspect_get_build_id = inspect_get_build_id g
     method inspect_get_distro = inspect_get_distro g
     method inspect_get_drive_mappings = inspect_get_drive_mappings g
     method inspect_get_filesystems = inspect_get_filesystems g

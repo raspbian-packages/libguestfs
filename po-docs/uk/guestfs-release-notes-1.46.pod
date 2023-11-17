@@ -199,5 +199,5 @@ git shortlog -s v1.44.0..
 
 =head1 АВТОРСЬКІ ПРАВА
 
-Copyright (C) 2009-2021 Red Hat Inc.
+Copyright (C) 2009-2023 Red Hat Inc.
 

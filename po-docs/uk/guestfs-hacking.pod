@@ -47,18 +47,6 @@ Large amounts of boilerplate code in libguestfs (RPC, bindings, documentation) a
 
 Програма L<virt-builder(1)> та документація до неї.
 
-=item F<bundled>
-
-Вбудовані копії інших бібліотек, здебільшого для зручності (і випадків, коли вбудована бібліотека не є достатньо поширеною).
-
-=over 4
-
-=item F<bundled/ocaml-augeas>
-
-Прив'язки до бібліотеки Augeas. Їх запозичено з бібліотеки ocaml-augeas, L<http://git.annexia.org/?p=ocaml-augeas.git>
-
-=back
-
 =item F<cat>
 
 Код програм L<virt-cat(1)>, L<virt-filesystems(1)>, L<virt-log(1)>, L<virt-ls(1)> and L<virt-tail(1)> та документація до них.
@@ -854,5 +842,5 @@ Richard W.M. Jones (C<rjones at redhat dot com>)
 
 =head1 АВТОРСЬКІ ПРАВА
 
-© Red Hat Inc., 2009–2020
+Copyright (C) 2009-2023 Red Hat Inc.
 

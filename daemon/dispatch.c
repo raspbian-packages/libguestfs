@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -294,6 +294,9 @@ dispatch_incoming_message (XDR *xdr_in)
     case GUESTFS_PROC_CHOWN:
       chown_stub (xdr_in);
       break;
+    case GUESTFS_PROC_CLEVIS_LUKS_UNLOCK:
+      clevis_luks_unlock_stub (xdr_in);
+      break;
     case GUESTFS_PROC_COMMAND:
       command_stub (xdr_in);
       break;
@@ -579,6 +582,9 @@ dispatch_incoming_message (XDR *xdr_in)
     case GUESTFS_PROC_INSPECT_GET_ARCH:
       inspect_get_arch_stub (xdr_in);
       break;
+    case GUESTFS_PROC_INSPECT_GET_BUILD_ID:
+      inspect_get_build_id_stub (xdr_in);
+      break;
     case GUESTFS_PROC_INSPECT_GET_DISTRO:
       inspect_get_distro_stub (xdr_in);
       break;
@@ -674,6 +680,9 @@ dispatch_incoming_message (XDR *xdr_in)
       break;
     case GUESTFS_PROC_INTERNAL_PARSE_MOUNTABLE:
       internal_parse_mountable_stub (xdr_in);
+      break;
+    case GUESTFS_PROC_INTERNAL_READDIR:
+      internal_readdir_stub (xdr_in);
       break;
     case GUESTFS_PROC_INTERNAL_READLINKLIST:
       internal_readlinklist_stub (xdr_in);
@@ -1178,9 +1187,6 @@ dispatch_incoming_message (XDR *xdr_in)
       break;
     case GUESTFS_PROC_PWRITE_DEVICE:
       pwrite_device_stub (xdr_in);
-      break;
-    case GUESTFS_PROC_READDIR:
-      readdir_stub (xdr_in);
       break;
     case GUESTFS_PROC_READLINK:
       readlink_stub (xdr_in);

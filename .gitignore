@@ -61,7 +61,6 @@ Makefile.in
 /build-aux/snippet/
 /build-aux/test-driver
 /build-aux/ylwrap
-/bundled/ocaml-augeas/.depend
 /compile
 /config.cache
 /config.guess
@@ -325,6 +324,7 @@ Makefile.in
 /php/extension/configure.in
 /php/extension/env
 /php/extension/guestfs_php.c
+/php/extension/guestfs_php.dep
 /php/extension/install-sh
 /php/extension/libtool
 /php/extension/ltmain.sh

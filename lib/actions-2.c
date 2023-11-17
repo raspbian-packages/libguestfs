@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -631,6 +631,61 @@ guestfs_parse_environment (guestfs_h *g)
     if (trace_flag)
       guestfs_int_trace (g, "%s = %s (error)",
                          "parse_environment", "-1");
+  }
+
+  return r;
+}
+
+GUESTFS_DLL_PUBLIC struct guestfs_dirent_list *
+guestfs_readdir (guestfs_h *g,
+                 const char *dir)
+{
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
+  int trace_flag = g->trace;
+  struct trace_buffer trace_buffer;
+  struct guestfs_dirent_list *r;
+
+  guestfs_int_call_callbacks_message (g, GUESTFS_EVENT_ENTER,
+                                      "readdir", 7);
+  if (dir == NULL) {
+    error (g, "%s: %s: parameter cannot be NULL",
+           "readdir", "dir");
+    return NULL;
+  }
+
+  if (trace_flag) {
+    guestfs_int_trace_open (&trace_buffer);
+    fprintf (trace_buffer.fp, "%s", "readdir");
+    fprintf (trace_buffer.fp, " \"%s\"", dir);
+    guestfs_int_trace_send_line (g, &trace_buffer);
+  }
+
+  r = guestfs_impl_readdir (g, dir);
+
+  if (r != NULL) {
+    if (trace_flag) {
+      size_t i;
+
+      guestfs_int_trace_open (&trace_buffer);
+      fprintf (trace_buffer.fp, "%s = ", "readdir");
+      fprintf (trace_buffer.fp, "<struct guestfs_dirent_list(%u)", r->len);
+      if (r->len > 0)
+        fprintf (trace_buffer.fp, " = ");
+      for (i = 0; i < r->len; ++i) {
+        if (i != 0)
+          fprintf (trace_buffer.fp, " ");
+        fprintf (trace_buffer.fp, "[%zu]{", i);
+        guestfs_int_print_dirent_indent (&r->val[i], trace_buffer.fp, ", ", "");
+        fprintf (trace_buffer.fp, "}");
+      }
+      fprintf (trace_buffer.fp, ">");
+      guestfs_int_trace_send_line (g, &trace_buffer);
+    }
+
+  } else {
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "readdir", "NULL");
   }
 
   return r;
@@ -6215,117 +6270,6 @@ guestfs_pwrite_device (guestfs_h *g,
     guestfs_int_trace_open (&trace_buffer);
     fprintf (trace_buffer.fp, "%s = ", "pwrite_device");
     fprintf (trace_buffer.fp, "%d", ret_v);
-    guestfs_int_trace_send_line (g, &trace_buffer);
-  }
-
-  return ret_v;
-}
-
-GUESTFS_DLL_PUBLIC struct guestfs_dirent_list *
-guestfs_readdir (guestfs_h *g,
-                 const char *dir)
-{
-  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
-  struct guestfs_readdir_args args;
-  guestfs_message_header hdr;
-  guestfs_message_error err;
-  struct guestfs_readdir_ret ret;
-  int serial;
-  int r;
-  int trace_flag = g->trace;
-  struct trace_buffer trace_buffer;
-  struct guestfs_dirent_list *ret_v;
-  const uint64_t progress_hint = 0;
-
-  guestfs_int_call_callbacks_message (g, GUESTFS_EVENT_ENTER,
-                                      "readdir", 7);
-  if (dir == NULL) {
-    error (g, "%s: %s: parameter cannot be NULL",
-           "readdir", "dir");
-    return NULL;
-  }
-
-  if (trace_flag) {
-    guestfs_int_trace_open (&trace_buffer);
-    fprintf (trace_buffer.fp, "%s", "readdir");
-    fprintf (trace_buffer.fp, " \"%s\"", dir);
-    guestfs_int_trace_send_line (g, &trace_buffer);
-  }
-
-  if (guestfs_int_check_appliance_up (g, "readdir") == -1) {
-    if (trace_flag)
-      guestfs_int_trace (g, "%s = %s (error)",
-                         "readdir", "NULL");
-    return NULL;
-  }
-
-  args.dir = (char *) dir;
-  serial = guestfs_int_send (g, GUESTFS_PROC_READDIR,
-                             progress_hint, 0,
-                             (xdrproc_t) xdr_guestfs_readdir_args, (char *) &args);
-  if (serial == -1) {
-    if (trace_flag)
-      guestfs_int_trace (g, "%s = %s (error)",
-                         "readdir", "NULL");
-    return NULL;
-  }
-
-  memset (&hdr, 0, sizeof hdr);
-  memset (&err, 0, sizeof err);
-  memset (&ret, 0, sizeof ret);
-
-  r = guestfs_int_recv (g, "readdir", &hdr, &err,
-        (xdrproc_t) xdr_guestfs_readdir_ret, (char *) &ret);
-  if (r == -1) {
-    if (trace_flag)
-      guestfs_int_trace (g, "%s = %s (error)",
-                         "readdir", "NULL");
-    return NULL;
-  }
-
-  if (guestfs_int_check_reply_header (g, &hdr, GUESTFS_PROC_READDIR, serial) == -1) {
-    if (trace_flag)
-      guestfs_int_trace (g, "%s = %s (error)",
-                         "readdir", "NULL");
-    return NULL;
-  }
-
-  if (hdr.status == GUESTFS_STATUS_ERROR) {
-    int errnum = 0;
-
-    if (trace_flag)
-      guestfs_int_trace (g, "%s = %s (error)",
-                         "readdir", "NULL");
-    if (err.errno_string[0] != '\0')
-      errnum = guestfs_int_string_to_errno (err.errno_string);
-    if (errnum <= 0)
-      error (g, "%s: %s", "readdir", err.error_message);
-    else
-      guestfs_int_error_errno (g, errnum, "%s: %s", "readdir",
-                               err.error_message);
-    free (err.error_message);
-    free (err.errno_string);
-    return NULL;
-  }
-
-  /* caller will free this */
-  ret_v = safe_memdup (g, &ret.entries, sizeof (ret.entries));
-  if (trace_flag) {
-    size_t i;
-
-    guestfs_int_trace_open (&trace_buffer);
-    fprintf (trace_buffer.fp, "%s = ", "readdir");
-    fprintf (trace_buffer.fp, "<struct guestfs_dirent_list(%u)", ret_v->len);
-    if (ret_v->len > 0)
-      fprintf (trace_buffer.fp, " = ");
-    for (i = 0; i < ret_v->len; ++i) {
-      if (i != 0)
-        fprintf (trace_buffer.fp, " ");
-      fprintf (trace_buffer.fp, "[%zu]{", i);
-      guestfs_int_print_dirent_indent (&ret_v->val[i], trace_buffer.fp, ", ", "");
-      fprintf (trace_buffer.fp, "}");
-    }
-    fprintf (trace_buffer.fp, ">");
     guestfs_int_trace_send_line (g, &trace_buffer);
   }
 

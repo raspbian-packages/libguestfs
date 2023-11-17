@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -293,6 +293,8 @@ Init__guestfs (void)
                     guestfs_int_ruby_chown, 3);
   rb_define_method (c_guestfs, "clear_backend_setting",
                     guestfs_int_ruby_clear_backend_setting, 1);
+  rb_define_method (c_guestfs, "clevis_luks_unlock",
+                    guestfs_int_ruby_clevis_luks_unlock, 2);
   rb_define_method (c_guestfs, "command",
                     guestfs_int_ruby_command, 1);
   rb_define_method (c_guestfs, "command_lines",
@@ -341,6 +343,8 @@ Init__guestfs (void)
                     guestfs_int_ruby_debug_upload, 3);
   rb_define_method (c_guestfs, "device_index",
                     guestfs_int_ruby_device_index, 1);
+  rb_define_method (c_guestfs, "device_name",
+                    guestfs_int_ruby_device_name, 1);
   rb_define_method (c_guestfs, "df",
                     guestfs_int_ruby_df, 0);
   rb_define_method (c_guestfs, "df_h",
@@ -571,6 +575,8 @@ Init__guestfs (void)
                     guestfs_int_ruby_inotify_rm_watch, 1);
   rb_define_method (c_guestfs, "inspect_get_arch",
                     guestfs_int_ruby_inspect_get_arch, 1);
+  rb_define_method (c_guestfs, "inspect_get_build_id",
+                    guestfs_int_ruby_inspect_get_build_id, 1);
   rb_define_method (c_guestfs, "inspect_get_distro",
                     guestfs_int_ruby_inspect_get_distro, 1);
   rb_define_method (c_guestfs, "inspect_get_drive_mappings",

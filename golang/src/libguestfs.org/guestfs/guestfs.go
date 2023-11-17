@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -3351,6 +3351,26 @@ func (g *Guestfs) Clear_backend_setting (name string) (int, error) {
     return int (r), nil
 }
 
+/* clevis_luks_unlock : open an encrypted LUKS block device with Clevis and Tang */
+func (g *Guestfs) Clevis_luks_unlock (device string, mapname string) error {
+    if g.g == nil {
+        return closed_handle_error ("clevis_luks_unlock")
+    }
+
+    c_device := C.CString (device)
+    defer C.free (unsafe.Pointer (c_device))
+
+    c_mapname := C.CString (mapname)
+    defer C.free (unsafe.Pointer (c_mapname))
+
+    r := C.guestfs_clevis_luks_unlock (g.g, c_device, c_mapname)
+
+    if r == -1 {
+        return get_error_from_handle (g, "clevis_luks_unlock")
+    }
+    return nil
+}
+
 /* command : run a command from the guest filesystem */
 func (g *Guestfs) Command (arguments []string) (string, error) {
     if g.g == nil {
@@ -4095,6 +4115,21 @@ func (g *Guestfs) Device_index (device string) (int, error) {
         return 0, get_error_from_handle (g, "device_index")
     }
     return int (r), nil
+}
+
+/* device_name : convert device index to name */
+func (g *Guestfs) Device_name (index int) (string, error) {
+    if g.g == nil {
+        return "", closed_handle_error ("device_name")
+    }
+
+    r := C.guestfs_device_name (g.g, C.int (index))
+
+    if r == nil {
+        return "", get_error_from_handle (g, "device_name")
+    }
+    defer C.free (unsafe.Pointer (r))
+    return C.GoString (r), nil
 }
 
 /* df : report file system disk space usage */
@@ -6177,6 +6212,24 @@ func (g *Guestfs) Inspect_get_arch (root string) (string, error) {
 
     if r == nil {
         return "", get_error_from_handle (g, "inspect_get_arch")
+    }
+    defer C.free (unsafe.Pointer (r))
+    return C.GoString (r), nil
+}
+
+/* inspect_get_build_id : get the system build ID */
+func (g *Guestfs) Inspect_get_build_id (root string) (string, error) {
+    if g.g == nil {
+        return "", closed_handle_error ("inspect_get_build_id")
+    }
+
+    c_root := C.CString (root)
+    defer C.free (unsafe.Pointer (c_root))
+
+    r := C.guestfs_inspect_get_build_id (g.g, c_root)
+
+    if r == nil {
+        return "", get_error_from_handle (g, "inspect_get_build_id")
     }
     defer C.free (unsafe.Pointer (r))
     return C.GoString (r), nil

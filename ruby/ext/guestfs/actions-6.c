@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -1315,6 +1315,53 @@ guestfs_int_ruby_inotify_read (VALUE gv)
     rb_ary_push (rv, hv);
   }
   guestfs_free_inotify_event_list (r);
+  return rv;
+}
+
+/*
+ * call-seq:
+ *   g.inspect_get_build_id(root) -> string
+ *
+ * get the system build ID
+ *
+ * This returns the build ID of the system, or the string
+ * "unknown" if the system does not have a build ID.
+ * 
+ * For Windows, this gets the build number. Although it is
+ * returned as a string, it is (so far) always a number.
+ * See
+ * <https://en.wikipedia.org/wiki/List_of_Microsoft_Windows
+ * _versions> for some possible values.
+ * 
+ * For Linux, this returns the "BUILD_ID" string from
+ * /etc/os-release, although this is not often used.
+ * 
+ * Please read "INSPECTION" in guestfs(3) for more details.
+ *
+ *
+ * [Since] Added in version 1.49.8.
+ *
+ * [C API] For the C API documentation for this function, see
+ *         {guestfs_inspect_get_build_id}[http://libguestfs.org/guestfs.3.html#guestfs_inspect_get_build_id].
+ */
+VALUE
+guestfs_int_ruby_inspect_get_build_id (VALUE gv, VALUE rootv)
+{
+  guestfs_h *g;
+  Data_Get_Struct (gv, guestfs_h, g);
+  if (!g)
+    rb_raise (rb_eArgError, "%s: used handle after closing it", "inspect_get_build_id");
+
+  const char *root = StringValueCStr (rootv);
+
+  char *r;
+
+  r = guestfs_inspect_get_build_id (g, root);
+  if (r == NULL)
+    rb_raise (e_Error, "%s", guestfs_last_error (g));
+
+  volatile VALUE rv = rb_str_new2 (r);
+  free (r);
   return rv;
 }
 

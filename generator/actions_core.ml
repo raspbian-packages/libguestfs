@@ -1,5 +1,5 @@
 (* libguestfs
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -140,6 +140,66 @@ This returns the current state as an opaque integer.  This is
 only useful for printing debug and internal error messages.
 
 For more information on states, see L<guestfs(3)>." };
+
+  { defaults with
+    name = "readdir"; added = (1, 0, 55);
+    style = RStructList ("entries", "dirent"), [String (Pathname, "dir")], [];
+    progress = true; cancellable = true;
+    shortdesc = "read directories entries";
+    longdesc = "\
+This returns the list of directory entries in directory C<dir>.
+
+All entries in the directory are returned, including C<.> and
+C<..>.  The entries are I<not> sorted, but returned in the same
+order as the underlying filesystem.
+
+Also this call returns basic file type information about each
+file.  The C<ftyp> field will contain one of the following characters:
+
+=over 4
+
+=item 'b'
+
+Block special
+
+=item 'c'
+
+Char special
+
+=item 'd'
+
+Directory
+
+=item 'f'
+
+FIFO (named pipe)
+
+=item 'l'
+
+Symbolic link
+
+=item 'r'
+
+Regular file
+
+=item 's'
+
+Socket
+
+=item 'u'
+
+Unknown file type
+
+=item '?'
+
+The L<readdir(3)> call returned a C<d_type> field with an
+unexpected value
+
+=back
+
+This function is primarily intended for use by programs.  To
+get a simple list of names, use C<guestfs_ls>.  To get a printable
+directory for human consumption, use C<guestfs_ll>." };
 
   { defaults with
     name = "version"; added = (1, 0, 58);
@@ -737,7 +797,29 @@ returns the index of the device in the list of devices.
 Index numbers start from 0.  The named device must exist,
 for example as a string returned from C<guestfs_list_devices>.
 
-See also C<guestfs_list_devices>, C<guestfs_part_to_dev>." };
+See also C<guestfs_list_devices>, C<guestfs_part_to_dev>,
+C<guestfs_device_name>." };
+
+  { defaults with
+    name = "device_name"; added = (1, 49, 1);
+    style = RString (RPlainString, "name"), [Int "index"], [];
+    tests = [
+      InitEmpty, Always, TestResult (
+        [["device_name"; "0"]], "STREQ (ret, \"/dev/sda\")"), [];
+      InitEmpty, Always, TestResult (
+        [["device_name"; "1"]], "STREQ (ret, \"/dev/sdb\")"), [];
+      InitEmpty, Always, TestLastFail (
+        [["device_name"; "99"]]), []
+    ];
+    shortdesc = "convert device index to name";
+    longdesc = "\
+This function takes a device index and returns the device
+name.  For example index C<0> will return the string C</dev/sda>.
+
+The drive index must have been added to the handle.
+
+See also C<guestfs_list_devices>, C<guestfs_part_to_dev>,
+C<guestfs_device_index>." };
 
   { defaults with
     name = "shutdown"; added = (1, 19, 16);
@@ -3915,66 +3997,6 @@ See also C<guestfs_get_umask>,
 L<umask(2)>, C<guestfs_mknod>, C<guestfs_mkdir>.
 
 This call returns the previous umask." };
-
-  { defaults with
-    name = "readdir"; added = (1, 0, 55);
-    style = RStructList ("entries", "dirent"), [String (Pathname, "dir")], [];
-    protocol_limit_warning = true;
-    shortdesc = "read directories entries";
-    longdesc = "\
-This returns the list of directory entries in directory C<dir>.
-
-All entries in the directory are returned, including C<.> and
-C<..>.  The entries are I<not> sorted, but returned in the same
-order as the underlying filesystem.
-
-Also this call returns basic file type information about each
-file.  The C<ftyp> field will contain one of the following characters:
-
-=over 4
-
-=item 'b'
-
-Block special
-
-=item 'c'
-
-Char special
-
-=item 'd'
-
-Directory
-
-=item 'f'
-
-FIFO (named pipe)
-
-=item 'l'
-
-Symbolic link
-
-=item 'r'
-
-Regular file
-
-=item 's'
-
-Socket
-
-=item 'u'
-
-Unknown file type
-
-=item '?'
-
-The L<readdir(3)> call returned a C<d_type> field with an
-unexpected value
-
-=back
-
-This function is primarily intended for use by programs.  To
-get a simple list of names, use C<guestfs_ls>.  To get a printable
-directory for human consumption, use C<guestfs_ll>." };
 
   { defaults with
     name = "getxattrs"; added = (1, 0, 59);
@@ -9691,5 +9713,52 @@ This closes an encrypted device that was created earlier by
 C<guestfs_cryptsetup_open>.  The C<device> parameter must be
 the name of the mapping device (ie. F</dev/mapper/mapname>)
 and I<not> the name of the underlying block device." };
+
+  { defaults with
+    name = "internal_readdir"; added = (1, 48, 2);
+    style = RErr, [String (Pathname, "dir"); String (FileOut, "filename")], [];
+    visibility = VInternal;
+    shortdesc = "read directories entries";
+    longdesc = "Internal function for readdir." };
+
+  { defaults with
+    name = "clevis_luks_unlock"; added = (1, 49, 3);
+    style = RErr,
+            [String (Device, "device"); String (PlainString, "mapname")],
+            [];
+    optional = Some "clevisluks";
+    test_excuse = "needs networking and a configured Tang server";
+    shortdesc = "open an encrypted LUKS block device with Clevis and Tang";
+    longdesc = "\
+This command opens a block device that has been encrypted according to
+the Linux Unified Key Setup (LUKS) standard, using network-bound disk
+encryption (NBDE).
+
+C<device> is the encrypted block device.
+
+The appliance will connect to the Tang servers noted in the tree of
+Clevis pins that is bound to a keyslot of the LUKS header.  The Clevis
+pin tree may comprise C<sss> (redudancy) pins as internal nodes
+(optionally), and C<tang> pins as leaves.  C<tpm2> pins are not
+supported.  The appliance unlocks the encrypted block device by
+combining responses from the Tang servers with metadata from the LUKS
+header; there is no C<key> parameter.
+
+This command will fail if networking has not been enabled for the
+appliance. Refer to C<guestfs_set_network>.
+
+The command creates a new block device called F</dev/mapper/mapname>.
+Reads and writes to this block device are decrypted from and encrypted
+to the underlying C<device> respectively.  Close the decrypted block
+device with C<guestfs_cryptsetup_close>.
+
+C<mapname> cannot be C<\"control\"> because that name is reserved by
+device-mapper.
+
+If this block device contains LVM volume groups, then calling
+C<guestfs_lvm_scan> with the C<activate> parameter C<true> will make
+them visible.
+
+Use C<guestfs_list_dm_devices> to list all device mapper devices." };
 
 ]

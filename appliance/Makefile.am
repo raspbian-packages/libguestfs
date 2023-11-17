@@ -1,5 +1,5 @@
 # libguestfs
-# Copyright (C) 2009-2020 Red Hat Inc.
+# Copyright (C) 2009-2023 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -119,7 +119,7 @@ supermin.d/daemon.tar.gz: ../daemon/guestfsd
 	rm -rf tmp-d
 	mkdir -p tmp-d$(DAEMON_SUPERMIN_DIR) tmp-d/etc
 	ln ../daemon/guestfsd tmp-d$(DAEMON_SUPERMIN_DIR)/guestfsd
-	( cd tmp-d && tar --mtime=$(abs_top_srcdir)/RELEASES -zcf - * ) > $@-t
+	( cd tmp-d && tar --mtime=@$(SOURCE_DATE_EPOCH) -zcf - * ) > $@-t
 	rm -r tmp-d
 	mv $@-t $@
 
@@ -140,7 +140,7 @@ supermin.d/hostfiles: hostfiles.in Makefile
 
 supermin.d/init.tar.gz: init
 	rm -f $@ $@-t
-	( cd $(srcdir) && tar --mtime=$(abs_top_srcdir)/RELEASES -zcf - init ) > $@-t
+	( cd $(srcdir) && tar --mtime=@$(SOURCE_DATE_EPOCH) -zcf - init ) > $@-t
 	mv $@-t $@
 
 # We should put this file in /lib/udev/rules.d, but put it in /etc so
@@ -150,7 +150,7 @@ supermin.d/udev-rules.tar.gz: 99-guestfs-serial.rules
 	rm -rf tmp-u
 	mkdir -p tmp-u/etc/udev/rules.d
 	for f in $^; do ln $$f tmp-u/etc/udev/rules.d/$$(basename $$f); done
-	( cd tmp-u && tar --mtime=$(abs_top_srcdir)/RELEASES -zcf - etc ) > $@-t
+	( cd tmp-u && tar --mtime=@$(SOURCE_DATE_EPOCH) -zcf - etc ) > $@-t
 	rm -r tmp-u
 	mv $@-t $@
 

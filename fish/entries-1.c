@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -406,7 +406,7 @@ struct command_entry device_index_cmd_entry = {
           "    Index numbers start from 0. The named device must exist, for example as\n"
           "    a string returned from \"list_devices\".\n"
           "\n"
-          "    See also \"list_devices\", \"part_to_dev\".\n"
+          "    See also \"list_devices\", \"part_to_dev\", \"device_name\".\n"
           "\n"
           "",
   .synopsis = "device-index device",

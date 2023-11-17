@@ -15,7 +15,7 @@
 @SET_MAKE@
 
 # libguestfs
-# Copyright (C) 2017-2021 Red Hat Inc.
+# Copyright (C) 2017-2023 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@
 # probably being moved to common/utils.
 
 # libguestfs
-# Copyright (C) 2009-2020 Red Hat Inc.
+# Copyright (C) 2009-2023 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -185,9 +185,10 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
 libgnu_la_LIBADD =
-am_libgnu_la_OBJECTS = base64.lo cloexec.lo full-read.lo full-write.lo \
-	hash.lo hash-pjw.lo nonblocking.lo safe-read.lo safe-write.lo \
-	xstrtol.lo xstrtoll.lo xstrtoul.lo xstrtoull.lo xstrtoumax.lo
+am_libgnu_la_OBJECTS = accept4.lo base64.lo cloexec.lo error.lo \
+	full-read.lo full-write.lo hash.lo hash-pjw.lo nonblocking.lo \
+	pipe2.lo safe-read.lo safe-write.lo xstrtol.lo xstrtoll.lo \
+	xstrtoul.lo xstrtoull.lo xstrtoumax.lo
 libgnu_la_OBJECTS = $(am_libgnu_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -208,13 +209,15 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/base64.Plo ./$(DEPDIR)/cloexec.Plo \
+am__depfiles_remade = ./$(DEPDIR)/accept4.Plo ./$(DEPDIR)/base64.Plo \
+	./$(DEPDIR)/cloexec.Plo ./$(DEPDIR)/error.Plo \
 	./$(DEPDIR)/full-read.Plo ./$(DEPDIR)/full-write.Plo \
 	./$(DEPDIR)/hash-pjw.Plo ./$(DEPDIR)/hash.Plo \
-	./$(DEPDIR)/nonblocking.Plo ./$(DEPDIR)/safe-read.Plo \
-	./$(DEPDIR)/safe-write.Plo ./$(DEPDIR)/xstrtol.Plo \
-	./$(DEPDIR)/xstrtoll.Plo ./$(DEPDIR)/xstrtoul.Plo \
-	./$(DEPDIR)/xstrtoull.Plo ./$(DEPDIR)/xstrtoumax.Plo
+	./$(DEPDIR)/nonblocking.Plo ./$(DEPDIR)/pipe2.Plo \
+	./$(DEPDIR)/safe-read.Plo ./$(DEPDIR)/safe-write.Plo \
+	./$(DEPDIR)/xstrtol.Plo ./$(DEPDIR)/xstrtoll.Plo \
+	./$(DEPDIR)/xstrtoul.Plo ./$(DEPDIR)/xstrtoull.Plo \
+	./$(DEPDIR)/xstrtoumax.Plo
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -431,6 +434,7 @@ OCAMLOPT = @OCAMLOPT@
 OCAMLOPTDOTOPT = @OCAMLOPTDOTOPT@
 OCAMLVERSION = @OCAMLVERSION@
 OCAML_FLAGS = @OCAML_FLAGS@
+OCAML_PKG_augeas = @OCAML_PKG_augeas@
 OCAML_PKG_hivex = @OCAML_PKG_hivex@
 OCAML_RUNTIME_VARIANT_PIC_OPTION = @OCAML_RUNTIME_VARIANT_PIC_OPTION@
 OCAML_WARN_ERROR = @OCAML_WARN_ERROR@
@@ -639,12 +643,15 @@ guestfs_am_v_po4a_translate_ = $(guestfs_am_v_po4a_translate_@AM_DEFAULT_V@)
 guestfs_am_v_po4a_translate_0 = @echo "  PO4A-T  " $@;
 noinst_LTLIBRARIES = libgnu.la
 libgnu_la_SOURCES = \
+	accept4.c \
 	base64.c \
 	base64.h \
 	bitrotate.h \
 	c-ctype.h \
 	cloexec.c \
 	cloexec.h \
+	error.c \
+	error.h \
 	full-read.c \
 	full-read.h \
 	full-write.c \
@@ -657,6 +664,7 @@ libgnu_la_SOURCES = \
 	ignore-value.h \
 	nonblocking.c \
 	nonblocking.h \
+	pipe2.c \
 	safe-read.c \
 	safe-read.h \
 	safe-write.c \
@@ -728,13 +736,16 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/accept4.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/base64.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cloexec.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/error.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-read.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-write.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hash-pjw.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hash.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nonblocking.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pipe2.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/safe-read.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/safe-write.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtol.Plo@am__quote@ # am--include-marker
@@ -905,13 +916,16 @@ clean-am: clean-generic clean-libtool clean-noinstLTLIBRARIES \
 	mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ./$(DEPDIR)/base64.Plo
+		-rm -f ./$(DEPDIR)/accept4.Plo
+	-rm -f ./$(DEPDIR)/base64.Plo
 	-rm -f ./$(DEPDIR)/cloexec.Plo
+	-rm -f ./$(DEPDIR)/error.Plo
 	-rm -f ./$(DEPDIR)/full-read.Plo
 	-rm -f ./$(DEPDIR)/full-write.Plo
 	-rm -f ./$(DEPDIR)/hash-pjw.Plo
 	-rm -f ./$(DEPDIR)/hash.Plo
 	-rm -f ./$(DEPDIR)/nonblocking.Plo
+	-rm -f ./$(DEPDIR)/pipe2.Plo
 	-rm -f ./$(DEPDIR)/safe-read.Plo
 	-rm -f ./$(DEPDIR)/safe-write.Plo
 	-rm -f ./$(DEPDIR)/xstrtol.Plo
@@ -964,13 +978,16 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ./$(DEPDIR)/base64.Plo
+		-rm -f ./$(DEPDIR)/accept4.Plo
+	-rm -f ./$(DEPDIR)/base64.Plo
 	-rm -f ./$(DEPDIR)/cloexec.Plo
+	-rm -f ./$(DEPDIR)/error.Plo
 	-rm -f ./$(DEPDIR)/full-read.Plo
 	-rm -f ./$(DEPDIR)/full-write.Plo
 	-rm -f ./$(DEPDIR)/hash-pjw.Plo
 	-rm -f ./$(DEPDIR)/hash.Plo
 	-rm -f ./$(DEPDIR)/nonblocking.Plo
+	-rm -f ./$(DEPDIR)/pipe2.Plo
 	-rm -f ./$(DEPDIR)/safe-read.Plo
 	-rm -f ./$(DEPDIR)/safe-write.Plo
 	-rm -f ./$(DEPDIR)/xstrtol.Plo

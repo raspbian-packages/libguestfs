@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -329,6 +329,9 @@ static PyMethodDef methods[] = {
 #ifdef GUESTFS_HAVE_CLEAR_BACKEND_SETTING
   { (char *) "clear_backend_setting", guestfs_int_py_clear_backend_setting, METH_VARARGS, NULL },
 #endif
+#ifdef GUESTFS_HAVE_CLEVIS_LUKS_UNLOCK
+  { (char *) "clevis_luks_unlock", guestfs_int_py_clevis_luks_unlock, METH_VARARGS, NULL },
+#endif
 #ifdef GUESTFS_HAVE_COMMAND
   { (char *) "command", guestfs_int_py_command, METH_VARARGS, NULL },
 #endif
@@ -400,6 +403,9 @@ static PyMethodDef methods[] = {
 #endif
 #ifdef GUESTFS_HAVE_DEVICE_INDEX
   { (char *) "device_index", guestfs_int_py_device_index, METH_VARARGS, NULL },
+#endif
+#ifdef GUESTFS_HAVE_DEVICE_NAME
+  { (char *) "device_name", guestfs_int_py_device_name, METH_VARARGS, NULL },
 #endif
 #ifdef GUESTFS_HAVE_DF
   { (char *) "df", guestfs_int_py_df, METH_VARARGS, NULL },
@@ -739,6 +745,9 @@ static PyMethodDef methods[] = {
 #endif
 #ifdef GUESTFS_HAVE_INSPECT_GET_ARCH
   { (char *) "inspect_get_arch", guestfs_int_py_inspect_get_arch, METH_VARARGS, NULL },
+#endif
+#ifdef GUESTFS_HAVE_INSPECT_GET_BUILD_ID
+  { (char *) "inspect_get_build_id", guestfs_int_py_inspect_get_build_id, METH_VARARGS, NULL },
 #endif
 #ifdef GUESTFS_HAVE_INSPECT_GET_DISTRO
   { (char *) "inspect_get_distro", guestfs_int_py_inspect_get_distro, METH_VARARGS, NULL },

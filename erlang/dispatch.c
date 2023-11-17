@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -240,6 +240,8 @@ dispatch (ei_x_buff *retbuff, const char *buff, int *index)
     return run_chown (retbuff, buff, index);
   else if (atom_equals (fun, "clear_backend_setting"))
     return run_clear_backend_setting (retbuff, buff, index);
+  else if (atom_equals (fun, "clevis_luks_unlock"))
+    return run_clevis_luks_unlock (retbuff, buff, index);
   else if (atom_equals (fun, "command"))
     return run_command (retbuff, buff, index);
   else if (atom_equals (fun, "command_lines"))
@@ -288,6 +290,8 @@ dispatch (ei_x_buff *retbuff, const char *buff, int *index)
     return run_debug_upload (retbuff, buff, index);
   else if (atom_equals (fun, "device_index"))
     return run_device_index (retbuff, buff, index);
+  else if (atom_equals (fun, "device_name"))
+    return run_device_name (retbuff, buff, index);
   else if (atom_equals (fun, "df"))
     return run_df (retbuff, buff, index);
   else if (atom_equals (fun, "df_h"))
@@ -514,6 +518,8 @@ dispatch (ei_x_buff *retbuff, const char *buff, int *index)
     return run_inotify_rm_watch (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_arch"))
     return run_inspect_get_arch (retbuff, buff, index);
+  else if (atom_equals (fun, "inspect_get_build_id"))
+    return run_inspect_get_build_id (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_distro"))
     return run_inspect_get_distro (retbuff, buff, index);
   else if (atom_equals (fun, "inspect_get_drive_mappings"))

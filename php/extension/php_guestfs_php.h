@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -134,6 +134,7 @@ PHP_FUNCTION (guestfs_checksums_out);
 PHP_FUNCTION (guestfs_chmod);
 PHP_FUNCTION (guestfs_chown);
 PHP_FUNCTION (guestfs_clear_backend_setting);
+PHP_FUNCTION (guestfs_clevis_luks_unlock);
 PHP_FUNCTION (guestfs_command);
 PHP_FUNCTION (guestfs_command_lines);
 PHP_FUNCTION (guestfs_compress_device_out);
@@ -158,6 +159,7 @@ PHP_FUNCTION (guestfs_debug);
 PHP_FUNCTION (guestfs_debug_drives);
 PHP_FUNCTION (guestfs_debug_upload);
 PHP_FUNCTION (guestfs_device_index);
+PHP_FUNCTION (guestfs_device_name);
 PHP_FUNCTION (guestfs_df);
 PHP_FUNCTION (guestfs_df_h);
 PHP_FUNCTION (guestfs_disk_create);
@@ -271,6 +273,7 @@ PHP_FUNCTION (guestfs_inotify_init);
 PHP_FUNCTION (guestfs_inotify_read);
 PHP_FUNCTION (guestfs_inotify_rm_watch);
 PHP_FUNCTION (guestfs_inspect_get_arch);
+PHP_FUNCTION (guestfs_inspect_get_build_id);
 PHP_FUNCTION (guestfs_inspect_get_distro);
 PHP_FUNCTION (guestfs_inspect_get_drive_mappings);
 PHP_FUNCTION (guestfs_inspect_get_filesystems);

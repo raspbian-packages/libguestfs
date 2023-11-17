@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -298,6 +298,7 @@ extern char *do_checksum_device (const char *csumtype, const char *device);
 extern int do_checksums_out (const char *csumtype, const char *directory);
 extern int do_chmod (int mode, const char *path);
 extern int do_chown (int owner, int group, const char *path);
+extern int do_clevis_luks_unlock (const char *device, const char *mapname);
 extern char *do_command (char *const *arguments);
 extern char **do_command_lines (char *const *arguments);
 extern int do_compress_device_out (const char *ctype, const char *device, int level);
@@ -393,6 +394,7 @@ extern int do_inotify_init (int maxevents);
 extern guestfs_int_inotify_event_list *do_inotify_read (void);
 extern int do_inotify_rm_watch (int wd);
 extern char *do_inspect_get_arch (const mountable_t *root);
+extern char *do_inspect_get_build_id (const mountable_t *root);
 extern char *do_inspect_get_distro (const mountable_t *root);
 extern char **do_inspect_get_drive_mappings (const mountable_t *root);
 extern char **do_inspect_get_filesystems (const mountable_t *root);
@@ -425,6 +427,7 @@ extern guestfs_int_application2_list *do_internal_list_rpm_applications (void);
 extern guestfs_int_statns_list *do_internal_lstatnslist (const char *path, char *const *names);
 extern guestfs_int_xattr_list *do_internal_lxattrlist (const char *path, char *const *names);
 extern guestfs_int_internal_mountable *do_internal_parse_mountable (const mountable_t *mountable);
+extern int do_internal_readdir (const char *dir);
 extern char **do_internal_readlinklist (const char *path, char *const *names);
 extern int do_internal_rhbz914931 (int count);
 extern int do_internal_upload (const char *tmpname, int mode);
@@ -593,7 +596,6 @@ extern guestfs_int_lvm_pv_list *do_pvs_full (void);
 extern char *do_pvuuid (const char *device);
 extern int do_pwrite (const char *path, const char *content, size_t content_size, int64_t offset);
 extern int do_pwrite_device (const char *device, const char *content, size_t content_size, int64_t offset);
-extern guestfs_int_dirent_list *do_readdir (const char *dir);
 extern char *do_readlink (const char *path);
 extern char *do_realpath (const char *path);
 extern int do_remount (const char *mountpoint, int rw);

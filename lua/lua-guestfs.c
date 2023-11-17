@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -98,10 +98,10 @@ static uint64_t get_event (lua_State *L, int index);
 static uint64_t get_event_bitmask (lua_State *L, int index);
 static void push_event (lua_State *L, uint64_t event);
 
-static void push_lvm_lv (lua_State *L, struct guestfs_lvm_lv *v);
-static void push_lvm_lv_list (lua_State *L, struct guestfs_lvm_lv_list *v);
 static void push_dirent (lua_State *L, struct guestfs_dirent *v);
 static void push_dirent_list (lua_State *L, struct guestfs_dirent_list *v);
+static void push_lvm_lv (lua_State *L, struct guestfs_lvm_lv *v);
+static void push_lvm_lv_list (lua_State *L, struct guestfs_lvm_lv_list *v);
 static void push_utsname (lua_State *L, struct guestfs_utsname *v);
 static void push_btrfsqgroup (lua_State *L, struct guestfs_btrfsqgroup *v);
 static void push_btrfsqgroup_list (lua_State *L, struct guestfs_btrfsqgroup_list *v);
@@ -2863,6 +2863,29 @@ guestfs_int_lua_clear_backend_setting (lua_State *L)
 }
 
 static int
+guestfs_int_lua_clevis_luks_unlock (lua_State *L)
+{
+  int r;
+  struct userdata *u = get_handle (L, 1);
+  guestfs_h *g = u->g;
+  const char *device;
+  const char *mapname;
+
+  if (g == NULL)
+    return luaL_error (L, "Guestfs.%s: handle is closed",
+                       "clevis_luks_unlock");
+
+  device = luaL_checkstring (L, 2);
+  mapname = luaL_checkstring (L, 3);
+
+  r = guestfs_clevis_luks_unlock (g, device, mapname);
+  if (r == -1)
+    return last_error (L, g);
+
+  return 0;
+}
+
+static int
 guestfs_int_lua_command (lua_State *L)
 {
   char *r;
@@ -3591,6 +3614,29 @@ guestfs_int_lua_device_index (lua_State *L)
     return last_error (L, g);
 
   lua_pushinteger (L, r);
+  return 1;
+}
+
+static int
+guestfs_int_lua_device_name (lua_State *L)
+{
+  char *r;
+  struct userdata *u = get_handle (L, 1);
+  guestfs_h *g = u->g;
+  int index;
+
+  if (g == NULL)
+    return luaL_error (L, "Guestfs.%s: handle is closed",
+                       "device_name");
+
+  index = luaL_checkint (L, 2);
+
+  r = guestfs_device_name (g, index);
+  if (r == NULL)
+    return last_error (L, g);
+
+  lua_pushstring (L, r);
+  free (r);
   return 1;
 }
 
@@ -6231,6 +6277,29 @@ guestfs_int_lua_inspect_get_arch (lua_State *L)
   root = luaL_checkstring (L, 2);
 
   r = guestfs_inspect_get_arch (g, root);
+  if (r == NULL)
+    return last_error (L, g);
+
+  lua_pushstring (L, r);
+  free (r);
+  return 1;
+}
+
+static int
+guestfs_int_lua_inspect_get_build_id (lua_State *L)
+{
+  char *r;
+  struct userdata *u = get_handle (L, 1);
+  guestfs_h *g = u->g;
+  const char *root;
+
+  if (g == NULL)
+    return luaL_error (L, "Guestfs.%s: handle is closed",
+                       "inspect_get_build_id");
+
+  root = luaL_checkstring (L, 2);
+
+  r = guestfs_inspect_get_build_id (g, root);
   if (r == NULL)
     return last_error (L, g);
 
@@ -16170,6 +16239,33 @@ push_event (lua_State *L, uint64_t event)
 }
 
 static void
+push_dirent (lua_State *L, struct guestfs_dirent *v)
+{
+  lua_newtable (L);
+  lua_pushliteral (L, "ino");
+  push_int64 (L, (int64_t) v->ino);
+  lua_settable (L, -3);
+  lua_pushliteral (L, "ftyp");
+  lua_pushlstring (L, &v->ftyp, 1);
+  lua_settable (L, -3);
+  lua_pushliteral (L, "name");
+  lua_pushstring (L, v->name);
+  lua_settable (L, -3);
+}
+
+static void
+push_dirent_list (lua_State *L, struct guestfs_dirent_list *v)
+{
+  size_t i;
+
+  lua_newtable (L);
+  for (i = 0; i < v->len; ++i) {
+    push_dirent (L, &v->val[i]);
+    lua_rawseti (L, -2, i+1 /* because of base 1 arrays */);
+  }
+}
+
+static void
 push_lvm_lv (lua_State *L, struct guestfs_lvm_lv *v)
 {
   lua_newtable (L);
@@ -16231,33 +16327,6 @@ push_lvm_lv_list (lua_State *L, struct guestfs_lvm_lv_list *v)
   lua_newtable (L);
   for (i = 0; i < v->len; ++i) {
     push_lvm_lv (L, &v->val[i]);
-    lua_rawseti (L, -2, i+1 /* because of base 1 arrays */);
-  }
-}
-
-static void
-push_dirent (lua_State *L, struct guestfs_dirent *v)
-{
-  lua_newtable (L);
-  lua_pushliteral (L, "ino");
-  push_int64 (L, (int64_t) v->ino);
-  lua_settable (L, -3);
-  lua_pushliteral (L, "ftyp");
-  lua_pushlstring (L, &v->ftyp, 1);
-  lua_settable (L, -3);
-  lua_pushliteral (L, "name");
-  lua_pushstring (L, v->name);
-  lua_settable (L, -3);
-}
-
-static void
-push_dirent_list (lua_State *L, struct guestfs_dirent_list *v)
-{
-  size_t i;
-
-  lua_newtable (L);
-  for (i = 0; i < v->len; ++i) {
-    push_dirent (L, &v->val[i]);
     lua_rawseti (L, -2, i+1 /* because of base 1 arrays */);
   }
 }
@@ -17372,6 +17441,7 @@ static luaL_Reg methods[] = {
   { "chmod", guestfs_int_lua_chmod },
   { "chown", guestfs_int_lua_chown },
   { "clear_backend_setting", guestfs_int_lua_clear_backend_setting },
+  { "clevis_luks_unlock", guestfs_int_lua_clevis_luks_unlock },
   { "command", guestfs_int_lua_command },
   { "command_lines", guestfs_int_lua_command_lines },
   { "compress_device_out", guestfs_int_lua_compress_device_out },
@@ -17396,6 +17466,7 @@ static luaL_Reg methods[] = {
   { "debug_drives", guestfs_int_lua_debug_drives },
   { "debug_upload", guestfs_int_lua_debug_upload },
   { "device_index", guestfs_int_lua_device_index },
+  { "device_name", guestfs_int_lua_device_name },
   { "df", guestfs_int_lua_df },
   { "df_h", guestfs_int_lua_df_h },
   { "disk_create", guestfs_int_lua_disk_create },
@@ -17509,6 +17580,7 @@ static luaL_Reg methods[] = {
   { "inotify_read", guestfs_int_lua_inotify_read },
   { "inotify_rm_watch", guestfs_int_lua_inotify_rm_watch },
   { "inspect_get_arch", guestfs_int_lua_inspect_get_arch },
+  { "inspect_get_build_id", guestfs_int_lua_inspect_get_build_id },
   { "inspect_get_distro", guestfs_int_lua_inspect_get_distro },
   { "inspect_get_drive_mappings", guestfs_int_lua_inspect_get_drive_mappings },
   { "inspect_get_filesystems", guestfs_int_lua_inspect_get_filesystems },
@@ -17957,7 +18029,7 @@ luaopen_guestfs (lua_State *L)
 
   /* Add _COPYRIGHT, etc. fields to the module namespace. */
   lua_pushliteral (L, "_COPYRIGHT");
-  lua_pushliteral (L, "Copyright (C) 2009-2020 Red Hat Inc.");
+  lua_pushliteral (L, "Copyright (C) 2009-2023 Red Hat Inc.");
   lua_settable (L, -3);
 
   lua_pushliteral (L, "_DESCRIPTION");

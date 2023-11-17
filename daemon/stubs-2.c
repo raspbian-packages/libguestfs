@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -2467,53 +2467,6 @@ pwrite_device_stub (XDR *xdr_in)
   struct guestfs_pwrite_device_ret ret;
   ret.nbytes = r;
   reply ((xdrproc_t) &xdr_guestfs_pwrite_device_ret, (char *) &ret);
-}
-
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
-#define CLEANUP_XDR_FREE_READDIR_ARGS \
-    __attribute__((cleanup(cleanup_xdr_free_readdir_args)))
-
-static void
-cleanup_xdr_free_readdir_args (struct guestfs_readdir_args *argsp)
-{
-  xdr_free ((xdrproc_t) xdr_guestfs_readdir_args, (char *) argsp);
-}
-
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_READDIR_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
-
-void
-readdir_stub (XDR *xdr_in)
-{
-  CLEANUP_FREE guestfs_int_dirent_list *r = NULL;
-  CLEANUP_XDR_FREE_READDIR_ARGS struct guestfs_readdir_args args;
-  memset (&args, 0, sizeof args);
-  const char *dir;
-
-  if (optargs_bitmask != 0) {
-    reply_with_error ("header optargs_bitmask field must be passed as 0 for calls that don't take optional arguments");
-    return;
-  }
-
-  if (!xdr_guestfs_readdir_args (xdr_in, &args)) {
-    reply_with_error ("daemon failed to decode procedure arguments");
-    return;
-  }
-  dir = args.dir;
-  ABS_PATH (dir, false, return);
-
-  NEED_ROOT (false, return);
-  r = do_readdir (dir);
-  if (r == NULL)
-    /* do_readdir has already called reply_with_error */
-    return;
-
-  struct guestfs_readdir_ret ret;
-  ret.entries = *r;
-  reply ((xdrproc_t) xdr_guestfs_readdir_ret, (char *) &ret);
-  xdr_free ((xdrproc_t) xdr_guestfs_readdir_ret, (char *) &ret);
 }
 
 #ifdef HAVE_ATTRIBUTE_CLEANUP

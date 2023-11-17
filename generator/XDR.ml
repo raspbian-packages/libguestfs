@@ -1,5 +1,5 @@
 (* libguestfs
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,6 +49,10 @@ let generate_xdr () =
   pr " */\n";
   pr "\n";
   pr "%%#include <config.h>\n";
+  pr "\n";
+  pr "%%#ifndef HAVE_XDR_UINT64_T\n";
+  pr "%%#define xdr_uint64_t xdr_int64_t\n";
+  pr "%%#endif\n";
   pr "\n";
 
   pr "/* This has to be defined to get around a limitation in Sun's rpcgen. */\n";

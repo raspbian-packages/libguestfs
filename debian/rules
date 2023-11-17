@@ -136,7 +136,9 @@ override_dh_autoreconf:
 override_dh_auto_test:
 ifneq "" "$(findstring x$(DEB_HOST_ARCH)x,$(patsubst %,x%x,$(QUICKCHECK_ARCHITECTURES)))"
 	printenv
-	unset XDG_RUNTIME_DIR; \
+	mount
+	unset XDG_RUNTIME_DIR; export TMPDIR=$(CURDIR)/tmp; \
+		mkdir -p $(CURDIR)/tmp; \
 		if ! test -w /dev/kvm; then \
 			export LIBGUESTFS_BACKEND_SETTINGS=force_tcg; \
 		fi; \

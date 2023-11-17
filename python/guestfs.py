@@ -5,7 +5,7 @@
 #          and from the code in the generator/ subdirectory.
 # ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 #
-# Copyright (C) 2009-2020 Red Hat Inc.
+# Copyright (C) 2009-2023 Red Hat Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -649,7 +649,8 @@ class GuestFS(object):
     def add_drive_ro_with_if(self, filename: str, iface: str) -> None:
         """This is the same as "g.add_drive_ro" but it allows you
         to specify the QEMU interface emulation to use at run
-        time.
+        time. Both the direct and the libvirt backends ignore
+        "iface".
 
         *This function is deprecated.* In new code, use the
         "add_drive" call instead.
@@ -686,6 +687,7 @@ class GuestFS(object):
     def add_drive_with_if(self, filename: str, iface: str) -> None:
         """This is the same as "g.add_drive" but it allows you to
         specify the QEMU interface emulation to use at run time.
+        Both the direct and the libvirt backends ignore "iface".
 
         *This function is deprecated.* In new code, use the
         "add_drive" call instead.
@@ -2013,6 +2015,49 @@ class GuestFS(object):
         r = libguestfsmod.clear_backend_setting(self._o, name)
         return r
 
+    def clevis_luks_unlock(self, device: str, mapname: str) -> None:
+        """This command opens a block device that has been
+        encrypted according to the Linux Unified Key Setup
+        (LUKS) standard, using network-bound disk encryption
+        (NBDE).
+
+        "device" is the encrypted block device.
+
+        The appliance will connect to the Tang servers noted in
+        the tree of Clevis pins that is bound to a keyslot of
+        the LUKS header. The Clevis pin tree may comprise "sss"
+        (redudancy) pins as internal nodes (optionally), and
+        "tang" pins as leaves. "tpm2" pins are not supported.
+        The appliance unlocks the encrypted block device by
+        combining responses from the Tang servers with metadata
+        from the LUKS header; there is no "key" parameter.
+
+        This command will fail if networking has not been
+        enabled for the appliance. Refer to "g.set_network".
+
+        The command creates a new block device called
+        /dev/mapper/mapname. Reads and writes to this block
+        device are decrypted from and encrypted to the
+        underlying "device" respectively. Close the decrypted
+        block device with "g.cryptsetup_close".
+
+        "mapname" cannot be "control" because that name is
+        reserved by device-mapper.
+
+        If this block device contains LVM volume groups, then
+        calling "g.lvm_scan" with the "activate" parameter
+        "true" will make them visible.
+
+        Use "g.list_dm_devices" to list all device mapper
+        devices.
+
+        This function depends on the feature "clevisluks". See
+        also "g.feature-available".
+        """
+        self._check_not_closed()
+        r = libguestfsmod.clevis_luks_unlock(self._o, device, mapname)
+        return r
+
     def command(self, arguments: List[str]) -> str:
         """This call runs a command from the guest filesystem. The
         filesystem must be mounted, and must contain a
@@ -2460,10 +2505,25 @@ class GuestFS(object):
         Index numbers start from 0. The named device must exist,
         for example as a string returned from "g.list_devices".
 
-        See also "g.list_devices", "g.part_to_dev".
+        See also "g.list_devices", "g.part_to_dev",
+        "g.device_name".
         """
         self._check_not_closed()
         r = libguestfsmod.device_index(self._o, device)
+        return r
+
+    def device_name(self, index: int) -> str:
+        """This function takes a device index and returns the
+        device name. For example index 0 will return the string
+        "/dev/sda".
+
+        The drive index must have been added to the handle.
+
+        See also "g.list_devices", "g.part_to_dev",
+        "g.device_index".
+        """
+        self._check_not_closed()
+        r = libguestfsmod.device_name(self._o, index)
         return r
 
     def df(self) -> str:
@@ -4622,6 +4682,25 @@ class GuestFS(object):
         """
         self._check_not_closed()
         r = libguestfsmod.inspect_get_arch(self._o, root)
+        return r
+
+    def inspect_get_build_id(self, root: str) -> str:
+        """This returns the build ID of the system, or the string
+        "unknown" if the system does not have a build ID.
+
+        For Windows, this gets the build number. Although it is
+        returned as a string, it is (so far) always a number.
+        See
+        <https://en.wikipedia.org/wiki/List_of_Microsoft_Windows
+        _versions> for some possible values.
+
+        For Linux, this returns the "BUILD_ID" string from
+        /etc/os-release, although this is not often used.
+
+        Please read "INSPECTION" in guestfs(3) for more details.
+        """
+        self._check_not_closed()
+        r = libguestfsmod.inspect_get_build_id(self._o, root)
         return r
 
     def inspect_get_distro(self, root: str) -> str:
@@ -9042,10 +9121,6 @@ class GuestFS(object):
 
         This function returns a list of dirents. Each dirent is
         represented as a dictionary.
-
-        Because of the message protocol, there is a transfer
-        limit of somewhere between 2MB and 4MB. See "PROTOCOL
-        LIMITS" in guestfs(3).
         """
         self._check_not_closed()
         r = libguestfsmod.readdir(self._o, dir)

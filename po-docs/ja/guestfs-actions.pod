@@ -7,7 +7,7 @@ libguestfs generated file
           and from the code in the generator/ subdirectory.
  ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 
- Copyright (C) 2009-2020 Red Hat Inc.
+ Copyright (C) 2009-2023 Red Hat Inc.
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -505,7 +505,7 @@ I<This function is deprecated.> In new code, use the L</guestfs_add_drive> call 
 
 Deprecated functions will not be removed from the API, but the fact that they are deprecated indicates that there are problems with correct use of these functions.
 
-This is the same as C<guestfs_add_drive_ro> but it allows you to specify the QEMU interface emulation to use at run time.
+This is the same as C<guestfs_add_drive_ro> but it allows you to specify the QEMU interface emulation to use at run time.  Both the direct and the libvirt backends ignore C<iface>.
 
 この関数は、成功のとき 0 を、エラーのとき -1 を返します。
 
@@ -565,7 +565,7 @@ I<This function is deprecated.> In new code, use the L</guestfs_add_drive> call 
 
 Deprecated functions will not be removed from the API, but the fact that they are deprecated indicates that there are problems with correct use of these functions.
 
-This is the same as C<guestfs_add_drive> but it allows you to specify the QEMU interface emulation to use at run time.
+This is the same as C<guestfs_add_drive> but it allows you to specify the QEMU interface emulation to use at run time.  Both the direct and the libvirt backends ignore C<iface>.
 
 この関数は、成功のとき 0 を、エラーのとき -1 を返します。
 
@@ -2294,6 +2294,35 @@ See L<guestfs(3)/BACKEND>, L<guestfs(3)/BACKEND SETTINGS>.
 
 (Added in 1.27.2)
 
+=head2 guestfs_clevis_luks_unlock
+
+ int
+ guestfs_clevis_luks_unlock (guestfs_h *g,
+                             const char *device,
+                             const char *mapname);
+
+This command opens a block device that has been encrypted according to the Linux Unified Key Setup (LUKS) standard, using network-bound disk encryption (NBDE).
+
+C<device> is the encrypted block device.
+
+The appliance will connect to the Tang servers noted in the tree of Clevis pins that is bound to a keyslot of the LUKS header.  The Clevis pin tree may comprise C<sss> (redudancy) pins as internal nodes (optionally), and C<tang> pins as leaves.  C<tpm2> pins are not supported.  The appliance unlocks the encrypted block device by combining responses from the Tang servers with metadata from the LUKS header; there is no C<key> parameter.
+
+This command will fail if networking has not been enabled for the appliance. Refer to C<guestfs_set_network>.
+
+The command creates a new block device called F</dev/mapper/mapname>.  Reads and writes to this block device are decrypted from and encrypted to the underlying C<device> respectively.  Close the decrypted block device with C<guestfs_cryptsetup_close>.
+
+C<mapname> cannot be C<"control"> because that name is reserved by device-mapper.
+
+If this block device contains LVM volume groups, then calling C<guestfs_lvm_scan> with the C<activate> parameter C<true> will make them visible.
+
+すべてのデバイスマッパーデバイスを一覧表示するには C<guestfs_list_dm_devices> を使用します。
+
+この関数は、成功のとき 0 を、エラーのとき -1 を返します。
+
+This function depends on the feature C<clevisluks>.  See also L</guestfs_feature_available>.
+
+(Added in 1.49.3)
+
 =head2 guestfs_command
 
  char *
@@ -2996,11 +3025,27 @@ If the destination is a device, it must be as large or larger than the source fi
 
 Index numbers start from 0.  The named device must exist, for example as a string returned from C<guestfs_list_devices>.
 
-C<guestfs_list_devices>, C<guestfs_part_to_dev> 参照。
+See also C<guestfs_list_devices>, C<guestfs_part_to_dev>, C<guestfs_device_name>.
 
 この関数はエラーのとき -1 を返します。
 
 (1.19.7 において追加)
+
+=head2 guestfs_device_name
+
+ char *
+ guestfs_device_name (guestfs_h *g,
+                      int index);
+
+This function takes a device index and returns the device name.  For example index C<0> will return the string C</dev/sda>.
+
+The drive index must have been added to the handle.
+
+See also C<guestfs_list_devices>, C<guestfs_part_to_dev>, C<guestfs_device_index>.
+
+この関数は文字列を返します。エラー時は NULL です。 I<呼び出し元は使用後に返された文字列を開放する必要があります>。
+
+(Added in 1.49.1)
 
 =head2 guestfs_df
 
@@ -5487,6 +5532,24 @@ This function depends on the feature C<inotify>.  See also L</guestfs_feature_av
 この関数は文字列を返します。エラー時は NULL です。 I<呼び出し元は使用後に返された文字列を開放する必要があります>。
 
 (1.5.3 において追加)
+
+=head2 guestfs_inspect_get_build_id
+
+ char *
+ guestfs_inspect_get_build_id (guestfs_h *g,
+                               const char *root);
+
+This returns the build ID of the system, or the string C<"unknown"> if the system does not have a build ID.
+
+For Windows, this gets the build number.  Although it is returned as a string, it is (so far) always a number.  See L<https://en.wikipedia.org/wiki/List_of_Microsoft_Windows_versions> for some possible values.
+
+For Linux, this returns the C<BUILD_ID> string from F</etc/os-release>, although this is not often used.
+
+詳細は L<guestfs(3)/INSPECTION> を参照してください。
+
+この関数は文字列を返します。エラー時は NULL です。 I<呼び出し元は使用後に返された文字列を開放する必要があります>。
+
+(Added in 1.49.8)
 
 =head2 guestfs_inspect_get_distro
 
@@ -10295,7 +10358,7 @@ This function is primarily intended for use by programs.  To get a simple list o
 
 この関数は C<struct guestfs_dirent_list *> を返します。もしくは、エラーが発生すると NULL を返します。 I<呼び出し元は使用後に C<guestfs_free_dirent_list> を呼び出す必要があります>。
 
-Because of the message protocol, there is a transfer limit of somewhere between 2MB and 4MB.  See L<guestfs(3)/PROTOCOL LIMITS>.
+This long-running command can generate progress notification messages so that the caller can display a progress bar or indicator.  To receive these messages, the caller must register a progress event callback.  See L<guestfs(3)/GUESTFS_EVENT_PROGRESS>.
 
 (1.0.55 において追加)
 

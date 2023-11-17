@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -692,6 +692,33 @@ struct command_entry inotify_read_cmd_entry = {
           "",
   .synopsis = "inotify-read",
   .run = run_inotify_read
+};
+
+struct command_entry inspect_get_build_id_cmd_entry = {
+  .name = "inspect-get-build-id",
+  .help = "NAME\n"
+          "    inspect-get-build-id - get the system build ID\n"
+          "\n"
+          "SYNOPSIS\n"
+          "     inspect-get-build-id root\n"
+          "\n"
+          "DESCRIPTION\n"
+          "    This returns the build ID of the system, or the string \"unknown\" if the\n"
+          "    system does not have a build ID.\n"
+          "\n"
+          "    For Windows, this gets the build number. Although it is returned as a\n"
+          "    string, it is (so far) always a number. See\n"
+          "    <https://en.wikipedia.org/wiki/List_of_Microsoft_Windows_versions> for\n"
+          "    some possible values.\n"
+          "\n"
+          "    For Linux, this returns the \"BUILD_ID\" string from /etc/os-release,\n"
+          "    although this is not often used.\n"
+          "\n"
+          "    Please read \"INSPECTION\" in guestfs(3) for more details.\n"
+          "\n"
+          "",
+  .synopsis = "inspect-get-build-id root",
+  .run = run_inspect_get_build_id
 };
 
 struct command_entry inspect_get_mountpoints_cmd_entry = {

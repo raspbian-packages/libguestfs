@@ -1,5 +1,5 @@
 /* libguestfs
- * Copyright (C) 2013-2020 Red Hat Inc.
+ * Copyright (C) 2013-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,6 +19,8 @@
 #ifndef GUESTFS_GETPROGNAME
 #define GUESTFS_GETPROGNAME
 
+#ifndef HAVE_GETPROGNAME
+
 #include <errno.h>
 
 static inline char const *
@@ -26,5 +28,7 @@ getprogname (void)
 {
   return program_invocation_short_name;
 }
+
+#endif
 
 #endif /* GUESTFS_GETPROGNAME */

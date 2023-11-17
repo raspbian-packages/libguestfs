@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -1647,28 +1647,6 @@ guestfs_int_py_put_yara_detection (struct guestfs_yara_detection *yara_detection
 };
 #endif
 
-#ifdef GUESTFS_HAVE_STRUCT_LVM_LV
-PyObject *
-guestfs_int_py_put_lvm_lv_list (struct guestfs_lvm_lv_list *lvm_lvs)
-{
-  PyObject *list, *element;
-  size_t i;
-
-  list = PyList_New (lvm_lvs->len);
-  if (list == NULL)
-    return NULL;
-  for (i = 0; i < lvm_lvs->len; ++i) {
-    element = guestfs_int_py_put_lvm_lv (&lvm_lvs->val[i]);
-    if (element == NULL) {
-      Py_CLEAR (list);
-      return NULL;
-    }
-    PyList_SetItem (list, i, element);
-  }
-  return list;
-};
-#endif
-
 #ifdef GUESTFS_HAVE_STRUCT_DIRENT
 PyObject *
 guestfs_int_py_put_dirent_list (struct guestfs_dirent_list *dirents)
@@ -1681,6 +1659,28 @@ guestfs_int_py_put_dirent_list (struct guestfs_dirent_list *dirents)
     return NULL;
   for (i = 0; i < dirents->len; ++i) {
     element = guestfs_int_py_put_dirent (&dirents->val[i]);
+    if (element == NULL) {
+      Py_CLEAR (list);
+      return NULL;
+    }
+    PyList_SetItem (list, i, element);
+  }
+  return list;
+};
+#endif
+
+#ifdef GUESTFS_HAVE_STRUCT_LVM_LV
+PyObject *
+guestfs_int_py_put_lvm_lv_list (struct guestfs_lvm_lv_list *lvm_lvs)
+{
+  PyObject *list, *element;
+  size_t i;
+
+  list = PyList_New (lvm_lvs->len);
+  if (list == NULL)
+    return NULL;
+  for (i = 0; i < lvm_lvs->len; ++i) {
+    element = guestfs_int_py_put_lvm_lv (&lvm_lvs->val[i]);
     if (element == NULL) {
       Py_CLEAR (list);
       return NULL;

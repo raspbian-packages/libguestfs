@@ -1,5 +1,5 @@
 /* libguestfs
- * Copyright (C) 2013-2020 Red Hat Inc.
+ * Copyright (C) 2013-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -151,5 +151,17 @@ typedef enum {
   MOUNTABLE_BTRFSVOL,   /* A btrfs subvolume: device + volume */
   MOUNTABLE_PATH        /* An already mounted path: device = path */
 } mountable_type_t;
+
+/* Some functions replaced by gnulib */
+#ifndef HAVE_ACCEPT4
+#include <sys/socket.h>
+
+extern int accept4 (int sockfd, struct sockaddr *__restrict__ addr,
+		    socklen_t *__restrict__ addrlen, int flags);
+#endif
+
+#ifndef HAVE_PIPE2
+extern int pipe2 (int pipefd[2], int flags);
+#endif
 
 #endif /* GUESTFS_INTERNAL_ALL_H_ */

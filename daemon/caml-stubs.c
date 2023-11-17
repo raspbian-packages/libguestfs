@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -699,6 +699,35 @@ do_inspect_get_arch (const mountable_t *root)
   if (Is_exception_result (retv)) {
     retv = Extract_exception (retv);
     guestfs_int_daemon_exn_to_reply_with_error ("inspect_get_arch", retv);
+    CAMLreturnT (void *, NULL);
+  }
+
+  char *ret = strdup (String_val (retv));
+  if (ret == NULL) {
+    reply_with_perror ("strdup");
+    CAMLreturnT (char *, NULL);
+  }
+  CAMLreturnT (char *, ret); /* caller frees */
+}
+
+/* Wrapper for OCaml function ‘Inspect.inspect_get_build_id’. */
+char *
+do_inspect_get_build_id (const mountable_t *root)
+{
+  static const value *cb = NULL;
+  CAMLparam0 ();
+  CAMLlocal2 (v, retv);
+  CAMLlocalN (args, 1);
+
+  if (cb == NULL)
+    cb = caml_named_value ("Inspect.inspect_get_build_id");
+
+  args[0] = guestfs_int_daemon_copy_mountable (root);
+  retv = caml_callbackN_exn (*cb, 1, args);
+
+  if (Is_exception_result (retv)) {
+    retv = Extract_exception (retv);
+    guestfs_int_daemon_exn_to_reply_with_error ("inspect_get_build_id", retv);
     CAMLreturnT (void *, NULL);
   }
 

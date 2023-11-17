@@ -1,5 +1,5 @@
 (* guestfs-inspection
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,6 +48,7 @@ and inspection_data = {
   mutable version : version option;
   mutable arch : string option;
   mutable hostname : string option;
+  mutable build_id : string option;
   mutable fstab : fstab_entry list;
   mutable windows_systemroot : string option;
   mutable windows_software_hive : string option;
@@ -149,37 +150,39 @@ and string_of_root { root_location; inspection_data } =
 and string_of_inspection_data data =
   let b = Buffer.create 1024 in
   let bpf fs = bprintf b fs in
-  Option.may (fun v -> bpf "    type: %s\n" (string_of_os_type v))
+  Option.iter (fun v -> bpf "    type: %s\n" (string_of_os_type v))
              data.os_type;
-  Option.may (fun v -> bpf "    distro: %s\n" (string_of_distro v))
+  Option.iter (fun v -> bpf "    distro: %s\n" (string_of_distro v))
              data.distro;
-  Option.may (fun v -> bpf "    package_format: %s\n" (string_of_package_format v))
+  Option.iter (fun v -> bpf "    package_format: %s\n" (string_of_package_format v))
              data.package_format;
-  Option.may (fun v -> bpf "    package_management: %s\n" (string_of_package_management v))
+  Option.iter (fun v -> bpf "    package_management: %s\n" (string_of_package_management v))
              data.package_management;
-  Option.may (fun v -> bpf "    product_name: %s\n" v)
+  Option.iter (fun v -> bpf "    product_name: %s\n" v)
              data.product_name;
-  Option.may (fun v -> bpf "    product_variant: %s\n" v)
+  Option.iter (fun v -> bpf "    product_variant: %s\n" v)
              data.product_variant;
-  Option.may (fun (major, minor) -> bpf "    version: %d.%d\n" major minor)
+  Option.iter (fun (major, minor) -> bpf "    version: %d.%d\n" major minor)
              data.version;
-  Option.may (fun v -> bpf "    arch: %s\n" v)
+  Option.iter (fun v -> bpf "    arch: %s\n" v)
              data.arch;
-  Option.may (fun v -> bpf "    hostname: %s\n" v)
+  Option.iter (fun v -> bpf "    hostname: %s\n" v)
              data.hostname;
+  Option.iter (fun v -> bpf "    build ID: %s\n" v)
+             data.build_id;
   if data.fstab <> [] then (
     let v = List.map (
       fun (a, b) -> sprintf "(%s, %s)" (Mountable.to_string a) b
     ) data.fstab in
     bpf "    fstab: [%s]\n" (String.concat ", " v)
   );
-  Option.may (fun v -> bpf "    windows_systemroot: %s\n" v)
+  Option.iter (fun v -> bpf "    windows_systemroot: %s\n" v)
              data.windows_systemroot;
-  Option.may (fun v -> bpf "    windows_software_hive: %s\n" v)
+  Option.iter (fun v -> bpf "    windows_software_hive: %s\n" v)
              data.windows_software_hive;
-  Option.may (fun v -> bpf "    windows_system_hive: %s\n" v)
+  Option.iter (fun v -> bpf "    windows_system_hive: %s\n" v)
              data.windows_system_hive;
-  Option.may (fun v -> bpf "    windows_current_control_set: %s\n" v)
+  Option.iter (fun v -> bpf "    windows_current_control_set: %s\n" v)
              data.windows_current_control_set;
   if data.drive_mappings <> [] then (
     let v =
@@ -272,6 +275,7 @@ let null_inspection_data = {
   version = None;
   arch = None;
   hostname = None;
+  build_id = None;
   fstab = [];
   windows_systemroot = None;
   windows_software_hive = None;
@@ -294,6 +298,7 @@ let merge_inspection_data child parent =
   parent.version <-         merge child.version parent.version;
   parent.arch <-            merge child.arch parent.arch;
   parent.hostname <-        merge child.hostname parent.hostname;
+  parent.build_id <-        merge child.build_id parent.build_id;
   parent.fstab <-           child.fstab @ parent.fstab;
   parent.windows_systemroot <-
     merge child.windows_systemroot parent.windows_systemroot;

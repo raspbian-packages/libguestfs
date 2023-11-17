@@ -6,7 +6,7 @@ libguestfs generated file
           and from the code in the generator/ subdirectory.
  ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 
- Copyright (C) 2009-2020 Red Hat Inc.
+ Copyright (C) 2009-2023 Red Hat Inc.
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -632,6 +632,7 @@ with correct use of these functions.
 
 This is the same as C<guestfs_add_drive_ro> but it allows you
 to specify the QEMU interface emulation to use at run time.
+Both the direct and the libvirt backends ignore C<iface>.
 
 This function returns 0 on success or -1 on error.
 
@@ -703,6 +704,7 @@ with correct use of these functions.
 
 This is the same as C<guestfs_add_drive> but it allows you
 to specify the QEMU interface emulation to use at run time.
+Both the direct and the libvirt backends ignore C<iface>.
 
 This function returns 0 on success or -1 on error.
 
@@ -2731,6 +2733,51 @@ On error this function returns -1.
 
 (Added in 1.27.2)
 
+=head2 guestfs_clevis_luks_unlock
+
+ int
+ guestfs_clevis_luks_unlock (guestfs_h *g,
+                             const char *device,
+                             const char *mapname);
+
+This command opens a block device that has been encrypted according to
+the Linux Unified Key Setup (LUKS) standard, using network-bound disk
+encryption (NBDE).
+
+C<device> is the encrypted block device.
+
+The appliance will connect to the Tang servers noted in the tree of
+Clevis pins that is bound to a keyslot of the LUKS header.  The Clevis
+pin tree may comprise C<sss> (redudancy) pins as internal nodes
+(optionally), and C<tang> pins as leaves.  C<tpm2> pins are not
+supported.  The appliance unlocks the encrypted block device by
+combining responses from the Tang servers with metadata from the LUKS
+header; there is no C<key> parameter.
+
+This command will fail if networking has not been enabled for the
+appliance. Refer to C<guestfs_set_network>.
+
+The command creates a new block device called F</dev/mapper/mapname>.
+Reads and writes to this block device are decrypted from and encrypted
+to the underlying C<device> respectively.  Close the decrypted block
+device with C<guestfs_cryptsetup_close>.
+
+C<mapname> cannot be C<"control"> because that name is reserved by
+device-mapper.
+
+If this block device contains LVM volume groups, then calling
+C<guestfs_lvm_scan> with the C<activate> parameter C<true> will make
+them visible.
+
+Use C<guestfs_list_dm_devices> to list all device mapper devices.
+
+This function returns 0 on success or -1 on error.
+
+This function depends on the feature C<clevisluks>.  See also
+L</guestfs_feature_available>.
+
+(Added in 1.49.3)
+
 =head2 guestfs_command
 
  char *
@@ -3590,11 +3637,31 @@ returns the index of the device in the list of devices.
 Index numbers start from 0.  The named device must exist,
 for example as a string returned from C<guestfs_list_devices>.
 
-See also C<guestfs_list_devices>, C<guestfs_part_to_dev>.
+See also C<guestfs_list_devices>, C<guestfs_part_to_dev>,
+C<guestfs_device_name>.
 
 On error this function returns -1.
 
 (Added in 1.19.7)
+
+=head2 guestfs_device_name
+
+ char *
+ guestfs_device_name (guestfs_h *g,
+                      int index);
+
+This function takes a device index and returns the device
+name.  For example index C<0> will return the string C</dev/sda>.
+
+The drive index must have been added to the handle.
+
+See also C<guestfs_list_devices>, C<guestfs_part_to_dev>,
+C<guestfs_device_index>.
+
+This function returns a string, or NULL on error.
+I<The caller must free the returned string after use>.
+
+(Added in 1.49.1)
 
 =head2 guestfs_df
 
@@ -6650,6 +6717,30 @@ This function returns a string, or NULL on error.
 I<The caller must free the returned string after use>.
 
 (Added in 1.5.3)
+
+=head2 guestfs_inspect_get_build_id
+
+ char *
+ guestfs_inspect_get_build_id (guestfs_h *g,
+                               const char *root);
+
+This returns the build ID of the system, or the string
+C<"unknown"> if the system does not have a build ID.
+
+For Windows, this gets the build number.  Although it is
+returned as a string, it is (so far) always a number.  See
+L<https://en.wikipedia.org/wiki/List_of_Microsoft_Windows_versions>
+for some possible values.
+
+For Linux, this returns the C<BUILD_ID> string from
+F</etc/os-release>, although this is not often used.
+
+Please read L<guestfs(3)/INSPECTION> for more details.
+
+This function returns a string, or NULL on error.
+I<The caller must free the returned string after use>.
+
+(Added in 1.49.8)
 
 =head2 guestfs_inspect_get_distro
 
@@ -12609,8 +12700,10 @@ This function returns a C<struct guestfs_dirent_list *>,
 or NULL if there was an error.
 I<The caller must call C<guestfs_free_dirent_list> after use>.
 
-Because of the message protocol, there is a transfer limit
-of somewhere between 2MB and 4MB.  See L<guestfs(3)/PROTOCOL LIMITS>.
+This long-running command can generate progress notification messages
+so that the caller can display a progress bar or indicator.
+To receive these messages, the caller must register a progress
+event callback.  See L<guestfs(3)/GUESTFS_EVENT_PROGRESS>.
 
 (Added in 1.0.55)
 

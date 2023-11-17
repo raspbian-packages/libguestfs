@@ -23,6 +23,7 @@ dnl Basically the same with a few minor tweaks.
 ifelse(UBUNTU,1,`define(`DEBIAN',1)')
 
 ifelse(REDHAT,1,
+  clevis-luks
   cryptsetup
   cryptsetup-luks      dnl old name used before Fedora 17
   dhclient
@@ -56,6 +57,7 @@ ifelse(DEBIAN,1,
   bsdextrautils
 dnl old name used in Jessie and earlier
   btrfs-tools
+  clevis-luks
   cryptsetup-bin
   dash
   extlinux
@@ -97,6 +99,7 @@ dnl iproute has been renamed to iproute2
 ifelse(ARCHLINUX,1,
   cdrkit
   cdrtools
+  clevis
   cryptsetup
   dhclient
   dhcpcd
@@ -125,6 +128,7 @@ ifelse(SUSE,1,
   augeas-lenses
   btrfsprogs
   cdrkit-cdrtools-compat
+  clevis
   cryptsetup
   dhcpcd
   dhcp-client

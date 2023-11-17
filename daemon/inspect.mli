@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@ val inspect_get_product_variant : Mountable.t -> string
 val inspect_get_windows_current_control_set : Mountable.t -> string
 val inspect_get_windows_software_hive : Mountable.t -> string
 val inspect_get_windows_system_hive : Mountable.t -> string
+val inspect_get_build_id : Mountable.t -> string
 val inspect_get_mountpoints : Mountable.t -> (string * Mountable.t) list
 val inspect_get_filesystems : Mountable.t -> Mountable.t list
 val inspect_get_drive_mappings : Mountable.t -> (string * string) list

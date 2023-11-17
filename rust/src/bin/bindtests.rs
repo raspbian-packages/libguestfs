@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Hiroyuki Katsura <hiroyuki.katsura.0513@gmail.com>
+ * Copyright (C) 2009-2023 Hiroyuki Katsura <hiroyuki.katsura.0513@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -4,7 +4,7 @@
 #          and from the code in the generator/ subdirectory.
 # ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 #
-# Copyright (C) 2009-2020 Red Hat Inc.
+# Copyright (C) 2009-2023 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -144,6 +144,7 @@
         guestfs_chmod;
         guestfs_chown;
         guestfs_clear_backend_setting;
+        guestfs_clevis_luks_unlock;
         guestfs_close;
         guestfs_command;
         guestfs_command_lines;
@@ -298,6 +299,7 @@
         guestfs_debug_upload;
         guestfs_delete_event_callback;
         guestfs_device_index;
+        guestfs_device_name;
         guestfs_df;
         guestfs_df_h;
         guestfs_disk_create;
@@ -486,6 +488,7 @@
         guestfs_inotify_read;
         guestfs_inotify_rm_watch;
         guestfs_inspect_get_arch;
+        guestfs_inspect_get_build_id;
         guestfs_inspect_get_distro;
         guestfs_inspect_get_drive_mappings;
         guestfs_inspect_get_filesystems;
@@ -525,6 +528,7 @@
         guestfs_internal_lstatnslist;
         guestfs_internal_lxattrlist;
         guestfs_internal_parse_mountable;
+        guestfs_internal_readdir;
         guestfs_internal_readlinklist;
         guestfs_internal_rhbz914931;
         guestfs_internal_test;

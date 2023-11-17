@@ -591,9 +591,9 @@ Called during launch to add a dummy slot to C<g-E<gt>drives>.
 
 Free up all the drives in the handle.
 
-=head4 Definition C<lib/drives.c:VALID_FORMAT_IFACE>
+=head4 Definition C<lib/drives.c:VALID_FORMAT>
 
- #define VALID_FORMAT_IFACE
+ #define VALID_FORMAT
 
 Check string parameter matches regular expression C<^[-_[:alnum:]]+$> (in C locale).
 
@@ -794,7 +794,6 @@ This struct is used to maintain a list of events registered against the handle. 
  
    /* Various per-drive flags. */
    bool readonly;
-   char *iface;
    char *name;
    char *disk_label;
    char *cachemode;
@@ -985,7 +984,7 @@ Used to cache the appliance features (see F<lib/available.c>).
    int ml_debug_calls;        /* Extra debug info on each FUSE call. */
  #endif
  
- #ifdef HAVE_LIBVIRT_BACKEND
+ #ifdef HAVE_LIBVIRT
    /* Used by lib/libvirt-auth.c. */
  #define NR_CREDENTIAL_TYPES 9
    unsigned int nr_supported_credentials;

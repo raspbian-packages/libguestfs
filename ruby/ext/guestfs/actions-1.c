@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -847,7 +847,8 @@ guestfs_int_ruby_debug_drives (VALUE gv)
  * Index numbers start from 0. The named device must exist,
  * for example as a string returned from "g.list_devices".
  * 
- * See also "g.list_devices", "g.part_to_dev".
+ * See also "g.list_devices", "g.part_to_dev",
+ * "g.device_name".
  *
  *
  * [Since] Added in version 1.19.7.

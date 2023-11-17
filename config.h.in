@@ -16,14 +16,14 @@
 /* Enable packet dumps in verbose mode. */
 #undef ENABLE_PACKET_DUMP
 
-/* Enable systemtap/DTrace userspace probes. */
-#undef ENABLE_PROBES
-
 /* Name of fuser program. */
 #undef FUSER
 
 /* Define guestfs default path. */
 #undef GUESTFS_DEFAULT_PATH
+
+/* Define to 1 if you have the `accept4' function. */
+#undef HAVE_ACCEPT4
 
 /* Define to 1 if the POSIX acl library is available. */
 #undef HAVE_ACL
@@ -84,6 +84,12 @@
 /* Define to 1 if you have the <errno.h> header file. */
 #undef HAVE_ERRNO_H
 
+/* Define to 1 if you have the `error' function. */
+#undef HAVE_ERROR
+
+/* Define to 1 if you have the <error.h> header file. */
+#undef HAVE_ERROR_H
+
 /* Define to 1 if you have the `fsync' function. */
 #undef HAVE_FSYNC
 
@@ -98,6 +104,9 @@
 
 /* Define to 1 if you have the `getcon' function. */
 #undef HAVE_GETCON
+
+/* Define to 1 if you have the `getprogname' function. */
+#undef HAVE_GETPROGNAME
 
 /* Define if the GNU gettext() function is already present or preinstalled. */
 #undef HAVE_GETTEXT
@@ -200,6 +209,9 @@
 
 /* Define to 1 if you have the `ntohs' function. */
 #undef HAVE_NTOHS
+
+/* Define to 1 if you have the `pipe2' function. */
+#undef HAVE_PIPE2
 
 /* Define to 1 if you have the `posix_fadvise' function. */
 #undef HAVE_POSIX_FADVISE
@@ -312,9 +324,6 @@
 /* Define to 1 if you have the <sys/resource.h> header file. */
 #undef HAVE_SYS_RESOURCE_H
 
-/* Define to 1 if you have the <sys/sdt.h> header file. */
-#undef HAVE_SYS_SDT_H
-
 /* Define to 1 if you have the <sys/socket.h> header file. */
 #undef HAVE_SYS_SOCKET_H
 
@@ -353,6 +362,9 @@
 
 /* Define to 1 if you have the <windows.h> header file. */
 #undef HAVE_WINDOWS_H
+
+/* Define to 1 if you have the `xdr_uint64_t' function. */
+#undef HAVE_XDR_UINT64_T
 
 /* Define to 1 if you have the `xmlBufferDetach' function. */
 #undef HAVE_XMLBUFFERDETACH

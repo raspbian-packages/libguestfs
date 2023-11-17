@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -108,6 +108,7 @@ extern void checksum_device_stub (XDR *xdr_in);
 extern void checksums_out_stub (XDR *xdr_in);
 extern void chmod_stub (XDR *xdr_in);
 extern void chown_stub (XDR *xdr_in);
+extern void clevis_luks_unlock_stub (XDR *xdr_in);
 extern void command_stub (XDR *xdr_in);
 extern void command_lines_stub (XDR *xdr_in);
 extern void compress_device_out_stub (XDR *xdr_in);
@@ -203,6 +204,7 @@ extern void inotify_init_stub (XDR *xdr_in);
 extern void inotify_read_stub (XDR *xdr_in);
 extern void inotify_rm_watch_stub (XDR *xdr_in);
 extern void inspect_get_arch_stub (XDR *xdr_in);
+extern void inspect_get_build_id_stub (XDR *xdr_in);
 extern void inspect_get_distro_stub (XDR *xdr_in);
 extern void inspect_get_drive_mappings_stub (XDR *xdr_in);
 extern void inspect_get_filesystems_stub (XDR *xdr_in);
@@ -235,6 +237,7 @@ extern void internal_list_rpm_applications_stub (XDR *xdr_in);
 extern void internal_lstatnslist_stub (XDR *xdr_in);
 extern void internal_lxattrlist_stub (XDR *xdr_in);
 extern void internal_parse_mountable_stub (XDR *xdr_in);
+extern void internal_readdir_stub (XDR *xdr_in);
 extern void internal_readlinklist_stub (XDR *xdr_in);
 extern void internal_rhbz914931_stub (XDR *xdr_in);
 extern void internal_upload_stub (XDR *xdr_in);
@@ -403,7 +406,6 @@ extern void pvs_full_stub (XDR *xdr_in);
 extern void pvuuid_stub (XDR *xdr_in);
 extern void pwrite_stub (XDR *xdr_in);
 extern void pwrite_device_stub (XDR *xdr_in);
-extern void readdir_stub (XDR *xdr_in);
 extern void readlink_stub (XDR *xdr_in);
 extern void realpath_stub (XDR *xdr_in);
 extern void remount_stub (XDR *xdr_in);

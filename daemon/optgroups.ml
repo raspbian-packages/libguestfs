@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,8 @@ external blkdiscardzeroes_available : unit -> bool =
   "guestfs_int_daemon_optgroup_blkdiscardzeroes_available" [@@noalloc]
 external btrfs_available : unit -> bool =
   "guestfs_int_daemon_optgroup_btrfs_available" [@@noalloc]
+external clevisluks_available : unit -> bool =
+  "guestfs_int_daemon_optgroup_clevisluks_available" [@@noalloc]
 external extlinux_available : unit -> bool =
   "guestfs_int_daemon_optgroup_extlinux_available" [@@noalloc]
 external f2fs_available : unit -> bool =

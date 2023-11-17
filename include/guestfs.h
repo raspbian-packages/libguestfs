@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -1447,6 +1447,9 @@ extern GUESTFS_DLL_PUBLIC int guestfs_chown (guestfs_h *g, int owner, int group,
 #define GUESTFS_HAVE_CLEAR_BACKEND_SETTING 1
 extern GUESTFS_DLL_PUBLIC int guestfs_clear_backend_setting (guestfs_h *g, const char *name);
 
+#define GUESTFS_HAVE_CLEVIS_LUKS_UNLOCK 1
+extern GUESTFS_DLL_PUBLIC int guestfs_clevis_luks_unlock (guestfs_h *g, const char *device, const char *mapname);
+
 #define GUESTFS_HAVE_COMMAND 1
 extern GUESTFS_DLL_PUBLIC char *guestfs_command (guestfs_h *g, char *const *arguments);
 
@@ -1674,6 +1677,9 @@ extern GUESTFS_DLL_PUBLIC int guestfs_debug_upload (guestfs_h *g, const char *fi
 
 #define GUESTFS_HAVE_DEVICE_INDEX 1
 extern GUESTFS_DLL_PUBLIC int guestfs_device_index (guestfs_h *g, const char *device);
+
+#define GUESTFS_HAVE_DEVICE_NAME 1
+extern GUESTFS_DLL_PUBLIC char *guestfs_device_name (guestfs_h *g, int index);
 
 #define GUESTFS_HAVE_DF 1
 extern GUESTFS_DLL_PUBLIC char *guestfs_df (guestfs_h *g);
@@ -2173,6 +2179,9 @@ extern GUESTFS_DLL_PUBLIC int guestfs_inotify_rm_watch (guestfs_h *g, int wd);
 
 #define GUESTFS_HAVE_INSPECT_GET_ARCH 1
 extern GUESTFS_DLL_PUBLIC char *guestfs_inspect_get_arch (guestfs_h *g, const char *root);
+
+#define GUESTFS_HAVE_INSPECT_GET_BUILD_ID 1
+extern GUESTFS_DLL_PUBLIC char *guestfs_inspect_get_build_id (guestfs_h *g, const char *root);
 
 #define GUESTFS_HAVE_INSPECT_GET_DISTRO 1
 extern GUESTFS_DLL_PUBLIC char *guestfs_inspect_get_distro (guestfs_h *g, const char *root);
@@ -4133,6 +4142,9 @@ extern GUESTFS_DLL_PUBLIC struct guestfs_xattr_list *guestfs_internal_lxattrlist
 #define GUESTFS_HAVE_INTERNAL_PARSE_MOUNTABLE 1
 extern GUESTFS_DLL_PUBLIC struct guestfs_internal_mountable *guestfs_internal_parse_mountable (guestfs_h *g, const char *mountable);
 
+#define GUESTFS_HAVE_INTERNAL_READDIR 1
+extern GUESTFS_DLL_PUBLIC int guestfs_internal_readdir (guestfs_h *g, const char *dir, const char *filename);
+
 #define GUESTFS_HAVE_INTERNAL_READLINKLIST 1
 extern GUESTFS_DLL_PUBLIC char **guestfs_internal_readlinklist (guestfs_h *g, const char *path, char *const *names);
 
@@ -4599,6 +4611,7 @@ extern GUESTFS_DLL_PUBLIC void guestfs_free_internal_mountable_list (struct gues
 #define LIBGUESTFS_HAVE_CHMOD 1
 #define LIBGUESTFS_HAVE_CHOWN 1
 #define LIBGUESTFS_HAVE_CLEAR_BACKEND_SETTING 1
+#define LIBGUESTFS_HAVE_CLEVIS_LUKS_UNLOCK 1
 #define LIBGUESTFS_HAVE_COMMAND 1
 #define LIBGUESTFS_HAVE_COMMAND_LINES 1
 #define LIBGUESTFS_HAVE_COMPRESS_DEVICE_OUT 1
@@ -4623,6 +4636,7 @@ extern GUESTFS_DLL_PUBLIC void guestfs_free_internal_mountable_list (struct gues
 #define LIBGUESTFS_HAVE_DEBUG_DRIVES 1
 #define LIBGUESTFS_HAVE_DEBUG_UPLOAD 1
 #define LIBGUESTFS_HAVE_DEVICE_INDEX 1
+#define LIBGUESTFS_HAVE_DEVICE_NAME 1
 #define LIBGUESTFS_HAVE_DF 1
 #define LIBGUESTFS_HAVE_DF_H 1
 #define LIBGUESTFS_HAVE_DISK_CREATE 1
@@ -4736,6 +4750,7 @@ extern GUESTFS_DLL_PUBLIC void guestfs_free_internal_mountable_list (struct gues
 #define LIBGUESTFS_HAVE_INOTIFY_READ 1
 #define LIBGUESTFS_HAVE_INOTIFY_RM_WATCH 1
 #define LIBGUESTFS_HAVE_INSPECT_GET_ARCH 1
+#define LIBGUESTFS_HAVE_INSPECT_GET_BUILD_ID 1
 #define LIBGUESTFS_HAVE_INSPECT_GET_DISTRO 1
 #define LIBGUESTFS_HAVE_INSPECT_GET_DRIVE_MAPPINGS 1
 #define LIBGUESTFS_HAVE_INSPECT_GET_FILESYSTEMS 1

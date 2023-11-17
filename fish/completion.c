@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -143,6 +143,7 @@ static const char *const commands[] = {
   "chmod",
   "chown",
   "clear-backend-setting",
+  "clevis-luks-unlock",
   "command",
   "command-lines",
   "compress-device-out",
@@ -168,6 +169,7 @@ static const char *const commands[] = {
   "debug-upload",
   "delete-event",
   "device-index",
+  "device-name",
   "df",
   "df-h",
   "disk-create",
@@ -291,6 +293,7 @@ static const char *const commands[] = {
   "inotify-read",
   "inotify-rm-watch",
   "inspect-get-arch",
+  "inspect-get-build-id",
   "inspect-get-distro",
   "inspect-get-drive-mappings",
   "inspect-get-filesystems",

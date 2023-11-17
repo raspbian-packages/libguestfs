@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -165,6 +165,7 @@ extern VALUE guestfs_int_ruby_checksums_out (VALUE gv, VALUE csumtypev, VALUE di
 extern VALUE guestfs_int_ruby_chmod (VALUE gv, VALUE modev, VALUE pathv);
 extern VALUE guestfs_int_ruby_chown (VALUE gv, VALUE ownerv, VALUE groupv, VALUE pathv);
 extern VALUE guestfs_int_ruby_clear_backend_setting (VALUE gv, VALUE namev);
+extern VALUE guestfs_int_ruby_clevis_luks_unlock (VALUE gv, VALUE devicev, VALUE mapnamev);
 extern VALUE guestfs_int_ruby_command (VALUE gv, VALUE argumentsv);
 extern VALUE guestfs_int_ruby_command_lines (VALUE gv, VALUE argumentsv);
 extern VALUE guestfs_int_ruby_compress_device_out (int argc, VALUE *argv, VALUE gv);
@@ -189,6 +190,7 @@ extern VALUE guestfs_int_ruby_debug (VALUE gv, VALUE subcmdv, VALUE extraargsv);
 extern VALUE guestfs_int_ruby_debug_drives (VALUE gv);
 extern VALUE guestfs_int_ruby_debug_upload (VALUE gv, VALUE filenamev, VALUE tmpnamev, VALUE modev);
 extern VALUE guestfs_int_ruby_device_index (VALUE gv, VALUE devicev);
+extern VALUE guestfs_int_ruby_device_name (VALUE gv, VALUE indexv);
 extern VALUE guestfs_int_ruby_df (VALUE gv);
 extern VALUE guestfs_int_ruby_df_h (VALUE gv);
 extern VALUE guestfs_int_ruby_disk_create (int argc, VALUE *argv, VALUE gv);
@@ -302,6 +304,7 @@ extern VALUE guestfs_int_ruby_inotify_init (VALUE gv, VALUE maxeventsv);
 extern VALUE guestfs_int_ruby_inotify_read (VALUE gv);
 extern VALUE guestfs_int_ruby_inotify_rm_watch (VALUE gv, VALUE wdv);
 extern VALUE guestfs_int_ruby_inspect_get_arch (VALUE gv, VALUE rootv);
+extern VALUE guestfs_int_ruby_inspect_get_build_id (VALUE gv, VALUE rootv);
 extern VALUE guestfs_int_ruby_inspect_get_distro (VALUE gv, VALUE rootv);
 extern VALUE guestfs_int_ruby_inspect_get_drive_mappings (VALUE gv, VALUE rootv);
 extern VALUE guestfs_int_ruby_inspect_get_filesystems (VALUE gv, VALUE rootv);

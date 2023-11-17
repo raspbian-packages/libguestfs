@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -67,8 +67,8 @@ int make_version (ei_x_buff *buff, const struct guestfs_version *version);
 int make_xattr (ei_x_buff *buff, const struct guestfs_xattr *xattr);
 int make_xfsinfo (ei_x_buff *buff, const struct guestfs_xfsinfo *xfsinfo);
 int make_yara_detection (ei_x_buff *buff, const struct guestfs_yara_detection *yara_detection);
-int make_lvm_lv_list (ei_x_buff *buff, const struct guestfs_lvm_lv_list *lvm_lvs);
 int make_dirent_list (ei_x_buff *buff, const struct guestfs_dirent_list *dirents);
+int make_lvm_lv_list (ei_x_buff *buff, const struct guestfs_lvm_lv_list *lvm_lvs);
 int make_btrfsqgroup_list (ei_x_buff *buff, const struct guestfs_btrfsqgroup_list *btrfsqgroups);
 int make_tsk_dirent_list (ei_x_buff *buff, const struct guestfs_tsk_dirent_list *tsk_dirents);
 int make_partition_list (ei_x_buff *buff, const struct guestfs_partition_list *partitions);
@@ -183,6 +183,7 @@ int run_checksums_out (ei_x_buff *retbuff, const char *buff, int *index);
 int run_chmod (ei_x_buff *retbuff, const char *buff, int *index);
 int run_chown (ei_x_buff *retbuff, const char *buff, int *index);
 int run_clear_backend_setting (ei_x_buff *retbuff, const char *buff, int *index);
+int run_clevis_luks_unlock (ei_x_buff *retbuff, const char *buff, int *index);
 int run_command (ei_x_buff *retbuff, const char *buff, int *index);
 int run_command_lines (ei_x_buff *retbuff, const char *buff, int *index);
 int run_compress_device_out (ei_x_buff *retbuff, const char *buff, int *index);
@@ -207,6 +208,7 @@ int run_debug (ei_x_buff *retbuff, const char *buff, int *index);
 int run_debug_drives (ei_x_buff *retbuff, const char *buff, int *index);
 int run_debug_upload (ei_x_buff *retbuff, const char *buff, int *index);
 int run_device_index (ei_x_buff *retbuff, const char *buff, int *index);
+int run_device_name (ei_x_buff *retbuff, const char *buff, int *index);
 int run_df (ei_x_buff *retbuff, const char *buff, int *index);
 int run_df_h (ei_x_buff *retbuff, const char *buff, int *index);
 int run_disk_create (ei_x_buff *retbuff, const char *buff, int *index);
@@ -320,6 +322,7 @@ int run_inotify_init (ei_x_buff *retbuff, const char *buff, int *index);
 int run_inotify_read (ei_x_buff *retbuff, const char *buff, int *index);
 int run_inotify_rm_watch (ei_x_buff *retbuff, const char *buff, int *index);
 int run_inspect_get_arch (ei_x_buff *retbuff, const char *buff, int *index);
+int run_inspect_get_build_id (ei_x_buff *retbuff, const char *buff, int *index);
 int run_inspect_get_distro (ei_x_buff *retbuff, const char *buff, int *index);
 int run_inspect_get_drive_mappings (ei_x_buff *retbuff, const char *buff, int *index);
 int run_inspect_get_filesystems (ei_x_buff *retbuff, const char *buff, int *index);

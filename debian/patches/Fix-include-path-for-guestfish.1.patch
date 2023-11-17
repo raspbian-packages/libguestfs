@@ -7,7 +7,7 @@ Subject: Fix include path for guestfish.1
  1 file changed, 1 insertion(+)
 
 diff --git a/po-docs/language.mk b/po-docs/language.mk
-index 9576469..61c8267 100644
+index 2d5f0fe..8968864 100644
 --- a/po-docs/language.mk
 +++ b/po-docs/language.mk
 @@ -107,6 +107,7 @@ guestfish.1: guestfish.pod guestfish-actions.pod guestfish-commands.pod guestfis

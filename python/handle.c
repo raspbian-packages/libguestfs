@@ -1,5 +1,5 @@
 /* libguestfs python bindings
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -131,21 +131,24 @@ guestfs_int_py_event_callback_wrapper (guestfs_h *g,
   }
 
   /* XXX As with Perl we don't pass the guestfs_h handle here. */
-  args = Py_BuildValue ("(Kis#O)",
+  args = Py_BuildValue ("(Kiy#O)",
                         (unsigned PY_LONG_LONG) event, event_handle,
                         buf, buf_len, py_array);
-  Py_INCREF (args);
+  Py_DECREF (py_array);
+  if (args == NULL) {
+    PyErr_PrintEx (0);
+    goto out;
+  }
 
   py_r = PyObject_CallObject (py_callback, args);
-
   Py_DECREF (args);
-
   if (py_r != NULL)
     Py_DECREF (py_r);
   else
     /* Callback threw an exception: print it. */
     PyErr_PrintEx (0);
 
+ out:
   PyGILState_Release (py_save);
 }
 

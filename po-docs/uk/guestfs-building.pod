@@ -156,6 +156,10 @@ I<Обов’язкове>.
 
 I<Обов’язкове>.
 
+=item ocaml-augeas
+
+I<Required>.  These are the OCaml bindings for Augeas, found at: L<http://people.redhat.com/~rjones/augeas/>
+
 =item xz
 
 I<Обов’язкове>.
@@ -197,10 +201,6 @@ I<Обов'язковий>. Це бібліотека, яка використо
 =item libselinux
 
 Необов'язковий. Використовується L<модулем libvirt|guestfs(3)/МОДУЛЬ> для безпечного ізолювання базової системи (sVirt).
-
-=item systemtap
-
-Не обов'язкове. Для зондування простору користувача.
 
 =item readline
 
@@ -659,5 +659,5 @@ Richard W.M. Jones (C<rjones at redhat dot com>)
 
 =head1 АВТОРСЬКІ ПРАВА
 
-© Red Hat Inc., 2009–2020
+Copyright (C) 2009-2023 Red Hat Inc.
 

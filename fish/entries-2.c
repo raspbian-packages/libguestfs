@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1637,9 +1637,6 @@ struct command_entry readdir_cmd_entry = {
           "    This function is primarily intended for use by programs. To get a simple\n"
           "    list of names, use \"ls\". To get a printable directory for human\n"
           "    consumption, use \"ll\".\n"
-          "\n"
-          "    Because of the message protocol, there is a transfer limit of somewhere\n"
-          "    between 2MB and 4MB. See \"PROTOCOL LIMITS\" in guestfs(3).\n"
           "\n"
           "",
   .synopsis = "readdir dir",

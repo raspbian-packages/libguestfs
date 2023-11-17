@@ -3,7 +3,7 @@
  *          from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Hiroyuki Katsura <hiroyuki.katsura.0513@gmail.com>
+ * Copyright (C) 2009-2023 Hiroyuki Katsura <hiroyuki.katsura.0513@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -6427,6 +6427,8 @@ extern "C" {
     #[allow(non_snake_case)]
     fn guestfs_clear_backend_setting(g: *const guestfs_h, name: *const c_char) -> c_int;
     #[allow(non_snake_case)]
+    fn guestfs_clevis_luks_unlock(g: *const guestfs_h, device: *const c_char, mapname: *const c_char) -> c_int;
+    #[allow(non_snake_case)]
     fn guestfs_command(g: *const guestfs_h, arguments: *const *const c_char) -> *const c_char;
     #[allow(non_snake_case)]
     fn guestfs_command_lines(g: *const guestfs_h, arguments: *const *const c_char) -> *const *const c_char;
@@ -6474,6 +6476,8 @@ extern "C" {
     fn guestfs_debug_upload(g: *const guestfs_h, filename: *const c_char, tmpname: *const c_char, mode: c_int) -> c_int;
     #[allow(non_snake_case)]
     fn guestfs_device_index(g: *const guestfs_h, device: *const c_char) -> c_int;
+    #[allow(non_snake_case)]
+    fn guestfs_device_name(g: *const guestfs_h, index: c_int) -> *const c_char;
     #[allow(non_snake_case)]
     fn guestfs_df(g: *const guestfs_h) -> *const c_char;
     #[allow(non_snake_case)]
@@ -6700,6 +6704,8 @@ extern "C" {
     fn guestfs_inotify_rm_watch(g: *const guestfs_h, wd: c_int) -> c_int;
     #[allow(non_snake_case)]
     fn guestfs_inspect_get_arch(g: *const guestfs_h, root: *const c_char) -> *const c_char;
+    #[allow(non_snake_case)]
+    fn guestfs_inspect_get_build_id(g: *const guestfs_h, root: *const c_char) -> *const c_char;
     #[allow(non_snake_case)]
     fn guestfs_inspect_get_distro(g: *const guestfs_h, root: *const c_char) -> *const c_char;
     #[allow(non_snake_case)]
@@ -8896,6 +8902,21 @@ impl<'a> Handle<'a> {
         Ok(r)
     }
 
+    /// open an encrypted LUKS block device with Clevis and Tang
+    #[allow(non_snake_case)]
+    pub fn clevis_luks_unlock(&self, device: &str, mapname: &str) -> Result<(), Error> {
+        let c_device = ffi::CString::new(device)?;
+        let c_mapname = ffi::CString::new(mapname)?;
+        
+        let r = unsafe { guestfs_clevis_luks_unlock(self.g, (&c_device).as_ptr(), (&c_mapname).as_ptr()) };
+        if r == -1 {
+            return Err(self.get_error_from_handle("clevis_luks_unlock"));
+        }
+        drop(c_device);
+        drop(c_mapname);
+        Ok(())
+    }
+
     /// run a command from the guest filesystem
     #[allow(non_snake_case)]
     pub fn command(&self, arguments: &[&str]) -> Result<String, Error> {
@@ -9290,6 +9311,20 @@ impl<'a> Handle<'a> {
         }
         drop(c_device);
         Ok(r)
+    }
+
+    /// convert device index to name
+    #[allow(non_snake_case)]
+    pub fn device_name(&self, index: i32) -> Result<String, Error> {
+        
+        let r = unsafe { guestfs_device_name(self.g, index) };
+        if r.is_null() {
+            return Err(self.get_error_from_handle("device_name"));
+        }
+        Ok({
+            let s = unsafe { char_ptr_to_string(r) };
+            unsafe { free(r as *const c_void) };            s?
+        })
     }
 
     /// report file system disk space usage
@@ -10894,6 +10929,22 @@ impl<'a> Handle<'a> {
         let r = unsafe { guestfs_inspect_get_arch(self.g, (&c_root).as_ptr()) };
         if r.is_null() {
             return Err(self.get_error_from_handle("inspect_get_arch"));
+        }
+        drop(c_root);
+        Ok({
+            let s = unsafe { char_ptr_to_string(r) };
+            unsafe { free(r as *const c_void) };            s?
+        })
+    }
+
+    /// get the system build ID
+    #[allow(non_snake_case)]
+    pub fn inspect_get_build_id(&self, root: &str) -> Result<String, Error> {
+        let c_root = ffi::CString::new(root)?;
+        
+        let r = unsafe { guestfs_inspect_get_build_id(self.g, (&c_root).as_ptr()) };
+        if r.is_null() {
+            return Err(self.get_error_from_handle("inspect_get_build_id"));
         }
         drop(c_root);
         Ok({

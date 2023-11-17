@@ -15,7 +15,7 @@
 @SET_MAKE@
 
 # libguestfs
-# Copyright (C) 2009-2020 Red Hat Inc.
+# Copyright (C) 2009-2023 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -451,12 +451,12 @@ TEST_LOG_COMPILE = $(TEST_LOG_COMPILER) $(AM_TEST_LOG_FLAGS) \
 DIST_SUBDIRS = common/mlstdutils generator test-data gnulib/lib \
 	common/errnostring common/protocol common/qemuopts \
 	common/utils common/structs include lib docs examples \
-	common/mlutils bundled/ocaml-augeas common/mlpcre daemon \
-	appliance tests common/edit common/options common/parallel \
-	common/progress common/visit common/windows test-tool fish \
-	rescue bash perl perl/examples ocaml ocaml/examples python \
-	python/examples ruby ruby/examples java java/examples haskell \
-	php erlang erlang/examples lua lua/examples gobject golang \
+	common/mlutils common/mlpcre daemon appliance tests \
+	common/edit common/options common/parallel common/progress \
+	common/visit common/windows test-tool fish rescue bash perl \
+	perl/examples ocaml ocaml/examples python python/examples ruby \
+	ruby/examples java java/examples haskell php erlang \
+	erlang/examples lua lua/examples gobject golang \
 	golang/examples rust csharp fuse po po-docs
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in \
 	$(srcdir)/config.sh.in $(srcdir)/installcheck.sh.in \
@@ -695,6 +695,7 @@ OCAMLOPT = @OCAMLOPT@
 OCAMLOPTDOTOPT = @OCAMLOPTDOTOPT@
 OCAMLVERSION = @OCAMLVERSION@
 OCAML_FLAGS = @OCAML_FLAGS@
+OCAML_PKG_augeas = @OCAML_PKG_augeas@
 OCAML_PKG_hivex = @OCAML_PKG_hivex@
 OCAML_RUNTIME_VARIANT_PIC_OPTION = @OCAML_RUNTIME_VARIANT_PIC_OPTION@
 OCAML_WARN_ERROR = @OCAML_WARN_ERROR@
@@ -894,17 +895,16 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = common/mlstdutils generator test-data gnulib/lib \
 	common/errnostring common/protocol common/qemuopts \
 	common/utils common/structs include lib docs examples \
-	common/mlutils bundled/ocaml-augeas common/mlpcre \
-	$(am__append_1) $(am__append_2) tests common/edit \
-	common/options common/parallel common/progress common/visit \
-	common/windows test-tool fish rescue bash $(am__append_3) \
-	$(am__append_4) $(am__append_5) $(am__append_6) \
-	$(am__append_7) $(am__append_8) $(am__append_9) \
-	$(am__append_10) $(am__append_11) $(am__append_12) \
-	$(am__append_13) $(am__append_14) csharp $(am__append_15) po \
-	$(am__append_16)
+	common/mlutils common/mlpcre $(am__append_1) $(am__append_2) \
+	tests common/edit common/options common/parallel \
+	common/progress common/visit common/windows test-tool fish \
+	rescue bash $(am__append_3) $(am__append_4) $(am__append_5) \
+	$(am__append_6) $(am__append_7) $(am__append_8) \
+	$(am__append_9) $(am__append_10) $(am__append_11) \
+	$(am__append_12) $(am__append_13) $(am__append_14) csharp \
+	$(am__append_15) po $(am__append_16)
 EXTRA_DIST = \
-	AUTHORS HACKING RELEASES TODO \
+	AUTHORS HACKING TODO \
 	.gitignore \
 	.gitpublish \
 	.lvimrc \
@@ -1699,7 +1699,7 @@ dist-hook: docs/C_SOURCE_FILES po/POTFILES
 docs/C_SOURCE_FILES: configure.ac
 	rm -f $@ $@-t
 	find $(DIST_SUBDIRS) -name '*.[ch]' | \
-	grep -v -E '^(builder/index-parse\.|builder/index-scan\.|examples/|gobject/|java/com_redhat_et_libguestfs|perl/|php/extension/config\.h|ruby/ext/guestfs/extconf\.h|tests/|test-data/|bundled/)' | \
+	grep -v -E '^(builder/index-parse\.|builder/index-scan\.|examples/|gobject/|java/com_redhat_et_libguestfs|perl/|php/extension/config\.h|ruby/ext/guestfs/extconf\.h|tests/|test-data/)' | \
 	grep -v -E '/(guestfs|rc)_protocol\.' | \
 	grep -v -E '.*/errnostring\.' | \
 	grep -v -E '.*-gperf\.' | \
@@ -1712,7 +1712,7 @@ po/POTFILES: configure.ac
 	rm -f $@ $@-t
 	cd $(srcdir); \
 	find $(DIST_SUBDIRS) -name '*.c' | \
-	grep -v -E '^(examples|perl/(blib|examples)|po-docs|tests|test-data|bundled)/' | \
+	grep -v -E '^(examples|perl/(blib|examples)|po-docs|tests|test-data)/' | \
 	grep -v -E '/((guestfs|rc)_protocol\.c|dummy\.c)$$' | \
 	grep -v -E '^python/utils\.c$$' | \
 	grep -v -E '^perl/lib/Sys/Guestfs\.c$$' | \
@@ -1904,6 +1904,7 @@ maintainer-check-extra-dist:
 	  cd common; git ls-files | sed 's,^,common/,' ) | \
 	  grep -v '^common$$' | \
 	  grep -v '^common/mlcustomize/' | \
+	  grep -v '^common/mldrivers/' | \
 	  grep -v '^common/mlgettext/' | \
 	  grep -v '^common/mlprogress/' | \
 	  grep -v '^common/mltools/' | \

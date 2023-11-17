@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2020 Red Hat Inc.
+ * Copyright (C) 2009-2023 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -1032,7 +1032,8 @@ public class GuestFS {
    * </p><p>
    * This is the same as "g.add_drive_ro" but it allows you
    * to specify the QEMU interface emulation to use at run
-   * time.
+   * time. Both the direct and the libvirt backends ignore
+   * "iface".
    * </p>
    * @since 1.0.84
    * @deprecated In new code, use {@link #add_drive} instead
@@ -1123,6 +1124,7 @@ public class GuestFS {
    * </p><p>
    * This is the same as "g.add_drive" but it allows you to
    * specify the QEMU interface emulation to use at run time.
+   * Both the direct and the libvirt backends ignore "iface".
    * </p>
    * @since 1.0.84
    * @deprecated In new code, use {@link #add_drive} instead
@@ -3837,6 +3839,62 @@ public class GuestFS {
 
   /**
    * <p>
+   * open an encrypted LUKS block device with Clevis and Tang
+   * </p><p>
+   * This command opens a block device that has been
+   * encrypted according to the Linux Unified Key Setup
+   * (LUKS) standard, using network-bound disk encryption
+   * (NBDE).
+   * </p><p>
+   * "device" is the encrypted block device.
+   * </p><p>
+   * The appliance will connect to the Tang servers noted in
+   * the tree of Clevis pins that is bound to a keyslot of
+   * the LUKS header. The Clevis pin tree may comprise "sss"
+   * (redudancy) pins as internal nodes (optionally), and
+   * "tang" pins as leaves. "tpm2" pins are not supported.
+   * The appliance unlocks the encrypted block device by
+   * combining responses from the Tang servers with metadata
+   * from the LUKS header; there is no "key" parameter.
+   * </p><p>
+   * This command will fail if networking has not been
+   * enabled for the appliance. Refer to "g.set_network".
+   * </p><p>
+   * The command creates a new block device called
+   * /dev/mapper/mapname. Reads and writes to this block
+   * device are decrypted from and encrypted to the
+   * underlying "device" respectively. Close the decrypted
+   * block device with "g.cryptsetup_close".
+   * </p><p>
+   * "mapname" cannot be "control" because that name is
+   * reserved by device-mapper.
+   * </p><p>
+   * If this block device contains LVM volume groups, then
+   * calling "g.lvm_scan" with the "activate" parameter
+   * "true" will make them visible.
+   * </p><p>
+   * Use "g.list_dm_devices" to list all device mapper
+   * devices.
+   * </p><p>
+   * This function depends on the feature "clevisluks".  See also {@link #feature_available}.
+   * </p>
+   * @since 1.49.3
+   * @throws LibGuestFSException If there is a libguestfs error.
+   */
+  public void clevis_luks_unlock (String device, String mapname)
+    throws LibGuestFSException
+  {
+    if (g == 0)
+      throw new LibGuestFSException ("clevis_luks_unlock: handle is closed");
+
+    _clevis_luks_unlock (g, device, mapname);
+  }
+
+  private native void _clevis_luks_unlock (long g, String device, String mapname)
+    throws LibGuestFSException;
+
+  /**
+   * <p>
    * run a command from the guest filesystem
    * </p><p>
    * This call runs a command from the guest filesystem. The
@@ -4890,7 +4948,8 @@ public class GuestFS {
    * Index numbers start from 0. The named device must exist,
    * for example as a string returned from "g.list_devices".
    * </p><p>
-   * See also "g.list_devices", "g.part_to_dev".
+   * See also "g.list_devices", "g.part_to_dev",
+   * "g.device_name".
    * </p>
    * @since 1.19.7
    * @throws LibGuestFSException If there is a libguestfs error.
@@ -4905,6 +4964,34 @@ public class GuestFS {
   }
 
   private native int _device_index (long g, String device)
+    throws LibGuestFSException;
+
+  /**
+   * <p>
+   * convert device index to name
+   * </p><p>
+   * This function takes a device index and returns the
+   * device name. For example index 0 will return the string
+   * "/dev/sda".
+   * </p><p>
+   * The drive index must have been added to the handle.
+   * </p><p>
+   * See also "g.list_devices", "g.part_to_dev",
+   * "g.device_index".
+   * </p>
+   * @since 1.49.1
+   * @throws LibGuestFSException If there is a libguestfs error.
+   */
+  public String device_name (int index)
+    throws LibGuestFSException
+  {
+    if (g == 0)
+      throw new LibGuestFSException ("device_name: handle is closed");
+
+    return _device_name (g, index);
+  }
+
+  private native String _device_name (long g, int index)
     throws LibGuestFSException;
 
   /**
@@ -8670,6 +8757,39 @@ public class GuestFS {
   }
 
   private native String _inspect_get_arch (long g, String root)
+    throws LibGuestFSException;
+
+  /**
+   * <p>
+   * get the system build ID
+   * </p><p>
+   * This returns the build ID of the system, or the string
+   * "unknown" if the system does not have a build ID.
+   * </p><p>
+   * For Windows, this gets the build number. Although it is
+   * returned as a string, it is (so far) always a number.
+   * See
+   * &lt;https://en.wikipedia.org/wiki/List_of_Microsoft_Windows
+   * _versions&gt; for some possible values.
+   * </p><p>
+   * For Linux, this returns the "BUILD_ID" string from
+   * /etc/os-release, although this is not often used.
+   * </p><p>
+   * Please read "INSPECTION" in guestfs(3) for more details.
+   * </p>
+   * @since 1.49.8
+   * @throws LibGuestFSException If there is a libguestfs error.
+   */
+  public String inspect_get_build_id (String root)
+    throws LibGuestFSException
+  {
+    if (g == 0)
+      throw new LibGuestFSException ("inspect_get_build_id: handle is closed");
+
+    return _inspect_get_build_id (g, root);
+  }
+
+  private native String _inspect_get_build_id (long g, String root)
     throws LibGuestFSException;
 
   /**
@@ -17213,10 +17333,6 @@ public class GuestFS {
    * This function is primarily intended for use by programs.
    * To get a simple list of names, use "g.ls". To get a
    * printable directory for human consumption, use "g.ll".
-   * </p><p>
-   * Because of the message protocol, there is a transfer
-   * limit of somewhere between 2MB and 4MB. See "PROTOCOL
-   * LIMITS" in guestfs(3).
    * </p>
    * @since 1.0.55
    * @throws LibGuestFSException If there is a libguestfs error.
