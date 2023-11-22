@@ -9,6 +9,9 @@ libguestfs (1:1.50.1-4+rpi1) trixie-staging; urgency=medium
   * Remove testsuite-specific build-dependencies.
   * Disable testsuite.
 
+  [changes introduced in 1:1.50.1-4+rpi1 by Peter Michael Green]
+  * Add build-conflicts on rustc.
+
  -- Peter Michael Green <plugwash@raspbian.org>  Fri, 17 Nov 2023 00:30:45 +0000
 
 libguestfs (1:1.50.1-4) unstable; urgency=medium

@@ -119,6 +119,7 @@ Build-Depends: debhelper-compat (= 13),
   zfs-fuse [i386 amd64 armel armhf powerpc ppc64el sparc],
   zstd,
 #-# appliance end
+Build-Conflicts: rustc
 Homepage: http://libguestfs.org
 Standards-Version: 4.6.2
 Rules-Requires-Root: no
