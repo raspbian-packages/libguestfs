@@ -1,0 +1,20 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Sun, 7 Jan 2024 16:48:37 +0100
+Subject: Add dhcpcd to Debian package list
+
+---
+ appliance/packagelist.in | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/appliance/packagelist.in b/appliance/packagelist.in
+index 29277cd..0ffb8db 100644
+--- a/appliance/packagelist.in
++++ b/appliance/packagelist.in
+@@ -76,6 +76,7 @@ dnl iproute has been renamed to iproute2
+   iputils-ping
+   iputils-arping
+   iputils-tracepath
++  dhcpcd-base
+   isc-dhcp-client
+   ldmtool
+   libc-bin
