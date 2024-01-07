@@ -1,0 +1,147 @@
+
+=head1 НАЗВА
+
+guestfs-java — як користуватися libguestfs з коду на Java
+
+=head1 КОРОТКИЙ ОПИС
+
+ import com.redhat.et.libguestfs.*;
+ 
+ GuestFS g = new GuestFS ();
+ g.add_drive ("disk.img",
+              new HashMap<String,Object>() {
+                {
+                    put ("readonly", Boolean.TRUE);
+                    put ("format", "raw");
+                }
+              });
+ g.launch ();
+
+=head1 ОПИС
+
+На цій сторінці підручника наведено документацію щодо викликів libguestfs з коду мовою програмування Java. На сторінці задокументовано відмінності від програмного інтерфейсу C та подано декілька прикладів. Якщо ви не дуже знайомі із користуванням libguestfs, вам також слід прочитати підручник з L<guestfs(3)>.
+
+=head2 ЗАКРИТТЯ ДЕСКРИПТОРА
+
+Дескриптор закривається, коли його вилучає засіб збирання сміття у системі. Оскільки дескриптори libguestfs у значній мірі керуються станами, можна закрити (і отже, звільнити) дескриптор явним чином, викликавши метод C<close>.
+
+=head2 ВИНЯТКИ
+
+Помилки функцій libguestfs пов'язуються із виключенням C<LibGuestFSException>. Виключення містить єдиний параметр, яким є повідомлення про помилку (параметр C<String>).
+
+Спроба викликати будь-який метод для закритого дескриптора призведе до надсилання однакового виключення.
+
+Якщо у прив'язках станеться помилка L<malloc(3)> або якоїсь іншої функції отримання пам'яті, буде надіслано виключення C<LibGuestFSOutOfMemory>.
+
+=head2 ПОДІЇ
+
+З боку Java реалізовано повну підтримку L<програмного інтерфейсу подій libguestfs|guestfs(3)/ПОДІЇ>. Створіть клас, який реалізує інтерфейс C<EventCallback>, створіть екземпляр цього класу, а потім викличте метод C<GuestFS#set_event_callback> для реєстрації цього екземпляра. Метод C<event> класу викликається, коли libguestfs створює повідомлення про подію.
+
+Наприклад, такий код виводить усі події трасування:
+
+ GuestFS g = new GuestFS ();
+ g.set_trace (true);
+ g.set_event_callback (
+   new EventCallback () {
+     public void event (long event, int eh,
+                        String buffer, long[] array) {
+       System.out.println (GuestFS.eventToString (event) +
+                           ": " + buffer);
+     }
+   },
+   GuestFS.EVENT_TRACE);
+ g.add_drive_ro ("disk.img");
+ // тощо
+
+Виведені дані будуть подібними до таких:
+
+ EVENT_TRACE: add_drive_ro "disk.img"
+ EVENT_TRACE: add_drive_ro = 0
+ // тощо
+
+=head2 НЕОБОВ'ЯЗКОВІ АРГУМЕНТИ
+
+Деяким методам передається необов'язкова карта додаткових параметрів. Прикладом таких методів є метод C<g.add_drive>, який можна викликати в один з двох способів:
+
+ g.add_drive ("disk.img");
+
+або за допомогою додаткових аргументів:
+
+ Map<String, Object> optargs =
+   new HashMap<String, Object>() {
+   {
+     put ("readonly", Boolean.TRUE);
+     put ("format", "raw");
+   }
+ };
+ g.add_drive ("disk.img", optargs);
+
+Щоб дізнатися більше про цю тему, див. L</ВИКЛИКИ ІЗ НЕОБОВ'ЯЗКОВИМИ АРГУМЕНТАМИ>.
+
+=head3 Необов'язкові параметри дескриптора
+
+При створенні дескриптора ви також можете передати карту необов'язкових параметрів:
+
+ Map<String, Object> optargs =
+   new HashMap<String, Object>() {
+   {
+     put ("close_on_exit", Boolean.FALSE);
+     put ("environment", Boolean.TRUE);
+   }
+ };
+ GuestFS g = new GuestFS (optargs);
+
+Докладніший опис можна знайти тут: L<guestfs(3)/guestfs_create_flags>.
+
+=head1 ЗБИРАННЯ І ЗАПУСК
+
+Libguestfs для Java є розширенням Java Native Interface (JNI), яке поділено на три частини:
+
+=over 4
+
+=item F<libguestfs.jar>
+
+=item F<libguestfs-I<ВЕРСІЯ>.jar>
+
+Файл JAR з кодом суто Java, який містить декілька класів, основним з яких є C<com.redhat.et.libguestfs.GuestFS>. У основній гілці розробки назва файла JAR містить номер версії, але у деяких дистрибутивах Linux файл перейменовують так, щоб у назві не було номера версії.
+
+=item F<libguestfs_jni.so>
+
+Код JNI (написаний на C). Ця частина містить приватні функції інтерфейсу між кодом Java і звичайною бібліотекою libguestfs, яку написано на C. Вам B<не слід> викликати ці функції безпосередньо.
+
+=item F<libguestfs.so>
+
+Типова бібліотека C libguestfs.
+
+=back
+
+Для збирання вашої програми мовою Java вам слід встановити розташування файла JAR і додати його до шляху до класів. Приклад:
+
+ export CLASSPATH=/usr/share/java/libguestfs.jar
+ javac MyProgram.java
+
+Для запуску вашої програми Java вам також потрібно впевнитися, що файл JAR перебуває у каталозі зі шляху до класів, а також є частиною вашої програми. Приклад:
+
+ export CLASSPATH=.:/usr/share/java/libguestfs.jar
+ java MyProgram
+
+=head1 ПРИКЛАД 1. СТВОРЕННЯ ОБРАЗУ ДИСКА
+
+@EXAMPLE1@
+
+=head1 ПРИКЛАД 2. ПЕРЕВІРКА ОБРАЗУ ДИСКА ВІРТУАЛЬНОЇ МАШИНИ
+
+@EXAMPLE2@
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfs(3)>, L<guestfs-examples(3)>, L<guestfs-erlang(3)>, L<guestfs-gobject(3)>, L<guestfs-golang(3)>, L<guestfs-lua(3)>, L<guestfs-ocaml(3)>, L<guestfs-perl(3)>, L<guestfs-python(3)>, L<guestfs-recipes(1)>, L<guestfs-ruby(3)>, L<http://libguestfs.org/>, L<http://caml.inria.fr/>.
+
+=head1 АВТОРИ
+
+Richard W.M. Jones (C<rjones at redhat dot com>)
+
+=head1 АВТОРСЬКІ ПРАВА
+
+Copyright (C) 2011-2023 Red Hat Inc.
+

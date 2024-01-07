@@ -1,0 +1,334 @@
+
+=head1 НАЗВА
+
+guestfs-release-notes - нотатки щодо випусків libguestfs
+
+=head1 НОТАТКИ ЩОДО ВИПУСКУ LIBGUESTFS 1.22
+
+Ці нотатки щодо випуску стосуються лише відмінностей від попереднього стабільного випуску (1.20.0). Докладний журнал змін є частиною журналу змін сховища git. Його також наведено у файлі ChangeLog, який є частиною архіву tar із кодом бібліотеки.
+
+=head2 Нові можливості
+
+=head3 API
+
+Віддалений доступ до таких дисків:
+
+=over 4
+
+=item *
+
+Network Block Device (nbd)
+
+=item *
+
+Secure Shell (ssh)
+
+=item *
+
+HTTP та HTTPS
+
+=item *
+
+FTP та FTPS
+
+=item *
+
+iSCSI
+
+=item *
+
+Gluster
+
+=item *
+
+Ceph/rbd (Mike Kelly)
+
+=item *
+
+Sheepdog
+
+=item *
+
+TFTP
+
+=back
+
+Завантажувачі SYSLINUX і EXTLINUX тепер можна встановлювати на образи дисків за допомогою програмного інтерфейсу.
+
+Засіб інспектування тепер може обробляти файлові системи, зокрема btrfs, у яких підтомами є окремі точки монтування (Matthew Booth).
+
+«Методи долучення» тепер називатимуться «модулями обробки». Сумісність із наявним кодом збережено.
+
+У назвах файлів можуть міститися символи «:», якщо використовується нова версія QEMU.
+
+=head3 Інструменти
+
+Virt-alignment-scan і virt-df можуть сканувати декілька гостьових систем паралельно.
+
+Guestmount тепер передає до простору користувача точний номер помилки майже завжди.
+
+Guestfish та інші інструменти тепер можуть використовувати адресоподібний синтаксис для доступу до віддалених дисків. Приклад:
+
+ guestfish -a ssh://example.com/шлях/до/диска.img
+
+Guestfish та guestmount тепер надають вам змогу вказувати тип файлової системи під час монтування, що є безпечнішими способом монтування (Dave Vasilevsky).
+
+Guestfish тепер є «командною оболонкою файлової системи гостьової операційної системи».
+
+Guestfish тепер надає змогу використовувати лише C<1> C<true> C<t> C<yes> C<y> C<on> C<0> C<false> C<f> C<no> C<n> C<off> як булеві значення (без врахування регістру символів) і повертає помилку для усіх інших рядків.
+
+Новий інструмент C<guestunmount> для безпечного демонтування файлових систем FUSE.
+
+За допомогою прапорця C<guestmount --no-fork> тепер можна запобігти перетворенню guestmount на фонову службу.
+
+Virt-resize тепер типово використовує розріджені копії, значно заощаджуючи місце на диску для гостьових систем, які є майже порожніми.
+
+Інструкції доповнення команд за Tab у bash було переписано, тепер у них враховано більшість інструментів та реалізовано правильне доповнення C<--довгих> параметрів. Крім того, скрипти доповнення bash завантажуються на вимогу.
+
+=head3 Прив’язки до мов програмування
+
+У програмному інтерфейсі Java тепер передбачено підтримку подій.
+
+Об'єкт Python тепер успадковується від базового класу C<object>.
+
+Методи Python, які раніше повертали список кортежів, тепер можуть повертати словники Python. З метою забезпечення зворотної сумісності, вам доведеться увімкнути цю можливість за допомогою використання параметра конструктора S<C<guestfs.GuestFS (python_return_dict=True)>>.
+
+Прив'язки до PHP тепер належним чином перевірено, у них виправлено декілька вад.
+
+Вилучено застарілу бібліотеку Perl C<Sys::Guestfs::Lib>. L<https://www.redhat.com/archives/libguestfs/2013-April/msg00001.html>
+
+=head3 Приклади
+
+Нові приклади програм показують, як увімкнути діагностику і перехопити повідомлення журналу.
+
+=head3 Інше
+
+Автори дистрибутивів можуть додавати довільні додаткові пакунки до базової системи за допомогою такої команди:
+
+ ./configure --with-extra-packages="список назв пакунків"
+
+Автори дистрибутивів можуть скористатися такою командою:
+
+ ./configure --with-supermin-extra-options="..."
+
+для додавання довільних додаткових параметрів supermin.
+
+=head2 Безпека
+
+У цьому випуску вад захисту не виявлено.
+
+=head2 Нові програмні інтерфейси
+
+ cp-r
+ extlinux
+ feature-available
+ get-program
+ is-whole-device
+ part-get-gpt-type
+ part-set-gpt-type
+ rename
+ set-program
+ syslinux
+
+Лише C:
+
+ guestfs_event_to_string
+
+=head2 Внутрішня частина роботи програми
+
+Інструмент febootstrap перейменовано на «supermin». Libguestfs може використовувати обидві назви, але тепер пріоритетною назвою є «supermin». L<http://people.redhat.com/~rjones/supermin/>
+
+Для збирання libguestfs тепер обов'язковою є libxml2.
+
+Для збирання версії з git тепер обов'язковою є програма hivexregedit (з hivex).
+
+Внутрішніми функціями більше не можна користуватися, якщо функція виклику не визначає C<-DGUESTFS_PRIVATE=1>.
+
+Увімкнено попередження компілятора C у прив'язках до Python і Ruby.
+
+Реалізовано раннє і зрозуміле завершення роботи, якщо у libvirt не передбачено підтримки qemu/KVM (наприклад, якщо типовим з'єднанням libvirt є Xen).
+
+Реалізовано правило C<make print-subdirs>, яке є корисним для вибіркового запуску тестів.
+
+Декілька виправлень, які уможливлюють роздільне збирання (каталог коду != каталог збирання).
+
+Декілька виправлень у прив’язках до Haskell.
+
+Програмні інтерфейси C<ln> та C<ln-f> тепер правильно перехоплюють C<errno>.
+
+Тести прив'язок до мов (здебільшого) використовують стандартну схему нумерування і тестують однаковий діапазон можливостей для усіх мов. Крім того, зменшено кількість запусків, які для цього потрібні, отже виконання тестів значно пришвидшено.
+
+Код бібліотеки на внутрішньому рівні використовує GCC C<__attribute__((cleanup))> (якщо доступне) для спрощення отримання пам'яті.
+
+Перевпорядковано внутрішні файли заголовків. Див. коментарі у F<src/guestfs-internal*.h>
+
+Код внутрішнього використання, який є спільним для бібліотеки та деяких інструментів, тепер зберігається у статичній бібліотеці C<libutils>.
+
+Майже у всіх підкаталогах тепер використовується паралельне збирання, хоча, слід зауважити, що усі каталоги верхнього рівня все ще збираються послідовно.
+
+З коду вилучено усі випадки використання C<PATH_MAX> і C<NAME_MAX>.
+
+Для програмного інтерфейсу Java тепер потрібна JVM E<ge> 1.6.
+
+Реалізовано примусове використання C<serial-tests> із automake E<ge> 1.12.
+
+Створено абстракцію використання сокетів у шарі протоколу бібліотеки, що уможливлює додавання інших нових шарів, відмінних від POSIX (див. F<src/conn-socket.c>).
+
+Якщо можливо, використовується C<qemu-img info --output json> з метою зробити обробку виведених цією командою даних безпечнішою.
+
+Тепер дистрибутиви можуть використовувати C<make INSTALLDIRS=vendor install> для розміщення прив'язок до Ruby у відповідному каталозі. Таким чином усунено потребу у зовнішній латці у Fedora та Debian.
+
+Файли журналу valgrind тепер записуються до F<tmp/valgrind-I<ДАТА>-I<PID>.log>
+
+C<make clean> очищує локальний каталог C<tmp/>.
+
+Тести програмного інтерфейсу мовою C переписано із використанням гнучкішої мови генератора, що уможливило виконання довільного коду C під час тестування.
+
+=head2 Виправлені вади
+
+=begin коментар
+
+./bugs-in-changelog.sh 1.20.0..
+
+=end коментар
+
+=over 4
+
+=item L<https://bugzilla.redhat.com/961812>
+
+Segfault in inspect-fs.c in mountable code
+
+=item L<https://bugzilla.redhat.com/957772>
+
+tar-out and base64-out quoting error
+
+=item L<https://bugzilla.redhat.com/957380>
+
+libguestfs: error: btrfsvol:/dev/sda2/root: root device not found: only call this function with a root device previously returned by guestfs_inspect_os
+
+=item L<https://bugzilla.redhat.com/948324>
+
+Не вдається виконати інспектування, якщо не встановлено libosinfo
+
+=item L<https://bugzilla.redhat.com/928995>
+
+file on zero-sized file now produces "empty " instead of "empty"
+
+=item L<https://bugzilla.redhat.com/921292>
+
+qemu: could not open disk image /tmp/.../snapshot1: Permission denied
+
+=item L<https://bugzilla.redhat.com/921040>
+
+"error: external command failed, see earlier error messages" message needs to change
+
+=item L<https://bugzilla.redhat.com/920225>
+
+libguestfs should use --output json (if supported) to safely parse the output of qemu-img command
+
+=item L<https://bugzilla.redhat.com/916780>
+
+feature request: guestmount --with-cleanup-pipefd
+
+=item L<https://bugzilla.redhat.com/914934>
+
+oom-killer kills guestfsd when tar-in a lot of data
+
+=item L<https://bugzilla.redhat.com/914931>
+
+FileIn commands cause segfault if appliance dies during the file copy in
+
+=item L<https://bugzilla.redhat.com/913145>
+
+Misc leaks in virNetClientProgramCall in libvirt 1.0.2
+
+=item L<https://bugzilla.redhat.com/912499>
+
+Security context on image file gets reset
+
+=item L<https://bugzilla.redhat.com/909836>
+
+libguestfs-test-tool --qemu segfaults
+
+=item L<https://bugzilla.redhat.com/909624>
+
+Unexpected non-tail recursion in recv_from_daemon results in stack overflow in very long-running API calls that send progress messages
+
+=item L<https://bugzilla.redhat.com/908322>
+
+virt-tar fails on non-existent directory names "error in chunked encoding at /home/rjones/d/libguestfs/tools/virt-tar line 272."
+
+=item L<https://bugzilla.redhat.com/908321>
+
+virt-cat fails on directory names "/dev/stdout: error in chunked encoding"
+
+=item L<https://bugzilla.redhat.com/907554>
+
+btrfs causes subsequent ntfs-3g filesystem to fail
+
+=item L<https://bugzilla.redhat.com/905341>
+
+"No such file or directory" when execute "hivex-commit"
+
+=item L<https://bugzilla.redhat.com/903620>
+
+btrfs_subvolume_list broken due to change in subvolume list output
+
+=item L<https://bugzilla.redhat.com/895910>
+
+guestmount: rename() incorrectly follows symbolic links
+
+=item L<https://bugzilla.redhat.com/895905>
+
+guestmount: link() incorrectly returns ENOENT, when it should be EXDEV
+
+=item L<https://bugzilla.redhat.com/895904>
+
+checksums-out fail to compute the checksums of all regular files in directory
+
+=item L<https://bugzilla.redhat.com/894545>
+
+libguestfs FTBFS on Fedora 19 because of new ruby
+
+=item L<https://bugzilla.redhat.com/890027>
+
+virt-sysprep: Setting hostname, domain name and pretty name on Fedora 18 correctly
+
+=item L<https://bugzilla.redhat.com/887971>
+
+pvcreate fails if partition contains a swap signature
+
+=item L<https://bugzilla.redhat.com/887520>
+
+zero_free_space: open: /sysroot//ujqqq135.rd3: Cannot allocate memory
+
+=item L<https://bugzilla.redhat.com/886915>
+
+libguestfs with libvirt attach-method fails with odd error if default hypervisor is Xen
+
+=item L<https://bugzilla.redhat.com/847549>
+
+Adding a zero-length virtio-scsi disk causes: qemu-kvm: hw/scsi-bus.c:1568: scsi_req_complete: Assertion `req->status == -1' failed.
+
+=item L<https://bugzilla.redhat.com/811649>
+
+libguestfs cannot open disk images which are symlinks to files that contain ':' (colon) character
+
+=item L<https://bugzilla.redhat.com/664558>
+
+RFE: Allow to set log callback in Ruby bindings
+
+=back
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfs-examples(1)>, L<guestfs-faq(1)>, L<guestfs-performance(1)>, L<guestfs-recipes(1)>, L<guestfs-testing(1)>, L<guestfs(3)>, L<guestfish(1)>, L<http://libguestfs.org/>
+
+=head1 АВТОР
+
+Richard W.M. Jones
+
+=head1 АВТОРСЬКІ ПРАВА
+
+Copyright (C) 2009-2023 Red Hat Inc.
+

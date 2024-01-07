@@ -1,0 +1,49 @@
+
+=head1 НАЗВА
+
+guestfs-gobject — як використовувати libguestfs за допомогою прив'язок GObject
+
+=head1 КОРОТКИЙ ОПИС
+
+З Javascript за допомогою gjs:
+
+ const Guestfs = imports.gi.Guestfs;
+ var g = new Guestfs.Session();
+ g.add_drive('disk.img', null);
+ g.launch();
+ g.close();
+
+=head1 ОПИС
+
+Цю сторінку підручника присвячено опису того, як викликати libguestfs за допомогою прив'язок до GObject, особливо з Javascript.
+
+Зауважте, що у прив'язок до GObject є певні проблеми із обробкою 64-бітових значень. Вам не слід використовувати прив'язки до GObject, якщо існують безпосередні прив'язки до потрібної вам мови програмування. Наприклад, щоб скористатися libguestfs у коді мовою Python, ми наполегливо рекомендуємо вам використовувати природні прив'язки до Python (див. L<guestfs-python(3)>).
+
+На сторінці задокументовано відмінності від програмного інтерфейсу C та подано декілька прикладів. Якщо ви не дуже знайомі із користуванням libguestfs, вам також слід прочитати підручник з L<guestfs(3)>.
+
+=head1 JAVASCRIPT
+
+За допомогою gjs ви можете записати файл C<.js>, який міститиме:
+
+ const Guestfs = imports.gi.Guestfs;
+ var g = new Guestfs.Session();
+ g.add_drive('disk.img', null);
+ g.launch();
+ g.close();
+
+а потім запустити його такою командою:
+
+ gjs програма.js
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfs(3)>, L<guestfs-examples(3)>, L<guestfs-erlang(3)>, L<guestfs-golang(3)>, L<guestfs-java(3)>, L<guestfs-lua(3)>, L<guestfs-perl(3)>, L<guestfs-python(3)>, L<guestfs-recipes(1)>, L<guestfs-ruby(3)>, L<http://libguestfs.org/>.
+
+=head1 АВТОРИ
+
+Richard W.M. Jones (C<rjones at redhat dot com>)
+
+=head1 АВТОРСЬКІ ПРАВА
+
+Copyright (C) 2012-2023 Red Hat Inc.
+

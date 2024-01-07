@@ -1,0 +1,76 @@
+
+=head1 НАЗВА
+
+guestfs-golang — як використовувати libguestfs з Go
+
+=head1 КОРОТКИЙ ОПИС
+
+ import "libguestfs.org/guestfs"
+ 
+ g, errno := guestfs.Create ()
+ if errno != nil {
+     panic (fmt.Sprintf ("could not create handle: %s", errno))
+ }
+ defer g.Close ()
+ if err := g.Add_drive ("test.img"); err != nil {
+     panic (err)
+ }
+ if err := g.Launch (); err != nil {
+     panic (err)
+ }
+ if err := g.Shutdown (); err != nil {
+     panic (err)
+ }
+
+=head1 ОПИС
+
+На цій сторінці підручника наведено документацію щодо викликів libguestfs з коду мовою програмування Go. На сторінці задокументовано відмінності від програмного інтерфейсу C та подано декілька прикладів. Якщо ви не дуже знайомі із користуванням libguestfs, вам також слід прочитати підручник з L<guestfs(3)>.
+
+=head2 ІМПОРТУВАННЯ МОДУЛЯ
+
+Модуль називається C<guestfs>. Повна назва пакунка для імпортування — C<libguestfs.org/guestfs>.
+
+=head2 СТВОРЕННЯ І ЗАКРИТТЯ ДЕСКРИПТОРА
+
+Скористайтеся C<guestfs.Create> або C<guestfs.Create_flags> для створення дескриптора. Дескриптор буде закрито неявним чином під час збирання сміття. Втім, ймовірно, непогано було б закривати його явним чином шляхом виклику S<C<g.Close ()>> або відклавши ту саму команду.
+
+=head2 ПОМИЛКИ
+
+C<guestfs.Create> і C<guestfs.Create_flags> повертають простий C<*error>, який насправді є простим C<errno> з C, загорнутим у відповідну структуру golang.
+
+Усі інші виклики повертають C<*GuestfsError>, яка є (якщо вона непорожня) ширшою структурою, яка містить рядок помилки від libguestfs, номер помилки (якщо доступний) та дані щодо дії, яка призвела до помилки. Ці дані також можна перетворити на рядок для показу.
+
+=head2 ОБМЕЖЕННЯ
+
+=over 4
+
+=item *
+
+Немає підтримки подій (див. L<guestfs(3)/ПОДІЇ>).
+
+=item *
+
+UUID не повертаються у структурах.
+
+=back
+
+=head1 ПРИКЛАД 1. СТВОРЕННЯ ОБРАЗУ ДИСКА
+
+@EXAMPLE1@
+
+=head1 ПРИКЛАД 2. ПЕРЕВІРКА ОБРАЗУ ДИСКА ВІРТУАЛЬНОЇ МАШИНИ
+
+@EXAMPLE2@
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfs(3)>, L<guestfs-examples(3)>, L<guestfs-erlang(3)>, L<guestfs-gobject(3)>, L<guestfs-java(3)>, L<guestfs-lua(3)>, L<guestfs-ocaml(3)>, L<guestfs-perl(3)>, L<guestfs-python(3)>, L<guestfs-recipes(1)>, L<guestfs-ruby(3)>, L<http://www.golang.org/>, L<http://libguestfs.org/>.
+
+=head1 АВТОРИ
+
+Richard W.M. Jones (C<rjones at redhat dot com>)
+
+=head1 АВТОРСЬКІ ПРАВА
+
+© Red Hat Inc., 2013
+

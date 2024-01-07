@@ -1,0 +1,77 @@
+
+=head1 НАЗВА
+
+guestfs-ocaml — як використовувати libguestfs з OCaml
+
+=head1 КОРОТКИЙ ОПИС
+
+Стиль Module:
+
+ let g = Guestfs.create () in
+ Guestfs.add_drive_opts g ~format:"raw" ~readonly:true "disk.img";
+ Guestfs.launch g;
+
+Об’єктно-орієнтований стиль:
+
+ let g = new Guestfs.guestfs () in
+ g#add_drive_opts ~format:"raw" ~readonly:true "disk.img";
+ g#launch ();
+
+ ocamlfind opt prog.ml -package guestfs -linkpkg -o prog
+or:
+ ocamlopt -I +guestfs mlguestfs.cmxa prog.ml -o prog
+
+=head1 ОПИС
+
+На цій сторінці підручника наведено документацію щодо викликів libguestfs з коду мовою програмування OCaml. На сторінці задокументовано відмінності від програмного інтерфейсу C та подано декілька прикладів. Якщо ви не дуже знайомі із користуванням libguestfs, вам також слід прочитати підручник з L<guestfs(3)>.
+
+=head2 СТИЛІ ПРОГРАМУВАННЯ
+
+Існує два різних стилі програмування, підтримку яких передбачено у прив'язках до OCaml. Ви можете скористатися модульним стилем, де кожну функцію C буде прив'язано до функції OCaml:
+
+ int guestfs_set_verbose (guestfs_h *g, int flag);
+
+перетворюється на:
+
+ val Guestfs.set_verbose : Guestfs.t -> bool -> unit
+
+Крім того, ви можете скористатися об'єктно-орієнтованим стилем, викликаючи методи на класі C<Guestfs.guestfs>:
+
+ method set_verbose : bool -> unit
+
+Код у об'єктно-орієнтованому стилі, зазвичай, є коротшим, а незначна втрата швидкодії є непомітною у загальному потоці виконання функцій libguestfs.
+
+=head2 ЗАКРИТТЯ ДЕСКРИПТОРА
+
+Дескриптор закривається, коли його знищує збирач сміття. Оскільки дескриптори libguestfs містять багато від стану, їх також можна закривати (і отже, звільняти) явним чином, викликаючи C<Guestfs.close> або метод C<#close>.
+
+=head2 ВИНЯТКИ
+
+Помилки функцій libguestfs пов'язуються із виключенням C<Guestfs.Error>. Це виключення має єдиний параметр, яким є повідомлення щодо помилки (рядок).
+
+Спроба виклику будь-якої функції чи методу для закритого дескриптора призводить до C<Guestfs.Handle_closed>. Єдиним параметром цього виключення є назва функції, яку було викликано.
+
+=head1 ПРИКЛАД. СТВОРЕННЯ ОБРАЗУ ДИСКА
+
+@CREATE_DISK@
+
+=head1 ПРИКЛАД. ПЕРЕВІРКА ОБРАЗУ ДИСКА ВІРТУАЛЬНОЇ МАШИНИ
+
+@INSPECT_VM@
+
+=head1 ПРИКЛАД: ВМИКАННЯ ДІАГНОСТИКИ І ЖУРНАЛЮВАННЯ
+
+@DEBUG_LOGGING@
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfs(3)>, L<guestfs-examples(3)>, L<guestfs-erlang(3)>, L<guestfs-gobject(3)>, L<guestfs-golang(3)>, L<guestfs-java(3)>, L<guestfs-lua(3)>, L<guestfs-perl(3)>, L<guestfs-python(3)>, L<guestfs-recipes(1)>, L<guestfs-ruby(3)>, L<http://libguestfs.org/>, L<http://caml.inria.fr/>.
+
+=head1 АВТОРИ
+
+Richard W.M. Jones (C<rjones at redhat dot com>)
+
+=head1 АВТОРСЬКІ ПРАВА
+
+Copyright (C) 2010-2023 Red Hat Inc.
+

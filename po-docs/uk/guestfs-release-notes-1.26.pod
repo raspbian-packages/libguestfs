@@ -1,0 +1,312 @@
+
+=head1 НАЗВА
+
+guestfs-release-notes - нотатки щодо випусків libguestfs
+
+=head1 НОТАТКИ ЩОДО ВИПУСКУ LIBGUESTFS 1.26
+
+Ці нотатки щодо випуску стосуються лише відмінностей від попереднього стабільного випуску (1.24.0). Докладний журнал змін є частиною журналу змін сховища git. Його також наведено у файлі ChangeLog, який є частиною архіву tar із кодом бібліотеки.
+
+=head2 Нові можливості
+
+=head3 Інструменти
+
+L<virt-customize(1)> — новий інструмент для налаштовування образів дисків віртуальної машини. За його допомогою ви можете встановлювати пакунки, редагувати файли налаштувань, запускати скрипти, встановлювати паролі тощо. L<virt-builder(1)> і L<virt-sysprep(1)> використовують virt-customize. Параметри командного рядка усіх цих інструментів тепер є ідентичними.
+
+L<virt-diff(1)> — новий інструмент для показу відмінностей між файловими системами двох віртуальних машин. Основним його призначенням є показ файлів, які було змінено між двома знімками віртуальної машини.
+
+Значно розширено можливості L<virt-builder(1)>. Передбачено набагато більше способів налаштовування віртуальної машини. Можливе отримання шаблонів з декількох сховищ. Паралелізована внутрішня реалізація xzcat пришвидшує розпаковування шаблонів. Virt-builder використовує оптимізований планувальник для вибору найшвидшого способу побудови віртуальної машини. Тепер простіше користуватися virt-builder з інших програм. Додано підтримку перекладу метаданих. Реалізовано ефективнішу процедуру повторного встановлення міток SELinux для файлів. Можлива побудова гостьових систем для декількох архітектур. Поліпшено повідомлення щодо помилок. (Pino Toscano)
+
+У L<virt-sparsify(1)> передбачено новий параметр I<--in-place>. Його використання призводить до розрідження системи на місці (без її копіювання), що набагато пришвидшує виконання завдання. (Значна допомога з боку Paolo Bonzini)
+
+L<virt-sysprep(1)> може вилучати і витирати файли під керуванням користувача. Ви можете заблокувати облікові записи користувачів або встановити випадкові паролі для облікових записів. Можна вилучати більше файлів журналу. Можна скасовувати передплату гостьових систем у Red Hat Subscription Manager. Новий гнучкий спосіб вмикати і вимикати дії. (Wanlong Gao, Pino Toscano)
+
+У L<virt-win-reg(1)> передбачено можливість використовувати адреси для визначення віддалених образів дисків.
+
+L<virt-format(1)> тепер може повертати отримане додаткове вільне місце основній системі.
+
+L<guestfish(1)> має додаткові змінні середовища для надання можливості точнішого налаштовування за допомогою запиту C<E<gt>E<lt>fsE<gt>>. Guestfish тепер читає його (нечасто використовуваний) файл налаштувань у іншому порядку так, що локальні параметри перевизначають загальні параметри. (Pino Toscano)
+
+L<virt-make-fs(1)> було переписано на C, але програма лишилася незмінною за функціональними можливостями і використанням командного рядка.
+
+=head3 Прив’язки до мов програмування
+
+Прив'язки до OCaml містять новий модуль C<Guestfs.Errno>, який використовується для перевірки номерів помилок, які повертає C<Guestfs.last_errno>.
+
+Відновлення працездатності тестів PHP. (Pino Toscano)
+
+=head3 Перевірка
+
+Засіб інспектування тепер може розпізнавати образи портативних систем Debian.
+
+=head3 Архітектури
+
+На ARMv7 (32-бітових) тепер передбачено підтримку пришвидшення KVM.
+
+Передбачено підтримку Aarch64 (ARM 64-бітових), але частина, пов'язана із базовою системою, ще не працює.
+
+Виправлено і удосконалено підтримку PPC64.
+
+=head2 Безпека
+
+=over 4
+
+=item Відмова у обслуговуванні при інспектуванні образів дисків із пошкодженими
+томами btrfs
+
+Можна було спричинити аварійне завершення роботи libguestfs (та програм, які використовують libguestfs як бібліотеку) передаванням їм образу диска, на якому містився пошкоджений том btrfs.
+
+Причиною було розіменування нульового вказівника, яке спричиняло відмову в обслуговуванні. Ми вважаємо, що ширше використання цієї вразливості неможливе.
+
+Див. внесок d70ceb4cbea165c960710576efac5a5716055486 із виправленням. Це виправлено включено до стабільних гілок libguestfs S<E<ge> 1.26.0>, S<E<ge> 1.24.6> та S<E<ge> 1.22.8>, а також до RHEL S<E<ge> 7.0>. Старіші версії libguestfs не є вразливими.
+
+=item Якісніше створення випадкових паролів root та породжувачів псевдовипадкових
+послідовностей
+
+Виявлено і виправлено дві пов'язаних із захистом вади під час створення випадкових паролів root та породжувачів псевдовипадкових послідовностей чисел. По-перше, ми більше не читаємо зайві байти з F</dev/urandom> (більшу частину даних з якого ми просто відкидали). По-друге, ми змінили код, щоб уникнути нерівномірного розподілу за лишками. Ми вважаємо, що цими вразливостями не можна скористатися. (Обидві зміни запропоновано Edwin Török)
+
+=back
+
+=head2 API
+
+Тепер перевіряється коректність параметрів GUID, коли їх передають до викликів програмного інтерфейсу. Раніше можна було передати довільний рядок. (Pino Toscano)
+
+=head3 Нові програмні інтерфейси
+
+=over 4
+
+=item C<guestfs_add_drive_opts>: новий параметр C<discard>
+
+За допомогою нового параметра C<discard> можливий точніший контроль над підтримкою відкидання та обрізання для певного диска. Це уможливлює створення розрідженіших файлів у основній системі, коли ви вилучаєте файли або надсилаєте виклик до програмного інтерфейсу C<guestfs_fstrim>.
+
+=item C<guestfs_add_domain>: нові параметри: C<cachemode>, C<discard>
+
+Ці параметри передаються під час додавання дисків домену.
+
+=item C<guestfs_blkdiscard>
+
+Відкинути усі блоки на пристрої guestfs. У поєднанні із описаним вище параметром C<discard> це робить файл у основній системі розрідженим.
+
+=item C<guestfs_blkdiscardzeroes>
+
+Для перевірки того, чи відкинуті блоки читаються як нульові.
+
+=item C<guestfs_compare_*>
+
+=item C<guestfs_copy_*>
+
+Для усіх структури, повернути через програмний інтерфейс, libguestfs тепер створює функції C<guestfs_compare_*> і C<guestfs_copy_*>, за допомогою яких можна порівнювати і копіювати структури.
+
+=item C<guestfs_copy_attributes>
+
+Копіювання атрибутів (зокрема прав доступу, xattrs, прав власності) з одного файла до іншого. (Pino Toscano)
+
+=item C<guestfs_disk_create>
+
+Гнучкий програмний інтерфейс для створення порожніх образів дисків з нуля. Надає змогу обійтися без викликів зовнішніх програм, зокрема L<qemu-img(1)>.
+
+=item C<guestfs_get_backend_settings>
+
+=item C<guestfs_set_backend_settings>
+
+Окремі параметри для різних модулів обробки (можна також встановити за допомогою змінної середовища C<LIBGUESTFS_BACKEND_SETTINGS>). Основним призначенням є примусовий режим TCG у заснованих на qemu модулях обробки. Приклад:
+
+ export LIBGUESTFS_BACKEND=direct
+ export LIBGUESTFS_BACKEND_SETTINGS=force_tcg
+
+=item C<guestfs_part_get_name>
+
+Отримання мітки або назви розділу (для образів дисків GPT).
+
+=back
+
+=head2 Зміни у збиранні
+
+Для збирання libguestfs 1.26 потрібні такі додаткові пакунки:
+
+=over 4
+
+=item supermin E<ge> 5
+
+Для збирання цієї версії libguestfs потрібен supermin версії 5.
+
+=item flex, bison
+
+Virt-builder тепер використовує справжній засіб обробки для свого файла метаданих, отже ці інструменти тепер є обов'язковими.
+
+=item xz
+
+Тепер це обов'язкова частина для збирання там, де раніше (теоретично) вона була необов'язковою.
+
+=back
+
+=head2 Внутрішня частина роботи програми
+
+Переписано засіб видобування повідомлень PO, що мало зробити його стійкішим. (Pino Toscano)
+
+C<podwrapper> повідомляє про помилку, якщо не знайдено аргумент зразка для I<--insert> або I<--verbatim>.
+
+Libguestfs тепер передає параметр qemu I<-enable-fips> для вмикання FIPS, якщо у qemu передбачено його підтримку.
+
+Якщо ви не хочете вказувати типовий гіпервізор, можете скористатися C<./configure --without-qemu>.
+
+Накладки copy-on-write [COW], які використовуються, наприклад, для придатних лише для читання дисків, тепер створюються за допомогою вбудованого програмного інтерфейсу (C<.create_cow_overlay>).
+
+Модуль обробки libvirt використовує якийсь вигадливий макрос C для створення XML. Ці є простішими і безпечнішими.
+
+Було змінено формат файла ChangeLog. Тепер він такий самий як у C<git log>. Нетиповий формат більше не використовується.
+
+Змінено процедуру запуску базової системи:
+
+=over 4
+
+=item *
+
+Базова система libguestfs тепер ініціалізує LVM у той самий спосіб, у який це робиться на фізичних машинах.
+
+=item *
+
+Базова система libguestfs не записує порожній рядок до F</proc/sys/kernel/hotplug> під час запуску.
+
+Зауважте, що вам B<слід> налаштувати ваше ядро так, щоб у ньому було C<CONFIG_UEVENT_HELPER_PATH="">, інакше ви матимете справу із дивними помилками LVM (це стосується будь-якої машини Linux, не лише libguestfs). (Peter Rajnoha)
+
+=back
+
+Libguestfs тепер можна зібрати на архітектурах, де є L<ocamlc(1)>, але немає L<ocamlopt(1)>. (Hilko Bengen, Olaf Hering)
+
+Не можна використовувати C<./configure --disable-daemon --enable-appliance>. Така комбінація усе одно не мала сенсу. Тепер її заборонено явним чином у скрипті configure.
+
+Файл packagelist використовує C<m4> для розгортання макросів замість C<cpp>.
+
+=head2 Виправлені вади
+
+=begin коментар
+
+./bugs-in-changelog.sh 1.24.0..
+
+=end коментар
+
+=over 4
+
+=item L<https://bugzilla.redhat.com/1073906>
+
+java bindings inspect_list_applications2 throws java.lang.ArrayIndexOutOfBoundsException:
+
+=item L<https://bugzilla.redhat.com/1063374>
+
+[RFE] enable subscription manager clean or unregister operation to sysprep
+
+=item L<https://bugzilla.redhat.com/1060404>
+
+virt-resize does not preserve GPT partition names
+
+=item L<https://bugzilla.redhat.com/1057504>
+
+mount-local should give a clearer error if root is not mounted
+
+=item L<https://bugzilla.redhat.com/1056290>
+
+virt-sparsify overwrites block devices if used as output files
+
+=item L<https://bugzilla.redhat.com/1055452>
+
+libguestfs: error: invalid backend: appliance
+
+=item L<https://bugzilla.redhat.com/1054761>
+
+guestfs_pvs prints "unknown device" if a physical volume is missing
+
+=item L<https://bugzilla.redhat.com/1053847>
+
+Recommended default clock/timer settings
+
+=item L<https://bugzilla.redhat.com/1046509>
+
+ruby-libguestfs throws "expecting 0 or 1 arguments" on Guestfs::Guestfs.new
+
+=item L<https://bugzilla.redhat.com/1045450>
+
+Cannot inspect cirros 0.3.1 disk image fully
+
+=item L<https://bugzilla.redhat.com/1045033>
+
+LIBVIRT_DEFAULT_URI=qemu:///system breaks libguestfs
+
+=item L<https://bugzilla.redhat.com/1044585>
+
+virt-builder network (eg. --install) doesn't work if resolv.conf sets nameserver 127.0.0.1
+
+=item L<https://bugzilla.redhat.com/1044014>
+
+When SSSD is installed, libvirt configuration requires authentication, but not clear to user
+
+=item L<https://bugzilla.redhat.com/1039995>
+
+virt-make-fs fails making fat/vfat whole disk: Device partition expected, not making filesystem on entire device '/dev/sda' (use -I to override)
+
+=item L<https://bugzilla.redhat.com/1039540>
+
+virt-sysprep to delete more logfiles
+
+=item L<https://bugzilla.redhat.com/1033207>
+
+RFE: libguestfs inspection does not recognize Free4NAS live CD
+
+=item L<https://bugzilla.redhat.com/1028660>
+
+RFE: virt-sysprep/virt-builder повинні мати можливість блокувати обліковий запис користувача
+
+=item L<https://bugzilla.redhat.com/1026688>
+
+libguestfs fails examining libvirt guest with ceph drives: rbd: image name must begin with a '/'
+
+=item L<https://bugzilla.redhat.com/1022431>
+
+virt-builder не працює, якщо не існує $HOME/.cache
+
+=item L<https://bugzilla.redhat.com/1022184>
+
+libguestfs: не слід використовувати файл jar із зазначенням версії
+
+=item L<https://bugzilla.redhat.com/1020806>
+
+Усі дії libguestfs із LVM завершуються невдало у Debian/Ubuntu
+
+=item L<https://bugzilla.redhat.com/1008417>
+
+Need update helpout of part-set-gpt-type
+
+=item L<https://bugzilla.redhat.com/953907>
+
+virt-sysprep does not correctly set the hostname on Debian/Ubuntu
+
+=item L<https://bugzilla.redhat.com/923355>
+
+guestfish виводить у повідомленнях про помилки «\n» буквально
+
+=item L<https://bugzilla.redhat.com/660687>
+
+guestmount: "touch" command fails: touch: setting times of `timestamp': Invalid argument
+
+=item L<https://bugzilla.redhat.com/593511>
+
+[RFE] function to get partition name
+
+=item L<https://bugzilla.redhat.com/563450>
+
+list-devices returns devices of different types out of order
+
+=back
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfs-examples(1)>, L<guestfs-faq(1)>, L<guestfs-performance(1)>, L<guestfs-recipes(1)>, L<guestfs-testing(1)>, L<guestfs(3)>, L<guestfish(1)>, L<http://libguestfs.org/>
+
+=head1 АВТОР
+
+Richard W.M. Jones
+
+=head1 АВТОРСЬКІ ПРАВА
+
+Copyright (C) 2009-2023 Red Hat Inc.
+

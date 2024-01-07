@@ -1,0 +1,41 @@
+
+=head1 НАЗВА
+
+guestfs-ruby — як використовувати libguestfs з Ruby
+
+=head1 КОРОТКИЙ ОПИС
+
+ require 'guestfs'
+ g = Guestfs::Guestfs.new()
+ g.add_drive_opts("disk.img",
+                  :readonly => true, :format => "raw")
+ g.launch()
+
+=head1 ОПИС
+
+На цій сторінці підручника наведено документацію щодо викликів libguestfs з коду мовою програмування Ruby. На сторінці задокументовано відмінності від програмного інтерфейсу C та подано декілька прикладів. Якщо ви не дуже знайомі із користуванням libguestfs, вам також слід прочитати підручник з L<guestfs(3)>.
+
+=head2 ВИНЯТКИ
+
+Помилки функцій libguestfs пов'язуються із виключенням C<Error>. Це виключення має єдиний параметр, яким є повідомлення щодо помилки (рядок).
+
+=head1 ПРИКЛАД 1. СТВОРЕННЯ ОБРАЗУ ДИСКА
+
+@EXAMPLE1@
+
+=head1 ПРИКЛАД 2. ПЕРЕВІРКА ОБРАЗУ ДИСКА ВІРТУАЛЬНОЇ МАШИНИ
+
+@EXAMPLE2@
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfs(3)>, L<guestfs-examples(3)>, L<guestfs-erlang(3)>, L<guestfs-gobject(3)>, L<guestfs-golang(3)>, L<guestfs-java(3)>, L<guestfs-lua(3)>, L<guestfs-ocaml(3)>, L<guestfs-perl(3)>, L<guestfs-python(3)>, L<guestfs-recipes(1)>, L<http://libguestfs.org/>.
+
+=head1 АВТОРИ
+
+Richard W.M. Jones (C<rjones at redhat dot com>)
+
+=head1 АВТОРСЬКІ ПРАВА
+
+Copyright (C) 2010-2023 Red Hat Inc.
+

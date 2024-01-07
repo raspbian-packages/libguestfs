@@ -1,0 +1,125 @@
+
+=head1 НАЗВА
+
+guestfs-release-notes - нотатки щодо випусків libguestfs
+
+=head1 НОТАТКИ ЩОДО ВИПУСКУ LIBGUESTFS 1.12
+
+Ці нотатки щодо випуску стосуються лише відмінностей від попереднього стабільного випуску (1.10.0). Докладний журнал змін є частиною журналу змін сховища git. Його також наведено у файлі ChangeLog, який є частиною архіву tar із кодом бібліотеки.
+
+=head2 Нові можливості
+
+=head3 guestfish
+
+- Тепер у рядках guestfish можна використовувати екранування, приклад: ><fs> write /щось "рядок 1\nрядок 2\n"
+
+- Для дописування даних до файлів можна скористатися командою guestfish write-append.
+
+- Довготривалі вивантаження і отримання файлів можна скасувати за допомогою програмного інтерфейсу або натискання ^C у guestfish.
+
+- Нова команда guestfish display для показу графічних файлів у гостьовій системі.
+
+- У guestfish доповнення за Tab тепер працює і на пристроях /dev/mapper.
+
+=head3 virt-inspector
+
+- Програмний інтерфейс інспектування тепер здатен отримувати піктограму або логотип певних гостьових систем.
+
+- До virt-inspector включено логотипи і назви вузлів для певних гостьових систем.
+
+- virt-inspector тепер може отримувати дані щодо версії і випуску пакунків RPM.
+
+- CentOS і Scientific Linux тепер вважаються окремими дистрибутивами у програмному інтерфейсі інспектування.
+
+=head3 virt-resize
+
+- virt-resize тепер може працювати з btrfs.
+
+- За допомогою нового параметра virt-resize --ntfsresize-force можна змінювати розмір віртуальних машин Windows декілька разів.
+
+=head3 інші virt tools
+
+- У guestfish, guestmount, virt-cat, virt-df, virt-edit, virt-filesystems, virt-inspector, virt-ls та virt-rescue тепер можна скористатися параметром -d UUID для визначення гостьової системи за UUID. Це значно підвищує надійність роботи цих програм, якщо їх викликано іншими програмами.
+
+- Параметр virt-ls -lR уможливлює складну ітерацію файловою системою та аналіз гостьової системи.
+
+- У virt-win-reg реалізовано підтримку HKEY_USERS\<SID> та HKEY_USERS\<користувач>.
+
+- Параметр virt-win-reg --unsafe-printable-strings уможливлює показ придатних до друку рядків у виведених даних (не є безпечним: ознайомтеся із документацією, перш ніж користуватися).
+
+- virt-edit переписано на C.
+
+=head3 Програмний інтерфейс і прив'язки до мов програмування
+
+- Реалізовано повну підтримку Java. Див. http://libguestfs.org/guestfs-java.3.html
+
+- За допомогою прив'язок до Java реалізовано підтримку JRuby.
+
+- Тепер у повідомленнях трасування з'являється guestfs_close.
+
+- У прив'язках до Python додано явний метод g.close().
+
+- Програми мовою Python тепер можуть використовувати новий програмний інтерфейс подій.
+
+- GIL Python вимикається на час викликів libguestfs, що уможливлює належну роботу багатопотокових програм мовою Python.
+
+- Реалізовано підтримку 9pfs (файлових систем Plan 9, експортованих із основної системи).
+
+- Додано -DGUESTFS_WARN_DEPRECATED=1 для попередження щодо використання функцій застарілого програмного інтерфейсу у програмах мовою C.
+
+- Нова сторінка підручника guestfs-recipes(1), яку призначено для зберігання рецептів.
+
+- mkfs-opts тепер може встановлювати розміри inode та сектора на створених файлових системах (дякуємо Nikita Menkovich).
+
+- guestfs_last_errno тепер є доступною з OCaml (як g#last_errno ()).
+
+=head2 Безпека
+
+- optargs_bitmask перевіряється навіть для викликів, які не мають необов'язкових аргументів. Це унеможливлює використання можливої дірки у захисті фонової служби для ненадійних джерел викликів.
+
+=head2 Нові програмні інтерфейси
+
+btrfs-filesystem-resize, get-pgroup, inspect-get-icon, is-zero, is-zero-device, list-9p, list-dm-devices, mount-9p, ntfsresize-opts, set-pgroup, write-append
+
+=head2 Внутрішня частина роботи програми
+
+- Для визначення вад у коді було запущено Coverity (інструмент статичного аналізу). Було виправлено багато вад.
+
+- Тепер генератор може обробляти функції, які повертають RBufferOut і мають необов'язкові аргументи.
+
+- Реалізовано сумісність із Perl 5.14.
+
+ - Сумісність з gcc 4.6.
+
+- Було виконано перевірки захисту QEMU.
+
+- Тести програмного інтерфейсу C тепер можуть повністю тестувати виклики із необов'язковими аргументами.
+
+ - Скористайтеся ./configure --enable-install-daemon, щоб встановити /usr/sbin/guestfsd.
+
+ - Каталог po-docs тепер стосується усіх сторінок підручника (man).
+
+- stderr з процесу qemu тепер перехоплюється підсистемою подій.
+
+=head2 Виправлені вади
+
+ - 602997 part-get-bootable gives wrong result with an unordered part layout
+ - 661280 virt-rescue: panic when shutting down: "/sbin/reboot: No such file or directory"
+ - 700369 qemu-system-x86_64 says 'KVM not supported for this target'
+ - 705200 guestmount attempt results in access denied
+ - 714981 'list-filesystems' does not know about virtio 9p filesystems or detect existing mounts
+ - 717786 libguestfs python bindings should have an explicit close call
+ - 721275 virt-resize in F16 should support btrfs
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfs-examples(1)>, L<guestfs-faq(1)>, L<guestfs-performance(1)>, L<guestfs-recipes(1)>, L<guestfs-testing(1)>, L<guestfs(3)>, L<guestfish(1)>, L<http://libguestfs.org/>
+
+=head1 АВТОР
+
+Richard W.M. Jones
+
+=head1 АВТОРСЬКІ ПРАВА
+
+Copyright (C) 2009-2023 Red Hat Inc.
+
