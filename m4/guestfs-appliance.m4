@@ -133,7 +133,7 @@ AM_CONDITIONAL([HAVE_RPM],
     [AS_CASE([$DISTRO], [REDHAT | SUSE | OPENMANDRIVA | MAGEIA | OPENCLOUDOS ], [true],
                         [*], [false])])
 AM_CONDITIONAL([HAVE_DPKG],
-    [AS_CASE([$DISTRO], [DEBIAN | UBUNTU ], [true],
+    [AS_CASE([$DISTRO], [DEBIAN | UBUNTU | RASPBIAN ], [true],
                         [*], [false])])
 AM_CONDITIONAL([HAVE_PACMAN],
     [AS_CASE([$DISTRO], [ARCHLINUX | FRUGALWARE | ARTIX], [true],
