@@ -1,0 +1,23 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Thu, 23 May 2013 19:20:17 +0200
+Subject: perl: Fix out-of-tree build by generating symlinks
+
+---
+ perl/Makefile.am | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/perl/Makefile.am b/perl/Makefile.am
+index 01da4a7..ebc616c 100644
+--- a/perl/Makefile.am
++++ b/perl/Makefile.am
+@@ -57,8 +57,10 @@ all-local: Build
+ 
+ clean-local: Build
+ 	./Build clean
++	if [ $(srcdir) != $(builddir) ]; then find -type l | xargs rm -f ; fi
+ 
+ Build: Build.PL
++	if [ $(srcdir) != $(builddir) ]; then cp -rsft $(builddir) $(abs_srcdir)/. ; fi
+ 	$(PERL) Build.PL --prefix "@prefix@"
+ 
+ TESTS_ENVIRONMENT = $(top_builddir)/run --test
