@@ -1,0 +1,120 @@
+#!/bin/sh
+
+set -eu
+
+ssh="ssh -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no -i id_rsa -T"
+
+arch=$(dpkg --print-architecture)
+case $arch in
+    amd64)
+        QEMU_FLAVOR=x86_64
+        LINUX_FLAVOR=amd64
+        ;;
+    i386)
+        QEMU_FLAVOR=i386
+        LINUX_FLAVOR=686-pae
+        ;;
+    *)
+        echo "unknown architecture $arch"
+        exit 1 ;;
+esac
+
+
+pkgs=
+
+# shellcheck disable=SC2016
+mmdebstrap \
+    --mode=root \
+    --variant=apt \
+    --include="linux-image-${LINUX_FLAVOR},openssh-server,systemd-sysv,libpam-systemd,iproute2,util-linux,e2fsprogs,ifupdown,isc-dhcp-client,extlinux" \
+    --customize-hook='chroot "$1" passwd --delete root' \
+    --customize-hook='chroot "$1" useradd --home-dir /home/user --create-home user' \
+    --customize-hook='chroot "$1" passwd --delete user' \
+    --customize-hook='echo host > "$1/etc/hostname"' \
+    --customize-hook='echo "127.0.0.1 localhost host" > "$1/etc/hosts"' \
+    --customize-hook='echo "/dev/sda1 / auto errors=remount-ro 0 1" > "$1/etc/fstab"' \
+    bullseye debian-bullseye.tar
+
+cat << END > extlinux.conf
+default linux
+timeout 0
+
+label linux
+kernel /vmlinuz
+append initrd=/initrd.img root=/dev/sda1 net.ifnames=0 console=ttyS0
+END
+
+cat << END > interfaces
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet dhcp
+END
+
+if [ ! -e ./id_rsa ] || [ ! -e ./id_rsa.pub ]; then
+    ssh-keygen -q -t rsa -f ./id_rsa -N ""
+fi
+
+guestfish <<EOF
+sparse debian-bullseye.img 1G
+run
+
+part-disk /dev/sda mbr
+part-set-bootable /dev/sda 1 true
+mkfs ext2 /dev/sda1
+
+mount /dev/sda1 /
+
+tar-in debian-bullseye.tar /
+
+mkdir /root/.ssh
+copy-in id_rsa.pub /root/
+mv /root/id_rsa.pub /root/.ssh/authorized_keys
+chown 0 0 /root/.ssh/authorized_keys
+
+extlinux /
+copy-in extlinux.conf /
+copy-file-to-device /usr/lib/EXTLINUX//mbr.bin /dev/sda
+
+copy-in interfaces /etc/network
+EOF
+
+qemu-system-${QEMU_FLAVOR} -m 1G -net user,hostfwd=tcp::10022-:22,hostfwd=tcp::12222-:2222 \
+	-net nic -nographic -serial mon:stdio \
+	-drive file=debian-bullseye.img,format=raw >qemu.log </dev/null 2>&1 &
+
+QEMUPID=$!
+
+trap 'cat --show-nonprinting qemu.log; kill $QEMUPID' EXIT
+
+TIMESTAMP=$(sleepenh 0 || [ $? -eq 1 ])
+TIMEOUT=5
+NUM_TRIES=40
+i=0
+while true; do
+	rv=0
+	$ssh -p 10022 -o ConnectTimeout=$TIMEOUT root@localhost echo success || rv=1
+	[ $rv -eq 0 ] && break
+	# if the command before took less than $TIMEOUT seconds, wait the remaining time
+	TIMESTAMP=$(sleepenh "$TIMESTAMP" $TIMEOUT || [ $? -eq 1 ]);
+	i=$((i+1))
+	if [ $i -ge $NUM_TRIES ]; then
+		break
+	fi
+done
+
+if [ $i -eq $NUM_TRIES ]; then
+	echo "timeout reached: unable to connect to qemu via ssh"
+	exit 1
+fi
+
+$ssh -p 10022 root@localhost systemctl poweroff
+
+wait $QEMUPID
+
+trap - EXIT
+
+rm debian-bullseye.img debian-bullseye.tar extlinux.conf id_rsa id_rsa.pub interfaces qemu.log
+
+exit 0
