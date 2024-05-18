@@ -313,6 +313,7 @@ syslinux
 tar
 udev
 util-linux
+util-linux-extra
 util-linux-ng
 xfsprogs
 zerofree
