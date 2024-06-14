@@ -1,4 +1,4 @@
-libguestfs.so.0 libguestfs0 #MINVER#
+libguestfs.so.0 libguestfs0t64 #MINVER#
  (optional|regex)"guestfs_internal_.*@Base" 0
  guestfs_acl_delete_def_file@Base 1:1.20
  guestfs_acl_get_file@Base 1:1.20

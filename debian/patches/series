@@ -19,4 +19,6 @@ Set-CPU-type-for-mipsel-mips64el.patch
 Fix-include-path-for-generating-localized-manpages.patch
 Only-set-rtc-driftfix-slew-on-x86-architectures.patch
 Add-dhcpcd-to-Debian-package-list.patch
+Add-util-linux-extra-to-appliance-list.patch
+udev-rules-path.patch
 recognise-raspbian.diff
