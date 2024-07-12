@@ -1,0 +1,65 @@
+
+=head1 НАЗВА
+
+guestfs-examples — приклади використання libguestfs з коду мовою C
+
+=head1 КОРОТКИЙ ОПИС
+
+ #include <guestfs.h>
+ 
+ guestfs_h *g = guestfs_create ();
+ guestfs_add_drive_ro (g, "disk.img");
+ guestfs_launch (g);
+
+ cc prog.c -o prog -lguestfs
+або:
+ cc prog.c -o prog `pkg-config libguestfs --cflags --libs`
+
+=head1 ОПИС
+
+На цій сторінці підручника наведено документацію щодо викликів libguestfs з коду мовою програмування C. Якщо ви не дуже знайомі із користуванням libguestfs, вам також слід прочитати підручник з L<guestfs(3)>.
+
+=head1 ПРИКЛАД. СТВОРЕННЯ ОБРАЗУ ДИСКА
+
+@CREATE_DISK@
+
+=head1 ПРИКЛАД. ПЕРЕВІРКА ОБРАЗУ ДИСКА ВІРТУАЛЬНОЇ МАШИНИ
+
+@INSPECT_VM@
+
+=head1 ПРИКЛАД: ВМИКАННЯ ДІАГНОСТИКИ І ЖУРНАЛЮВАННЯ
+
+@DEBUG_LOGGING@
+
+=head1 ПРИКЛАД: ПОКАЗ ПІКТОГРАМИ ОПЕРАЦІЙНОЇ СИСТЕМИ ГОСТЬОВОЇ СИСТЕМИ
+
+@DISPLAY_ICON@
+
+=head1 ПРИКЛАД: ПРОГРАМНИЙ ІНТЕРФЕЙС РОЗПІЗНАВАННЯ LIBVIRT
+
+@LIBVIRT_AUTH@
+
+=head1 ПРИКЛАД: ЛОКАЛЬНИЙ ПРОГРАМНИЙ ІНТЕРФЕЙС МОНТУВАННЯ
+
+@MOUNT_LOCAL@
+
+=head1 ПРИКЛАД: ОБРОБКА У ДЕКІЛЬКА ДЕСКРПИТОРІВ І ПОТОКІВ
+
+@COPY_OVER@
+
+=head1 ПРИКЛАД: ОТРИМАННЯ АДРЕСИ DHCP ІЗ ГОСТЬОВОЇ СИСТЕМИ
+
+@VIRT_DHCP_ADDRESS@
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfs(3)>, L<guestfs-erlang(3)>, L<guestfs-golang(3)>, L<guestfs-java(3)>, L<guestfs-lua(3)>, L<guestfs-ocaml(3)>, L<guestfs-perl(3)>, L<guestfs-python(3)>, L<guestfs-recipes(1)>, L<guestfs-ruby(3)>, L<http://libguestfs.org/>.
+
+=head1 АВТОРИ
+
+Richard W.M. Jones (C<rjones at redhat dot com>)
+
+=head1 АВТОРСЬКІ ПРАВА
+
+Copyright (C) 2010-2023 Red Hat Inc.
+

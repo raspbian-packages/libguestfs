@@ -1,0 +1,194 @@
+# virt-tools bash completion script -*- shell-script -*-
+# Copyright (C) 2010-2023 Red Hat Inc.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+# List all local libvirt domains.
+_guestfs_virsh_list ()
+{
+    local flag_ro=$1 flags
+
+    if [ "$flag_ro" -eq 1 ]; then
+        flags="--all"
+    else
+        flags="--inactive"
+    fi
+    virsh list $flags | head -n -1 | tail -n +3 | awk '{print $2}'
+}
+
+_guestfs_virttools ()
+{
+    local cur prev words cword split
+    local shortopts longopts tool="$1" flag_ro="$2" doms
+
+    _init_completion -s || return
+
+    case "$prev" in
+        --align-first)
+            COMPREPLY=( $( compgen -W "never always auto" -- "$cur") )
+            return ;;
+        --check-tmpdir)
+            COMPREPLY=( $( compgen -W "ignore i continue cont c warn warning w fail f error" -- "$cur") )
+            return ;;
+        -d|--domain)
+            doms=$(_guestfs_virsh_list "$flag_ro")
+            COMPREPLY=( $(compgen -W "$doms" -- "$cur") )
+            return ;;
+        -D)
+            doms=$(_guestfs_virsh_list "$flag_ro")
+            COMPREPLY=( $(compgen -W "$doms" -- "$cur") )
+            return ;;
+        --list-format)
+            COMPREPLY=( $( compgen -W "short long json" -- "$cur") )
+            return ;;
+        --password-crypto)
+            COMPREPLY=( $( compgen -W "md5 sha256 sha512" -- "$cur") )
+            return ;;
+        --unknown-filesystems)
+            COMPREPLY=( $( compgen -W "ignore warn error" -- "$cur") )
+            return ;;
+    esac
+
+    case "$cur" in
+        --*)
+            # --options
+            longopts="$($tool --long-options)"
+            COMPREPLY=( $(compgen -W "$longopts" -- "$cur") )
+            return ;;
+        -*)
+            # -o and --options
+            shortopts="$($tool --short-options)"
+            longopts="$($tool --long-options)"
+            COMPREPLY=( $(compgen -W "$shortopts $longopts" -- "$cur") )
+            return ;;
+        *)
+            COMPREPLY=( $(compgen "$cur") )
+            return ;;
+    esac
+}
+
+_guestunmount ()
+{
+    _guestfs_virttools "guestunmount" 1
+} &&
+complete -o default -F _guestunmount guestunmount
+
+_virt_alignment_scan ()
+{
+    _guestfs_virttools "virt-alignment-scan" 1
+} &&
+complete -o default -F _virt_alignment_scan virt-alignment-scan
+
+_virt_builder ()
+{
+    _guestfs_virttools "virt-builder" 0
+} &&
+complete -o default -F _virt_builder virt-builder
+
+_virt_cat ()
+{
+    _guestfs_virttools "virt-cat" 1
+} &&
+complete -o default -F _virt_cat virt-cat
+
+_virt_customize ()
+{
+    _guestfs_virttools "virt-customize" 0
+} &&
+complete -o default -F _virt_customize virt-customize
+
+_virt_dib ()
+{
+    _guestfs_virttools "virt-dib" 0
+} &&
+complete -o default -F _virt_dib virt-dib
+
+_virt_df ()
+{
+    _guestfs_virttools "virt-df" 1
+} &&
+complete -o default -F _virt_df virt-df
+
+_virt_diff ()
+{
+    _guestfs_virttools "virt-diff" 1
+} &&
+complete -o default -F _virt_diff virt-diff
+
+_virt_edit ()
+{
+    _guestfs_virttools "virt-edit" 0
+} &&
+complete -o default -F _virt_edit virt-edit
+
+_virt_filesystems ()
+{
+    _guestfs_virttools "virt-filesystems" 1
+} &&
+complete -o default -F _virt_filesystems virt-filesystems
+
+_virt_format ()
+{
+    _guestfs_virttools "virt-format" 0
+} &&
+complete -o default -F _virt_format virt-format
+
+_virt_get_kernel ()
+{
+    _guestfs_virttools "virt-get-kernel" 1
+} &&
+complete -o default -F _virt_get_kernel virt-get-kernel
+
+_virt_inspector ()
+{
+    _guestfs_virttools "virt-inspector" 1
+} &&
+complete -o default -F _virt_inspector virt-inspector
+
+_virt_log ()
+{
+    _guestfs_virttools "virt-log" 1
+} &&
+complete -o default -F _virt_log virt-log
+
+_virt_ls ()
+{
+    _guestfs_virttools "virt-ls" 1
+} &&
+complete -o default -F _virt_ls virt-ls
+
+_virt_resize ()
+{
+    _guestfs_virttools "virt-resize" 0
+} &&
+complete -o default -F _virt_resize virt-resize
+
+_virt_sparsify ()
+{
+    _guestfs_virttools "virt-sparsify" 0
+} &&
+complete -o default -F _virt_sparsify virt-sparsify
+
+_virt_sysprep ()
+{
+    _guestfs_virttools "virt-sysprep" 0
+} &&
+complete -o default -F _virt_sysprep virt-sysprep
+
+_virt_tail ()
+{
+    _guestfs_virttools "virt-tail" 1
+} &&
+complete -o default -F _virt_tail virt-tail
