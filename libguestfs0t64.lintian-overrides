@@ -1,0 +1,3 @@
+# As of 2.88dsf-53.3, sysvinit is no longer essential
+libguestfs0t64: depends-on-essential-package-without-using-version depends: sysvinit
+libguestfs0t64: package-name-doesnt-match-sonames libguestfs0
