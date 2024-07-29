@@ -162,11 +162,11 @@ override_dh_install:
 
 	# Workaround for Ubuntu's strict kernel permissions
 	if [ "$$(sed -ne '/^ID=/ { s/^[^=]*=//;p }' /etc/os-release)" = ubuntu ]; then \
-		mkidr -p debian/libguestfs0/etc/kernel/preinst.d debian/libguestfs0/etc/kernel/postrm.d ; \
-		install -m755 debian/libguestfs0.kernel-preinst debian/libguestfs0/etc/kernel/preinst.d/libguestfs0 ; \
-		install -m755 debian/libguestfs0.kernel-postrm  debian/libguestfs0/etc/kernel/postrm.d/libguestfs0  ; \
-		cat debian/libguestfs0.preinst.snippet >> debian/libguestfs0.preinst.debhelper ; \
-		cat debian/libguestfs0.postrm.snippet  >> debian/libguestfs0.postrm.debhelper  ; \
+		mkidr -p debian/libguestfs0t64/etc/kernel/preinst.d debian/libguestfs0t64/etc/kernel/postrm.d ; \
+		install -m755 debian/libguestfs0t64.kernel-preinst debian/libguestfs0t64/etc/kernel/preinst.d/libguestfs0 ; \
+		install -m755 debian/libguestfs0t64.kernel-postrm  debian/libguestfs0t64/etc/kernel/postrm.d/libguestfs0  ; \
+		cat debian/libguestfs0t64.preinst.snippet >> debian/libguestfs0t64.preinst.debhelper ; \
+		cat debian/libguestfs0t64.postrm.snippet  >> debian/libguestfs0t64.postrm.debhelper  ; \
 	fi
 
 override_dh_missing:
@@ -184,7 +184,7 @@ override_dh_python3:
 override_dh_shlibdeps:
 	dh_shlibdeps
 # Add libraries needed by guestfsd to libguestfs0 dependencies
-	dh_shlibdeps -p libguestfs0 -- -e debian/guestfsd/usr/sbin/guestfsd
+	dh_shlibdeps -p libguestfs0t64 -- -e debian/guestfsd/usr/sbin/guestfsd
 
 # Workaround for Lintian warning
 # "{pre,post}inst-has-useless-call-to-ldconfig"

@@ -6846,9 +6846,7 @@ C<$g-E<gt>feature-available>.
 
 =item $guid = $g->part_get_gpt_type ($device, $partnum);
 
-Return the type GUID of numbered GPT partition C<partnum>. For MBR partitions,
-return an appropriate GUID corresponding to the MBR type. Behaviour is undefined
-for other partition types.
+Return the type GUID of numbered GPT partition C<partnum>.
 
 This function depends on the feature C<gdisk>.  See also
 C<$g-E<gt>feature-available>.

@@ -3890,9 +3890,7 @@ guestfs_int_ruby_part_del (VALUE gv, VALUE devicev, VALUE partnumv)
  * get the type GUID of a GPT partition
  *
  * Return the type GUID of numbered GPT partition
- * "partnum". For MBR partitions, return an appropriate
- * GUID corresponding to the MBR type. Behaviour is
- * undefined for other partition types.
+ * "partnum".
  *
  *
  * [Since] Added in version 1.21.1.

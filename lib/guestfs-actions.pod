@@ -11906,9 +11906,7 @@ L</guestfs_feature_available>.
                             const char *device,
                             int partnum);
 
-Return the type GUID of numbered GPT partition C<partnum>. For MBR partitions,
-return an appropriate GUID corresponding to the MBR type. Behaviour is undefined
-for other partition types.
+Return the type GUID of numbered GPT partition C<partnum>.
 
 This function returns a string, or NULL on error.
 I<The caller must free the returned string after use>.

@@ -3,9 +3,10 @@ Section: libs
 Priority: optional
 Maintainer: Debian Libvirt Maintainers <pkg-libvirt-maintainers@lists.alioth.debian.org>
 Uploaders: Richard Jones <rjones@redhat.com>, Guido Günther <agx@sigxcpu.org>, Hilko Bengen <bengen@debian.org>
-Build-Depends: debhelper-compat (= 13),
+Build-Depends: dpkg-dev (>= 1.22.5), debhelper-compat (= 13),
   po-debconf, bash-completion,
-  supermin (>= 5),
+  supermin (>= 5.2.2-4~),
+  libtirpc-dev, rpcsvc-proto,
   libreadline-dev, libaugeas-dev (>= 1.0.0), libselinux1-dev, libhivex-ocaml-dev, libvirt-dev (>= 1.2.20),
   libaugeas-ocaml-dev,
   libvirt-ocaml-dev,
@@ -16,7 +17,7 @@ Build-Depends: debhelper-compat (= 13),
   librpm-dev,
   systemtap-sdt-dev,
   libcap-dev, libacl1-dev, libyajl-dev,
-  libsystemd-dev | libsystemd-journal-dev,
+  libsystemd-dev,
   libtsk-dev,
   libyara-dev,
   automake, autoconf, libtool,
@@ -31,7 +32,7 @@ Build-Depends: debhelper-compat (= 13),
   qemu-system-x86 [i386 amd64],
   xorriso,
   sqlite3,
-  pkg-config,
+  pkgconf,
   dh-lua,
   dh-ocaml, ocaml-nox, ocaml-findlib, libgettext-ocaml-dev,
   python3-all-dev,
@@ -44,7 +45,7 @@ Build-Depends: debhelper-compat (= 13),
   libstring-shellquote-perl,
   libsys-virt-perl, libwin-hivex-perl,
   libfuse-dev, fuse,
-  libglib2.0-dev, gobject-introspection, libgirepository1.0-dev,
+  libglib2.0-dev, gobject-introspection-bin, libgirepository1.0-dev,
   libgtk-3-dev,
   db-util,
   netpbm, icoutils,
@@ -110,6 +111,7 @@ Build-Depends: debhelper-compat (= 13),
   syslinux [i386 amd64],
   udev,
 # ufsutils,
+  util-linux-extra,
   uuid-runtime,
   vim-tiny,
   e2fsprogs,
@@ -159,21 +161,24 @@ Package: libguestfs-dev
 Section: libdevel
 Architecture: linux-any
 Multi-Arch: same
-Depends: libguestfs0 (= ${binary:Version}), ${misc:Depends}
-Conflicts: libguestfs0 (<< 1:1.14.9-1~)
+Depends: libguestfs0t64 (= ${binary:Version}), ${misc:Depends}
+Conflicts: libguestfs0t64 (<< 1:1.14.9-1~)
 Description: guest disk image management system - development headers
  The libguestfs library allows accessing and modifying guest disk
  images.
  .
  This package contains the development headers.
 
-Package: libguestfs0
+Package: libguestfs0t64
+Provides: ${t64:Provides}
+Replaces: libguestfs0
+Breaks: libguestfs0 (<< ${source:Version})
 Section: libs
 Architecture: linux-any
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends},
-  supermin (>= 5),
+  supermin (>= 5.2.2-4~),
   qemu-system-arm [armel armhf arm64],
   qemu-system-mips [mips mipsel mips64 mips64el],
   qemu-system-misc [s390x riscv64],
@@ -220,7 +225,7 @@ Section: libs
 Architecture: linux-any
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
-Depends: libguestfs0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
+Depends: libguestfs0t64 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
  ${appliance:Depends},
 Description: guest disk image management system - GFS2 support
  The libguestfs library allows accessing and modifying guest disk
@@ -234,7 +239,7 @@ Section: libs
 Architecture: linux-any
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
-Depends: libguestfs0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
+Depends: libguestfs0t64 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
  ${appliance:Depends},
 Description: guest disk image management system - HFS+ support
  The libguestfs library allows accessing and modifying guest disk
@@ -247,7 +252,7 @@ Section: libs
 Architecture: linux-any
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
-Depends: libguestfs0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
+Depends: libguestfs0t64 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
  ${appliance:Depends},
 Description: guest disk image management system - JFS support
  The libguestfs library allows accessing and modifying guest disk
@@ -260,7 +265,7 @@ Section: libs
 Architecture: linux-any
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
-Depends: libguestfs0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
+Depends: libguestfs0t64 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
  ${appliance:Depends},
 Description: guest disk image management system - NILFS v2 support
  The libguestfs library allows accessing and modifying guest disk
@@ -273,7 +278,7 @@ Section: libs
 Architecture: linux-any
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
-Depends: libguestfs0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
+Depends: libguestfs0t64 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
  ${appliance:Depends},
 Description: guest disk image management system - ReiserFS support
  The libguestfs library allows accessing and modifying guest disk
@@ -286,7 +291,7 @@ Section: libs
 Architecture: linux-any
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
-Depends: libguestfs0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
+Depends: libguestfs0t64 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
  ${appliance:Depends},
 Description: guest disk image management system - virt-rescue enhancements
  The libguestfs library allows accessing and modifying guest disk
@@ -301,7 +306,7 @@ Section: libs
 Architecture: linux-any
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
-Depends: libguestfs0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
+Depends: libguestfs0t64 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
  ${appliance:Depends},
 Description: guest disk image management system - rsync support
  The libguestfs library allows accessing and modifying guest disk
@@ -315,7 +320,7 @@ Section: libs
 Architecture: linux-any
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
-Depends: libguestfs0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
+Depends: libguestfs0t64 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
  ${appliance:Depends},
 Description: guest disk image management system - XFS support
  The libguestfs library allows accessing and modifying guest disk
@@ -328,7 +333,7 @@ Section: libs
 Architecture: i386 amd64 powerpc sparc
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
-Depends: libguestfs0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
+Depends: libguestfs0t64 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
  ${appliance:Depends},
 Description: guest disk image management system - ZFS support
  The libguestfs library allows accessing and modifying guest disk
@@ -339,7 +344,7 @@ Description: guest disk image management system - ZFS support
 Package: guestfish
 Section: admin
 Architecture: linux-any
-Depends: libguestfs0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
+Depends: libguestfs0t64 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
 Replaces: libguestfs-tools (<< 1:1.46),
 Breaks: libguestfs-tools (<< 1:1.46),
 Description: guest filesystem shell
@@ -352,7 +357,7 @@ Description: guest filesystem shell
 Package: guestmount
 Section: admin
 Architecture: linux-any
-Depends: libguestfs0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
+Depends: libguestfs0t64 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
 Replaces: libguestfs-tools (<< 1:1.46),
 Breaks: libguestfs-tools (<< 1:1.46),
 Description: FUSE-based mount utility for guest filesystems
@@ -366,14 +371,14 @@ Description: FUSE-based mount utility for guest filesystems
 Package: libguestfs-tools
 Section: admin
 Architecture: linux-any
-Depends: libguestfs0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
+Depends: libguestfs0t64 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
  guestfs-tools, guestmount, guestfish,
 Replaces: guestfish (<< 1:1.22.6-1~),
  guestmount (<< 1.24.2-1~),
- libguestfs0 (<< 1:1.18.2-1~),
+ libguestfs0t64 (<< 1:1.18.2-1~),
 Breaks: guestfish (<< 1:1.22.6-1~),
  guestmount (<< 1.24.2-1~),
- libguestfs0 (<< 1:1.18.2-1~),
+ libguestfs0t64 (<< 1:1.18.2-1~),
 Description: guest disk image management system - tools
  The libguestfs library allows accessing and modifying guest disk
  images.
@@ -396,7 +401,7 @@ Description: guest disk image management system - Python 3 bindings
 Package: libguestfs-perl
 Section: perl
 Architecture: linux-any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libguestfs0 (= ${binary:Version}),
+Depends: ${shlibs:Depends}, ${misc:Depends}, libguestfs0t64 (= ${binary:Version}),
  ${perl:Depends},
  libxml-xpath-perl,
  libwin-hivex-perl,
@@ -410,7 +415,7 @@ Description: guest disk image management system - Perl bindings
 Package: libguestfs-ocaml
 Section: ocaml
 Architecture: linux-any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libguestfs0 (= ${binary:Version}),
+Depends: ${shlibs:Depends}, ${misc:Depends}, libguestfs0t64 (= ${binary:Version}),
  ${ocaml:Depends}
 Provides: ${ocaml:Provides}
 Description: guest disk image management system - OCaml bindings
@@ -423,7 +428,7 @@ Package: libguestfs-ocaml-dev
 Section: ocaml
 Architecture: linux-any
 Depends: ${shlibs:Depends}, ${misc:Depends},
- libguestfs0 (= ${binary:Version}),
+ libguestfs0t64 (= ${binary:Version}),
  libguestfs-dev (= ${binary:Version}), 
  ${ocaml:Depends}
 Provides: ${ocaml:Provides}
@@ -458,13 +463,16 @@ Description: guest disk image management system - Ruby bindings
  .
  This package contains Ruby bindings to libguestfs.
 
-Package: libguestfs-gobject-1.0-0
+Package: libguestfs-gobject-1.0-0t64
+Provides: ${t64:Provides}
+Replaces: libguestfs-gobject-1.0-0
+Breaks: libguestfs-gobject-1.0-0 (<< ${source:Version})
 Section: libs
 Architecture: linux-any
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
-Depends: libguestfs0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
-Conflicts: libguestfs0 (<< 1:1.14.9-1~)
+Depends: libguestfs0t64 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Conflicts: libguestfs0t64 (<< 1:1.14.9-1~)
 Description: guest disk image management system - GObject bindings
  The libguestfs library allows accessing and modifying guest disk
  images.
@@ -475,8 +483,8 @@ Package: libguestfs-gobject-dev
 Section: libdevel
 Architecture: linux-any
 Multi-Arch: same
-Depends: libguestfs-gobject-1.0-0 (= ${binary:Version}), gir1.2-guestfs-1.0 (= ${binary:Version}), ${misc:Depends}
-Conflicts: libguestfs0 (<< 1:1.14.9-1~)
+Depends: libguestfs-gobject-1.0-0t64 (= ${binary:Version}), gir1.2-guestfs-1.0 (= ${binary:Version}), ${misc:Depends}
+Conflicts: libguestfs0t64 (<< 1:1.14.9-1~)
 Description: guest disk image management system - GObject development headers
  The libguestfs library allows accessing and modifying guest disk
  images.
@@ -487,8 +495,8 @@ Description: guest disk image management system - GObject development headers
 Package: gir1.2-guestfs-1.0
 Section: introspection
 Architecture: linux-any
-Depends: libguestfs-gobject-1.0-0 (= ${binary:Version}), ${gir:Depends}, ${misc:Depends}
-Conflicts: libguestfs0 (<< 1:1.14.9-1~)
+Depends: libguestfs-gobject-1.0-0t64 (= ${binary:Version}), ${gir:Depends}, ${misc:Depends}
+Conflicts: libguestfs0t64 (<< 1:1.14.9-1~)
 Description: guest disk image management system - GObject introspection files
  The libguestfs library allows accessing and modifying guest disk
  images.

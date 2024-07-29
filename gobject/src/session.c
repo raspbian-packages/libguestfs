@@ -22218,9 +22218,7 @@ guestfs_session_part_get_gpt_guid (GuestfsSession *session, const gchar *device,
  *
  * get the type GUID of a GPT partition
  *
- * Return the type GUID of numbered GPT partition @partnum. For MBR
- * partitions, return an appropriate GUID corresponding to the MBR type.
- * Behaviour is undefined for other partition types.
+ * Return the type GUID of numbered GPT partition @partnum.
  * 
  * This function depends on the feature "gdisk".
  * See also guestfs_session_feature_available().

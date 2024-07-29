@@ -438,7 +438,7 @@ do_btrfs_subvolume_get_default (const mountable_t *fs)
     CAMLreturnT (int, -1);
   }
 
-  CAMLreturnT (int, Int64_val (retv));
+  CAMLreturnT (int64_t, Int64_val (retv));
 }
 
 /* Wrapper for OCaml function ‘Btrfs.btrfs_subvolume_list’. */
@@ -1994,7 +1994,7 @@ do_part_get_gpt_attributes (const char *device,
     CAMLreturnT (int, -1);
   }
 
-  CAMLreturnT (int, Int64_val (retv));
+  CAMLreturnT (int64_t, Int64_val (retv));
 }
 
 /* Wrapper for OCaml function ‘Parted.part_get_gpt_guid’. */

@@ -1766,9 +1766,7 @@ struct command_entry part_get_gpt_type_cmd_entry = {
           "     part-get-gpt-type device partnum\n"
           "\n"
           "DESCRIPTION\n"
-          "    Return the type GUID of numbered GPT partition \"partnum\". For MBR\n"
-          "    partitions, return an appropriate GUID corresponding to the MBR type.\n"
-          "    Behaviour is undefined for other partition types.\n"
+          "    Return the type GUID of numbered GPT partition \"partnum\".\n"
           "\n"
           "",
   .synopsis = "part-get-gpt-type device partnum",

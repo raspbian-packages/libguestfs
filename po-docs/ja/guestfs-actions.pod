@@ -9693,7 +9693,7 @@ This function depends on the feature C<gdisk>.  See also L</guestfs_feature_avai
                             const char *device,
                             int partnum);
 
-Return the type GUID of numbered GPT partition C<partnum>. For MBR partitions, return an appropriate GUID corresponding to the MBR type. Behaviour is undefined for other partition types.
+Return the type GUID of numbered GPT partition C<partnum>.
 
 この関数は文字列を返します。エラー時は NULL です。 I<呼び出し元は使用後に返された文字列を開放する必要があります>。
 

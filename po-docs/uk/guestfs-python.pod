@@ -26,7 +26,7 @@ guestfs-python — як використовувати libguestfs з Python
 
 =head2 ВИНЯТКИ
 
-Помилки від функцій libguestfs пов'язуються із C<RuntimeException> з єдиним рядковим аргументом, яким є текст повідомлення про помилку.
+Errors from libguestfs functions are mapped into C<RuntimeError> with a single string argument which is the error message.
 
 =head2 ДОДАТКОВА ДОКУМЕНТАЦІЯ
 

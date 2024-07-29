@@ -213,17 +213,17 @@ am_guestfsd_OBJECTS = guestfsd-9p.$(OBJEXT) guestfsd-acl.$(OBJEXT) \
 	guestfsd-fallocate.$(OBJEXT) guestfsd-file.$(OBJEXT) \
 	guestfsd-fill.$(OBJEXT) guestfsd-find.$(OBJEXT) \
 	guestfsd-fs-min-size.$(OBJEXT) guestfsd-fsck.$(OBJEXT) \
-	guestfsd-fstrim.$(OBJEXT) guestfsd-glob.$(OBJEXT) \
-	guestfsd-grep.$(OBJEXT) guestfsd-grub.$(OBJEXT) \
-	guestfsd-guestfsd.$(OBJEXT) guestfsd-headtail.$(OBJEXT) \
-	guestfsd-hexdump.$(OBJEXT) guestfsd-hivex.$(OBJEXT) \
-	guestfsd-htonl.$(OBJEXT) guestfsd-initrd.$(OBJEXT) \
-	guestfsd-inotify.$(OBJEXT) guestfsd-internal.$(OBJEXT) \
-	guestfsd-is.$(OBJEXT) guestfsd-journal.$(OBJEXT) \
-	guestfsd-labels.$(OBJEXT) guestfsd-ldm.$(OBJEXT) \
-	guestfsd-link.$(OBJEXT) guestfsd-ls.$(OBJEXT) \
-	guestfsd-luks.$(OBJEXT) guestfsd-lvm.$(OBJEXT) \
-	guestfsd-lvm-filter.$(OBJEXT) \
+	guestfsd-fstrim.$(OBJEXT) guestfsd-gdisk.$(OBJEXT) \
+	guestfsd-glob.$(OBJEXT) guestfsd-grep.$(OBJEXT) \
+	guestfsd-grub.$(OBJEXT) guestfsd-guestfsd.$(OBJEXT) \
+	guestfsd-headtail.$(OBJEXT) guestfsd-hexdump.$(OBJEXT) \
+	guestfsd-hivex.$(OBJEXT) guestfsd-htonl.$(OBJEXT) \
+	guestfsd-initrd.$(OBJEXT) guestfsd-inotify.$(OBJEXT) \
+	guestfsd-internal.$(OBJEXT) guestfsd-is.$(OBJEXT) \
+	guestfsd-journal.$(OBJEXT) guestfsd-labels.$(OBJEXT) \
+	guestfsd-ldm.$(OBJEXT) guestfsd-link.$(OBJEXT) \
+	guestfsd-ls.$(OBJEXT) guestfsd-luks.$(OBJEXT) \
+	guestfsd-lvm.$(OBJEXT) guestfsd-lvm-filter.$(OBJEXT) \
 	guestfsd-lvm-tokenization.$(OBJEXT) guestfsd-md.$(OBJEXT) \
 	guestfsd-mkfs.$(OBJEXT) guestfsd-mknod.$(OBJEXT) \
 	guestfsd-mktemp.$(OBJEXT) guestfsd-modprobe.$(OBJEXT) \
@@ -320,8 +320,9 @@ am__depfiles_remade = ./$(DEPDIR)/daemon_utils_tests-command.Po \
 	./$(DEPDIR)/guestfsd-fill.Po ./$(DEPDIR)/guestfsd-find.Po \
 	./$(DEPDIR)/guestfsd-fs-min-size.Po \
 	./$(DEPDIR)/guestfsd-fsck.Po ./$(DEPDIR)/guestfsd-fstrim.Po \
-	./$(DEPDIR)/guestfsd-glob.Po ./$(DEPDIR)/guestfsd-grep.Po \
-	./$(DEPDIR)/guestfsd-grub.Po ./$(DEPDIR)/guestfsd-guestfsd.Po \
+	./$(DEPDIR)/guestfsd-gdisk.Po ./$(DEPDIR)/guestfsd-glob.Po \
+	./$(DEPDIR)/guestfsd-grep.Po ./$(DEPDIR)/guestfsd-grub.Po \
+	./$(DEPDIR)/guestfsd-guestfsd.Po \
 	./$(DEPDIR)/guestfsd-headtail.Po \
 	./$(DEPDIR)/guestfsd-hexdump.Po ./$(DEPDIR)/guestfsd-hivex.Po \
 	./$(DEPDIR)/guestfsd-htonl.Po ./$(DEPDIR)/guestfsd-initrd.Po \
@@ -1114,6 +1115,7 @@ guestfsd_SOURCES = \
 	fs-min-size.c \
 	fsck.c \
 	fstrim.c \
+	gdisk.c \
 	glob.c \
 	grep.c \
 	grub.c \
@@ -1589,6 +1591,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/guestfsd-fs-min-size.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/guestfsd-fsck.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/guestfsd-fstrim.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/guestfsd-gdisk.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/guestfsd-glob.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/guestfsd-grep.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/guestfsd-grub.Po@am__quote@ # am--include-marker
@@ -2340,6 +2343,20 @@ guestfsd-fstrim.obj: fstrim.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='fstrim.c' object='guestfsd-fstrim.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(guestfsd_CPPFLAGS) $(CPPFLAGS) $(guestfsd_CFLAGS) $(CFLAGS) -c -o guestfsd-fstrim.obj `if test -f 'fstrim.c'; then $(CYGPATH_W) 'fstrim.c'; else $(CYGPATH_W) '$(srcdir)/fstrim.c'; fi`
+
+guestfsd-gdisk.o: gdisk.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(guestfsd_CPPFLAGS) $(CPPFLAGS) $(guestfsd_CFLAGS) $(CFLAGS) -MT guestfsd-gdisk.o -MD -MP -MF $(DEPDIR)/guestfsd-gdisk.Tpo -c -o guestfsd-gdisk.o `test -f 'gdisk.c' || echo '$(srcdir)/'`gdisk.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/guestfsd-gdisk.Tpo $(DEPDIR)/guestfsd-gdisk.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gdisk.c' object='guestfsd-gdisk.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(guestfsd_CPPFLAGS) $(CPPFLAGS) $(guestfsd_CFLAGS) $(CFLAGS) -c -o guestfsd-gdisk.o `test -f 'gdisk.c' || echo '$(srcdir)/'`gdisk.c
+
+guestfsd-gdisk.obj: gdisk.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(guestfsd_CPPFLAGS) $(CPPFLAGS) $(guestfsd_CFLAGS) $(CFLAGS) -MT guestfsd-gdisk.obj -MD -MP -MF $(DEPDIR)/guestfsd-gdisk.Tpo -c -o guestfsd-gdisk.obj `if test -f 'gdisk.c'; then $(CYGPATH_W) 'gdisk.c'; else $(CYGPATH_W) '$(srcdir)/gdisk.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/guestfsd-gdisk.Tpo $(DEPDIR)/guestfsd-gdisk.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='gdisk.c' object='guestfsd-gdisk.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(guestfsd_CPPFLAGS) $(CPPFLAGS) $(guestfsd_CFLAGS) $(CFLAGS) -c -o guestfsd-gdisk.obj `if test -f 'gdisk.c'; then $(CYGPATH_W) 'gdisk.c'; else $(CYGPATH_W) '$(srcdir)/gdisk.c'; fi`
 
 guestfsd-glob.o: glob.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(guestfsd_CPPFLAGS) $(CPPFLAGS) $(guestfsd_CFLAGS) $(CFLAGS) -MT guestfsd-glob.o -MD -MP -MF $(DEPDIR)/guestfsd-glob.Tpo -c -o guestfsd-glob.o `test -f 'glob.c' || echo '$(srcdir)/'`glob.c
@@ -3815,6 +3832,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/guestfsd-fs-min-size.Po
 	-rm -f ./$(DEPDIR)/guestfsd-fsck.Po
 	-rm -f ./$(DEPDIR)/guestfsd-fstrim.Po
+	-rm -f ./$(DEPDIR)/guestfsd-gdisk.Po
 	-rm -f ./$(DEPDIR)/guestfsd-glob.Po
 	-rm -f ./$(DEPDIR)/guestfsd-grep.Po
 	-rm -f ./$(DEPDIR)/guestfsd-grub.Po
@@ -3983,6 +4001,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/guestfsd-fs-min-size.Po
 	-rm -f ./$(DEPDIR)/guestfsd-fsck.Po
 	-rm -f ./$(DEPDIR)/guestfsd-fstrim.Po
+	-rm -f ./$(DEPDIR)/guestfsd-gdisk.Po
 	-rm -f ./$(DEPDIR)/guestfsd-glob.Po
 	-rm -f ./$(DEPDIR)/guestfsd-grep.Po
 	-rm -f ./$(DEPDIR)/guestfsd-grub.Po

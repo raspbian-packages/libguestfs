@@ -424,30 +424,6 @@ do_part_get_bootable (const char *device, int partnum)
   return strstr (boot, "boot") != NULL;
 }
 
-/* Test if sfdisk is recent enough to have --part-type, to be used instead
- * of --print-id and --change-id.
- */
-static int
-test_sfdisk_has_part_type (void)
-{
-  static int tested = -1;
-
-  if (tested != -1)
-    return tested;
-
-  int r;
-  CLEANUP_FREE char *out = NULL, *err = NULL;
-
-  r = command (&out, &err, "sfdisk", "--help", NULL);
-  if (r == -1) {
-    reply_with_error ("%s: %s", "sfdisk --help", err);
-    return -1;
-  }
-
-  tested = strstr (out, "--part-type") != NULL;
-  return tested;
-}
-
 int
 do_part_set_mbr_id (const char *device, int partnum, int idbyte)
 {
@@ -455,8 +431,6 @@ do_part_set_mbr_id (const char *device, int partnum, int idbyte)
     reply_with_error ("partition number must be >= 1");
     return -1;
   }
-
-  const char *param = test_sfdisk_has_part_type () ? "--part-type" : "--change-id";
 
   char partnum_str[16];
   snprintf (partnum_str, sizeof partnum_str, "%d", partnum);
@@ -470,22 +444,16 @@ do_part_set_mbr_id (const char *device, int partnum, int idbyte)
 
   udev_settle ();
 
-  r = command (NULL, &err, "sfdisk",
-               param, device, partnum_str, idbyte_str, NULL);
+  r = command (NULL, &err, "sfdisk", "--part-type",
+               device, partnum_str, idbyte_str, NULL);
   if (r == -1) {
-    reply_with_error ("sfdisk %s: %s", param, err);
+    reply_with_error ("sfdisk --part-type: %s", err);
     return -1;
   }
 
   udev_settle ();
 
   return 0;
-}
-
-int
-optgroup_gdisk_available (void)
-{
-  return prog_exists ("sgdisk");
 }
 
 int
@@ -683,22 +651,6 @@ do_part_set_disk_guid_random (const char *device)
 
   if (r == -1) {
     reply_with_error ("%s %s -U R: %s", "sgdisk", device, err);
-    return -1;
-  }
-
-  return 0;
-}
-
-int
-do_part_expand_gpt(const char *device)
-{
-  CLEANUP_FREE char *err = NULL;
-
-  int r = commandf (NULL, &err, COMMAND_FLAG_FOLD_STDOUT_ON_STDERR,
-                    "sgdisk", "-e", device, NULL);
-
-  if (r == -1) {
-    reply_with_error ("%s -e %s: %s", "sgdisk", device, err);
     return -1;
   }
 

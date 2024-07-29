@@ -7314,9 +7314,7 @@ L</feature-available>.
 
  part-get-gpt-type device partnum
 
-Return the type GUID of numbered GPT partition C<partnum>. For MBR partitions,
-return an appropriate GUID corresponding to the MBR type. Behaviour is undefined
-for other partition types.
+Return the type GUID of numbered GPT partition C<partnum>.
 
 This command depends on the feature C<gdisk>.   See also
 L</feature-available>.

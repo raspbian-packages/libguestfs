@@ -16320,9 +16320,7 @@ public class GuestFS {
    * get the type GUID of a GPT partition
    * </p><p>
    * Return the type GUID of numbered GPT partition
-   * "partnum". For MBR partitions, return an appropriate
-   * GUID corresponding to the MBR type. Behaviour is
-   * undefined for other partition types.
+   * "partnum".
    * </p><p>
    * This function depends on the feature "gdisk".  See also {@link #feature_available}.
    * </p>

@@ -8554,9 +8554,7 @@ class GuestFS(object):
 
     def part_get_gpt_type(self, device: str, partnum: int) -> str:
         """Return the type GUID of numbered GPT partition
-        "partnum". For MBR partitions, return an appropriate
-        GUID corresponding to the MBR type. Behaviour is
-        undefined for other partition types.
+        "partnum".
 
         This function depends on the feature "gdisk". See also
         "g.feature-available".

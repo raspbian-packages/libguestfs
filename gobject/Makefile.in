@@ -171,7 +171,6 @@ host_triplet = @host@
 @HAVE_INTROSPECTION_TRUE@am__append_1 = Guestfs-1.0.gir
 @ENABLE_APPLIANCE_TRUE@@HAVE_INTROSPECTION_TRUE@am__append_2 = run-live-tests
 @HAVE_INTROSPECTION_TRUE@am__append_3 = $(gir_DATA) $(typelib_DATA)
-@HAVE_INTROSPECTION_TRUE@am__append_4 = libguestfs-gobject-1.0.deps
 subdir = gobject
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/introspection.m4 \
@@ -1267,9 +1266,18 @@ generator_built = \
 	bindtests.js
 
 BUILT_SOURCES = $(generator_built)
-EXTRA_DIST = $(generator_built) TODO.txt .gitignore \
-	bindtests-retvalues.js guestfs-gobject.pod tests-misc.js \
-	run-tests run-tests-retvalues run-live-tests $(am__append_4)
+EXTRA_DIST = \
+	$(generator_built) \
+	TODO.txt \
+	.gitignore \
+	bindtests-retvalues.js \
+	guestfs-gobject.pod \
+	libguestfs-gobject-1.0.deps \
+	tests-misc.js \
+	run-tests \
+	run-tests-retvalues \
+	run-live-tests
+
 libname = libguestfs-gobject-1.0.la
 lib_LTLIBRARIES = $(libname)
 libguestfs_gobject_1_0_ladir = $(includedir)/guestfs-gobject
