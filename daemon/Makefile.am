@@ -381,6 +381,7 @@ OCAML_LIBS = \
 	-l$(CAMLSTR) \
 	-l$(CAMLUNIX) \
 	-l$(CAMLRUN) \
+	-latomic \
 	$(LIBZSTD_LIBS) \
 	-ldl -lm
 
