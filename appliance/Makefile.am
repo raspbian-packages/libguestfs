@@ -157,7 +157,7 @@ supermin.d/udev-rules.tar.gz: 99-guestfs-serial.rules
 # If installing the daemon, install the udev rules too.
 
 if INSTALL_DAEMON
-udevrulesdir = /lib/udev/rules.d
+udevrulesdir = /usr/lib/udev/rules.d
 udevrules_DATA = 99-guestfs-serial.rules
 endif
 
