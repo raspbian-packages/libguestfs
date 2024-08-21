@@ -21,4 +21,5 @@ Only-set-rtc-driftfix-slew-on-x86-architectures.patch
 Add-dhcpcd-to-Debian-package-list.patch
 Add-util-linux-extra-to-appliance-list.patch
 udev-rules-path.patch
+link-with--latomic-when-linking-with--lc.patch
 recognise-raspbian.diff
