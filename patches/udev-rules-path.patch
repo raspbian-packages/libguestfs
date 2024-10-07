@@ -1,0 +1,13 @@
+Index: libguestfs-1.52.0/appliance/Makefile.am
+===================================================================
+--- libguestfs-1.52.0.orig/appliance/Makefile.am
++++ libguestfs-1.52.0/appliance/Makefile.am
+@@ -157,7 +157,7 @@ supermin.d/udev-rules.tar.gz: 99-guestfs
+ # If installing the daemon, install the udev rules too.
+ 
+ if INSTALL_DAEMON
+-udevrulesdir = /lib/udev/rules.d
++udevrulesdir = /usr/lib/udev/rules.d
+ udevrules_DATA = 99-guestfs-serial.rules
+ endif
+ 
