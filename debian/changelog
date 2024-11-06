@@ -1,4 +1,4 @@
-libguestfs (1:1.52.2-3+rpi1) trixie-staging; urgency=medium
+libguestfs (1:1.52.2-5+rpi1) trixie-staging; urgency=medium
 
   [changes brought forward from 1:1.42.0-11+rpi1 by Peter Michael Green <plugwash@raspbian.org> at Thu, 12 Nov 2020 16:03:00 +0000]
   * Add raspbian to the list of distros with dpkg.
@@ -12,7 +12,20 @@ libguestfs (1:1.52.2-3+rpi1) trixie-staging; urgency=medium
   [changes introduced in 1:1.50.1-4+rpi1 by Peter Michael Green]
   * Add build-conflicts on rustc.
 
- -- Raspbian forward porter <root@raspbian.org>  Wed, 21 Aug 2024 01:41:47 +0000
+ -- Raspbian forward porter <root@raspbian.org>  Wed, 06 Nov 2024 08:40:49 +0000
+
+libguestfs (1:1.52.2-5) unstable; urgency=medium
+
+  * Tweak qemu-system-* dependencies.
+    Thanks to Michael Tokarev (Closes: 1086026)
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 26 Oct 2024 12:47:48 +0200
+
+libguestfs (1:1.52.2-4) unstable; urgency=medium
+
+  * Update fuse build dependency to allow for fuse3 (Closes: #1084437)
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 07 Oct 2024 15:21:04 +0200
 
 libguestfs (1:1.52.2-3) unstable; urgency=medium
 
