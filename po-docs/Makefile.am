@@ -26,7 +26,7 @@ include $(top_srcdir)/subdir-rules.mk
 linguas     := $(shell cat $(srcdir)/LINGUAS)
 
 # Languages that we translate, as they have enough coverage.
-linguas_translated = ja uk
+linguas_translated = 
 
 EXTRA_DIST = \
 	LINGUAS \

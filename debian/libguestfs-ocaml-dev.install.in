@@ -4,4 +4,3 @@
 @OCamlStdlibDir@/guestfs/*guestfs*.ml*
 
 usr/share/man/man3/guestfs-ocaml.3*
-usr/share/man/*/man3/guestfs-ocaml.3*
