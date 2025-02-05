@@ -1,0 +1,21 @@
+From: Peter Michael Green <plugwash@raspbian.org>
+Date: Sat, 1 Feb 2025 21:03:42 +0000
+X-Dgit-Generated: 1:1.52.2-7+rpi1 7d365450d3c67e408410f92d95c806aeae842e22
+Subject: disable some translations to workaround documentation build failure.
+
+
+---
+
+diff --git a/po-docs/Makefile.am b/po-docs/Makefile.am
+index 330b673f..609a74b1 100644
+--- a/po-docs/Makefile.am
++++ b/po-docs/Makefile.am
+@@ -26,7 +26,7 @@ include $(top_srcdir)/subdir-rules.mk
+ linguas     := $(shell cat $(srcdir)/LINGUAS)
+ 
+ # Languages that we translate, as they have enough coverage.
+-linguas_translated = ja uk
++linguas_translated = 
+ 
+ EXTRA_DIST = \
+ 	LINGUAS \

@@ -23,3 +23,4 @@ Add-util-linux-extra-to-appliance-list.patch
 udev-rules-path.patch
 link-with--latomic-when-linking-with--lc.patch
 recognise-raspbian.diff
+disable-some-translations-to-workaround-.patch
