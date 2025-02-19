@@ -1,0 +1,127 @@
+
+=head1 名前
+
+libguestfs-make-fixed-appliance - libguestfs 向け "fixed appliance" (固定アプライアンス) を作成します
+
+=head1 書式
+
+ libguestfs-make-fixed-appliance [--options] OUTPUTDIR
+
+ libguestfs-make-fixed-appliance [--options] --xz
+
+=head1 説明
+
+libguestfs-make-fixed-appliance により、事前に構築されたバイナリーの libguestfs 向けアプライアンスを作成できます。
+
+B<Note that ordinary users should not need to run this tool>.
+
+Some reasons why you I<might> want to use this include:
+
+=over 4
+
+=item *
+
+You want to make a self-contained libguestfs appliance that can be copied to another machine or platform that doesn't support L<supermin(1)>.
+
+=item *
+
+You have multiple users on the same machine and want to avoid the storage duplication and start-up overhead of having multiple cached copies of the appliance.
+
+=item *
+
+You want to have very predictable performance from libguestfs (see L<guestfs-performance(1)>).
+
+=back
+
+For deeper understanding of why you might need this tool, read L<guestfs-internals(1)/FIXED APPLIANCE>.
+
+Instead of running this tool, you can download fixed appliances from L<http://libguestfs.org/download/binaries/appliance/>.  These appliances were made using this tool.
+
+このツールを使用する方法が二つあります。
+
+=over 4
+
+=item *
+
+出力ディレクトリーを指定します、たとえば:
+
+ libguestfs-make-fixed-appliance /usr/local/lib/guestfs/appliance
+
+出力ディレクトリーが存在しなければ、作成されます。4 つのファイルがこのディレクトリーに作成されます:
+
+ <OUTPUTDIR>/kernel
+ <OUTPUTDIR>/initrd
+ <OUTPUTDIR>/root
+ <OUTPUTDIR>/README.fixed
+
+C<I<OUTPUTDIR>/root> はスパースなファイルのため、これをコピーするときに注意する必要があります。
+
+You can then run libguestfs (possibly after copying this directory to another machine) by setting the environment variable LIBGUESTFS_PATH to C<OUTPUTDIR>.
+
+=item *
+
+圧縮 tar ファイルを作成する、もう一つの方法は I<--xz> オプションを使用することです:
+
+ libguestfs-make-fixed-appliance --xz
+
+これは呼び出した I<カレント> ディレクトリーに tar ファイルを作成します:
+
+ appliance-<VERSION>.tar.xz
+
+(ここで C<VERSION> は libguestfs のバージョンです)。  tar ファイルは 4 つのファイルを含みます:
+
+ appliance/kernel
+ appliance/initrd
+ appliance/root
+ appliance/README.fixed
+
+C<appliance/root> はスパースファイルであるため、コピーするときには気をつける必要があるため、注意してください。
+
+=back
+
+=head1 オプション
+
+=over 4
+
+=item B<--help>
+
+簡単な使用法を表示して、終了します。
+
+=item B<-V>
+
+=item B<--version>
+
+バージョン番号を表示して、終了します。
+
+=item B<--xz>
+
+Instead of creating the appliance in an output directory, create a compressed tarball of the appliance in the current directory called F<appliance-I<VERSION>.tar.xz> where C<VERSION> is the version of libguestfs.
+
+Using I<--xz> can take some time.  If working normally, the tool is completely silent when it is running.
+
+=back
+
+=head1 ライセンス
+
+The fixed appliance is a complete Linux binary distro.  If you distribute it, you may need to distribute corresponding source files to remain in legal compliance with the licenses of the software in the appliance (such as the GNU General Public License).
+
+=head1 終了ステータス
+
+アプライアンスがエラーなくビルドされると、libguestfs-make-fixed-appliance は I<0> を返します。
+
+=head1 環境変数
+
+libguestfs に影響する環境変数の完全な一覧は L<guestfs(3)> マニュアルページを参照してください。
+
+=head1 関連項目
+
+L<guestfs(3)>, L<supermin(1)>, L<xz(1)>, L<http://libguestfs.org/>, L<http://qemu.org/>.
+
+=head1 著者
+
+Richard W.M. Jones (C<rjones at redhat dot com>)
+
+=head1 COPYRIGHT
+
+Copyright (C) 2009-2023 Red Hat Inc.
+

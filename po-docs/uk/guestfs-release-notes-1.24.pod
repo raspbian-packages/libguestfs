@@ -1,0 +1,292 @@
+
+=head1 НАЗВА
+
+guestfs-release-notes - нотатки щодо випусків libguestfs
+
+=head1 НОТАТКИ ЩОДО ВИПУСКУ LIBGUESTFS 1.24
+
+Ці нотатки щодо випуску стосуються лише відмінностей від попереднього стабільного випуску (1.22.0). Докладний журнал змін є частиною журналу змін сховища git. Його також наведено у файлі ChangeLog, який є частиною архіву tar із кодом бібліотеки.
+
+=head2 Нові можливості
+
+Можна використовувати User-Mode Linux (UML) як альтернативний модуль обробки (замість KVM). Використання цього модуля поліпшує швидкодію, особливо, якщо libguestfs використовується у віртуальній машині (наприклад, у хмарі). Підтримка UML здійснюється як для основного модуля. Див. L<guestfs(3)/МОДУЛЬ USER-MODE LINUX>, щоб дізнатися про цей модуль більше.
+
+Тепер повністю підтримуються архітектури ARM (32-бітова) та PPC64.
+
+=head3 Інструменти
+
+L<virt-builder(1)> — новий інструмент для збирання образів для віртуальних машин. За його допомогою ви можете швидко і безпечно створювати і налаштовувати гостьові системи.
+
+Нові дії у L<virt-sysprep(1)>: вилучення файлів у F</tmp> і F</var/tmp>. Вилучення файлів баз даних RPM. Зміна паролів root та користувача. Вилучається більше файлів журналів. Нові дії, які типово не увімкнено: створення випадкових UUID для файлових систем. Скидання правил брандмауера. (Wanlong Gao)
+
+L<virt-resize(1)> та virt-sysprep тепер можуть використовувати адреси для визначення віддаленого диска.
+
+Реалізовано використання C<guestfish -N назва_файла=тип> для створення іменованого образу диска (замість типового F<test1.img> тощо).
+
+L<virt-sparsify(1)> тепер перевіряє, чи достатньо місця на диску для завершення дії. Тепер неможлива ситуація, коли місце вичерпується під час виконання завдання.
+
+L<virt-format(1)> і L<virt-make-fs(1)>: новий параметр I<--label> для встановлення мітки файлової системи.
+
+Тепер можна скористатися прапорцем virt-resize I<--no-sparse> для зміни розмірів на розділи або інші незанулені місця.
+
+=head3 Прив’язки до мов програмування
+
+Нові прив'язки до мови програмування Go.
+
+=head3 API
+
+Підтримка журналу systemd.
+
+C<guestfs_add_drive_opts> тепер може контролювати режим кешування qemu за допомогою нового параметра C<cachemode>. Ви можете вибрати поліпшену швидкодію для тимчасових дисків або надійний захист.
+
+C<guestfs_set_label> тепер працює з XFS і btrfs.
+
+Нова подія GUESTFS_EVENT_WARNING для повідомлень із попередженнями.
+
+=head3 Перевірка
+
+Поліпшено інспектування гостьових систем SUSE (Olaf Hering).
+
+Поліпшено підтримку нестандартних %systemroot% у Windows (Matthew Booth).
+
+Удосконалено звітування про помилки у Augeas.
+
+=head2 Безпека
+
+=over 4
+
+=item CVE-2013-2124
+
+L<https://bugzilla.redhat.com/show_bug.cgi?id=968306>
+
+Була можливою відмова у обслуговування під час інспектування певних гостьових систем. Виправлення зворотно портовано на гілки 1.20 і 1.22.
+
+=item CVE-2013-4419
+
+L<https://www.redhat.com/archives/libguestfs/2013-October/msg00031.html>
+
+Виправлено незахищену обробку тимчасових каталогів для віддалених guestfish. Виправлення зворотно портовано на гілки 1.20 і 1.22.
+
+=back
+
+=head2 Нові програмні інтерфейси
+
+ add-drive-scratch: додавання тимчасового диска
+ aug-label
+ aug-setm
+ journal-open: підтримка журналу Systemd
+ journal-close
+ journal-next
+ journal-skip
+ journal-get
+ journal-get-data-threshold
+ journal-set-data-threshold
+ remount: уможливлення коригування прапорця rw для змонтованих файлових систем
+ set-uuid: встановлення UUID файлової системи
+
+У програмних інтерфейсів C<is-file>, C<is-dir>, C<is-blockdev>, C<is-chardev>, C<is-fifo>, C<is-socket> тепер з'явився додатковий прапорець C<followsymlinks>.
+
+У C<add-drive> передбачено новий параметр C<cachemode>.
+
+=head2 Зміни у збиранні
+
+Для збирання libguestfs 1.24 потрібні такі пакунки:
+
+=over 4
+
+=item Augeas E<ge> 1.0.0
+
+=back
+
+Вказаними нижче пакунками можна скористатися для розширення можливостей, але вони не є обов'язковими:
+
+=over 4
+
+=item sd-journal
+
+Для читання файлів журналів з гостьових систем, де використовуються журнали.
+
+=item url_mkcow
+
+Для модуля обробки UML.
+
+=item curl
+
+=item gpg
+
+=item xz
+
+Для virt-builder.
+
+=item golang E<ge> 1.1.1
+
+Для прив’язок до мови Go.
+
+=back
+
+=head2 Внутрішня частина роботи програми
+
+Нові правила C<make check-*>, які замінили C<make extra-tests>. Докладніший опис можна отримати за допомогою команди C<make help> і сторінки підручника L<guestfs(3)>.
+
+Тепер можна використовувати valgrind для коду мовою Perl.
+
+Код засобу інспектування перевірено за допомогою fuzz.
+
+C<make> більше не переходить рекурсивно до каталогу generator у кожному іншому каталозі. Це значно зменшує час збирання.
+
+Додаткові тести для Augeas, hivex.
+
+Додано час очікування на запуск у 20 хвилин для базової системи.
+
+Додано час очікування (4 години) для усіх тестів, щоб можна було розібратися із випадком, коли повисає qemu або інші компоненти.
+
+Реалізовано використання kvmclock і C<-cpu host>. Це поліпшує стабільність відліку часу та загальну швидкодію.
+
+Виправлено режим C<./configure --enable-packet-dump>.
+
+Переписано режим C<./configure --enable-valgrind-daemon>. Тепер розробники можуть використовувати цей прапорець увесь час.
+
+Переписано модулі обробки так, щоб вони не залежали один від одного (хоча насправді вони не є завантажуваними модулями).
+
+Якщо мережу увімкнено, використовуються налаштування визначення адрес (тобто /etc/resolv.conf) з основної системи.
+
+=head2 Виправлені вади
+
+=begin коментар
+
+./bugs-in-changelog.sh 1.22.0..
+
+=end коментар
+
+=over 4
+
+=item L<https://bugzilla.redhat.com/1019889>
+
+libguestfs-tools.conf потрібна сторінка man
+
+=item L<https://bugzilla.redhat.com/1018149>
+
+Помилки valgrind у btrfs_subvolume_list
+
+=item L<https://bugzilla.redhat.com/1002032>
+
+mke2fs can't return the correct filesystem type when blockscount is less than 2048 for ext3
+
+=item L<https://bugzilla.redhat.com/1001876>
+
+Update "rsync-out" helpout for using wildcard
+
+=item L<https://bugzilla.redhat.com/1001875>
+
+Argument 'excludes' of tar-out does not work
+
+=item L<https://bugzilla.redhat.com/1000428>
+
+virt-format uses wrong partition type for vfat filesystems
+
+=item L<https://bugzilla.redhat.com/1000121>
+
+'sh' command before mount causes daemon to segfault
+
+=item L<https://bugzilla.redhat.com/998513>
+
+guestfish does not work when you mix --remote and --add options
+
+=item L<https://bugzilla.redhat.com/998482>
+
+guestfish remote prints "libguestfs: error: waitpid (qemu): No child processes"
+
+=item L<https://bugzilla.redhat.com/995711>
+
+list-filesystems command fails if there are no block devices
+
+=item L<https://bugzilla.redhat.com/994517>
+
+cache=none/O_DIRECT workaround doesn't work for images with backing files
+
+=item L<https://bugzilla.redhat.com/989356>
+
+cap-get-file will return error if the file has not be set capabilities
+
+=item L<https://bugzilla.redhat.com/986877>
+
+RFE: Implement set-uuid command
+
+=item L<https://bugzilla.redhat.com/986875>
+
+RFE: Implement set-label for xfs
+
+=item L<https://bugzilla.redhat.com/985269>
+
+Can't set acl value for a specified user with 'acl-set-file'
+
+=item L<https://bugzilla.redhat.com/983218>
+
+libguestfs double free when kernel link fails during launch
+
+=item L<https://bugzilla.redhat.com/981715>
+
+Make xfs filesystem failed with specified blocksize, gives "unknown option -b" error
+
+=item L<https://bugzilla.redhat.com/981683>
+
+"hivex-commit" should fail with a relative path
+
+=item L<https://bugzilla.redhat.com/981663>
+
+disk-format "qemu-img info: JSON parse error" when target file does not exist
+
+=item L<https://bugzilla.redhat.com/978302>
+
+mke2fs-J should give a meaningful error when specified type is anything except 'ext{2,3,4}'
+
+=item L<https://bugzilla.redhat.com/975797>
+
+Specifying virtio interface ('iface' parameter) breaks the direct backend - libguestfs hangs
+
+=item L<https://bugzilla.redhat.com/975753>
+
+"virt-resize --expand" and "virt-resize --resize" outputs error message for Win2008 32bit OS
+
+=item L<https://bugzilla.redhat.com/975412>
+
+inspection: Augeas expressions are broken with augeas >= 0.10
+
+=item L<https://bugzilla.redhat.com/974904>
+
+virt-resize --expand fails on Ubuntu Cloud Image
+
+=item L<https://bugzilla.redhat.com/974489>
+
+Regression: Fedora inspection broken by change from guestfs_exists to guestfs_is_file
+
+=item L<https://bugzilla.redhat.com/972775>
+
+txz-out command produces a bzip2-compressed file (should be xz-compressed)
+
+=item L<https://bugzilla.redhat.com/969845>
+
+upload to a directory occasionally hangs instead of failing
+
+=item L<https://bugzilla.redhat.com/968875>
+
+virt-sysprep should support URL-type arguments
+
+=item L<https://bugzilla.redhat.com/624334>
+
+blockdev-setbsz succeeds, but does not affect blockdev-getbsz
+
+=back
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfs-examples(1)>, L<guestfs-faq(1)>, L<guestfs-performance(1)>, L<guestfs-recipes(1)>, L<guestfs-testing(1)>, L<guestfs(3)>, L<guestfish(1)>, L<http://libguestfs.org/>
+
+=head1 АВТОР
+
+Richard W.M. Jones
+
+=head1 АВТОРСЬКІ ПРАВА
+
+Copyright (C) 2009-2023 Red Hat Inc.
+

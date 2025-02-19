@@ -1,0 +1,75 @@
+=head1 NAME
+
+guestfs-examples - Examples of using libguestfs from C
+
+=head1 SYNOPSIS
+
+ #include <guestfs.h>
+ 
+ guestfs_h *g = guestfs_create ();
+ guestfs_add_drive_ro (g, "disk.img");
+ guestfs_launch (g);
+
+ cc prog.c -o prog -lguestfs
+or:
+ cc prog.c -o prog `pkg-config libguestfs --cflags --libs`
+
+=head1 DESCRIPTION
+
+This manual page contains examples of calling libguestfs from
+the C programming language.  If you are not familiar with using
+libguestfs, you also need to read L<guestfs(3)>.
+
+=head1 EXAMPLE: CREATE A DISK IMAGE
+
+@CREATE_DISK@
+
+=head1 EXAMPLE: INSPECT A VIRTUAL MACHINE DISK IMAGE
+
+@INSPECT_VM@
+
+=head1 EXAMPLE: ENABLE DEBUGGING AND LOGGING
+
+@DEBUG_LOGGING@
+
+=head1 EXAMPLE: DISPLAY THE OPERATING SYSTEM ICON OF A GUEST
+
+@DISPLAY_ICON@
+
+=head1 EXAMPLE: THE LIBVIRT AUTHENTICATION API
+
+@LIBVIRT_AUTH@
+
+=head1 EXAMPLE: THE MOUNT LOCAL API
+
+@MOUNT_LOCAL@
+
+=head1 EXAMPLE: MULTIPLE HANDLES AND THREADS
+
+@COPY_OVER@
+
+=head1 EXAMPLE: FETCH DHCP ADDRESS FROM A GUEST
+
+@VIRT_DHCP_ADDRESS@
+
+=head1 SEE ALSO
+
+L<guestfs(3)>,
+L<guestfs-erlang(3)>,
+L<guestfs-golang(3)>,
+L<guestfs-java(3)>,
+L<guestfs-lua(3)>,
+L<guestfs-ocaml(3)>,
+L<guestfs-perl(3)>,
+L<guestfs-python(3)>,
+L<guestfs-recipes(1)>,
+L<guestfs-ruby(3)>,
+L<http://libguestfs.org/>.
+
+=head1 AUTHORS
+
+Richard W.M. Jones (C<rjones at redhat dot com>)
+
+=head1 COPYRIGHT
+
+Copyright (C) 2010-2023 Red Hat Inc.

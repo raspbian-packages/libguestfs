@@ -1,0 +1,85 @@
+
+=head1 НАЗВА
+
+libguestfs-tools.conf — файл налаштувань для guestfish, guestmount, virt-rescue
+
+=head1 КОРОТКИЙ ОПИС
+
+ /etc/libguestfs-tools.conf
+
+ $XDG_CONFIG_DIRS/libguestfs/libguestfs-tools.conf
+
+ $HOME/.libguestfs-tools.rc
+
+ $XDG_CONFIG_HOME/libguestfs/libguestfs-tools.conf
+
+=head1 ОПИС
+
+F<libguestfs-tools.conf> (або F<$HOME/.libguestfs-tools.rc>) змінює типові параметри роботи лише таких програм:
+
+=over 4
+
+=item *
+
+L<guestfish(1)>
+
+=item *
+
+L<guestmount(1)>
+
+=item *
+
+L<virt-rescue(1)>
+
+=back
+
+Цим файлом у поточній версії керується лише один параметр. Додавання або зняття коментаря з:
+
+ read_only = true;
+
+змінює поведінку цих програм так, що вони працюють так, неначе у рядку команди було вказано параметр I<--ro>. Ви можете скористатися цим, щоб убезпечити запущену гостьову систему від випадкових змін, внесених програмами (для внесення змін користувачам доведеться явним чином вказати параметр I<--rw>). Така поведінка програм не є типовою з міркувань зворотної сумісності. Див. також L<guestfish(1)/ВІДКРИТТЯ ДИСКІВ ДЛЯ ЧИТАННЯ І ЗАПИСУ>.
+
+Зауважте, що B<крапка з комою є обов'язковою>.
+
+Цей файл обробляється бібліотекою libconfig. Щоб дізнатися більше про формат, див. L<http://www.hyperrealm.com/libconfig/libconfig_manual.html>
+
+=head1 АДРЕСА ФАЙЛА
+
+Ось список файлів налаштувань, які читає програма, за рівнем важливості:
+
+=over 4
+
+=item *
+
+$XDG_CONFIG_HOME/libguestfs/libguestfs-tools.conf (C<$XDG_CONFIG_HOME> має значення F<$HOME/.config>, якщо не встановлено).
+
+=item *
+
+$HOME/.libguestfs-tools.rc
+
+=item *
+
+$XDG_CONFIG_DIRS/libguestfs/libguestfs-tools.conf (де C<$XDG_CONFIG_DIRS> означає будь-які каталоги у відповідній змінній середовища або просто F</etc/xdg>, якщо значення змінної середовища не визначено)
+
+=item *
+
+/etc/libguestfs-tools.conf
+
+=back
+
+Це означає, що локальні користувачі можуть перевизначати налаштування системи копіюванням файла налаштувань до F<$XDG_CONFIG_HOME/libguestfs/libguestfs-tools.conf> (або створенням його).
+
+F</etc/libguestfs-tools.conf> і F<$HOME/.libguestfs-tools.rc> є застарілими шляхами, які не відповідають XDG і які програма читає лише з міркувань сумісності.
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfish(1)/ВІДКРИТТЯ ДИСКІВ ДЛЯ ЧИТАННЯ І ЗАПИСУ>, L<guestmount(1)>, L<virt-rescue(1)>, L<http://libguestfs.org/>, L<http://standards.freedesktop.org/basedir-spec/latest/>.
+
+=head1 АВТОРИ
+
+Richard W.M. Jones (C<rjones at redhat dot com>)
+
+=head1 АВТОРСЬКІ ПРАВА
+
+Copyright (C) 2011-2023 Red Hat Inc.
+

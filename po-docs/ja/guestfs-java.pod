@@ -1,0 +1,147 @@
+
+=head1 名前
+
+guestfs-java - Java から libguestfs を使用する方法
+
+=head1 書式
+
+ import com.redhat.et.libguestfs.*;
+ 
+ GuestFS g = new GuestFS ();
+ g.add_drive ("disk.img",
+              new HashMap<String,Object>() {
+                {
+                    put ("readonly", Boolean.TRUE);
+                    put ("format", "raw");
+                }
+              });
+ g.launch ();
+
+=head1 説明
+
+This manual page documents how to call libguestfs from the Java programming language.  This page just documents the differences from the C API and gives some examples.  If you are not familiar with using libguestfs, you also need to read L<guestfs(3)>.
+
+=head2 ハンドルの閉じ方
+
+The handle is closed when it is reaped by the garbage collector.  Because libguestfs handles include a lot of state, it is also possible to close (and hence free) them explicitly by calling the C<close> method.
+
+=head2 例外
+
+Errors from libguestfs functions are mapped into the C<LibGuestFSException> exception.  This has a single parameter which is the error message (a C<String>).
+
+Calling any method on a closed handle raises the same exception.
+
+If L<malloc(3)> or some other allocation fails inside the bindings, the C<LibGuestFSOutOfMemory> exception is thrown.
+
+=head2 イベント
+
+The L<libguestfs event API|guestfs(3)/EVENTS> is fully supported from Java. Create a class which implements the C<EventCallback> interface, create an instance of this class, and then call the C<GuestFS#set_event_callback> method to register this instance.  The C<event> method of the class is called when libguestfs generates an event.
+
+For example, this will print all trace events:
+
+ GuestFS g = new GuestFS ();
+ g.set_trace (true);
+ g.set_event_callback (
+   new EventCallback () {
+     public void event (long event, int eh,
+                        String buffer, long[] array) {
+       System.out.println (GuestFS.eventToString (event) +
+                           ": " + buffer);
+     }
+   },
+   GuestFS.EVENT_TRACE);
+ g.add_drive_ro ("disk.img");
+ // etc.
+
+The output looks similar to this:
+
+ EVENT_TRACE: add_drive_ro "disk.img"
+ EVENT_TRACE: add_drive_ro = 0
+ // etc.
+
+=head2 オプション引数
+
+Some methods take an optional map of optional parameters.  An example of this is C<g.add_drive> which can be called in one of two ways:
+
+ g.add_drive ("disk.img");
+
+or with optional arguments:
+
+ Map<String, Object> optargs =
+   new HashMap<String, Object>() {
+   {
+     put ("readonly", Boolean.TRUE);
+     put ("format", "raw");
+   }
+ };
+ g.add_drive ("disk.img", optargs);
+
+For more information on this topic, see L<guestfs(3)/CALLS WITH OPTIONAL ARGUMENTS>.
+
+=head3 Optional handle parameters
+
+When creating the handle you can also pass a map of optional parameters:
+
+ Map<String, Object> optargs =
+   new HashMap<String, Object>() {
+   {
+     put ("close_on_exit", Boolean.FALSE);
+     put ("environment", Boolean.TRUE);
+   }
+ };
+ GuestFS g = new GuestFS (optargs);
+
+For more information, see L<guestfs(3)/guestfs_create_flags>.
+
+=head1 COMPILING AND RUNNING
+
+Libguestfs for Java is a Java Native Interface (JNI) extension, supplied in three parts:
+
+=over 4
+
+=item F<libguestfs.jar>
+
+=item F<libguestfs-I<VERSION>.jar>
+
+The pure Java JAR file which contains several classes, the primary one being C<com.redhat.et.libguestfs.GuestFS>.  Upstream, the JAR file contains a version number in the filename, but some Linux distros may rename it without the version number.
+
+=item F<libguestfs_jni.so>
+
+The JNI code (written in C).  This contains private native functions that interface between Java code and the regular libguestfs C library.  You should B<not> call these directly.
+
+=item F<libguestfs.so>
+
+The regular libguestfs C library.
+
+=back
+
+To compile your Java program, you need to locate the JAR file and add it to the class path.  For example:
+
+ export CLASSPATH=/usr/share/java/libguestfs.jar
+ javac MyProgram.java
+
+To run your Java program, you also need to ensure that the JAR file is on the class path, as well as the path of your program.  For example:
+
+ export CLASSPATH=.:/usr/share/java/libguestfs.jar
+ java MyProgram
+
+=head1 例 1: ディスクイメージの作成
+
+@EXAMPLE1@
+
+=head1 例 2: 仮想マシンのディスクイメージの検査
+
+@EXAMPLE2@
+
+=head1 関連項目
+
+L<guestfs(3)>, L<guestfs-examples(3)>, L<guestfs-erlang(3)>, L<guestfs-gobject(3)>, L<guestfs-golang(3)>, L<guestfs-lua(3)>, L<guestfs-ocaml(3)>, L<guestfs-perl(3)>, L<guestfs-python(3)>, L<guestfs-recipes(1)>, L<guestfs-ruby(3)>, L<http://libguestfs.org/>, L<http://caml.inria.fr/>.
+
+=head1 著者
+
+Richard W.M. Jones (C<rjones at redhat dot com>)
+
+=head1 COPYRIGHT
+
+Copyright (C) 2011-2023 Red Hat Inc.
+

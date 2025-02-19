@@ -1,0 +1,418 @@
+
+=head1 НАЗВА
+
+guestfs-release-notes - нотатки щодо випусків libguestfs
+
+=head1 НОТАТКИ ЩОДО ВИПУСКУ LIBGUESTFS 1.32
+
+Ці нотатки щодо випуску стосуються лише відмінностей від попереднього стабільного випуску (1.30.0). Докладний журнал змін є частиною журналу змін сховища git. Його також наведено у файлі ChangeLog, який є частиною архіву tar із кодом бібліотеки.
+
+=head2 Нові можливості
+
+=head3 Нові інструменти
+
+Новий засіб L<virt-v2v-copy-to-local(1)>, який є допоміжним для L<virt-v2v(1)>, надає вам змогу перетворювати початкові гостьові системи, до яких virt-v2v не може отримати безпосередній доступ.
+
+=head3 Нові можливості у наявних інструментах
+
+Virt-customize тепер знає, як записати породжувач випадковості до CirrOS (Pino Toscano).
+
+У Fedora virt-customize запускає L<dnf(8)> з прапорцем I<--best>, забезпечуючи те, що програма завжди оновлює систему до найсвіжіших доступних пакунків.
+
+Virt-builder тепер містить 32-бітові шаблони для Fedora.
+
+Параметр virt-builder і virt-customize I<--install> тепер працює у 32-бітових гостьових системах Fedora. Раніше його використання призводило до спроби встановити 64-бітові пакунки (Jan Sedlák).
+
+Virt-builder тепер може отримувати образи для хмар за допомогою метаданих Simple Streams v1.0 (Pino Toscano).
+
+Virt-builder тепер може отримувати хмарні образи openSUSE без додаткових налаштовувань (Cédric Bosdonnat).
+
+Virt-customize тепер використовує стійкіше типове шифрування паролів (SHA-512) у openSUSE E<ge> 11 (Pino Toscano).
+
+Virt-builder тепер правильно обробляє вихідні назви файлів, що містять символи двокрапок (C<:>), і створює тимчасові файли у каталогу кешу libguestfs безпосередньо, замість типового F</tmp> (Pino Toscano).
+
+Virt-resize має новий параметр I<--unknown-filesystems> для керування тим, що робити, якщо програму попросять змінити розмір файлової системи, спосіб зміни якої libguestfs не є відомим.
+
+Virt-v2v тепер має прапорець або режим I<--in-place>, який уможливлює перетворення на місці гостьових систем (Roman Kagan).
+
+Virt-v2v має параметр I<--compressed> для створення стиснених файлів виведення qcow2.
+
+Virt-v2v тепер може правильно отримувати шлях до датацентру VMware (dcPath) від libvirt, замість визначення його за допомогою алгоритму, який іноді визначає помилкову відповідь (Matthias Bolte, Tingting Zheng).
+
+Virt-v2v тепер правильно обробляє розміри оперативної пам'яті для 64-бітових гостьових систем, якщо програму запущено у 32-бітовій основній системі.
+
+=head3 Прив’язки до мов програмування
+
+У програмах мовами Perl і Python програмний інтерфейс C<get_program_name> тепер повертає справжню назву програми, а не помилковий рядок C<perl> або C<python>.
+
+Прив'язки до Python тепер можна зібрати для іншої версії libguestfs, що уможливлює збирання модуля pip для будь-якої версії libguestfs (замість строгої вимоги щодо однакових версій модуля pip і libguestfs).
+
+Поліпшено якість документації Ruby rdoc (Pino Toscano).
+
+У скриптах Perl більше немає рядка із жорсткою прив'язкою до розташування інтерпретатора perl, замість цього використовується L<env(1)> (Pino Toscano).
+
+У програмах мовою OCaml дескриптор guestfs помилково вказував на загальну кореневу файлову систему, тобто його ніколи не можна було обробити засобом збирання сміття. Якщо ви не викликали функцію C<close> явним чином, дескриптор не закривався, аж доки не завершувала роботу уся програма. Тепер цю помилку виправлено, отже дескриптори можуть прибиратися засобом збирання сміття у звичний спосіб. Це призвело до зміни програмного інтерфейсу функції OCaml C<Guestfs.event_callback>. Зауважте, що прив'язки до мов, відмінних від C, не мають гарантій щодо незмінності програмного інтерфейсу та бінарної сумісності, хоча ми і намагаємося не змінювати їх, але у цьому випадку зміна була важливою, оскільки надала змогу виправити дуже серйозну ваду.
+
+=head3 Перевірка
+
+Тепер розпізнаються Alpine Linux та засіб керування пакунками APK, ALT Linux, Frugalware та PLD Linux (Pino Toscano).
+
+Якщо існує F</etc/os-release> дані з нього матимуть пріоритет над безпосереднім інспектуванням гостьових систем Linux (Pino Toscano).
+
+Тепер повертається правильна версія ядра для гостьових систем Windows E<ge> 10.
+
+=head3 Документація
+
+Велику сторінку підручника з L<guestfs(3)> поділено на декілька окремих сторінок підручника: L<guestfs-hacking(1)> L<guestfs-internals(1)> L<guestfs-security(1)>. Ця документація міститься у новому каталозі F<docs> ієрархії коду.
+
+=head3 Архітектури і платформи
+
+У новій версії libguestfs передбачено підтримку 64-бітовий платформ ARM з vGICv3.
+
+=head2 Безпека
+
+Див. також L<guestfs-security(1)>.
+
+=over 4
+
+=item C<CVE-2015-5745>
+
+L<https://bugzilla.redhat.com/1251157>
+
+Це не вразливість у libguestfs, але оскільки ми завжди надаємо порт virtio-serial для кожної гостьової системи (оскільки так здійснюється обмін даними між гостьовою і основною системами), можливе проникнення з базової системи до процесу qemu основної системи. Це може стосуватися таких випадків:
+
+=over 4
+
+=item *
+
+ваша програма libguestfs запускає ненадійні програми з гостьової системи (за допомогою L</guestfs_sh> тощо) або
+
+=item *
+
+у коді файлових систем ядра буде виявлено іншу властивість (наприклад), яка надає змогу відповідним чином створеній файловій системі захопити контроль над базовою системою.
+
+=back
+
+Якщо ви використовуєте sVirt для обмеження qemu, це може запобігти деяким нападам.
+
+=item Права доступу virt-customize до F<.ssh>, F<.ssh/authorized_keys>
+
+L<https://bugzilla.redhat.com/1260778>.
+
+Раніше, якщо надходила команда щодо вставляння ключа SSH до гостьової системи, virt-customize (а отже, virt-builder) створювала каталог F<.ssh> і файл F<.ssh/authorized_keys> із надто широким доступом, що надавало стороннім користувачам доступ до читання цих даних. Тепер цей каталог і файл створюються з правами доступу C<0700> і C<0600>, відповідно, що збігається із правилами, які використовує програма L<ssh-copy-id(1)>.
+
+=back
+
+=head2 API
+
+=head3 Нові програмні інтерфейси
+
+=over 4
+
+=item C<guestfs_get_identifier>
+
+=item C<guestfs_set_identifier>
+
+Отримати або встановити окремий для обробника ідентифікатор. Основним ефектом цього є зміна виведення trace з такого:
+
+ libguestfs: trace: foo
+
+на таке:
+
+ libguestfs: trace: ID: foo
+
+що спрощує стеження за трасуванням у багатопотокових програма або там, де програма використовує декілька дескрипторів (особливо virt-v2v).
+
+=item C<guestfs_vfs_minimum_size>
+
+Повертає мінімальний розмір файлової системи (після стискання). Передбачено підтримку ext2/3/4, XFS і btrfs, у майбутньому можлива підтримка інших файлових систем (Maxim Perevedentsev).
+
+=back
+
+=head3 Інші зміни у програмному інтерфейсі
+
+=over 4
+
+=item C<guestfs_disk_create>: додано C<preallocation> =
+C<off>/C<metadata>/C<full>.
+
+Для raw це уможливлює C<off> як синонім C<sparse> (робить сумісним із qcow2). Для qcow2 це уможливлює C<sparse> як синонім C<off>.
+
+Це також додає C<full>, який відповідає повному розміщенню, але використовує L<posix_fallocate(3)> для забезпечення ефективності.
+
+=item C<guestfs_tar_in>: нові параметри C<xattrs>, C<selinux>, C<acl>.
+
+=item C<guestfs_tar_out>: нові параметри C<xattrs>, C<selinux>, C<acl>.
+
+Ці додаткові параметри керують тим, чи буде відновлено розширені атрибути, контексти SELinux і/або ACL POSIX з /, збережених у архівах tar.
+
+=item C<guestfs_add_drive>
+
+Наявними параметрами C<username> і C<secret> можна скористатися для надання підтримки розпізнавання для iSCSI (Pino Toscano).
+
+=back
+
+=head2 Зміни у збиранні
+
+Вилучено параметр C<./configure --enable-valgrind-daemon>.
+
+Тепер libguestfs не можна зібрати на дистрибутивах ери RHEL 5 (близько 2007 року). Див. гілку C<oldlinux>, якщо вам потрібна (обмежена) підтримка RHEL 5.
+
+Virt-p2v тепер можна зібрати на дистрибутивах Linux ери RHEL 6 (близько 2010 року).
+
+Тепер для збирання з git потрібен OCaml E<ge> 3.11 (випущено у 2008 році).
+
+Для збирання прив'язок до Perl тепер потрібен C<Module::Build> (замість C<ExtUtils::MakeMaker>).
+
+Збирання має пришвидшитися (особливо нарощувальне повторне збирання), оскільки виконано певну роботу із зменшення тривалості збирання.
+
+Для запуску генератора під час збирання потрібні OCaml і модуль findlib OCaml. Раніше збирання завершувалося помилкою, якщо не було встановлено findlib.
+
+Тести C<make check> тепер виконуються у паралельному режимі (у межах кожного з каталогів тестування).
+
+C<make install> тепер встановлює файли OCaml F<bindtests.*> правильно.
+
+C<make install> тепер можна запускати двічі. Раніше, під час другого запуску видавалося повідомлення про помилку.
+
+C<make clean> тепер має вилучати майже усі файли, які створює C<make>.
+
+Додано нове правило C<make installcheck>, яке уможливлює тестування встановленої версії libguestfs.
+
+=head2 Внутрішня частина роботи програми
+
+Певних зусиль було докладено до мінімізації розміру базової системи, що зменшило об'єм тимчасового диска і час, потрібний на обробку у libguestfs.
+
+Базова система тепер передає назву NIC до dhcpd, це виправляє повисання під час роботи базової системи у деяких дистрибутивах (Cédric Bosdonnat).
+
+Тепер створюється C<Guestfs.Errno> OCaml (Pino Toscano).
+
+У засобах мовою OCaml загальний код тепер обробляє I<--debug-gc>, I<--verbose> та інші загальні параметри (Roman Kagan, Pino Toscano).
+
+Комплекс тестування virt-v2v надає нам змогу завантажувати тестовані гостьові системи у фіксовані моменти часу у минулому, забезпечуючи надійну роботу системи повторної активації Windows.
+
+Реалізовано новий внутрішній програмний інтерфейс для читання і запису підпроцесів за допомогою каналу з коду бібліотеки.
+
+Використано програму C<deheader> для вилучення невикористаних інструкцій C<#include>.
+
+У засобах мовою OCaml модулі C<Char> і C<String> тепер наявно посилаються на модулі C<Common_utils.Char> і C<Common_utils.String> (замість модулів зі stdlib). Модулі C<Common_utils> містять декілька додаткових допоміжних функцій для роботи із символами і рядками, а також приховування деяких незахищених функцій у stdlib.
+
+Тепер запускається набагато більше тестів virt-v2v, навіть якщо не встановлено rhsrvany і virtio-win (Roman Kagan).
+
+Величезний файл F<configure.ac> було поділено на декілька менших файлів із назвами F<m4/guestfs_*.m4>.
+
+Застарілі каталоги F<tests/data> і F<tests/guests> було пересунуто до F<test-data/>. Цей новий каталог верхнього рівня містить усі дані засобів тестування, які є спільними, великим і/або використовуються у декількох тестах.
+
+Створено новий каталог верхнього рівня F<website/>, який містить загальнодоступні дані сайта L<http://libguestfs.org> (або більшу частину цих даних).
+
+Нечітке тестування засобів інспектування (F<tests/fuzz>) було вилучено.
+
+Virt-p2v тепер зберігає виведення dmesg фізичної машини джерела до каталогу діагностичних даних сервера перетворення, що діагностику у випадку нестачі драйверів, мікропрограми тощо.
+
+=head2 Виправлені вади
+
+=begin коментар
+
+https_proxy= ./bugs-in-changelog.sh 1.30.0..
+
+=end коментар
+
+=over 4
+
+=item L<https://bugzilla.redhat.com/1294956>
+
+set-label повертає помилкове повідомлення про помилку, якщо встановлено мітку файлової системи ext3/ext4
+
+=item L<https://bugzilla.redhat.com/1288733>
+
+Add a Fedora 23 32-bit base image for virt-builder
+
+=item L<https://bugzilla.redhat.com/1288201>
+
+virt-builder записує тимчасові файли до /tmp
+
+=item L<https://bugzilla.redhat.com/1285847>
+
+virt-resize не копіює логічні розділи
+
+=item L<https://bugzilla.redhat.com/1281578>
+
+virt-inspector повертає версію 6.3 для образів win10 (має повертати 10.0)
+
+=item L<https://bugzilla.redhat.com/1281577>
+
+virt-inspector --xpath segfault on attribute get
+
+=item L<https://bugzilla.redhat.com/1280029>
+
+libguestfs can run commands with stdin not open (or worse still, connected to arbitrary guest-chosen random devices)
+
+=item L<https://bugzilla.redhat.com/1279273>
+
+Про параметр стискання для qcow2
+
+=item L<https://bugzilla.redhat.com/1278878>
+
+guestfish should be able to handle LVM thin layouts
+
+=item L<https://bugzilla.redhat.com/1278382>
+
+DNF python programming error when run from virt-builder
+
+=item L<https://bugzilla.redhat.com/1278371>
+
+inspection returns arch="unknown" for Windows guest if file command is not installed
+
+=item L<https://bugzilla.redhat.com/1277274>
+
+Document permissions needed for non-admin users to use virt-v2v
+
+=item L<https://bugzilla.redhat.com/1277122>
+
+RFE: virt-sparsify: make '--in-place' sparsification safe to abort (gracefully or ungracefully)
+
+=item L<https://bugzilla.redhat.com/1277074>
+
+Virt-p2v client shouldn't present the vdsm option because it's not usable
+
+=item L<https://bugzilla.redhat.com/1276540>
+
+virt-v2v fails to convert Windows raw image: error "device name is not a partition"
+
+=item L<https://bugzilla.redhat.com/1275806>
+
+virt-builder: error: [file] is not a regular file in the guest
+
+=item L<https://bugzilla.redhat.com/1270011>
+
+Simplestreams test fails: virt-builder: error: the value for the key 'size' is not an integer
+
+=item L<https://bugzilla.redhat.com/1267032>
+
+guestfish copy-in command behaves oddly/unexpectedly with wildcards
+
+=item L<https://bugzilla.redhat.com/1262983>
+
+python: Cannot compile pip module if installed libguestfs != pip guestfs version
+
+=item L<https://bugzilla.redhat.com/1262127>
+
+Better diagnostic message when virbr0 doesn't exist
+
+=item L<https://bugzilla.redhat.com/1261436>
+
+No warning shows when convert a win7 guest with AVG AntiVirus installed
+
+=item L<https://bugzilla.redhat.com/1260778>
+
+virt-builder --ssh-inject doesn't set proper permissions on created files
+
+=item L<https://bugzilla.redhat.com/1260689>
+
+RFE: V2V to check and warn user to disable group policy and anti virus on Windows guests
+
+=item L<https://bugzilla.redhat.com/1260590>
+
+Wrong graphics protocal and video type set for guest after convert to rhev 3.6 by virt-v2v
+
+=item L<https://bugzilla.redhat.com/1258342>
+
+extra slashes in vcenter URL confuses virt-v2v
+
+=item L<https://bugzilla.redhat.com/1257895>
+
+[RHEV][V2V] virt-v2v ignores NIC if interface source/@network or source/@bridge is an empty string
+
+=item L<https://bugzilla.redhat.com/1256405>
+
+virt-builder created Fedora 22 32bit disk image cannot be updated
+
+=item L<https://bugzilla.redhat.com/1256222>
+
+virt-p2v no GUI mode:error opening control connection to $ip:22:unexpected …rompt
+
+=item L<https://bugzilla.redhat.com/1251909>
+
+Option -oa preallocated -of qcow2 of virt-v2v didn't work efficiently
+
+=item L<https://bugzilla.redhat.com/1250715>
+
+v2v: у шляхах пробіли слід екранувати, ось так: %20
+
+=item L<https://bugzilla.redhat.com/1248678>
+
+Закрити усі вхідні порти на образі ISO virt-p2v
+
+=item L<https://bugzilla.redhat.com/1246882>
+
+man virt-customize показував короткий опис двічі
+
+=item L<https://bugzilla.redhat.com/1242853>
+
+mount-loop failed to setup loop device: No such file or directory
+
+=item L<https://bugzilla.redhat.com/1237136>
+
+BUG: unable to handle kernel NULL pointer dereference at <addr> in function __blkg_lookup
+
+=item L<https://bugzilla.redhat.com/1230412>
+
+virt-v2v should ignore bogus kernel entries in grub config
+
+=item L<https://bugzilla.redhat.com/1229119>
+
+Unrelated info in fstab makes virt-v2v fail with unclear error info
+
+=item L<https://bugzilla.redhat.com/1227609>
+
+virt-p2v: Using "Back" button causes output list to be repopulated multiple times
+
+=item L<https://bugzilla.redhat.com/1225789>
+
+Wrong video driver is installed for rhel5.11 guest after conversion to libvirt
+
+=item L<https://bugzilla.redhat.com/1204131>
+
+RFE: virt-builder creates qcow v3 images, add build option for qcow v2
+
+=item L<https://bugzilla.redhat.com/1176801>
+
+File /etc/sysconfig/kernel isn't updated when convert XenPV guest with regular kernel installed
+
+=item L<https://bugzilla.redhat.com/1174551>
+
+"lstatnslist" and "lstatlist" don't give an error if the API is used wrongly
+
+=item L<https://bugzilla.redhat.com/1168223>
+
+koji spin-livecd cannot build a working live CD
+
+=item L<https://bugzilla.redhat.com/1165785>
+
+mount-loop command fails: mount failed: Unknown error -1
+
+=item L<https://bugzilla.redhat.com/1164708>
+
+set-label can only set <=127 bytes for btrfs and <=126 bytes for ntfs filesystem which not meet the help message. Also for ntfs it should give a warning message when the length >128 bytes
+
+=item L<https://bugzilla.redhat.com/1020216>
+
+libvirt fails to shut down domain: could not destroy libvirt domain: Requested operation is not valid: domain is not running
+
+=item L<https://bugzilla.redhat.com/1011907>
+
+mount-loop failed to setup loop device: No such file or directory
+
+=back
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfs-examples(1)>, L<guestfs-faq(1)>, L<guestfs-performance(1)>, L<guestfs-recipes(1)>, L<guestfs-testing(1)>, L<guestfs(3)>, L<guestfish(1)>, L<http://libguestfs.org/>
+
+=head1 АВТОР
+
+Richard W.M. Jones
+
+=head1 АВТОРСЬКІ ПРАВА
+
+Copyright (C) 2009-2023 Red Hat Inc.
+

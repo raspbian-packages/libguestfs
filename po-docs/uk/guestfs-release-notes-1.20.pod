@@ -1,0 +1,527 @@
+
+=head1 НАЗВА
+
+guestfs-release-notes - нотатки щодо випусків libguestfs
+
+=head1 НОТАТКИ ЩОДО ВИПУСКУ LIBGUESTFS 1.20
+
+Ці нотатки щодо випуску стосуються лише відмінностей від попереднього стабільного випуску (1.18.0). Докладний журнал змін є частиною журналу змін сховища git. Його також наведено у файлі ChangeLog, який є частиною архіву tar із кодом бібліотеки.
+
+=head2 Нові можливості
+
+=head3 libvirt і sVirt (контейнер SELinux)
+
+Ви можете, I<якщо хочете>, скористатися libvirt для запуску і керування базовою системою за допомогою:
+
+=over 4
+
+=item *
+
+встановленням C<LIBGUESTFS_ATTACH_METHOD=libvirt[:URI]>
+
+=item *
+
+за допомогою C<./configure --with-default-attach-method=libvirt[:URI]>
+
+=item *
+
+або виклику методу C<guestfs_set_attach_method> програмного інтерфейсу
+
+=back
+
+Для захисту базової системи libguestfs використовується SVirt (контейнер SELinux), якщо вибрано модуль обробки libvirt.
+
+=head3 virtio-scsi, більша кількість дисків, з'єднання у «гарячому» режимі
+
+Тепер типово використовується virtio-scsi, якщо цей інтерфейс доступний. Це набагато збільшує кількість дисків, які можна додати до одного дескриптора libguestfs (аж до 255).
+
+Тепер можна додавати і вилучати диски після запуску у «гарячому» режимі.
+
+Libguestfs тепер може працювати із E<gt> 25 дисками, в усіх програмних інтерфейсах, засобах та тестах.
+
+Тепер ви можете додавати до дисків мітку і посилатися на них за міткою (F</dev/disk/guestfs/МІТКА>) замість використання назв пристроїв (F</dev/sda>).
+
+=head3 Нові можливості бібліотеки
+
+Через програмний інтерфейс читаються і записуються списки керування доступом POSIX (ACL) та можливості файлової системи Linux.
+
+Реалізовано підтримку динамічних дисків Windows. Метадані можна лише читати (не можна вносити зміни до томів або створювати томи). Втім дані та файлові системи на томах можна монтувати, читати та записувати (Matthew Booth).
+
+Реалізовано Hivex (редагування реєстру Windows) безпосередньо за допомогою програмного інтерфейсу, що робить читання та редагування реєстру Windows набагато ефективнішим.
+
+Повторно реалізовано декілька програмних інтерфейсів libguestfs так, що у них більше немає жодних обмежень на виведення даних. Серед повторно реалізованих програмних інтерфейсів такі: C<guestfs_cat>, C<guestfs_find>, C<guestfs_read_file>, C<guestfs_read_lines>, C<guestfs_write>, C<guestfs_write_append>, C<guestfs_lstatlist>, C<guestfs_lxattrlist>, C<guestfs_readlinklist>, C<guestfs_ls>.
+
+=head3 virt tools
+
+C<guestfish touch 'win:c:\новий_файл'> тепер працює як слід.
+
+У C<guestfish> реалізовано новий параметр I<--network>, за допомогою якого можна увімкнути для користувача мережу у libguestfs.
+
+Уможливлено встановлення змінної середовища C<GUESTFISH_PS1> для використання форматованих запитів щодо команд у C<guestfish>.
+
+Тепер у virt-rescue доступні команди C<rsync>, C<ssh>, C<less> та C<lrzip>. Крім того, для створення нарощувальних копій можна скористатися C<rsync> за допомогою програмного інтерфейсу.
+
+C<virt-sparsify> використовує qcow2 v3 для підвищення ефективності.
+
+Поліпшення у C<virt-sysprep>:
+
+=over 4
+
+=item *
+
+створення нових UUID для фізичних томів та груп томів
+
+=item *
+
+вилучення ідентифікатора локальної машини (Wanlong Gao)
+
+=item *
+
+вилучення даних ABRT (Wanlong Gao)
+
+=item *
+
+вилучення ключів і файлів журналів puppet (Wanlong Gao)
+
+=item *
+
+вилучення файлів обліку процесів (Wanlong Gao)
+
+=item *
+
+новий параметр I<--firstboot>, який уможливлює створення скриптів firstboot для налаштовування гостьових систем
+
+=item *
+
+вилучення поля HOSTNAME з файлів C<ifcfg-eth*> (Wanlong Gao)
+
+=item *
+
+різноманітні поліпшення для SuSE (Olaf Hering)
+
+=item *
+
+вилучення кешу сторінок підручника (Wanlong Gao)
+
+=item *
+
+вилучення даних щодо аварій, створених kexec-tools (Wanlong Gao)
+
+=back
+
+C<virt-make-fs> тепер може створювати віртуальні дискети (VFD).
+
+У C<guestmount> реалізовано параметр I<--pid-file>, яким можна скористатися для уникнення конкуренції між демонтуванням файлової системи і використанням підлеглого образу диска.
+
+=head3 прив’язки до мов програмування
+
+У цьому випуску додано повноцінні прив'язки до Lua (дякуємо Jerome Vuarand за багато пропозицій).
+
+У Ruby хеш для необов'язкових аргументів є необов'язковим.
+
+У Python необов'язкові аргументи тепер не використовують спеціальних «сторожових» значень, отже як необов'язковий параметр можна передавати будь-яке ціле число.
+
+Прив'язки до Erlang тепер постачаються із прикладами і тестами.
+
+Прив'язки до Erlang тепер обробляють 64-бітові цілі параметри належним чином.
+
+Автоматизовані «bindtests» тепер тестують правильність передавання 64-бітових параметрів. У результатів виявлено і виправлено декілька вад у прив'язках до мов програмування.
+
+Поліпшено обробку блокування та впроваджено функції, які не блокують обробку. Це має зробити виклики libguestfs ефективнішими.
+
+=head3 перевірка
+
+Тепер передбачено обробку гостьових систем Windows без обмежень на розмір реєстру. Додавання програмного інтерфейсу hivex до програмного інтерфейсу libguestfs зробило інспектування на внесення змір до реєстру Windows у гостьових системах набагато ефективнішим.
+
+Поліпшено підтримку гостьових систем SuSE (Olaf Hering).
+
+Реалізовано повернення даних щодо архітектури встановлених програм (John Eckersberg).
+
+Реалізовано підтримку Windows 8.
+
+Тепер підтримується Fedora 18.
+
+Засіб інспектування ISO, CD та DVD тепер може використовувати базу даних libosinfo.
+
+=head3 порти
+
+Libguestfs без базової системи можна зібрати у Mac OS X (Masami HIRATA).
+
+RHEL 5 тепер явним чином підтримується у гілці «oldlinux» основного сховища git.
+
+Реалізовано підтримку 64-бітової архітектури PowerPC. Крім того, libguestfs було проінспектовано на вади, пов'язані із порядком байтів. Виявлені вади було виправлено.
+
+=head3 фонова служба
+
+Включено сторінку підручника для фонової служби (L<guestfsd(8)>).
+
+=head2 Безпека
+
+=head3 Файл журналу guestfish
+
+Файл журналу F<$HOME/.guestfish> тепер створюється із правами доступу 0600 (раніше використовувалася маска 0644), отже, його більше не зможуть читати сторонні користувачі.
+
+=head3 CVE-2012-2690
+
+У старих версіях програми C<virt-edit> та команди C<edit> C<guestfish> створювався новий файл, у якому зберігалися зміни, але не встановлювалися права доступу та інші параметри так, щоб вони збігалися із параметрами старого редагованого файла. У результаті після редагування конфіденційного файла, зокрема F</etc/shadow>, він ставав доступним для сторонніх користувачів.
+
+Цій ваді було надано код CVE-2012-2690. Її було виправлено у libguestfs E<ge> 1.16.
+
+Докладніші дані можна знайти на сторінці L<https://bugzilla.redhat.com/show_bug.cgi?id=788642>
+
+=head2 Нові програмні інтерфейси
+
+ acl-delete-def-file
+ acl-get-file
+ acl-set-file
+ canonical-device-name
+ cap-get-file
+ cap-set-file
+ create-flags
+ device-index
+ disk-has-backing-file
+ disk-format
+ disk-virtual-size
+ filesystem-available
+ fill-dir
+ fstrim
+ get-cachedir
+ get-libvirt-requested-credentials
+ get-libvirt-requested-credential-prompt
+ get-libvirt-requested-credential-challenge
+ get-libvirt-requested-credential-defresult
+ get-tmpdir
+ hivex-close
+ hivex-commit
+ hivex-node-add-child
+ hivex-node-children
+ hivex-node-delete-child
+ hivex-node-get-child
+ hivex-node-get-value
+ hivex-node-name
+ hivex-node-parent
+ hivex-node-set-value
+ hivex-node-values
+ hivex-open
+ hivex-root
+ hivex-value-key
+ hivex-value-type
+ hivex-value-utf8
+ hivex-value-value
+ inspect-list-applications2 (John Eckersberg)
+ list-ldm-volumes
+ list-ldm-partitions
+ ldmtool-create-all
+ ldmtool-diskgroup-disks
+ ldmtool-diskgroup-name
+ ldmtool-diskgroup-volumes
+ ldmtool-remove-all
+ ldmtool-scan
+ ldmtool-scan-devices
+ ldmtool-volume-hint
+ ldmtool-volume-partitions
+ ldmtool-volume-type
+ ls0
+ max-disks
+ mke2fs (Wanlong Gao)
+ mklost-and-found
+ mkswap [додано додаткові аргументи label та uuid]
+ mktemp (Wanlong Gao)
+ nr-devices
+ parse-environment
+ parse-environment-list
+ rm-f
+ rsync
+ rsync-in
+ rsync-out
+ set-cachedir
+ set-libvirt-supported-credentials
+ set-libvirt-requested-credential
+ set-tmpdir
+ shutdown [зворотне портування на 1.16 та 1.18]
+ tar-in [додано прапорець compress]
+ tar-out [додано прапорці compress, numericowner, excludes]
+ umount [додано додаткові аргументи force і lazy]
+ utsname
+ xfs-admin (Wanlong Gao)
+ xfs-growfs (Wanlong Gao)
+ xfs-info (Wanlong Gao)
+ xfs-repair (Wanlong Gao)
+
+Лише у програмному інтерфейсі C:
+
+ guestfs_push_error_handler
+ guestfs_pop_error_handler
+
+=head2 Внутрішня частина роботи програми
+
+qemu E<ge> 1.1 є обов'язковою (бажаною є версія E<ge> 1.2).
+
+febootstrap E<ge> 3.20 є обов'язковою.
+
+libvirt є необов'язковою, але якщо ви хочете користуватися новим модулем libvirt для запуску базової системи, тоді обов'язковою є libvirt E<ge> 0.10.2.
+
+Для усього коду було виконано перевірку Coverity. Виправлено багато вад (дякуємо Ondrej Vasik, Kamil Dudka).
+
+Функції, у яких раніше не було необов'язкових аргументів, тепер можна перетворити на функції із необов'язковими аргументами, що робить розширення програмного інтерфейсу набагато гнучкішим. Для користувачів програмного інтерфейсу збережено зворотну сумісність за кодом і виконуваними файлами.
+
+Змінено спосіб, у який програмні інтерфейси і структури libguestfs представляються у генераторі, так, щоб використовувалися структури OCaml замість кортежів. Це робить описи у генераторів гнучкішими та простішими для розуміння. Подробиці викладено у внесках 39d1a7db і eb185eef.
+
+Поділ коду бібліотеки на більшу кількість файлів:
+
+=over 4
+
+=item *
+
+Модулі запуску тепер зберігаються у окремих файлах, наприклад F<src/launch-appliance.c>, C<src/launch-libvirt.c>.
+
+=item *
+
+Породжений код дій тепер поділено на декілька файлів F<src/action*.c> для пришвидшення збирання.
+
+=item *
+
+Величезний файл F<src/guestfs.c> поділено на декілька менших логічних модулів.
+
+=back
+
+POD (документація) тепер створюється з використанням переписаної програми на Perl, а не pod2* + скриптів оболонки.
+
+Сторінки підручника тепер містять стабільні дати (Hilko Bengen).
+
+Пропущені тести тепер виходять із кодом 77, отже потрапляють до C<SKIP:> у виведених C<make check> даних.
+
+Паралельний тест щодо mount-local було переписано на C (RHBZ#838081).
+
+Тепер передбачено підтримку Ruby 1.8.5 (хоча перевага надається Ruby E<ge> 1.9).
+
+Прив'язки до Perl тепер можна вимкнути за допомогою C<./configure --disable-perl> (Wulf C. Krueger). Зауважте, що сам інтерпретатор Perl усе ще потрібен для збирання libguestfs.
+
+Прив'язки до Java тепер можна увімкнути або вимкнути за допомогою C<./configure --with-java> або C<./configure --without-java> (Wulf C. Krueger).
+
+Нові параметри налаштування: C<./configure --enable-code-profiling> і C<./configure --enable-code-coverage>.
+
+Декілька виправлень щодо використання 64-бітових цілих чисел у прив'язках до мов програмування.
+
+Модуль базової системи тепер використовує sgabios замість vgabios (Dan Berrange).
+
+Скрипт C<./run> тепер встановлює достатньо змінних середовища, щоб можна було запускати програми на OCaml, Python, Ruby, Java, GJS, Erlang, Lua.
+
+Реалізовано прапорець C<./run --test> для запуску тестів із мінімальним виведенням. Також скрипт виводить час, який було витрачено на кожен із тестів.
+
+Скрипт C<./run> тепер збирає шляхи накопичувально, тобто ви можете скористатися C<./run> двічі або скористатися скриптами C<./run> libguestfs і libvirt разом.
+
+Тепер можна видобути список зовнішніх команд, потрібних для роботи фонової служби, що робить збирання базової системи на деяких дистрибутивах простішим (Olaf Hering).
+
+Тепер під час виконання C<make check> виконується тестування C<virt-rescue>.
+
+Генератор тепер вилучає невикористані створені файли. Це допомагає, якщо виконуються маневри модифікаціями коду за допомогою git rebase, git bisect тощо.
+
+Тести тепер запускаються у окремому каталозі C<tmp/> верхнього рівня у ієрархії коду. Це надає змогу створювати мітки для каталогу для SELinux (sVirt), а також спрощує чищення ієрархії коду.
+
+Розширено діапазон роботи C<make syntax-check> і усунено багато проблем у основному коді, які було виявлено за допомогою перевірки синтаксису (дякуємо Jim Meyering).
+
+До створених файлів додано режим Emacs (-*- foo -*-).
+
+Виведення смужки поступу тепер надсилається до F</dev/tty>, отже не потрапляє до звичайних виведених програмою даних. virt-resize і virt-sparsify тепер придушують дані смужки поступу, якщо стандартним виведенням не є tty.
+
+Впроваджено параметр C<./configure --without-libvirt>. Він є корисним для тестування того, чи можна зібрати код без libvirt.
+
+Впроваджено вбудовану мінібібліотеку для запуску команд. Це надало нам змогу переспрямувати повідомлення про помилки від зовнішніх команд до записів подій.
+
+Повністю переглянуто код для обробки тимчасових каталогів та кешу базової системи.
+
+Код для тимчасового ігнорування або вимикання повідомлень про помилки тепер виглядає так:
+
+ guestfs_push_error_handler (g, NULL, NULL);
+ guestfs_mkdir (g, "/foo"); /* Нам все одно, якщо спроба буде невдалою. */
+ guestfs_pop_error_handler (g);
+
+Усунено каталог C<tests/extra>. «Додаткові тести» тепер поділено на декілька окремих цілей, наприклад C<make check-valgrind>.  Скористайтеся командою C<make help>, щоб дізнатися більше про ці цілі.
+
+Ядру базової системи тепер передається параметр C<lpj>, якщо використовується TCG. Це має поліпшити стабільність відліку часу (дякуємо Marcelo Tosatti, Olaf Hering).
+
+=head2 Виправлені вади
+
+=begin коментар
+
+./bugs-in-changelog.sh 1.18.0..
+
+=end коментар
+
+=over 4
+
+=item L<https://bugzilla.redhat.com/882417>
+
+Інструменти libguestfs показують повідомлення про незрозумілі помилки, якщо TMPDIR не є абсолютним шляхом
+
+=item L<https://bugzilla.redhat.com/882299>
+
+Windows 8 guest disks can't be mounted: "The NTFS partition is in an unsafe state. Please resume and shutdown Windows fully (no hibernation or fast restarting), or mount the volume read-only with the 'ro' mount option."
+
+=item L<https://bugzilla.redhat.com/881953>
+
+libguestfs: перехід на /etc/hostname, /etc/vconsole.conf, /etc/locale.conf
+
+=item L<https://bugzilla.redhat.com/880801>
+
+virt-df із двома параметрами -a options показує некоректну назву образу диска
+
+=item L<https://bugzilla.redhat.com/879416>
+
+libguestfs-test-tool pauses when you use --help option
+
+=item L<https://bugzilla.redhat.com/876579>
+
+mke2fs API does not apply block device naming translation to journaldevice optarg
+
+=item L<https://bugzilla.redhat.com/860235>
+
+SELinux policy ought to allow qemu to write to unconfined_u:object_r:user_tmp_t:s0
+
+=item L<https://bugzilla.redhat.com/859949>
+
+RFE: inspect-list-applications does not return the architecture of RPM packages
+
+=item L<https://bugzilla.redhat.com/859885>
+
+inspect-list-applications does not list all installed RPM packages with same name and different versions
+
+=item L<https://bugzilla.redhat.com/859876>
+
+guestfish printed paths are not canonicalized
+
+=item L<https://bugzilla.redhat.com/859875>
+
+Progress bar output should go to tty(?) stderr(?)
+
+=item L<https://bugzilla.redhat.com/858696>
+
+virt-sysprep reports Guestfs.Error("read_lines: fopen: /etc/sysconfig/network: No such file or directory") on some Fedora guests
+
+=item L<https://bugzilla.redhat.com/858128>
+
+libguestfs fail to list devices added by add-drive-ro-with-if twice
+
+=item L<https://bugzilla.redhat.com/858126>
+
+virt-inspector fail to work with some windows guests
+
+=item L<https://bugzilla.redhat.com/853762>
+
+virt-sparsify should use a more robust method to detect the input format
+
+=item L<https://bugzilla.redhat.com/853393>
+
+libvirt doesn't label console, serial sockets
+
+=item L<https://bugzilla.redhat.com/853159>
+
+virt-rescue у Fedora 18 повністю непрацездатний
+
+=item L<https://bugzilla.redhat.com/852394>
+
+libguestfs inspection limits registries to 100 MiB
+
+=item L<https://bugzilla.redhat.com/852194>
+
+virt-sparsify --compress не працює, якщо дані виводяться у необробленому форматі (raw)
+
+=item L<https://bugzilla.redhat.com/847881>
+
+RFE: allow extra arguments (like --exclude) to tar-out
+
+=item L<https://bugzilla.redhat.com/847880>
+
+tar-out should allow (or force) --numeric-owner
+
+=item L<https://bugzilla.redhat.com/845522>
+
+guestfish "copy-out / localdir" command fails with "No such file or directory"
+
+=item L<https://bugzilla.redhat.com/845488>
+
+Long filenames on NTFS cause tar-out, copy-out etc to fail with error "Cannot open: File name too long"
+
+=item L<https://bugzilla.redhat.com/842307>
+
+RFE: Need help designing and implementing selinux policy for libguestfs/sVirt
+
+=item L<https://bugzilla.redhat.com/840572>
+
+virt-make-fs / tar-in має підтримувати vfat належним чином
+
+=item L<https://bugzilla.redhat.com/840115>
+
+guestfish touch problem - case_sensitive_path API expects the file to exist
+
+=item L<https://bugzilla.redhat.com/836710>
+
+Втрата даних під час запису до файлів дисків у форматі qcow2
+
+=item L<https://bugzilla.redhat.com/834712>
+
+lvresize, lvresize-free fail unnecessarily if you don't change the size of the LV: "New size (nn extents) matches existing size (nn extents)"
+
+=item L<https://bugzilla.redhat.com/824716>
+
+compress-device-out didn't support bzip2
+
+=item L<https://bugzilla.redhat.com/824043>
+
+guestfish unrecognized mount option gives confusing error message
+
+=item L<https://bugzilla.redhat.com/823887>
+
+Файли із китайськими ієрогліфами у назвах не можна створити у файловій системі vfat
+
+=item L<https://bugzilla.redhat.com/823885>
+
+virt-make-fs cannot create vfat filesystem containing filesystems with Chinese characters
+
+=item L<https://bugzilla.redhat.com/823883>
+
+virt-make-fs -t fat не працює, повідомляючи про незрозумілу помилку
+
+=item L<https://bugzilla.redhat.com/823821>
+
+Inspection fails when /etc/HOSTNAME is empty
+
+=item L<https://bugzilla.redhat.com/801117>
+
+libguestfs cannot get icon for Windows 8
+
+=item L<https://bugzilla.redhat.com/798979>
+
+Ubuntu install CDs from oneiric onwards are not recognized: "multi-boot operating systems are not supported"
+
+=item L<https://bugzilla.redhat.com/782167>
+
+libguestfs doesn't recognize Windows Dynamic disks in some configurations, eg. spanned
+
+=item L<https://bugzilla.redhat.com/713678>
+
+Not all febootstrap messages are redirected to log callbacks
+
+=item L<https://bugzilla.redhat.com/627675>
+
+libguestfs inspector code cannot handle /dev/disk/by-id/* paths
+
+=item L<https://bugzilla.redhat.com/602997>
+
+part-get-bootable gives wrong result with an unordered part layout
+
+=back
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfs-examples(1)>, L<guestfs-faq(1)>, L<guestfs-performance(1)>, L<guestfs-recipes(1)>, L<guestfs-testing(1)>, L<guestfs(3)>, L<guestfish(1)>, L<http://libguestfs.org/>
+
+=head1 АВТОР
+
+Richard W.M. Jones
+
+=head1 АВТОРСЬКІ ПРАВА
+
+Copyright (C) 2009-2023 Red Hat Inc.
+

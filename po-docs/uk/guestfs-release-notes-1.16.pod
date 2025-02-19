@@ -1,0 +1,135 @@
+
+=head1 НАЗВА
+
+guestfs-release-notes - нотатки щодо випусків libguestfs
+
+=head1 НОТАТКИ ЩОДО ВИПУСКУ LIBGUESTFS 1.16
+
+Ці нотатки щодо випуску стосуються лише відмінностей від попереднього стабільного випуску (1.14.0). Докладний журнал змін є частиною журналу змін сховища git. Його також наведено у файлі ChangeLog, який є частиною архіву tar із кодом бібліотеки.
+
+=head2 Нові можливості
+
+=head3 libguestfs
+
+ - уможливлено створення файлових систем XFS на наявних файлових системах (Wanlong Gao)
+
+- (невказане) типове вирівнювання для part-disk змінено на 64 кБ для поліпшення підтримки високоякісних сховищ, з'єднаних із мережею
+
+   - нова сторінка підручника, guestfs-testing(1)
+
+ - list-filesystems тепер повертає пункти пристроїв MD, які містять файлові системи (Matthew Booth)
+
+   - підтримка GCC >= 4.7 (Jim Meyering)
+
+- реалізовано перевірку повторного додавання користувачем диска (Wanlong Gao).
+
+=head3 прив’язки до мов програмування
+
+- експериментальні прив'язки до GObject із підтримкою інтроспекції GObject. Тепер ви можете використовувати libguestfs з Javascript. Будь ласка, зауважте, що прив'язки у цьому випуску не є стабільними і остаточними. (Matthew Booth).
+
+   - підтримка Ruby >= 1.9
+
+- прив'язки до Ruby можна вимикати окремо (Hilko Bengen)
+
+   - підтримка Python 2.6, 3.x (Richard Jones, Hilko Bengen)
+
+   - підтримка PHP >= 5.4
+
+- у прив'язках до Perl доступний новий хеш %guestfs_introspection, отже ви можете виконувати за його допомогою опитування щодо необов'язкових аргументів
+
+=head3 перевірка
+
+- уможливлено інспектування пристроїв MD (Matthew Booth)
+
+- реалізовано підтримку гостьових систем GNU/Hurd
+
+=head3 guestfish
+
+- події libguestfs (зокрема події смужки поступу та повідомлення журналу) тепер можна перехоплювати і обробляти за допомогою визначених користувачем скриптів оболонки.
+
+- уможливлено доповнення за Tab для пристроїв MD (Matthew Booth)
+
+=head3 virt tools
+
+- новий інструмент virt-format для витирання і створення порожніх дисків
+
+- нові параметри virt-sparsify --compress і -o для уможливлення виведення стиснених даних та виведення у іншому форматі
+
+- virt-sparsify тепер може виявляти і розріджувати файли .vdi
+
+- virt-sysprep більше не потребує xmlstarlet; додано новий параметр virt-inspector --xpath для заміни цієї функціональної можливості
+
+- virt-rescue має новий параметр --suggest, за допомогою якого реалізовано пропозиції команд монтування для гостьової системи
+
+- virt-resize більше не потребує виконуваного файла pcre OCaml
+
+=head3 libguestfs live
+
+- фонова служба більше не намагається редагувати ваші поточні налаштування /etc/lvm
+
+- усунено потенційну проблему захисту, пов'язану із передбачуваними назвами у /tmp (Steve Kemp)
+
+=head2 Безпека
+
+  CVE-2011-4127, RHBZ#757071
+  Усунено можливе розширення прав доступу за допомогою SG_IO ioctl
+  Докладніший опис: https://github.com/libguestfs/libguestfs/commit/9a5f784d511a8f00a8386f316eab41fe660430db
+
+=head2 Нові програмні інтерфейси
+
+blkid: виводить усі атрибути пристрою, відомого blkid (Wanlong Gao)
+e2fsck: надає доступ до ширшого спектра можливостей e2fsck (Wanlong Gao)
+list-md-devices: повертає список пристроїв MD Linux (Matthew Booth)
+md-create: створює пристрій MD
+md-detail: повертає метадані пристрою MD (Matthew Booth)
+md-stop: зупиняє роботу пристрою MD (Wanlong Gao)
+tune2fs: надає змогу коригувати параметри файлових систем ext2/3/4
+
+=head2 Внутрішня частина роботи програми
+
+сховище коду git перенесено до http://github.com/libguestfs
+
+Різноманітні каталоги для тестування перевпорядковано логічно: тепер усі вони є підкаталогами tests/.
+
+Реалізовано правило make extra-tests, яке запускає звичайні тести і додаткові тести, використовуючи valgrind для пошуку проблем із пам'яттю.
+
+Виявлено за допомогою valgrind і усунено витоки пам'яті та інші проблеми.
+
+Підтримку необов'язкових аргументів у генераторі було переписано із метою розширення можливостей та поліпшення захисту (Matthew Booth).
+
+Використання gcc -fvisibility=hidden для внутрішніх символів надало змогу уникнути опосередкованих викликів за допомогою PLT.
+
+Уможливлено тестування функцій RHashtable у генераторі.
+
+Макрос ADD_ARG у фоновій службі надає змогу будувати списки аргументів без ризику порушення стека.
+
+Виправлено створення функцій OCaml, які мають понад 10 аргументів.
+
+у базову систему додано psmisc, що уможливлює використання fuser, killall та pstree для діагностування.
+
+bindtests тепер стосуються і RBufferOut та необов'язкових аргументів (Matthew Booth).
+
+=head2 Виправлені вади
+
+ - 769680 temporary directories created during appliance builds are not cleaned up on error
+ - 761460 guestfs_utimens hangs on named pipes
+ - 761451 guestfs_utimens cannot set times on a directory
+ - 760775 "guestfish: multi-boot operating systems are not supported by the -i option" should be more explanatory
+ - 760669 guestfish copy-in and <! (inline execution) don't mix well: pclose: No child processes
+ - 760000 libguestfs fails to compile with Ruby >= 1.9
+ - 755729 Error message for resize2fs-M needs tweaking
+ - 750889 Python code incompatible with Python v3.
+ - 596761 Ctrl-\ causes guestfish to abort
+
+=head1 ТАКОЖ ПЕРЕГЛЯНЬТЕ
+
+L<guestfs-examples(1)>, L<guestfs-faq(1)>, L<guestfs-performance(1)>, L<guestfs-recipes(1)>, L<guestfs-testing(1)>, L<guestfs(3)>, L<guestfish(1)>, L<http://libguestfs.org/>
+
+=head1 АВТОР
+
+Richard W.M. Jones
+
+=head1 АВТОРСЬКІ ПРАВА
+
+Copyright (C) 2009-2023 Red Hat Inc.
+
