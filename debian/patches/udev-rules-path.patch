@@ -1,0 +1,23 @@
+From: Debian Libvirt Maintainers
+ <pkg-libvirt-maintainers@lists.alioth.debian.org>
+Date: Sun, 16 Feb 2025 23:26:42 +0100
+Subject: udev-rules-path
+
+===================================================================
+---
+ appliance/Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/appliance/Makefile.am b/appliance/Makefile.am
+index 2839bab..225cd78 100644
+--- a/appliance/Makefile.am
++++ b/appliance/Makefile.am
+@@ -163,7 +163,7 @@ supermin.d/udev-rules.tar.gz: 99-guestfs-serial.rules
+ # If installing the daemon, install the udev rules too.
+ 
+ if INSTALL_DAEMON
+-udevrulesdir = /lib/udev/rules.d
++udevrulesdir = /usr/lib/udev/rules.d
+ udevrules_DATA = 99-guestfs-serial.rules
+ endif
+ 

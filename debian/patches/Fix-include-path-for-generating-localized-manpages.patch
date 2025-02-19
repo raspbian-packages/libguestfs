@@ -1,0 +1,37 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Sat, 26 Nov 2022 16:12:08 +0100
+Subject: Fix include path for generating localized manpages
+
+---
+ po-docs/language.mk | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/po-docs/language.mk b/po-docs/language.mk
+index 62a148e..0c48c82 100644
+--- a/po-docs/language.mk
++++ b/po-docs/language.mk
+@@ -106,13 +106,16 @@ guestfs.3: guestfs.pod guestfs-actions.pod guestfs-availability.pod guestfs-stru
+ guestfish.1: guestfish.pod guestfish-actions.pod guestfish-commands.pod guestfish-prepopts.pod blocksize-option.pod key-option.pod keys-from-stdin-option.pod
+ 	$(PODWRAPPER) \
+ 	  --no-strict-checks \
++	  --path $(top_srcdir)/common/options \
+ 	  --man $@ \
++	  --path $(srcdir) \
+ 	  --license GPLv2+ \
+ 	  $<
+ 
+ guestmount.1: guestmount.pod blocksize-option.pod key-option.pod keys-from-stdin-option.pod
+ 	$(PODWRAPPER) \
+ 	  --no-strict-checks \
++	  --path $(top_srcdir)/common/options \
+ 	  --man $@ \
+ 	  --license GPLv2+ \
+ 	  $<
+@@ -156,6 +159,7 @@ virt-p2v.1: virt-p2v.pod virt-p2v-kernel-config.pod
+ 	$(PODWRAPPER) \
+ 	  --no-strict-checks \
+ 	  --man $@ \
++	  --path $(srcdir) \
+ 	  $<
+ 
+ %.3: %.pod
