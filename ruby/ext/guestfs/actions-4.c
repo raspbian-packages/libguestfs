@@ -1093,6 +1093,46 @@ guestfs_int_ruby_find_inode (VALUE gv, VALUE devicev, VALUE inodev)
 
 /*
  * call-seq:
+ *   g.findfs_partuuid(uuid) -> string
+ *
+ * find a partition by UUID
+ *
+ * This command searches the partitions and returns the one
+ * which has the given partition UUID. An error is returned
+ * if no such partition can be found.
+ * 
+ * To find the UUID of a partition, use "g.blkid"
+ * ("PART_ENTRY_UUID").
+ *
+ *
+ * [Since] Added in version 1.53.5.
+ *
+ * [C API] For the C API documentation for this function, see
+ *         {guestfs_findfs_partuuid}[http://libguestfs.org/guestfs.3.html#guestfs_findfs_partuuid].
+ */
+VALUE
+guestfs_int_ruby_findfs_partuuid (VALUE gv, VALUE uuidv)
+{
+  guestfs_h *g;
+  Data_Get_Struct (gv, guestfs_h, g);
+  if (!g)
+    rb_raise (rb_eArgError, "%s: used handle after closing it", "findfs_partuuid");
+
+  const char *uuid = StringValueCStr (uuidv);
+
+  char *r;
+
+  r = guestfs_findfs_partuuid (g, uuid);
+  if (r == NULL)
+    rb_raise (e_Error, "%s", guestfs_last_error (g));
+
+  volatile VALUE rv = rb_str_new2 (r);
+  free (r);
+  return rv;
+}
+
+/*
+ * call-seq:
  *   g.findfs_uuid(uuid) -> string
  *
  * find a filesystem by UUID
@@ -2550,8 +2590,6 @@ guestfs_int_ruby_part_add (VALUE gv, VALUE devicev, VALUE prlogexv, VALUE starts
  *
  *
  * [Since] Added in version 1.29.25.
- *
- * [Feature] This function depends on the feature +gdisk+.  See also {#feature_available}[rdoc-ref:feature_available].
  *
  * [C API] For the C API documentation for this function, see
  *         {guestfs_part_get_gpt_guid}[http://libguestfs.org/guestfs.3.html#guestfs_part_get_gpt_guid].

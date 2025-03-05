@@ -799,6 +799,40 @@ guestfs_int_py_find_inode (PyObject *self, PyObject *args)
 }
 #endif
 
+#ifdef GUESTFS_HAVE_FINDFS_PARTUUID
+PyObject *
+guestfs_int_py_findfs_partuuid (PyObject *self, PyObject *args)
+{
+  PyObject *py_g;
+  guestfs_h *g;
+  PyObject *py_r = NULL;
+  char *r;
+  const char *uuid;
+
+  if (!PyArg_ParseTuple (args, (char *) "Os:guestfs_findfs_partuuid",
+                         &py_g, &uuid))
+    goto out;
+  g = get_handle (py_g);
+
+  Py_BEGIN_ALLOW_THREADS
+  r = guestfs_findfs_partuuid (g, uuid);
+  Py_END_ALLOW_THREADS
+
+  if (r == NULL) {
+    PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
+    goto out;
+  }
+
+  py_r = guestfs_int_py_fromstring (r);
+  free (r);
+  if (py_r == NULL) goto out;
+
+  PyErr_Clear ();
+ out:
+  return py_r;
+}
+#endif
+
 #ifdef GUESTFS_HAVE_FINDFS_UUID
 PyObject *
 guestfs_int_py_findfs_uuid (PyObject *self, PyObject *args)

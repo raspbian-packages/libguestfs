@@ -230,6 +230,8 @@ extern VALUE guestfs_int_ruby_find (VALUE gv, VALUE directoryv);
 extern VALUE guestfs_int_ruby_find0 (VALUE gv, VALUE directoryv, VALUE filesv);
 extern VALUE guestfs_int_ruby_find_inode (VALUE gv, VALUE devicev, VALUE inodev);
 extern VALUE guestfs_int_ruby_findfs_label (VALUE gv, VALUE labelv);
+extern VALUE guestfs_int_ruby_findfs_partlabel (VALUE gv, VALUE labelv);
+extern VALUE guestfs_int_ruby_findfs_partuuid (VALUE gv, VALUE uuidv);
 extern VALUE guestfs_int_ruby_findfs_uuid (VALUE gv, VALUE uuidv);
 extern VALUE guestfs_int_ruby_fsck (VALUE gv, VALUE fstypev, VALUE devicev);
 extern VALUE guestfs_int_ruby_fstrim (int argc, VALUE *argv, VALUE gv);

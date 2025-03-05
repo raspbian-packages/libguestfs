@@ -159,6 +159,8 @@ extern void fill_dir_stub (XDR *xdr_in);
 extern void fill_pattern_stub (XDR *xdr_in);
 extern void find0_stub (XDR *xdr_in);
 extern void findfs_label_stub (XDR *xdr_in);
+extern void findfs_partlabel_stub (XDR *xdr_in);
+extern void findfs_partuuid_stub (XDR *xdr_in);
 extern void findfs_uuid_stub (XDR *xdr_in);
 extern void fsck_stub (XDR *xdr_in);
 extern void fstrim_stub (XDR *xdr_in);

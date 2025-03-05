@@ -351,11 +351,12 @@ guestfs_int_py_cryptsetup_open (PyObject *self, PyObject *args)
   const char *mapname;
   PyObject *py_readonly;
   PyObject *py_crypttype;
+  PyObject *py_cipher;
 
   optargs_s.bitmask = 0;
 
-  if (!PyArg_ParseTuple (args, (char *) "OsssOO:guestfs_cryptsetup_open",
-                         &py_g, &device, &key, &mapname, &py_readonly, &py_crypttype))
+  if (!PyArg_ParseTuple (args, (char *) "OsssOOO:guestfs_cryptsetup_open",
+                         &py_g, &device, &key, &mapname, &py_readonly, &py_crypttype, &py_cipher))
     goto out;
   g = get_handle (py_g);
 
@@ -370,6 +371,12 @@ guestfs_int_py_cryptsetup_open (PyObject *self, PyObject *args)
   if (py_crypttype != Py_None) {
     optargs_s.bitmask |= GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK;
     optargs_s.crypttype = guestfs_int_py_asstring (py_crypttype);
+  }
+#endif
+#ifdef GUESTFS_CRYPTSETUP_OPEN_CIPHER_BITMASK
+  if (py_cipher != Py_None) {
+    optargs_s.bitmask |= GUESTFS_CRYPTSETUP_OPEN_CIPHER_BITMASK;
+    optargs_s.cipher = guestfs_int_py_asstring (py_cipher);
   }
 #endif
 

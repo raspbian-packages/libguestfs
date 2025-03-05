@@ -694,6 +694,33 @@ Java_com_redhat_et_libguestfs_GuestFS__1file_1architecture  (JNIEnv *env, jobjec
 
 
 JNIEXPORT jstring JNICALL
+Java_com_redhat_et_libguestfs_GuestFS__1findfs_1partlabel  (JNIEnv *env, jobject obj, jlong jg, jstring jlabel)
+{
+  guestfs_h *g = (guestfs_h *) (long) jg;
+  jstring jr;
+  char *r;
+  const char *label;
+
+  label = (*env)->GetStringUTFChars (env, jlabel, NULL);
+
+  r = guestfs_findfs_partlabel (g, label);
+
+  (*env)->ReleaseStringUTFChars (env, jlabel, label);
+
+  if (r == NULL) {
+    throw_exception (env, guestfs_last_error (g));
+    goto ret_error;
+  }
+  jr = (*env)->NewStringUTF (env, r);
+  free (r);
+  return jr;
+
+ ret_error:
+  return NULL;
+}
+
+
+JNIEXPORT jstring JNICALL
 Java_com_redhat_et_libguestfs_GuestFS__1get_1backend  (JNIEnv *env, jobject obj, jlong jg)
 {
   guestfs_h *g = (guestfs_h *) (long) jg;

@@ -423,6 +423,10 @@ Init__guestfs (void)
                     guestfs_int_ruby_find_inode, 2);
   rb_define_method (c_guestfs, "findfs_label",
                     guestfs_int_ruby_findfs_label, 1);
+  rb_define_method (c_guestfs, "findfs_partlabel",
+                    guestfs_int_ruby_findfs_partlabel, 1);
+  rb_define_method (c_guestfs, "findfs_partuuid",
+                    guestfs_int_ruby_findfs_partuuid, 1);
   rb_define_method (c_guestfs, "findfs_uuid",
                     guestfs_int_ruby_findfs_uuid, 1);
   rb_define_method (c_guestfs, "fsck",

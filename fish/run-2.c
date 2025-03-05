@@ -967,6 +967,29 @@ run_file_architecture (const char *cmd, size_t argc, char *argv[])
 }
 
 int
+run_findfs_partlabel (const char *cmd, size_t argc, char *argv[])
+{
+  int ret = RUN_ERROR;
+  char *r;
+  const char *label;
+  size_t i = 0;
+
+  if (argc != 1) {
+    ret = RUN_WRONG_ARGS;
+    goto out_noargs;
+  }
+  label = argv[i++];
+  r = guestfs_findfs_partlabel (g, label);
+  if (r == NULL) goto out;
+  ret = 0;
+  printf ("%s\n", r);
+  free (r);
+ out:
+ out_noargs:
+  return ret;
+}
+
+int
 run_get_backend (const char *cmd, size_t argc, char *argv[])
 {
   int ret = RUN_ERROR;

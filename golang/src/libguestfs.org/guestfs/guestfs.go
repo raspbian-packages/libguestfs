@@ -3987,6 +3987,9 @@ type OptargsCryptsetup_open struct {
     /* Crypttype field is ignored unless Crypttype_is_set == true */
     Crypttype_is_set bool
     Crypttype string
+    /* Cipher field is ignored unless Cipher_is_set == true */
+    Cipher_is_set bool
+    Cipher string
 }
 
 /* cryptsetup_open : open an encrypted block device */
@@ -4013,6 +4016,11 @@ func (g *Guestfs) Cryptsetup_open (device string, key string, mapname string, op
             c_optargs.bitmask |= C.GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK
             c_optargs.crypttype = C.CString (optargs.Crypttype)
             defer C.free (unsafe.Pointer (c_optargs.crypttype))
+        }
+        if optargs.Cipher_is_set {
+            c_optargs.bitmask |= C.GUESTFS_CRYPTSETUP_OPEN_CIPHER_BITMASK
+            c_optargs.cipher = C.CString (optargs.Cipher)
+            defer C.free (unsafe.Pointer (c_optargs.cipher))
         }
     }
 
@@ -4910,6 +4918,42 @@ func (g *Guestfs) Findfs_label (label string) (string, error) {
 
     if r == nil {
         return "", get_error_from_handle (g, "findfs_label")
+    }
+    defer C.free (unsafe.Pointer (r))
+    return C.GoString (r), nil
+}
+
+/* findfs_partlabel : find a partition by label */
+func (g *Guestfs) Findfs_partlabel (label string) (string, error) {
+    if g.g == nil {
+        return "", closed_handle_error ("findfs_partlabel")
+    }
+
+    c_label := C.CString (label)
+    defer C.free (unsafe.Pointer (c_label))
+
+    r := C.guestfs_findfs_partlabel (g.g, c_label)
+
+    if r == nil {
+        return "", get_error_from_handle (g, "findfs_partlabel")
+    }
+    defer C.free (unsafe.Pointer (r))
+    return C.GoString (r), nil
+}
+
+/* findfs_partuuid : find a partition by UUID */
+func (g *Guestfs) Findfs_partuuid (uuid string) (string, error) {
+    if g.g == nil {
+        return "", closed_handle_error ("findfs_partuuid")
+    }
+
+    c_uuid := C.CString (uuid)
+    defer C.free (unsafe.Pointer (c_uuid))
+
+    r := C.guestfs_findfs_partuuid (g.g, c_uuid)
+
+    if r == nil {
+        return "", get_error_from_handle (g, "findfs_partuuid")
     }
     defer C.free (unsafe.Pointer (r))
     return C.GoString (r), nil

@@ -766,6 +766,29 @@ run_find_inode (const char *cmd, size_t argc, char *argv[])
 }
 
 int
+run_findfs_partuuid (const char *cmd, size_t argc, char *argv[])
+{
+  int ret = RUN_ERROR;
+  char *r;
+  const char *uuid;
+  size_t i = 0;
+
+  if (argc != 1) {
+    ret = RUN_WRONG_ARGS;
+    goto out_noargs;
+  }
+  uuid = argv[i++];
+  r = guestfs_findfs_partuuid (g, uuid);
+  if (r == NULL) goto out;
+  ret = 0;
+  printf ("%s\n", r);
+  free (r);
+ out:
+ out_noargs:
+  return ret;
+}
+
+int
 run_findfs_uuid (const char *cmd, size_t argc, char *argv[])
 {
   int ret = RUN_ERROR;

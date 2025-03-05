@@ -71,6 +71,7 @@ and distro =
   | DISTRO_ARCHLINUX
   | DISTRO_BUILDROOT
   | DISTRO_CENTOS
+  | DISTRO_CIRCLE
   | DISTRO_CIRROS
   | DISTRO_COREOS
   | DISTRO_DEBIAN
@@ -89,6 +90,7 @@ and distro =
   | DISTRO_NEOKYLIN
   | DISTRO_NETBSD
   | DISTRO_OPENBSD
+  | DISTRO_OPENEULER
   | DISTRO_OPENMANDRIVA
   | DISTRO_OPENCLOUDOS
   | DISTRO_OPENSUSE
@@ -208,6 +210,7 @@ and string_of_distro = function
   | DISTRO_ARCHLINUX -> "archlinux"
   | DISTRO_BUILDROOT -> "buildroot"
   | DISTRO_CENTOS -> "centos"
+  | DISTRO_CIRCLE -> "circle"
   | DISTRO_CIRROS -> "cirros"
   | DISTRO_COREOS -> "coreos"
   | DISTRO_DEBIAN -> "debian"
@@ -226,6 +229,7 @@ and string_of_distro = function
   | DISTRO_NEOKYLIN -> "neokylin"
   | DISTRO_NETBSD -> "netbsd"
   | DISTRO_OPENBSD -> "openbsd"
+  | DISTRO_OPENEULER -> "openeuler"
   | DISTRO_OPENMANDRIVA -> "openmandriva"
   | DISTRO_OPENCLOUDOS -> "opencloudos"
   | DISTRO_OPENSUSE -> "opensuse"

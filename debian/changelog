@@ -1,4 +1,4 @@
-libguestfs (1:1.52.2-7+rpi1) trixie-staging; urgency=medium
+libguestfs (1:1.54.1-1+rpi1) trixie-staging; urgency=medium
 
   [changes brought forward from 1:1.42.0-11+rpi1 by Peter Michael Green <plugwash@raspbian.org> at Thu, 12 Nov 2020 16:03:00 +0000]
   * Add raspbian to the list of distros with dpkg.
@@ -15,7 +15,28 @@ libguestfs (1:1.52.2-7+rpi1) trixie-staging; urgency=medium
   [changes introduced in 1:1.52.2-7+rpi1 by Peter Michael Green]
   * disable some translations due to build failures.
 
- -- Peter Michael Green <plugwash@raspbian.org>  Sat, 01 Feb 2025 16:46:24 +0000
+ -- Raspbian forward porter <root@raspbian.org>  Wed, 05 Mar 2025 02:44:14 +0000
+
+libguestfs (1:1.54.1-1) unstable; urgency=medium
+
+  * New upstream version 1.54.1
+  * Rebase patches
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 19 Feb 2025 09:38:24 +0100
+
+libguestfs (1:1.54.0-1) unstable; urgency=medium
+
+  [ Carles Pina i Estany ]
+  * Update translation
+
+  [ Hilko Bengen ]
+  * New upstream version 1.54.0
+  * Remove direct gobject-introspection-bin dependency (Closes: #1094628)
+  * Update watch file
+  * Rebase patches
+  * Update symbols file
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 17 Feb 2025 00:19:58 +0100
 
 libguestfs (1:1.52.2-7) unstable; urgency=medium
 

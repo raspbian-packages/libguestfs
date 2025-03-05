@@ -429,6 +429,9 @@ guestfs_int_ruby_cp_a (VALUE gv, VALUE srcv, VALUE destv)
  * The optional "readonly" flag, if set to true, creates a
  * read-only mapping.
  * 
+ * The optional "cipher" parameter allows specifying which
+ * cipher to use.
+ * 
  * If this block device contains LVM volume groups, then
  * calling "g.lvm_scan" with the "activate" parameter
  * "true" will make them visible.
@@ -481,6 +484,11 @@ guestfs_int_ruby_cryptsetup_open (int argc, VALUE *argv, VALUE gv)
   if (v != Qnil) {
     optargs_s.crypttype = StringValueCStr (v);
     optargs_s.bitmask |= GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK;
+  }
+  v = rb_hash_lookup (optargsv, ID2SYM (rb_intern ("cipher")));
+  if (v != Qnil) {
+    optargs_s.cipher = StringValueCStr (v);
+    optargs_s.bitmask |= GUESTFS_CRYPTSETUP_OPEN_CIPHER_BITMASK;
   }
 
   int r;

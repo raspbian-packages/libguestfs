@@ -345,7 +345,7 @@ run_cryptsetup_open (const char *cmd, size_t argc, char *argv[])
   struct guestfs_cryptsetup_open_argv *optargs = &optargs_s;
   size_t i = 0;
 
-  if (argc < 2 || argc > 4) {
+  if (argc < 2 || argc > 5) {
     ret = RUN_WRONG_ARGS;
     goto out_noargs;
   }
@@ -377,6 +377,11 @@ run_cryptsetup_open (const char *cmd, size_t argc, char *argv[])
       optargs_s.crypttype = &argv[i][10];
       this_mask = GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK;
       this_arg = "crypttype";
+    }
+    else if (STRPREFIX (argv[i], "cipher:")) {
+      optargs_s.cipher = &argv[i][7];
+      this_mask = GUESTFS_CRYPTSETUP_OPEN_CIPHER_BITMASK;
+      this_arg = "cipher";
     }
     else {
       fprintf (stderr, _("%s: unknown optional argument \"%s\"\n"),

@@ -545,19 +545,12 @@ F<filename> is interpreted as a local file or device.
 This is the default if the optional protocol parameter
 is omitted.
 
-=item C<protocol = "ftp"|"ftps"|"http"|"https"|"tftp">
+=item C<protocol = "ftp"|"ftps"|"http"|"https">
 
-Connect to a remote FTP, HTTP or TFTP server.
+Connect to a remote FTP or HTTP server.
 The C<server> parameter must also be supplied - see below.
 
-See also: L<guestfs(3)/FTP, HTTP AND TFTP>
-
-=item C<protocol = "gluster">
-
-Connect to the GlusterFS server.
-The C<server> parameter must also be supplied - see below.
-
-See also: L<guestfs(3)/GLUSTER>
+See also: L<guestfs(3)/FTP AND HTTP>
 
 =item C<protocol = "iscsi">
 
@@ -584,13 +577,6 @@ The C<secret> parameter may be supplied.  See below.
 
 See also: L<guestfs(3)/CEPH>.
 
-=item C<protocol = "sheepdog">
-
-Connect to the Sheepdog server.
-The C<server> parameter may also be supplied - see below.
-
-See also: L<guestfs(3)/SHEEPDOG>.
-
 =item C<protocol = "ssh">
 
 Connect to the Secure Shell (ssh) server.
@@ -610,12 +596,10 @@ is a list of server(s).
  Protocol       Number of servers required
  --------       --------------------------
  file           List must be empty or param not used at all
- ftp|ftps|http|https|tftp  Exactly one
- gluster        Exactly one
+ ftp|ftps|http|https  Exactly one
  iscsi          Exactly one
  nbd            Exactly one
  rbd            Zero or more
- sheepdog       Zero or more
  ssh            Exactly one
 
 Each list element is a string specifying a server.  The string must be
@@ -632,8 +616,8 @@ for the protocol is used (see F</etc/services>).
 
 =item C<username>
 
-For the C<ftp>, C<ftps>, C<http>, C<https>, C<iscsi>, C<rbd>, C<ssh>
-and C<tftp> protocols, this specifies the remote username.
+For the C<ftp>, C<ftps>, C<http>, C<https>, C<iscsi>, C<rbd> and C<ssh>
+protocols, this specifies the remote username.
 
 If not given, then the local username is used for C<ssh>, and no authentication
 is attempted for ceph.  But note this sometimes may give unexpected results, for
@@ -1702,6 +1686,13 @@ parameter which must have one of the following values:
 Compute the cyclic redundancy check (CRC) specified by POSIX
 for the C<cksum> command.
 
+=item C<gost>
+
+=item C<gost12>
+
+Compute the checksum using GOST R34.11-94 or
+GOST R34.11-2012 message digest.
+
 =item C<md5>
 
 Compute the MD5 hash (using the L<md5sum(1)> program).
@@ -2073,7 +2064,7 @@ and I<not> the name of the underlying block device.
 This function depends on the feature C<luks>.  See also
 C<$g-E<gt>feature-available>.
 
-=item $g->cryptsetup_open ($device, $key, $mapname [, readonly => $readonly] [, crypttype => $crypttype]);
+=item $g->cryptsetup_open ($device, $key, $mapname [, readonly => $readonly] [, crypttype => $crypttype] [, cipher => $cipher]);
 
 This command opens a block device which has been encrypted
 according to the Linux Unified Key Setup (LUKS) standard,
@@ -2110,6 +2101,9 @@ A Windows BitLocker device.
 
 The optional C<readonly> flag, if set to true, creates a
 read-only mapping.
+
+The optional C<cipher> parameter allows specifying which
+cipher to use.
 
 If this block device contains LVM volume groups, then
 calling C<$g-E<gt>lvm_scan> with the C<activate>
@@ -2598,6 +2592,10 @@ Intel Itanium.
 
 64 bit Power PC (little endian).
 
+=item "loongarch64"
+
+64 bit LoongArch64 (little endian).
+
 =item "riscv32"
 
 =item "riscv64"
@@ -2958,6 +2956,22 @@ which has the given label.  An error is returned if no such
 filesystem can be found.
 
 To find the label of a filesystem, use C<$g-E<gt>vfs_label>.
+
+=item $device = $g->findfs_partlabel ($label);
+
+This command searches the partitions and returns the one
+which has the given label.  An error is returned if no such
+partition can be found.
+
+To find the label of a partition, use C<$g-E<gt>blkid> (C<PART_ENTRY_NAME>).
+
+=item $device = $g->findfs_partuuid ($uuid);
+
+This command searches the partitions and returns the one
+which has the given partition UUID.  An error is returned if no such
+partition can be found.
+
+To find the UUID of a partition, use C<$g-E<gt>blkid> (C<PART_ENTRY_UUID>).
 
 =item $device = $g->findfs_uuid ($uuid);
 
@@ -3988,6 +4002,10 @@ Buildroot-derived distro, but not one we specifically recognize.
 
 CentOS.
 
+=item "circle"
+
+Circle Linux.
+
 =item "cirros"
 
 Cirros.
@@ -4059,6 +4077,10 @@ NetBSD.
 =item "openbsd"
 
 OpenBSD.
+
+=item "openeuler"
+
+openEuler.
 
 =item "openmandriva"
 
@@ -6826,30 +6848,18 @@ See also C<$g-E<gt>part_set_bootable>.
 Return the disk identifier (GUID) of a GPT-partitioned C<device>.
 Behaviour is undefined for other partition types.
 
-This function depends on the feature C<gdisk>.  See also
-C<$g-E<gt>feature-available>.
-
 =item $attributes = $g->part_get_gpt_attributes ($device, $partnum);
 
 Return the attribute flags of numbered GPT partition C<partnum>.
 An error is returned for MBR partitions.
 
-This function depends on the feature C<gdisk>.  See also
-C<$g-E<gt>feature-available>.
-
 =item $guid = $g->part_get_gpt_guid ($device, $partnum);
 
 Return the GUID of numbered GPT partition C<partnum>.
 
-This function depends on the feature C<gdisk>.  See also
-C<$g-E<gt>feature-available>.
-
 =item $guid = $g->part_get_gpt_type ($device, $partnum);
 
 Return the type GUID of numbered GPT partition C<partnum>.
-
-This function depends on the feature C<gdisk>.  See also
-C<$g-E<gt>feature-available>.
 
 =item $idbyte = $g->part_get_mbr_id ($device, $partnum);
 
@@ -7016,17 +7026,11 @@ Set the disk identifier (GUID) of a GPT-partitioned C<device> to C<guid>.
 Return an error if the partition table of C<device> isn't GPT,
 or if C<guid> is not a valid GUID.
 
-This function depends on the feature C<gdisk>.  See also
-C<$g-E<gt>feature-available>.
-
 =item $g->part_set_disk_guid_random ($device);
 
 Set the disk identifier (GUID) of a GPT-partitioned C<device> to
 a randomly generated value.
 Return an error if the partition table of C<device> isn't GPT.
-
-This function depends on the feature C<gdisk>.  See also
-C<$g-E<gt>feature-available>.
 
 =item $g->part_set_gpt_attributes ($device, $partnum, $attributes);
 
@@ -7036,17 +7040,11 @@ error if the partition table of C<device> isn't GPT.
 See L<https://en.wikipedia.org/wiki/GUID_Partition_Table#Partition_entries>
 for a useful list of partition attributes.
 
-This function depends on the feature C<gdisk>.  See also
-C<$g-E<gt>feature-available>.
-
 =item $g->part_set_gpt_guid ($device, $partnum, $guid);
 
 Set the GUID of numbered GPT partition C<partnum> to C<guid>.  Return an
 error if the partition table of C<device> isn't GPT, or if C<guid> is not a
 valid GUID.
-
-This function depends on the feature C<gdisk>.  See also
-C<$g-E<gt>feature-available>.
 
 =item $g->part_set_gpt_type ($device, $partnum, $guid);
 
@@ -7056,9 +7054,6 @@ valid GUID.
 
 See L<https://en.wikipedia.org/wiki/GUID_Partition_Table#Partition_type_GUIDs>
 for a useful list of type GUIDs.
-
-This function depends on the feature C<gdisk>.  See also
-C<$g-E<gt>feature-available>.
 
 =item $g->part_set_mbr_id ($device, $partnum, $idbyte);
 

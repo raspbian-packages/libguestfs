@@ -220,6 +220,11 @@ run_cryptsetup_open (ei_x_buff *retbuff, const char *buff, int *idx)
       if (decode_string (buff, idx, (char **) &optargs_s.crypttype) != 0) return -1;
     }
     else
+    if (atom_equals (hd_name, "cipher")) {
+      optargs_s.bitmask |= GUESTFS_CRYPTSETUP_OPEN_CIPHER_BITMASK;
+      if (decode_string (buff, idx, (char **) &optargs_s.cipher) != 0) return -1;
+    }
+    else
       return unknown_optarg (retbuff, "cryptsetup_open", hd_name);
   }
   if (optargsize > 0 && buff[*idx] == ERL_NIL_EXT)
@@ -230,6 +235,8 @@ run_cryptsetup_open (ei_x_buff *retbuff, const char *buff, int *idx)
   r = guestfs_cryptsetup_open_argv (g, device, key, mapname, optargs);
   if ((optargs_s.bitmask & GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK))
     free ((char *) optargs_s.crypttype);
+  if ((optargs_s.bitmask & GUESTFS_CRYPTSETUP_OPEN_CIPHER_BITMASK))
+    free ((char *) optargs_s.cipher);
   if (r == -1)
     return make_error (retbuff, "cryptsetup_open");
 

@@ -3285,8 +3285,6 @@ guestfs_int_ruby_part_get_bootable (VALUE gv, VALUE devicev, VALUE partnumv)
  *
  * [Since] Added in version 1.21.1.
  *
- * [Feature] This function depends on the feature +gdisk+.  See also {#feature_available}[rdoc-ref:feature_available].
- *
  * [C API] For the C API documentation for this function, see
  *         {guestfs_part_get_gpt_attributes}[http://libguestfs.org/guestfs.3.html#guestfs_part_get_gpt_attributes].
  */
@@ -3326,8 +3324,6 @@ guestfs_int_ruby_part_get_gpt_attributes (VALUE gv, VALUE devicev, VALUE partnum
  *
  *
  * [Since] Added in version 1.21.1.
- *
- * [Feature] This function depends on the feature +gdisk+.  See also {#feature_available}[rdoc-ref:feature_available].
  *
  * [C API] For the C API documentation for this function, see
  *         {guestfs_part_set_gpt_type}[http://libguestfs.org/guestfs.3.html#guestfs_part_set_gpt_type].

@@ -509,6 +509,26 @@ struct command_entry find_inode_cmd_entry = {
   .run = run_find_inode
 };
 
+struct command_entry findfs_partuuid_cmd_entry = {
+  .name = "findfs-partuuid",
+  .help = "NAME\n"
+          "    findfs-partuuid - find a partition by UUID\n"
+          "\n"
+          "SYNOPSIS\n"
+          "     findfs-partuuid uuid\n"
+          "\n"
+          "DESCRIPTION\n"
+          "    This command searches the partitions and returns the one which has the\n"
+          "    given partition UUID. An error is returned if no such partition can be\n"
+          "    found.\n"
+          "\n"
+          "    To find the UUID of a partition, use \"blkid\" (\"PART_ENTRY_UUID\").\n"
+          "\n"
+          "",
+  .synopsis = "findfs-partuuid uuid",
+  .run = run_findfs_partuuid
+};
+
 struct command_entry findfs_uuid_cmd_entry = {
   .name = "findfs-uuid",
   .help = "NAME\n"

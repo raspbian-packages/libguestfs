@@ -112,18 +112,12 @@
  * device. This is the default if the optional
  * protocol parameter is omitted.
  * 
- * "protocol = "ftp"|"ftps"|"http"|"https"|"tftp""
- * Connect to a remote FTP, HTTP or TFTP server.
- * The "server" parameter must also be supplied -
- * see below.
+ * "protocol = "ftp"|"ftps"|"http"|"https""
+ * Connect to a remote FTP or HTTP server. The
+ * "server" parameter must also be supplied - see
+ * below.
  * 
- * See also: "FTP, HTTP AND TFTP" in guestfs(3)
- * 
- * "protocol = "gluster""
- * Connect to the GlusterFS server. The "server"
- * parameter must also be supplied - see below.
- * 
- * See also: "GLUSTER" in guestfs(3)
+ * See also: "FTP AND HTTP" in guestfs(3)
  * 
  * "protocol = "iscsi""
  * Connect to the iSCSI server. The "server"
@@ -150,12 +144,6 @@
  * 
  * See also: "CEPH" in guestfs(3).
  * 
- * "protocol = "sheepdog""
- * Connect to the Sheepdog server. The "server"
- * parameter may also be supplied - see below.
- * 
- * See also: "SHEEPDOG" in guestfs(3).
- * 
  * "protocol = "ssh""
  * Connect to the Secure Shell (ssh) server.
  * 
@@ -171,12 +159,10 @@
  * Protocol       Number of servers required
  * --------       --------------------------
  * file           List must be empty or param not used at all
- * ftp|ftps|http|https|tftp  Exactly one
- * gluster        Exactly one
+ * ftp|ftps|http|https  Exactly one
  * iscsi          Exactly one
  * nbd            Exactly one
  * rbd            Zero or more
- * sheepdog       Zero or more
  * ssh            Exactly one
  * 
  * Each list element is a string specifying a server.
@@ -194,8 +180,8 @@
  * 
  * "username"
  * For the "ftp", "ftps", "http", "https", "iscsi",
- * "rbd", "ssh" and "tftp" protocols, this specifies
- * the remote username.
+ * "rbd" and "ssh" protocols, this specifies the remote
+ * username.
  * 
  * If not given, then the local username is used for
  * "ssh", and no authentication is attempted for ceph.
@@ -1248,6 +1234,9 @@ guestfs_int_ruby_egrep (VALUE gv, VALUE regexv, VALUE pathv)
  * "ppc64le"
  * 64 bit Power PC (little endian).
  * 
+ * "loongarch64"
+ * 64 bit LoongArch64 (little endian).
+ * 
  * "riscv32"
  * "riscv64"
  * "riscv128"
@@ -1326,6 +1315,46 @@ guestfs_int_ruby_file_architecture (VALUE gv, VALUE filenamev)
   char *r;
 
   r = guestfs_file_architecture (g, filename);
+  if (r == NULL)
+    rb_raise (e_Error, "%s", guestfs_last_error (g));
+
+  volatile VALUE rv = rb_str_new2 (r);
+  free (r);
+  return rv;
+}
+
+/*
+ * call-seq:
+ *   g.findfs_partlabel(label) -> string
+ *
+ * find a partition by label
+ *
+ * This command searches the partitions and returns the one
+ * which has the given label. An error is returned if no
+ * such partition can be found.
+ * 
+ * To find the label of a partition, use "g.blkid"
+ * ("PART_ENTRY_NAME").
+ *
+ *
+ * [Since] Added in version 1.53.5.
+ *
+ * [C API] For the C API documentation for this function, see
+ *         {guestfs_findfs_partlabel}[http://libguestfs.org/guestfs.3.html#guestfs_findfs_partlabel].
+ */
+VALUE
+guestfs_int_ruby_findfs_partlabel (VALUE gv, VALUE labelv)
+{
+  guestfs_h *g;
+  Data_Get_Struct (gv, guestfs_h, g);
+  if (!g)
+    rb_raise (rb_eArgError, "%s: used handle after closing it", "findfs_partlabel");
+
+  const char *label = StringValueCStr (labelv);
+
+  char *r;
+
+  r = guestfs_findfs_partlabel (g, label);
   if (r == NULL)
     rb_raise (e_Error, "%s", guestfs_last_error (g));
 
@@ -2827,8 +2856,6 @@ guestfs_int_ruby_parse_environment (VALUE gv)
  *
  * [Since] Added in version 1.33.2.
  *
- * [Feature] This function depends on the feature +gdisk+.  See also {#feature_available}[rdoc-ref:feature_available].
- *
  * [C API] For the C API documentation for this function, see
  *         {guestfs_part_get_disk_guid}[http://libguestfs.org/guestfs.3.html#guestfs_part_get_disk_guid].
  */
@@ -2973,8 +3000,6 @@ guestfs_int_ruby_part_set_bootable (VALUE gv, VALUE devicev, VALUE partnumv, VAL
  *
  * [Since] Added in version 1.21.1.
  *
- * [Feature] This function depends on the feature +gdisk+.  See also {#feature_available}[rdoc-ref:feature_available].
- *
  * [C API] For the C API documentation for this function, see
  *         {guestfs_part_set_gpt_attributes}[http://libguestfs.org/guestfs.3.html#guestfs_part_set_gpt_attributes].
  */
@@ -3011,8 +3036,6 @@ guestfs_int_ruby_part_set_gpt_attributes (VALUE gv, VALUE devicev, VALUE partnum
  *
  *
  * [Since] Added in version 1.29.25.
- *
- * [Feature] This function depends on the feature +gdisk+.  See also {#feature_available}[rdoc-ref:feature_available].
  *
  * [C API] For the C API documentation for this function, see
  *         {guestfs_part_set_gpt_guid}[http://libguestfs.org/guestfs.3.html#guestfs_part_set_gpt_guid].

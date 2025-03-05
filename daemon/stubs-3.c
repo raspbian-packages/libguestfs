@@ -40,8 +40,6 @@
 #include "stubs.h"
 #include "stubs-macros.h"
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_ACL_GET_FILE_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_acl_get_file_args)))
 
@@ -51,9 +49,6 @@ cleanup_xdr_free_acl_get_file_args (struct guestfs_acl_get_file_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_acl_get_file_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_ACL_GET_FILE_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 acl_get_file_stub (XDR *xdr_in)
@@ -112,8 +107,6 @@ aug_close_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_AUG_DEFNODE_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_aug_defnode_args)))
 
@@ -123,9 +116,6 @@ cleanup_xdr_free_aug_defnode_args (struct guestfs_aug_defnode_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_aug_defnode_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_AUG_DEFNODE_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 aug_defnode_stub (XDR *xdr_in)
@@ -161,8 +151,6 @@ aug_defnode_stub (XDR *xdr_in)
   xdr_free ((xdrproc_t) xdr_guestfs_aug_defnode_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_AUG_GET_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_aug_get_args)))
 
@@ -172,9 +160,6 @@ cleanup_xdr_free_aug_get_args (struct guestfs_aug_get_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_aug_get_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_AUG_GET_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 aug_get_stub (XDR *xdr_in)
@@ -223,8 +208,6 @@ aug_save_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_AUG_SETM_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_aug_setm_args)))
 
@@ -234,9 +217,6 @@ cleanup_xdr_free_aug_setm_args (struct guestfs_aug_setm_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_aug_setm_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_AUG_SETM_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 aug_setm_stub (XDR *xdr_in)
@@ -271,8 +251,6 @@ aug_setm_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_aug_setm_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_BLKDISCARD_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_blkdiscard_args)))
 
@@ -282,9 +260,6 @@ cleanup_xdr_free_blkdiscard_args (struct guestfs_blkdiscard_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_blkdiscard_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_BLKDISCARD_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 blkdiscard_stub (XDR *xdr_in)
@@ -319,8 +294,6 @@ blkdiscard_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_BLOCKDEV_GETSZ_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_blockdev_getsz_args)))
 
@@ -330,9 +303,6 @@ cleanup_xdr_free_blockdev_getsz_args (struct guestfs_blockdev_getsz_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_blockdev_getsz_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_BLOCKDEV_GETSZ_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 blockdev_getsz_stub (XDR *xdr_in)
@@ -363,8 +333,6 @@ blockdev_getsz_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_blockdev_getsz_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_BLOCKDEV_SETRO_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_blockdev_setro_args)))
 
@@ -374,9 +342,6 @@ cleanup_xdr_free_blockdev_setro_args (struct guestfs_blockdev_setro_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_blockdev_setro_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_BLOCKDEV_SETRO_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 blockdev_setro_stub (XDR *xdr_in)
@@ -405,8 +370,6 @@ blockdev_setro_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_BTRFS_BALANCE_STATUS_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_btrfs_balance_status_args)))
 
@@ -416,9 +379,6 @@ cleanup_xdr_free_btrfs_balance_status_args (struct guestfs_btrfs_balance_status_
   xdr_free ((xdrproc_t) xdr_guestfs_btrfs_balance_status_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_BTRFS_BALANCE_STATUS_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 btrfs_balance_status_stub (XDR *xdr_in)
@@ -458,8 +418,6 @@ btrfs_balance_status_stub (XDR *xdr_in)
   xdr_free ((xdrproc_t) xdr_guestfs_btrfs_balance_status_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_BTRFS_DEVICE_DELETE_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_btrfs_device_delete_args)))
 
@@ -469,9 +427,6 @@ cleanup_xdr_free_btrfs_device_delete_args (struct guestfs_btrfs_device_delete_ar
   xdr_free ((xdrproc_t) xdr_guestfs_btrfs_device_delete_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_BTRFS_DEVICE_DELETE_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 btrfs_device_delete_stub (XDR *xdr_in)
@@ -519,8 +474,6 @@ btrfs_device_delete_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_BTRFS_FILESYSTEM_DEFRAGMENT_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_btrfs_filesystem_defragment_args)))
 
@@ -530,9 +483,6 @@ cleanup_xdr_free_btrfs_filesystem_defragment_args (struct guestfs_btrfs_filesyst
   xdr_free ((xdrproc_t) xdr_guestfs_btrfs_filesystem_defragment_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_BTRFS_FILESYSTEM_DEFRAGMENT_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 btrfs_filesystem_defragment_stub (XDR *xdr_in)
@@ -573,8 +523,6 @@ btrfs_filesystem_defragment_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_BTRFS_FILESYSTEM_RESIZE_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_btrfs_filesystem_resize_args)))
 
@@ -584,9 +532,6 @@ cleanup_xdr_free_btrfs_filesystem_resize_args (struct guestfs_btrfs_filesystem_r
   xdr_free ((xdrproc_t) xdr_guestfs_btrfs_filesystem_resize_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_BTRFS_FILESYSTEM_RESIZE_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 btrfs_filesystem_resize_stub (XDR *xdr_in)
@@ -625,8 +570,6 @@ btrfs_filesystem_resize_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_BTRFS_FILESYSTEM_SYNC_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_btrfs_filesystem_sync_args)))
 
@@ -636,9 +579,6 @@ cleanup_xdr_free_btrfs_filesystem_sync_args (struct guestfs_btrfs_filesystem_syn
   xdr_free ((xdrproc_t) xdr_guestfs_btrfs_filesystem_sync_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_BTRFS_FILESYSTEM_SYNC_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 btrfs_filesystem_sync_stub (XDR *xdr_in)
@@ -675,8 +615,6 @@ btrfs_filesystem_sync_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_BTRFS_IMAGE_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_btrfs_image_args)))
 
@@ -686,9 +624,6 @@ cleanup_xdr_free_btrfs_image_args (struct guestfs_btrfs_image_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_btrfs_image_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_BTRFS_IMAGE_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 btrfs_image_stub (XDR *xdr_in)
@@ -738,8 +673,6 @@ btrfs_image_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_BTRFS_QGROUP_DESTROY_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_btrfs_qgroup_destroy_args)))
 
@@ -749,9 +682,6 @@ cleanup_xdr_free_btrfs_qgroup_destroy_args (struct guestfs_btrfs_qgroup_destroy_
   xdr_free ((xdrproc_t) xdr_guestfs_btrfs_qgroup_destroy_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_BTRFS_QGROUP_DESTROY_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 btrfs_qgroup_destroy_stub (XDR *xdr_in)
@@ -790,8 +720,6 @@ btrfs_qgroup_destroy_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_BTRFS_SUBVOLUME_DELETE_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_btrfs_subvolume_delete_args)))
 
@@ -801,9 +729,6 @@ cleanup_xdr_free_btrfs_subvolume_delete_args (struct guestfs_btrfs_subvolume_del
   xdr_free ((xdrproc_t) xdr_guestfs_btrfs_subvolume_delete_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_BTRFS_SUBVOLUME_DELETE_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 btrfs_subvolume_delete_stub (XDR *xdr_in)
@@ -840,8 +765,6 @@ btrfs_subvolume_delete_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_BTRFS_SUBVOLUME_LIST_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_btrfs_subvolume_list_args)))
 
@@ -851,9 +774,6 @@ cleanup_xdr_free_btrfs_subvolume_list_args (struct guestfs_btrfs_subvolume_list_
   xdr_free ((xdrproc_t) xdr_guestfs_btrfs_subvolume_list_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_BTRFS_SUBVOLUME_LIST_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 btrfs_subvolume_list_stub (XDR *xdr_in)
@@ -892,8 +812,6 @@ btrfs_subvolume_list_stub (XDR *xdr_in)
   xdr_free ((xdrproc_t) xdr_guestfs_btrfs_subvolume_list_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_BTRFSTUNE_ENABLE_SKINNY_METADATA_EXTENT_REFS_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_btrfstune_enable_skinny_metadata_extent_refs_args)))
 
@@ -903,9 +821,6 @@ cleanup_xdr_free_btrfstune_enable_skinny_metadata_extent_refs_args (struct guest
   xdr_free ((xdrproc_t) xdr_guestfs_btrfstune_enable_skinny_metadata_extent_refs_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_BTRFSTUNE_ENABLE_SKINNY_METADATA_EXTENT_REFS_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 btrfstune_enable_skinny_metadata_extent_refs_stub (XDR *xdr_in)
@@ -940,8 +855,6 @@ btrfstune_enable_skinny_metadata_extent_refs_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_CAP_GET_FILE_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_cap_get_file_args)))
 
@@ -951,9 +864,6 @@ cleanup_xdr_free_cap_get_file_args (struct guestfs_cap_get_file_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_cap_get_file_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_CAP_GET_FILE_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 cap_get_file_stub (XDR *xdr_in)
@@ -992,8 +902,6 @@ cap_get_file_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_cap_get_file_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_CHECKSUM_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_checksum_args)))
 
@@ -1003,9 +911,6 @@ cleanup_xdr_free_checksum_args (struct guestfs_checksum_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_checksum_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_CHECKSUM_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 checksum_stub (XDR *xdr_in)
@@ -1040,8 +945,6 @@ checksum_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_checksum_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_CHMOD_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_chmod_args)))
 
@@ -1051,9 +954,6 @@ cleanup_xdr_free_chmod_args (struct guestfs_chmod_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_chmod_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_CHMOD_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 chmod_stub (XDR *xdr_in)
@@ -1106,8 +1006,6 @@ dmesg_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_dmesg_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_DOWNLOAD_BLOCKS_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_download_blocks_args)))
 
@@ -1117,9 +1015,6 @@ cleanup_xdr_free_download_blocks_args (struct guestfs_download_blocks_args *args
   xdr_free ((xdrproc_t) xdr_guestfs_download_blocks_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_DOWNLOAD_BLOCKS_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 download_blocks_stub (XDR *xdr_in)
@@ -1161,8 +1056,6 @@ download_blocks_stub (XDR *xdr_in)
   /* do_download_blocks has already sent a reply */
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_DU_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_du_args)))
 
@@ -1172,9 +1065,6 @@ cleanup_xdr_free_du_args (struct guestfs_du_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_du_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_DU_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 du_stub (XDR *xdr_in)
@@ -1207,8 +1097,6 @@ du_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_du_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_E2FSCK_F_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_e2fsck_f_args)))
 
@@ -1218,9 +1106,6 @@ cleanup_xdr_free_e2fsck_f_args (struct guestfs_e2fsck_f_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_e2fsck_f_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_E2FSCK_F_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 e2fsck_f_stub (XDR *xdr_in)
@@ -1249,8 +1134,6 @@ e2fsck_f_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_ECHO_DAEMON_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_echo_daemon_args)))
 
@@ -1260,9 +1143,6 @@ cleanup_xdr_free_echo_daemon_args (struct guestfs_echo_daemon_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_echo_daemon_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_ECHO_DAEMON_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 echo_daemon_stub (XDR *xdr_in)
@@ -1301,8 +1181,6 @@ echo_daemon_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_echo_daemon_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_EQUAL_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_equal_args)))
 
@@ -1312,9 +1190,6 @@ cleanup_xdr_free_equal_args (struct guestfs_equal_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_equal_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_EQUAL_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 equal_stub (XDR *xdr_in)
@@ -1350,8 +1225,6 @@ equal_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_equal_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_FGREPI_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_fgrepi_args)))
 
@@ -1361,9 +1234,6 @@ cleanup_xdr_free_fgrepi_args (struct guestfs_fgrepi_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_fgrepi_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_FGREPI_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 fgrepi_stub (XDR *xdr_in)
@@ -1399,8 +1269,6 @@ fgrepi_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_fgrepi_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_GET_E2LABEL_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_get_e2label_args)))
 
@@ -1410,9 +1278,6 @@ cleanup_xdr_free_get_e2label_args (struct guestfs_get_e2label_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_get_e2label_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_GET_E2LABEL_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 get_e2label_stub (XDR *xdr_in)
@@ -1469,8 +1334,6 @@ getcon_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_getcon_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_GETXATTR_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_getxattr_args)))
 
@@ -1480,9 +1343,6 @@ cleanup_xdr_free_getxattr_args (struct guestfs_getxattr_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_getxattr_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_GETXATTR_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 getxattr_stub (XDR *xdr_in)
@@ -1552,8 +1412,6 @@ hivex_close_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_HIVEX_OPEN_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_hivex_open_args)))
 
@@ -1563,9 +1421,6 @@ cleanup_xdr_free_hivex_open_args (struct guestfs_hivex_open_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_hivex_open_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_HIVEX_OPEN_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 hivex_open_stub (XDR *xdr_in)
@@ -1610,8 +1465,6 @@ hivex_open_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_HIVEX_VALUE_UTF8_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_hivex_value_utf8_args)))
 
@@ -1621,9 +1474,6 @@ cleanup_xdr_free_hivex_value_utf8_args (struct guestfs_hivex_value_utf8_args *ar
   xdr_free ((xdrproc_t) xdr_guestfs_hivex_value_utf8_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_HIVEX_VALUE_UTF8_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 hivex_value_utf8_stub (XDR *xdr_in)
@@ -1660,8 +1510,6 @@ hivex_value_utf8_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_hivex_value_utf8_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_INOTIFY_ADD_WATCH_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_inotify_add_watch_args)))
 
@@ -1671,9 +1519,6 @@ cleanup_xdr_free_inotify_add_watch_args (struct guestfs_inotify_add_watch_args *
   xdr_free ((xdrproc_t) xdr_guestfs_inotify_add_watch_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_INOTIFY_ADD_WATCH_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 inotify_add_watch_stub (XDR *xdr_in)
@@ -1714,8 +1559,6 @@ inotify_add_watch_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_inotify_add_watch_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_INOTIFY_INIT_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_inotify_init_args)))
 
@@ -1725,9 +1568,6 @@ cleanup_xdr_free_inotify_init_args (struct guestfs_inotify_init_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_inotify_init_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_INOTIFY_INIT_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 inotify_init_stub (XDR *xdr_in)
@@ -1762,8 +1602,6 @@ inotify_init_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_INSPECT_GET_TYPE_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_inspect_get_type_args)))
 
@@ -1773,9 +1611,6 @@ cleanup_xdr_free_inspect_get_type_args (struct guestfs_inspect_get_type_args *ar
   xdr_free ((xdrproc_t) xdr_guestfs_inspect_get_type_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_INSPECT_GET_TYPE_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 inspect_get_type_stub (XDR *xdr_in)
@@ -1807,8 +1642,6 @@ inspect_get_type_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_inspect_get_type_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_INSPECT_IS_LIVE_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_inspect_is_live_args)))
 
@@ -1818,9 +1651,6 @@ cleanup_xdr_free_inspect_is_live_args (struct guestfs_inspect_is_live_args *args
   xdr_free ((xdrproc_t) xdr_guestfs_inspect_is_live_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_INSPECT_IS_LIVE_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 inspect_is_live_stub (XDR *xdr_in)
@@ -1870,8 +1700,6 @@ internal_exit_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_INTERNAL_YARA_SCAN_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_internal_yara_scan_args)))
 
@@ -1881,9 +1709,6 @@ cleanup_xdr_free_internal_yara_scan_args (struct guestfs_internal_yara_scan_args
   xdr_free ((xdrproc_t) xdr_guestfs_internal_yara_scan_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_INTERNAL_YARA_SCAN_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 internal_yara_scan_stub (XDR *xdr_in)
@@ -1920,8 +1745,6 @@ internal_yara_scan_stub (XDR *xdr_in)
   /* do_internal_yara_scan has already sent a reply */
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_IS_DIR_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_is_dir_args)))
 
@@ -1931,9 +1754,6 @@ cleanup_xdr_free_is_dir_args (struct guestfs_is_dir_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_is_dir_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_IS_DIR_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 is_dir_stub (XDR *xdr_in)
@@ -1968,8 +1788,6 @@ is_dir_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_is_dir_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_IS_FILE_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_is_file_args)))
 
@@ -1979,9 +1797,6 @@ cleanup_xdr_free_is_file_args (struct guestfs_is_file_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_is_file_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_IS_FILE_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 is_file_stub (XDR *xdr_in)
@@ -2016,8 +1831,6 @@ is_file_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_is_file_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_IS_WHOLE_DEVICE_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_is_whole_device_args)))
 
@@ -2027,9 +1840,6 @@ cleanup_xdr_free_is_whole_device_args (struct guestfs_is_whole_device_args *args
   xdr_free ((xdrproc_t) xdr_guestfs_is_whole_device_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_IS_WHOLE_DEVICE_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 is_whole_device_stub (XDR *xdr_in)
@@ -2060,8 +1870,6 @@ is_whole_device_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_is_whole_device_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_IS_ZERO_DEVICE_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_is_zero_device_args)))
 
@@ -2071,9 +1879,6 @@ cleanup_xdr_free_is_zero_device_args (struct guestfs_is_zero_device_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_is_zero_device_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_IS_ZERO_DEVICE_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 is_zero_device_stub (XDR *xdr_in)
@@ -2130,8 +1935,6 @@ journal_get_realtime_usec_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_journal_get_realtime_usec_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_JOURNAL_SET_DATA_THRESHOLD_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_journal_set_data_threshold_args)))
 
@@ -2141,9 +1944,6 @@ cleanup_xdr_free_journal_set_data_threshold_args (struct guestfs_journal_set_dat
   xdr_free ((xdrproc_t) xdr_guestfs_journal_set_data_threshold_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_JOURNAL_SET_DATA_THRESHOLD_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 journal_set_data_threshold_stub (XDR *xdr_in)
@@ -2202,8 +2002,6 @@ ldmtool_remove_all_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_LDMTOOL_VOLUME_HINT_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_ldmtool_volume_hint_args)))
 
@@ -2213,9 +2011,6 @@ cleanup_xdr_free_ldmtool_volume_hint_args (struct guestfs_ldmtool_volume_hint_ar
   xdr_free ((xdrproc_t) xdr_guestfs_ldmtool_volume_hint_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_LDMTOOL_VOLUME_HINT_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 ldmtool_volume_hint_stub (XDR *xdr_in)
@@ -2254,8 +2049,6 @@ ldmtool_volume_hint_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_ldmtool_volume_hint_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_LDMTOOL_VOLUME_TYPE_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_ldmtool_volume_type_args)))
 
@@ -2265,9 +2058,6 @@ cleanup_xdr_free_ldmtool_volume_type_args (struct guestfs_ldmtool_volume_type_ar
   xdr_free ((xdrproc_t) xdr_guestfs_ldmtool_volume_type_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_LDMTOOL_VOLUME_TYPE_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 ldmtool_volume_type_stub (XDR *xdr_in)
@@ -2366,8 +2156,6 @@ list_filesystems_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_list_filesystems_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_LS0_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_ls0_args)))
 
@@ -2377,9 +2165,6 @@ cleanup_xdr_free_ls0_args (struct guestfs_ls0_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_ls0_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_LS0_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 ls0_stub (XDR *xdr_in)
@@ -2410,8 +2195,6 @@ ls0_stub (XDR *xdr_in)
   /* do_ls0 has already sent a reply */
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_LSTATNS_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_lstatns_args)))
 
@@ -2421,9 +2204,6 @@ cleanup_xdr_free_lstatns_args (struct guestfs_lstatns_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_lstatns_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_LSTATNS_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 lstatns_stub (XDR *xdr_in)
@@ -2457,8 +2237,6 @@ lstatns_stub (XDR *xdr_in)
   xdr_free ((xdrproc_t) xdr_guestfs_lstatns_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_LUKS_UUID_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_luks_uuid_args)))
 
@@ -2468,9 +2246,6 @@ cleanup_xdr_free_luks_uuid_args (struct guestfs_luks_uuid_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_luks_uuid_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_LUKS_UUID_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 luks_uuid_stub (XDR *xdr_in)
@@ -2507,8 +2282,6 @@ luks_uuid_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_luks_uuid_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_MKDIR_MODE_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_mkdir_mode_args)))
 
@@ -2518,9 +2291,6 @@ cleanup_xdr_free_mkdir_mode_args (struct guestfs_mkdir_mode_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_mkdir_mode_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_MKDIR_MODE_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 mkdir_mode_stub (XDR *xdr_in)
@@ -2553,8 +2323,6 @@ mkdir_mode_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_MKDIR_P_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_mkdir_p_args)))
 
@@ -2564,9 +2332,6 @@ cleanup_xdr_free_mkdir_p_args (struct guestfs_mkdir_p_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_mkdir_p_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_MKDIR_P_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 mkdir_p_stub (XDR *xdr_in)
@@ -2597,8 +2362,6 @@ mkdir_p_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_MKE2FS_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_mke2fs_args)))
 
@@ -2608,9 +2371,6 @@ cleanup_xdr_free_mke2fs_args (struct guestfs_mke2fs_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_mke2fs_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_MKE2FS_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 mke2fs_stub (XDR *xdr_in)
@@ -2715,8 +2475,6 @@ mke2fs_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_MKE2FS_JL_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_mke2fs_JL_args)))
 
@@ -2726,9 +2484,6 @@ cleanup_xdr_free_mke2fs_JL_args (struct guestfs_mke2fs_JL_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_mke2fs_JL_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_MKE2FS_JL_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 mke2fs_JL_stub (XDR *xdr_in)
@@ -2763,8 +2518,6 @@ mke2fs_JL_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_MKE2FS_JU_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_mke2fs_JU_args)))
 
@@ -2774,9 +2527,6 @@ cleanup_xdr_free_mke2fs_JU_args (struct guestfs_mke2fs_JU_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_mke2fs_JU_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_MKE2FS_JU_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 mke2fs_JU_stub (XDR *xdr_in)
@@ -2817,8 +2567,6 @@ mke2fs_JU_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_MKE2JOURNAL_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_mke2journal_args)))
 
@@ -2828,9 +2576,6 @@ cleanup_xdr_free_mke2journal_args (struct guestfs_mke2journal_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_mke2journal_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_MKE2JOURNAL_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 mke2journal_stub (XDR *xdr_in)
@@ -2861,8 +2606,6 @@ mke2journal_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_MKNOD_B_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_mknod_b_args)))
 
@@ -2872,9 +2615,6 @@ cleanup_xdr_free_mknod_b_args (struct guestfs_mknod_b_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_mknod_b_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_MKNOD_B_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 mknod_b_stub (XDR *xdr_in)
@@ -2917,8 +2657,6 @@ mknod_b_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_NTFSRESIZE_SIZE_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_ntfsresize_size_args)))
 
@@ -2928,9 +2666,6 @@ cleanup_xdr_free_ntfsresize_size_args (struct guestfs_ntfsresize_size_args *args
   xdr_free ((xdrproc_t) xdr_guestfs_ntfsresize_size_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_NTFSRESIZE_SIZE_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 ntfsresize_size_stub (XDR *xdr_in)
@@ -2967,8 +2702,6 @@ ntfsresize_size_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_PART_DEL_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_part_del_args)))
 
@@ -2978,9 +2711,6 @@ cleanup_xdr_free_part_del_args (struct guestfs_part_del_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_part_del_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_PART_DEL_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 part_del_stub (XDR *xdr_in)
@@ -3011,8 +2741,6 @@ part_del_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_PART_GET_GPT_TYPE_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_part_get_gpt_type_args)))
 
@@ -3022,9 +2750,6 @@ cleanup_xdr_free_part_get_gpt_type_args (struct guestfs_part_get_gpt_type_args *
   xdr_free ((xdrproc_t) xdr_guestfs_part_get_gpt_type_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_PART_GET_GPT_TYPE_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 part_get_gpt_type_stub (XDR *xdr_in)
@@ -3034,12 +2759,6 @@ part_get_gpt_type_stub (XDR *xdr_in)
   memset (&args, 0, sizeof args);
   CLEANUP_FREE char *device = NULL;
   int partnum;
-
-  /* The caller should have checked before calling this. */
-  if (! optgroup_gdisk_available ()) {
-    reply_with_unavailable_feature ("gdisk");
-    return;
-  }
 
   if (optargs_bitmask != 0) {
     reply_with_error ("header optargs_bitmask field must be passed as 0 for calls that don't take optional arguments");
@@ -3081,8 +2800,6 @@ ping_daemon_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_RM_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_rm_args)))
 
@@ -3092,9 +2809,6 @@ cleanup_xdr_free_rm_args (struct guestfs_rm_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_rm_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_RM_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 rm_stub (XDR *xdr_in)
@@ -3125,8 +2839,6 @@ rm_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_RMDIR_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_rmdir_args)))
 
@@ -3136,9 +2848,6 @@ cleanup_xdr_free_rmdir_args (struct guestfs_rmdir_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_rmdir_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_RMDIR_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 rmdir_stub (XDR *xdr_in)
@@ -3169,8 +2878,6 @@ rmdir_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_RSYNC_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_rsync_args)))
 
@@ -3180,9 +2887,6 @@ cleanup_xdr_free_rsync_args (struct guestfs_rsync_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_rsync_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_RSYNC_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 rsync_stub (XDR *xdr_in)
@@ -3226,8 +2930,6 @@ rsync_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_SET_UUID_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_set_uuid_args)))
 
@@ -3237,9 +2939,6 @@ cleanup_xdr_free_set_uuid_args (struct guestfs_set_uuid_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_set_uuid_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_SET_UUID_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 set_uuid_stub (XDR *xdr_in)
@@ -3270,8 +2969,6 @@ set_uuid_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_SETCON_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_setcon_args)))
 
@@ -3281,9 +2978,6 @@ cleanup_xdr_free_setcon_args (struct guestfs_setcon_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_setcon_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_SETCON_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 setcon_stub (XDR *xdr_in)
@@ -3318,8 +3012,6 @@ setcon_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_STATVFS_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_statvfs_args)))
 
@@ -3329,9 +3021,6 @@ cleanup_xdr_free_statvfs_args (struct guestfs_statvfs_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_statvfs_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_STATVFS_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 statvfs_stub (XDR *xdr_in)
@@ -3365,8 +3054,6 @@ statvfs_stub (XDR *xdr_in)
   xdr_free ((xdrproc_t) xdr_guestfs_statvfs_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_STRINGS_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_strings_args)))
 
@@ -3376,9 +3063,6 @@ cleanup_xdr_free_strings_args (struct guestfs_strings_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_strings_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_STRINGS_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 strings_stub (XDR *xdr_in)
@@ -3412,8 +3096,6 @@ strings_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_strings_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_SWAPOFF_LABEL_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_swapoff_label_args)))
 
@@ -3423,9 +3105,6 @@ cleanup_xdr_free_swapoff_label_args (struct guestfs_swapoff_label_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_swapoff_label_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_SWAPOFF_LABEL_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 swapoff_label_stub (XDR *xdr_in)
@@ -3454,8 +3133,6 @@ swapoff_label_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_SWAPOFF_UUID_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_swapoff_uuid_args)))
 
@@ -3465,9 +3142,6 @@ cleanup_xdr_free_swapoff_uuid_args (struct guestfs_swapoff_uuid_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_swapoff_uuid_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_SWAPOFF_UUID_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 swapoff_uuid_stub (XDR *xdr_in)
@@ -3502,8 +3176,6 @@ swapoff_uuid_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_TAR_IN_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_tar_in_args)))
 
@@ -3513,9 +3185,6 @@ cleanup_xdr_free_tar_in_args (struct guestfs_tar_in_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_tar_in_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_TAR_IN_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 tar_in_stub (XDR *xdr_in)
@@ -3556,8 +3225,6 @@ tar_in_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_TRUNCATE_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_truncate_args)))
 
@@ -3567,9 +3234,6 @@ cleanup_xdr_free_truncate_args (struct guestfs_truncate_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_truncate_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_TRUNCATE_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 truncate_stub (XDR *xdr_in)
@@ -3600,8 +3264,6 @@ truncate_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_TUNE2FS_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_tune2fs_args)))
 
@@ -3611,9 +3273,6 @@ cleanup_xdr_free_tune2fs_args (struct guestfs_tune2fs_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_tune2fs_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_TUNE2FS_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 tune2fs_stub (XDR *xdr_in)
@@ -3662,8 +3321,6 @@ tune2fs_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_UPLOAD_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_upload_args)))
 
@@ -3673,9 +3330,6 @@ cleanup_xdr_free_upload_args (struct guestfs_upload_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_upload_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_UPLOAD_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 upload_stub (XDR *xdr_in)
@@ -3706,8 +3360,6 @@ upload_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_UTIMENS_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_utimens_args)))
 
@@ -3717,9 +3369,6 @@ cleanup_xdr_free_utimens_args (struct guestfs_utimens_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_utimens_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_UTIMENS_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 utimens_stub (XDR *xdr_in)
@@ -3758,8 +3407,6 @@ utimens_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_VFS_MINIMUM_SIZE_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_vfs_minimum_size_args)))
 
@@ -3769,9 +3416,6 @@ cleanup_xdr_free_vfs_minimum_size_args (struct guestfs_vfs_minimum_size_args *ar
   xdr_free ((xdrproc_t) xdr_guestfs_vfs_minimum_size_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_VFS_MINIMUM_SIZE_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 vfs_minimum_size_stub (XDR *xdr_in)
@@ -3803,8 +3447,6 @@ vfs_minimum_size_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_vfs_minimum_size_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_VFS_UUID_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_vfs_uuid_args)))
 
@@ -3814,9 +3456,6 @@ cleanup_xdr_free_vfs_uuid_args (struct guestfs_vfs_uuid_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_vfs_uuid_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_VFS_UUID_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 vfs_uuid_stub (XDR *xdr_in)
@@ -3875,8 +3514,6 @@ vgs_stub (XDR *xdr_in)
   reply ((xdrproc_t) &xdr_guestfs_vgs_ret, (char *) &ret);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_WRITE_FILE_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_write_file_args)))
 
@@ -3886,9 +3523,6 @@ cleanup_xdr_free_write_file_args (struct guestfs_write_file_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_write_file_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_WRITE_FILE_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 write_file_stub (XDR *xdr_in)
@@ -3923,8 +3557,6 @@ write_file_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_ZERO_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_zero_args)))
 
@@ -3934,9 +3566,6 @@ cleanup_xdr_free_zero_args (struct guestfs_zero_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_zero_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_ZERO_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 zero_stub (XDR *xdr_in)
@@ -3965,8 +3594,6 @@ zero_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_ZEROFREE_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_zerofree_args)))
 
@@ -3976,9 +3603,6 @@ cleanup_xdr_free_zerofree_args (struct guestfs_zerofree_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_zerofree_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_ZEROFREE_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 zerofree_stub (XDR *xdr_in)
@@ -4013,8 +3637,6 @@ zerofree_stub (XDR *xdr_in)
   reply (NULL, NULL);
 }
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
-
 #define CLEANUP_XDR_FREE_ZGREPI_ARGS \
     __attribute__((cleanup(cleanup_xdr_free_zgrepi_args)))
 
@@ -4024,9 +3646,6 @@ cleanup_xdr_free_zgrepi_args (struct guestfs_zgrepi_args *argsp)
   xdr_free ((xdrproc_t) xdr_guestfs_zgrepi_args, (char *) argsp);
 }
 
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_XDR_FREE_ZGREPI_ARGS
-#endif /* !HAVE_ATTRIBUTE_CLEANUP */
 
 void
 zgrepi_stub (XDR *xdr_in)

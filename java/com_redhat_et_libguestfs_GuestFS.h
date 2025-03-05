@@ -1000,10 +1000,10 @@ JNIEXPORT void JNICALL Java_com_redhat_et_libguestfs_GuestFS__1cryptsetup_1close
 /*
  * Class:     com_redhat_et_libguestfs_GuestFS
  * Method:    _cryptsetup_open
- * Signature: (JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;JZLjava/lang/String;)V
+ * Signature: (JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;JZLjava/lang/String;Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_com_redhat_et_libguestfs_GuestFS__1cryptsetup_1open
-  (JNIEnv *, jobject, jlong, jstring, jstring, jstring, jlong, jboolean, jstring);
+  (JNIEnv *, jobject, jlong, jstring, jstring, jstring, jlong, jboolean, jstring, jstring);
 
 /*
  * Class:     com_redhat_et_libguestfs_GuestFS
@@ -1363,6 +1363,22 @@ JNIEXPORT jobjectArray JNICALL Java_com_redhat_et_libguestfs_GuestFS__1find_1ino
  * Signature: (JLjava/lang/String;)Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_com_redhat_et_libguestfs_GuestFS__1findfs_1label
+  (JNIEnv *, jobject, jlong, jstring);
+
+/*
+ * Class:     com_redhat_et_libguestfs_GuestFS
+ * Method:    _findfs_partlabel
+ * Signature: (JLjava/lang/String;)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_redhat_et_libguestfs_GuestFS__1findfs_1partlabel
+  (JNIEnv *, jobject, jlong, jstring);
+
+/*
+ * Class:     com_redhat_et_libguestfs_GuestFS
+ * Method:    _findfs_partuuid
+ * Signature: (JLjava/lang/String;)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_redhat_et_libguestfs_GuestFS__1findfs_1partuuid
   (JNIEnv *, jobject, jlong, jstring);
 
 /*

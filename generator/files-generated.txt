@@ -6,6 +6,8 @@ common/mlcustomize/customize-options.pod
 common/mlcustomize/customize-synopsis.pod
 common/mlcustomize/customize_cmdline.ml
 common/mlcustomize/customize_cmdline.mli
+common/mlcustomize/v2v-customize-options.pod
+common/mlcustomize/v2v-customize-synopsis.pod
 common/mlv2v/uefi.ml
 common/mlv2v/uefi.mli
 common/protocol/guestfs_protocol.x
@@ -44,6 +46,7 @@ daemon/optgroups.mli
 daemon/parted.mli
 daemon/realpath.mli
 daemon/rpm.mli
+daemon/sfdisk.mli
 daemon/statvfs.mli
 daemon/structs-cleanups.c
 daemon/structs-cleanups.h

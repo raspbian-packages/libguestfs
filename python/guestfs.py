@@ -454,18 +454,12 @@ class GuestFS(object):
         device. This is the default if the optional
         protocol parameter is omitted.
 
-        "protocol = "ftp"|"ftps"|"http"|"https"|"tftp""
-        Connect to a remote FTP, HTTP or TFTP server.
-        The "server" parameter must also be supplied -
-        see below.
+        "protocol = "ftp"|"ftps"|"http"|"https""
+        Connect to a remote FTP or HTTP server. The
+        "server" parameter must also be supplied - see
+        below.
 
-        See also: "FTP, HTTP AND TFTP" in guestfs(3)
-
-        "protocol = "gluster""
-        Connect to the GlusterFS server. The "server"
-        parameter must also be supplied - see below.
-
-        See also: "GLUSTER" in guestfs(3)
+        See also: "FTP AND HTTP" in guestfs(3)
 
         "protocol = "iscsi""
         Connect to the iSCSI server. The "server"
@@ -492,12 +486,6 @@ class GuestFS(object):
 
         See also: "CEPH" in guestfs(3).
 
-        "protocol = "sheepdog""
-        Connect to the Sheepdog server. The "server"
-        parameter may also be supplied - see below.
-
-        See also: "SHEEPDOG" in guestfs(3).
-
         "protocol = "ssh""
         Connect to the Secure Shell (ssh) server.
 
@@ -513,12 +501,10 @@ class GuestFS(object):
         Protocol       Number of servers required
         --------       --------------------------
         file           List must be empty or param not used at all
-        ftp|ftps|http|https|tftp  Exactly one
-        gluster        Exactly one
+        ftp|ftps|http|https  Exactly one
         iscsi          Exactly one
         nbd            Exactly one
         rbd            Zero or more
-        sheepdog       Zero or more
         ssh            Exactly one
 
         Each list element is a string specifying a server.
@@ -536,8 +522,8 @@ class GuestFS(object):
 
         "username"
         For the "ftp", "ftps", "http", "https", "iscsi",
-        "rbd", "ssh" and "tftp" protocols, this specifies
-        the remote username.
+        "rbd" and "ssh" protocols, this specifies the remote
+        username.
 
         If not given, then the local username is used for
         "ssh", and no authentication is attempted for ceph.
@@ -1912,6 +1898,11 @@ class GuestFS(object):
         Compute the cyclic redundancy check (CRC) specified
         by POSIX for the "cksum" command.
 
+        "gost"
+        "gost12"
+        Compute the checksum using GOST R34.11-94 or GOST
+        R34.11-2012 message digest.
+
         "md5"
         Compute the MD5 hash (using the md5sum(1) program).
 
@@ -2409,7 +2400,8 @@ class GuestFS(object):
 
     def cryptsetup_open(self, device: str, key: str, mapname: str,
                         readonly: Optional[bool] = None,
-                        crypttype: Optional[str] = None) -> None:
+                        crypttype: Optional[str] = None,
+                        cipher: Optional[str] = None) -> None:
         """This command opens a block device which has been
         encrypted according to the Linux Unified Key Setup
         (LUKS) standard, Windows BitLocker, or some other types.
@@ -2441,6 +2433,9 @@ class GuestFS(object):
         The optional "readonly" flag, if set to true, creates a
         read-only mapping.
 
+        The optional "cipher" parameter allows specifying which
+        cipher to use.
+
         If this block device contains LVM volume groups, then
         calling "g.lvm_scan" with the "activate" parameter
         "true" will make them visible.
@@ -2453,7 +2448,7 @@ class GuestFS(object):
         """
         self._check_not_closed()
         r = libguestfsmod.cryptsetup_open(self._o, device, key, mapname,
-                                          readonly, crypttype)
+                                          readonly, crypttype, cipher)
         return r
 
     def dd(self, src: str, dest: str) -> None:
@@ -3095,6 +3090,9 @@ class GuestFS(object):
         "ppc64le"
         64 bit Power PC (little endian).
 
+        "loongarch64"
+        64 bit LoongArch64 (little endian).
+
         "riscv32"
         "riscv64"
         "riscv128"
@@ -3416,6 +3414,30 @@ class GuestFS(object):
         """
         self._check_not_closed()
         r = libguestfsmod.findfs_label(self._o, label)
+        return r
+
+    def findfs_partlabel(self, label: str) -> str:
+        """This command searches the partitions and returns the one
+        which has the given label. An error is returned if no
+        such partition can be found.
+
+        To find the label of a partition, use "g.blkid"
+        ("PART_ENTRY_NAME").
+        """
+        self._check_not_closed()
+        r = libguestfsmod.findfs_partlabel(self._o, label)
+        return r
+
+    def findfs_partuuid(self, uuid: str) -> str:
+        """This command searches the partitions and returns the one
+        which has the given partition UUID. An error is returned
+        if no such partition can be found.
+
+        To find the UUID of a partition, use "g.blkid"
+        ("PART_ENTRY_UUID").
+        """
+        self._check_not_closed()
+        r = libguestfsmod.findfs_partuuid(self._o, uuid)
         return r
 
     def findfs_uuid(self, uuid: str) -> str:
@@ -4728,6 +4750,9 @@ class GuestFS(object):
         "centos"
         CentOS.
 
+        "circle"
+        Circle Linux.
+
         "cirros"
         Cirros.
 
@@ -4781,6 +4806,9 @@ class GuestFS(object):
 
         "openbsd"
         OpenBSD.
+
+        "openeuler"
+        openEuler.
 
         "openmandriva"
         OpenMandriva Lx.
@@ -8523,9 +8551,6 @@ class GuestFS(object):
         """Return the disk identifier (GUID) of a GPT-partitioned
         "device". Behaviour is undefined for other partition
         types.
-
-        This function depends on the feature "gdisk". See also
-        "g.feature-available".
         """
         self._check_not_closed()
         r = libguestfsmod.part_get_disk_guid(self._o, device)
@@ -8534,9 +8559,6 @@ class GuestFS(object):
     def part_get_gpt_attributes(self, device: str, partnum: int) -> int:
         """Return the attribute flags of numbered GPT partition
         "partnum". An error is returned for MBR partitions.
-
-        This function depends on the feature "gdisk". See also
-        "g.feature-available".
         """
         self._check_not_closed()
         r = libguestfsmod.part_get_gpt_attributes(self._o, device, partnum)
@@ -8544,9 +8566,6 @@ class GuestFS(object):
 
     def part_get_gpt_guid(self, device: str, partnum: int) -> str:
         """Return the GUID of numbered GPT partition "partnum".
-
-        This function depends on the feature "gdisk". See also
-        "g.feature-available".
         """
         self._check_not_closed()
         r = libguestfsmod.part_get_gpt_guid(self._o, device, partnum)
@@ -8555,9 +8574,6 @@ class GuestFS(object):
     def part_get_gpt_type(self, device: str, partnum: int) -> str:
         """Return the type GUID of numbered GPT partition
         "partnum".
-
-        This function depends on the feature "gdisk". See also
-        "g.feature-available".
         """
         self._check_not_closed()
         r = libguestfsmod.part_get_gpt_type(self._o, device, partnum)
@@ -8732,9 +8748,6 @@ class GuestFS(object):
         "device" to "guid". Return an error if the partition
         table of "device" isn't GPT, or if "guid" is not a valid
         GUID.
-
-        This function depends on the feature "gdisk". See also
-        "g.feature-available".
         """
         self._check_not_closed()
         r = libguestfsmod.part_set_disk_guid(self._o, device, guid)
@@ -8744,9 +8757,6 @@ class GuestFS(object):
         """Set the disk identifier (GUID) of a GPT-partitioned
         "device" to a randomly generated value. Return an error
         if the partition table of "device" isn't GPT.
-
-        This function depends on the feature "gdisk". See also
-        "g.feature-available".
         """
         self._check_not_closed()
         r = libguestfsmod.part_set_disk_guid_random(self._o, device)
@@ -8762,9 +8772,6 @@ class GuestFS(object):
         <https://en.wikipedia.org/wiki/GUID_Partition_Table#Part
         ition_entries> for a useful list of partition
         attributes.
-
-        This function depends on the feature "gdisk". See also
-        "g.feature-available".
         """
         self._check_not_closed()
         r = libguestfsmod.part_set_gpt_attributes(self._o, device, partnum,
@@ -8775,9 +8782,6 @@ class GuestFS(object):
         """Set the GUID of numbered GPT partition "partnum" to
         "guid". Return an error if the partition table of
         "device" isn't GPT, or if "guid" is not a valid GUID.
-
-        This function depends on the feature "gdisk". See also
-        "g.feature-available".
         """
         self._check_not_closed()
         r = libguestfsmod.part_set_gpt_guid(self._o, device, partnum, guid)
@@ -8791,9 +8795,6 @@ class GuestFS(object):
         See
         <https://en.wikipedia.org/wiki/GUID_Partition_Table#Part
         ition_type_GUIDs> for a useful list of type GUIDs.
-
-        This function depends on the feature "gdisk". See also
-        "g.feature-available".
         """
         self._check_not_closed()
         r = libguestfsmod.part_set_gpt_type(self._o, device, partnum, guid)

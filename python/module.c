@@ -524,6 +524,12 @@ static PyMethodDef methods[] = {
 #ifdef GUESTFS_HAVE_FINDFS_LABEL
   { (char *) "findfs_label", guestfs_int_py_findfs_label, METH_VARARGS, NULL },
 #endif
+#ifdef GUESTFS_HAVE_FINDFS_PARTLABEL
+  { (char *) "findfs_partlabel", guestfs_int_py_findfs_partlabel, METH_VARARGS, NULL },
+#endif
+#ifdef GUESTFS_HAVE_FINDFS_PARTUUID
+  { (char *) "findfs_partuuid", guestfs_int_py_findfs_partuuid, METH_VARARGS, NULL },
+#endif
 #ifdef GUESTFS_HAVE_FINDFS_UUID
   { (char *) "findfs_uuid", guestfs_int_py_findfs_uuid, METH_VARARGS, NULL },
 #endif

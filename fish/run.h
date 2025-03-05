@@ -187,6 +187,8 @@ extern int run_find (const char *cmd, size_t argc, char *argv[]);
 extern int run_find0 (const char *cmd, size_t argc, char *argv[]);
 extern int run_find_inode (const char *cmd, size_t argc, char *argv[]);
 extern int run_findfs_label (const char *cmd, size_t argc, char *argv[]);
+extern int run_findfs_partlabel (const char *cmd, size_t argc, char *argv[]);
+extern int run_findfs_partuuid (const char *cmd, size_t argc, char *argv[]);
 extern int run_findfs_uuid (const char *cmd, size_t argc, char *argv[]);
 extern int run_fsck (const char *cmd, size_t argc, char *argv[]);
 extern int run_fstrim (const char *cmd, size_t argc, char *argv[]);

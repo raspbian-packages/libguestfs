@@ -804,6 +804,7 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_cryptsetup_open, 0, 0, 4)
   ZEND_ARG_INFO(0, mapname)
   ZEND_ARG_INFO(0, readonly)
   ZEND_ARG_INFO(0, crypttype)
+  ZEND_ARG_INFO(0, cipher)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(arginfo_dd, 0, 0, 3)
@@ -1062,6 +1063,16 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO_EX(arginfo_findfs_label, 0, 0, 2)
   ZEND_ARG_INFO(0, g)
   ZEND_ARG_INFO(0, label)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_findfs_partlabel, 0, 0, 2)
+  ZEND_ARG_INFO(0, g)
+  ZEND_ARG_INFO(0, label)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_findfs_partuuid, 0, 0, 2)
+  ZEND_ARG_INFO(0, g)
+  ZEND_ARG_INFO(0, uuid)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(arginfo_findfs_uuid, 0, 0, 2)
@@ -3931,6 +3942,8 @@ static zend_function_entry guestfs_php_functions[] = {
   PHP_FE (guestfs_find0, arginfo_find0)
   PHP_FE (guestfs_find_inode, arginfo_find_inode)
   PHP_FE (guestfs_findfs_label, arginfo_findfs_label)
+  PHP_FE (guestfs_findfs_partlabel, arginfo_findfs_partlabel)
+  PHP_FE (guestfs_findfs_partuuid, arginfo_findfs_partuuid)
   PHP_FE (guestfs_findfs_uuid, arginfo_findfs_uuid)
   PHP_FE (guestfs_fsck, arginfo_fsck)
   PHP_FE (guestfs_fstrim, arginfo_fstrim)
@@ -9169,9 +9182,11 @@ PHP_FUNCTION (guestfs_cryptsetup_open)
   zend_bool optargs_t_readonly = -1;
   char *optargs_t_crypttype = NULL;
   guestfs_string_length optargs_t_crypttype_size = -1;
+  char *optargs_t_cipher = NULL;
+  guestfs_string_length optargs_t_cipher_size = -1;
 
-  if (zend_parse_parameters (ZEND_NUM_ARGS() TSRMLS_CC, "rsss|bs",
-        &z_g, &device, &device_size, &key, &key_size, &mapname, &mapname_size, &optargs_t_readonly, &optargs_t_crypttype, &optargs_t_crypttype_size) == FAILURE) {
+  if (zend_parse_parameters (ZEND_NUM_ARGS() TSRMLS_CC, "rsss|bss",
+        &z_g, &device, &device_size, &key, &key_size, &mapname, &mapname_size, &optargs_t_readonly, &optargs_t_crypttype, &optargs_t_crypttype_size, &optargs_t_cipher, &optargs_t_cipher_size) == FAILURE) {
     RETURN_FALSE;
   }
 
@@ -9203,6 +9218,10 @@ PHP_FUNCTION (guestfs_cryptsetup_open)
   if (optargs_t_crypttype != NULL) {
     optargs_s.crypttype = optargs_t_crypttype;
     optargs_s.bitmask |= GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK;
+  }
+  if (optargs_t_cipher != NULL) {
+    optargs_s.cipher = optargs_t_cipher;
+    optargs_s.bitmask |= GUESTFS_CRYPTSETUP_OPEN_CIPHER_BITMASK;
   }
 
   int r;
@@ -10933,6 +10952,76 @@ PHP_FUNCTION (guestfs_findfs_label)
 
   char *r;
   r = guestfs_findfs_label (g, label);
+
+  if (r == NULL) {
+    RETURN_FALSE;
+  }
+
+  char *r_copy = estrdup (r);
+  free (r);
+  GUESTFS_RETURN_STRING (r_copy, 0);
+}
+
+PHP_FUNCTION (guestfs_findfs_partlabel)
+{
+  zval *z_g;
+  guestfs_h *g;
+  char *label;
+  guestfs_string_length label_size;
+
+  if (zend_parse_parameters (ZEND_NUM_ARGS() TSRMLS_CC, "rs",
+        &z_g, &label, &label_size) == FAILURE) {
+    RETURN_FALSE;
+  }
+
+  GUESTFS_ZEND_FETCH_RESOURCE (g, guestfs_h *, z_g,
+                               PHP_GUESTFS_HANDLE_RES_NAME, res_guestfs_h);
+  if (g == NULL) {
+    RETURN_FALSE;
+  }
+
+  if (strlen (label) != label_size) {
+    fprintf (stderr, "libguestfs: findfs_partlabel: parameter 'label' contains embedded ASCII NUL.\n");
+    RETURN_FALSE;
+  }
+
+  char *r;
+  r = guestfs_findfs_partlabel (g, label);
+
+  if (r == NULL) {
+    RETURN_FALSE;
+  }
+
+  char *r_copy = estrdup (r);
+  free (r);
+  GUESTFS_RETURN_STRING (r_copy, 0);
+}
+
+PHP_FUNCTION (guestfs_findfs_partuuid)
+{
+  zval *z_g;
+  guestfs_h *g;
+  char *uuid;
+  guestfs_string_length uuid_size;
+
+  if (zend_parse_parameters (ZEND_NUM_ARGS() TSRMLS_CC, "rs",
+        &z_g, &uuid, &uuid_size) == FAILURE) {
+    RETURN_FALSE;
+  }
+
+  GUESTFS_ZEND_FETCH_RESOURCE (g, guestfs_h *, z_g,
+                               PHP_GUESTFS_HANDLE_RES_NAME, res_guestfs_h);
+  if (g == NULL) {
+    RETURN_FALSE;
+  }
+
+  if (strlen (uuid) != uuid_size) {
+    fprintf (stderr, "libguestfs: findfs_partuuid: parameter 'uuid' contains embedded ASCII NUL.\n");
+    RETURN_FALSE;
+  }
+
+  char *r;
+  r = guestfs_findfs_partuuid (g, uuid);
 
   if (r == NULL) {
     RETURN_FALSE;

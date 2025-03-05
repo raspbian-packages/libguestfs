@@ -2595,11 +2595,13 @@ impl convert::From<&CExprCpioOutOptArgs> for RawCpioOutOptArgs {
 pub struct CryptsetupOpenOptArgs<'a> {
     pub readonly: Option<bool>,
     pub crypttype: Option<&'a str>,
+    pub cipher: Option<&'a str>,
 }
 
 struct CExprCryptsetupOpenOptArgs {
     readonly: Option<c_int>,
     crypttype: Option<ffi::CString>,
+    cipher: Option<ffi::CString>,
 }
 
 impl<'a> TryFrom<CryptsetupOpenOptArgs<'a>> for CExprCryptsetupOpenOptArgs {
@@ -2608,6 +2610,7 @@ impl<'a> TryFrom<CryptsetupOpenOptArgs<'a>> for CExprCryptsetupOpenOptArgs {
         Ok(CExprCryptsetupOpenOptArgs {
         readonly: optargs.readonly.map(|b| if b { 1 } else { 0 }),
         crypttype: optargs.crypttype.map(|v| ffi::CString::new(v)).transpose()?,
+        cipher: optargs.cipher.map(|v| ffi::CString::new(v)).transpose()?,
          })
     }
 }
@@ -2616,6 +2619,7 @@ struct RawCryptsetupOpenOptArgs {
     bitmask: u64,
     readonly: c_int,
     crypttype: *const c_char,
+    cipher: *const c_char,
 }
 
 impl convert::From<&CExprCryptsetupOpenOptArgs> for RawCryptsetupOpenOptArgs {
@@ -2630,6 +2634,12 @@ impl convert::From<&CExprCryptsetupOpenOptArgs> for RawCryptsetupOpenOptArgs {
         },
         crypttype: if let Some(ref v) = optargs.crypttype {
             bitmask |= 1 << 1;
+            v.as_ptr()
+        } else {
+            ptr::null()
+        },
+        cipher: if let Some(ref v) = optargs.cipher {
+            bitmask |= 1 << 2;
             v.as_ptr()
         } else {
             ptr::null()
@@ -6557,6 +6567,10 @@ extern "C" {
     #[allow(non_snake_case)]
     fn guestfs_findfs_label(g: *const guestfs_h, label: *const c_char) -> *const c_char;
     #[allow(non_snake_case)]
+    fn guestfs_findfs_partlabel(g: *const guestfs_h, label: *const c_char) -> *const c_char;
+    #[allow(non_snake_case)]
+    fn guestfs_findfs_partuuid(g: *const guestfs_h, uuid: *const c_char) -> *const c_char;
+    #[allow(non_snake_case)]
     fn guestfs_findfs_uuid(g: *const guestfs_h, uuid: *const c_char) -> *const c_char;
     #[allow(non_snake_case)]
     fn guestfs_fsck(g: *const guestfs_h, fstype: *const c_char, device: *const c_char) -> c_int;
@@ -9908,6 +9922,38 @@ impl<'a> Handle<'a> {
             return Err(self.get_error_from_handle("findfs_label"));
         }
         drop(c_label);
+        Ok({
+            let s = unsafe { char_ptr_to_string(r) };
+            unsafe { free(r as *const c_void) };            s?
+        })
+    }
+
+    /// find a partition by label
+    #[allow(non_snake_case)]
+    pub fn findfs_partlabel(&self, label: &str) -> Result<String, Error> {
+        let c_label = ffi::CString::new(label)?;
+        
+        let r = unsafe { guestfs_findfs_partlabel(self.g, (&c_label).as_ptr()) };
+        if r.is_null() {
+            return Err(self.get_error_from_handle("findfs_partlabel"));
+        }
+        drop(c_label);
+        Ok({
+            let s = unsafe { char_ptr_to_string(r) };
+            unsafe { free(r as *const c_void) };            s?
+        })
+    }
+
+    /// find a partition by UUID
+    #[allow(non_snake_case)]
+    pub fn findfs_partuuid(&self, uuid: &str) -> Result<String, Error> {
+        let c_uuid = ffi::CString::new(uuid)?;
+        
+        let r = unsafe { guestfs_findfs_partuuid(self.g, (&c_uuid).as_ptr()) };
+        if r.is_null() {
+            return Err(self.get_error_from_handle("findfs_partuuid"));
+        }
+        drop(c_uuid);
         Ok({
             let s = unsafe { char_ptr_to_string(r) };
             unsafe { free(r as *const c_void) };            s?

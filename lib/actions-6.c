@@ -1518,8 +1518,14 @@ guestfs_cryptsetup_open_argv (guestfs_h *g,
            "cryptsetup_open", "crypttype");
     return -1;
   }
+  if ((optargs->bitmask & GUESTFS_CRYPTSETUP_OPEN_CIPHER_BITMASK) &&
+      optargs->cipher == NULL) {
+    error (g, "%s: %s: optional parameter cannot be NULL",
+           "cryptsetup_open", "cipher");
+    return -1;
+  }
 
-  if (optargs->bitmask & UINT64_C(0xfffffffffffffffc)) {
+  if (optargs->bitmask & UINT64_C(0xfffffffffffffff8)) {
     error (g, "%s: unknown option in guestfs_%s_argv->bitmask (this can happen if a program is compiled against a newer version of libguestfs, then dynamically linked to an older version)",
            "cryptsetup_open", "cryptsetup_open");
     return -1;
@@ -1536,6 +1542,9 @@ guestfs_cryptsetup_open_argv (guestfs_h *g,
     }
     if (optargs->bitmask & GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK) {
       fprintf (trace_buffer.fp, " \"%s:%s\"", "crypttype", optargs->crypttype);
+    }
+    if (optargs->bitmask & GUESTFS_CRYPTSETUP_OPEN_CIPHER_BITMASK) {
+      fprintf (trace_buffer.fp, " \"%s:%s\"", "cipher", optargs->cipher);
     }
     guestfs_int_trace_send_line (g, &trace_buffer);
   }
@@ -1559,6 +1568,11 @@ guestfs_cryptsetup_open_argv (guestfs_h *g,
     args.crypttype = (char *) optargs->crypttype;
   } else {
     args.crypttype = (char *) "";
+  }
+  if (optargs->bitmask & GUESTFS_CRYPTSETUP_OPEN_CIPHER_BITMASK) {
+    args.cipher = (char *) optargs->cipher;
+  } else {
+    args.cipher = (char *) "";
   }
   serial = guestfs_int_send (g, GUESTFS_PROC_CRYPTSETUP_OPEN,
                              progress_hint, optargs->bitmask,

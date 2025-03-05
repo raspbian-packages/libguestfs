@@ -447,6 +447,12 @@ dispatch_incoming_message (XDR *xdr_in)
     case GUESTFS_PROC_FINDFS_LABEL:
       findfs_label_stub (xdr_in);
       break;
+    case GUESTFS_PROC_FINDFS_PARTLABEL:
+      findfs_partlabel_stub (xdr_in);
+      break;
+    case GUESTFS_PROC_FINDFS_PARTUUID:
+      findfs_partuuid_stub (xdr_in);
+      break;
     case GUESTFS_PROC_FINDFS_UUID:
       findfs_uuid_stub (xdr_in);
       break;

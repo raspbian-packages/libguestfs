@@ -189,6 +189,8 @@
 -export([find0/3]).
 -export([find_inode/3]).
 -export([findfs_label/2]).
+-export([findfs_partlabel/2]).
+-export([findfs_partuuid/2]).
 -export([findfs_uuid/2]).
 -export([fsck/3]).
 -export([fstrim/2, fstrim/3]).
@@ -1245,6 +1247,12 @@ find_inode(G, Device, Inode) ->
 
 findfs_label(G, Label) ->
   call_port(G, {findfs_label, Label}).
+
+findfs_partlabel(G, Label) ->
+  call_port(G, {findfs_partlabel, Label}).
+
+findfs_partuuid(G, Uuid) ->
+  call_port(G, {findfs_partuuid, Uuid}).
 
 findfs_uuid(G, Uuid) ->
   call_port(G, {findfs_uuid, Uuid}).

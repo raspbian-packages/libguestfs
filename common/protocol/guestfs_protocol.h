@@ -1269,6 +1269,7 @@ struct guestfs_cryptsetup_open_args {
 	char *mapname;
 	bool_t readonly;
 	char *crypttype;
+	char *cipher;
 };
 typedef struct guestfs_cryptsetup_open_args guestfs_cryptsetup_open_args;
 
@@ -1552,6 +1553,26 @@ struct guestfs_findfs_label_ret {
 	char *device;
 };
 typedef struct guestfs_findfs_label_ret guestfs_findfs_label_ret;
+
+struct guestfs_findfs_partlabel_args {
+	char *label;
+};
+typedef struct guestfs_findfs_partlabel_args guestfs_findfs_partlabel_args;
+
+struct guestfs_findfs_partlabel_ret {
+	char *device;
+};
+typedef struct guestfs_findfs_partlabel_ret guestfs_findfs_partlabel_ret;
+
+struct guestfs_findfs_partuuid_args {
+	char *uuid;
+};
+typedef struct guestfs_findfs_partuuid_args guestfs_findfs_partuuid_args;
+
+struct guestfs_findfs_partuuid_ret {
+	char *device;
+};
+typedef struct guestfs_findfs_partuuid_ret guestfs_findfs_partuuid_ret;
 
 struct guestfs_findfs_uuid_args {
 	char *uuid;
@@ -4648,6 +4669,8 @@ enum guestfs_procedure {
 	GUESTFS_PROC_FILL_PATTERN = 245,
 	GUESTFS_PROC_FIND0 = 196,
 	GUESTFS_PROC_FINDFS_LABEL = 266,
+	GUESTFS_PROC_FINDFS_PARTLABEL = 515,
+	GUESTFS_PROC_FINDFS_PARTUUID = 514,
 	GUESTFS_PROC_FINDFS_UUID = 265,
 	GUESTFS_PROC_FSCK = 84,
 	GUESTFS_PROC_FSTRIM = 334,
@@ -5009,7 +5032,7 @@ enum guestfs_procedure {
 	GUESTFS_PROC_ZGREPI = 160,
 };
 typedef enum guestfs_procedure guestfs_procedure;
-#define GUESTFS_MAX_PROC_NR 513
+#define GUESTFS_MAX_PROC_NR 515
 #define GUESTFS_MESSAGE_MAX 4194304
 #define GUESTFS_PROGRAM 0x2000F5F5
 #define GUESTFS_PROTOCOL_VERSION 4
@@ -5299,6 +5322,10 @@ extern  bool_t xdr_guestfs_fill_pattern_args (XDR *, guestfs_fill_pattern_args*)
 extern  bool_t xdr_guestfs_find0_args (XDR *, guestfs_find0_args*);
 extern  bool_t xdr_guestfs_findfs_label_args (XDR *, guestfs_findfs_label_args*);
 extern  bool_t xdr_guestfs_findfs_label_ret (XDR *, guestfs_findfs_label_ret*);
+extern  bool_t xdr_guestfs_findfs_partlabel_args (XDR *, guestfs_findfs_partlabel_args*);
+extern  bool_t xdr_guestfs_findfs_partlabel_ret (XDR *, guestfs_findfs_partlabel_ret*);
+extern  bool_t xdr_guestfs_findfs_partuuid_args (XDR *, guestfs_findfs_partuuid_args*);
+extern  bool_t xdr_guestfs_findfs_partuuid_ret (XDR *, guestfs_findfs_partuuid_ret*);
 extern  bool_t xdr_guestfs_findfs_uuid_args (XDR *, guestfs_findfs_uuid_args*);
 extern  bool_t xdr_guestfs_findfs_uuid_ret (XDR *, guestfs_findfs_uuid_ret*);
 extern  bool_t xdr_guestfs_fsck_args (XDR *, guestfs_fsck_args*);
@@ -6021,6 +6048,10 @@ extern bool_t xdr_guestfs_fill_pattern_args ();
 extern bool_t xdr_guestfs_find0_args ();
 extern bool_t xdr_guestfs_findfs_label_args ();
 extern bool_t xdr_guestfs_findfs_label_ret ();
+extern bool_t xdr_guestfs_findfs_partlabel_args ();
+extern bool_t xdr_guestfs_findfs_partlabel_ret ();
+extern bool_t xdr_guestfs_findfs_partuuid_args ();
+extern bool_t xdr_guestfs_findfs_partuuid_ret ();
 extern bool_t xdr_guestfs_findfs_uuid_args ();
 extern bool_t xdr_guestfs_findfs_uuid_ret ();
 extern bool_t xdr_guestfs_fsck_args ();

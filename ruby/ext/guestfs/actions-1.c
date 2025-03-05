@@ -3733,8 +3733,6 @@ guestfs_int_ruby_part_resize (VALUE gv, VALUE devicev, VALUE partnumv, VALUE end
  *
  * [Since] Added in version 1.33.2.
  *
- * [Feature] This function depends on the feature +gdisk+.  See also {#feature_available}[rdoc-ref:feature_available].
- *
  * [C API] For the C API documentation for this function, see
  *         {guestfs_part_set_disk_guid}[http://libguestfs.org/guestfs.3.html#guestfs_part_set_disk_guid].
  */
@@ -3770,8 +3768,6 @@ guestfs_int_ruby_part_set_disk_guid (VALUE gv, VALUE devicev, VALUE guidv)
  *
  *
  * [Since] Added in version 1.33.2.
- *
- * [Feature] This function depends on the feature +gdisk+.  See also {#feature_available}[rdoc-ref:feature_available].
  *
  * [C API] For the C API documentation for this function, see
  *         {guestfs_part_set_disk_guid_random}[http://libguestfs.org/guestfs.3.html#guestfs_part_set_disk_guid_random].

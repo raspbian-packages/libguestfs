@@ -21,7 +21,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *)
 
-val cryptsetup_open : ?readonly:bool -> ?crypttype:string -> string -> string -> string -> unit
+val cryptsetup_open : ?readonly:bool -> ?crypttype:string -> ?cipher:string -> string -> string -> string -> unit
 val cryptsetup_close : string -> unit
 val luks_open : string -> string -> string -> unit
 val luks_open_ro : string -> string -> string -> unit

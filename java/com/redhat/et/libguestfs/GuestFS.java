@@ -683,18 +683,12 @@ public class GuestFS {
    * device. This is the default if the optional
    * protocol parameter is omitted.
    * </p><p>
-   * "protocol = "ftp"|"ftps"|"http"|"https"|"tftp""
-   * Connect to a remote FTP, HTTP or TFTP server.
-   * The "server" parameter must also be supplied -
-   * see below.
+   * "protocol = "ftp"|"ftps"|"http"|"https""
+   * Connect to a remote FTP or HTTP server. The
+   * "server" parameter must also be supplied - see
+   * below.
    * </p><p>
-   * See also: "FTP, HTTP AND TFTP" in guestfs(3)
-   * </p><p>
-   * "protocol = "gluster""
-   * Connect to the GlusterFS server. The "server"
-   * parameter must also be supplied - see below.
-   * </p><p>
-   * See also: "GLUSTER" in guestfs(3)
+   * See also: "FTP AND HTTP" in guestfs(3)
    * </p><p>
    * "protocol = "iscsi""
    * Connect to the iSCSI server. The "server"
@@ -721,12 +715,6 @@ public class GuestFS {
    * </p><p>
    * See also: "CEPH" in guestfs(3).
    * </p><p>
-   * "protocol = "sheepdog""
-   * Connect to the Sheepdog server. The "server"
-   * parameter may also be supplied - see below.
-   * </p><p>
-   * See also: "SHEEPDOG" in guestfs(3).
-   * </p><p>
    * "protocol = "ssh""
    * Connect to the Secure Shell (ssh) server.
    * </p><p>
@@ -742,12 +730,10 @@ public class GuestFS {
    * Protocol       Number of servers required
    * --------       --------------------------
    * file           List must be empty or param not used at all
-   * ftp|ftps|http|https|tftp  Exactly one
-   * gluster        Exactly one
+   * ftp|ftps|http|https  Exactly one
    * iscsi          Exactly one
    * nbd            Exactly one
    * rbd            Zero or more
-   * sheepdog       Zero or more
    * ssh            Exactly one
    * </p><p>
    * Each list element is a string specifying a server.
@@ -765,8 +751,8 @@ public class GuestFS {
    * </p><p>
    * "username"
    * For the "ftp", "ftps", "http", "https", "iscsi",
-   * "rbd", "ssh" and "tftp" protocols, this specifies
-   * the remote username.
+   * "rbd" and "ssh" protocols, this specifies the remote
+   * username.
    * </p><p>
    * If not given, then the local username is used for
    * "ssh", and no authentication is attempted for ceph.
@@ -3654,6 +3640,11 @@ public class GuestFS {
    * Compute the cyclic redundancy check (CRC) specified
    * by POSIX for the "cksum" command.
    * </p><p>
+   * "gost"
+   * "gost12"
+   * Compute the checksum using GOST R34.11-94 or GOST
+   * R34.11-2012 message digest.
+   * </p><p>
    * "md5"
    * Compute the MD5 hash (using the md5sum(1) program).
    * </p><p>
@@ -4817,6 +4808,9 @@ public class GuestFS {
    * The optional "readonly" flag, if set to true, creates a
    * read-only mapping.
    * </p><p>
+   * The optional "cipher" parameter allows specifying which
+   * cipher to use.
+   * </p><p>
    * If this block device contains LVM volume groups, then
    * calling "g.lvm_scan" with the "activate" parameter
    * "true" will make them visible.
@@ -4859,8 +4853,16 @@ public class GuestFS {
       crypttype = ((String) _optobj);
       _optargs_bitmask |= 2L;
     }
+    String cipher = "";
+    _optobj = null;
+    if (optargs != null)
+      _optobj = optargs.get ("cipher");
+    if (_optobj != null) {
+      cipher = ((String) _optobj);
+      _optargs_bitmask |= 4L;
+    }
 
-    _cryptsetup_open (g, device, key, mapname, _optargs_bitmask, readonly, crypttype);
+    _cryptsetup_open (g, device, key, mapname, _optargs_bitmask, readonly, crypttype, cipher);
   }
 
   public void cryptsetup_open (String device, String key, String mapname)
@@ -4869,7 +4871,7 @@ public class GuestFS {
     cryptsetup_open (device, key, mapname, null);
   }
 
-  private native void _cryptsetup_open (long g, String device, String key, String mapname, long _optargs_bitmask, boolean readonly, String crypttype)
+  private native void _cryptsetup_open (long g, String device, String key, String mapname, long _optargs_bitmask, boolean readonly, String crypttype, String cipher)
     throws LibGuestFSException;
 
   /**
@@ -5980,6 +5982,9 @@ public class GuestFS {
    * "ppc64le"
    * 64 bit Power PC (little endian).
    * </p><p>
+   * "loongarch64"
+   * 64 bit LoongArch64 (little endian).
+   * </p><p>
    * "riscv32"
    * "riscv64"
    * "riscv128"
@@ -6442,6 +6447,58 @@ public class GuestFS {
   }
 
   private native String _findfs_label (long g, String label)
+    throws LibGuestFSException;
+
+  /**
+   * <p>
+   * find a partition by label
+   * </p><p>
+   * This command searches the partitions and returns the one
+   * which has the given label. An error is returned if no
+   * such partition can be found.
+   * </p><p>
+   * To find the label of a partition, use "g.blkid"
+   * ("PART_ENTRY_NAME").
+   * </p>
+   * @since 1.53.5
+   * @throws LibGuestFSException If there is a libguestfs error.
+   */
+  public String findfs_partlabel (String label)
+    throws LibGuestFSException
+  {
+    if (g == 0)
+      throw new LibGuestFSException ("findfs_partlabel: handle is closed");
+
+    return _findfs_partlabel (g, label);
+  }
+
+  private native String _findfs_partlabel (long g, String label)
+    throws LibGuestFSException;
+
+  /**
+   * <p>
+   * find a partition by UUID
+   * </p><p>
+   * This command searches the partitions and returns the one
+   * which has the given partition UUID. An error is returned
+   * if no such partition can be found.
+   * </p><p>
+   * To find the UUID of a partition, use "g.blkid"
+   * ("PART_ENTRY_UUID").
+   * </p>
+   * @since 1.53.5
+   * @throws LibGuestFSException If there is a libguestfs error.
+   */
+  public String findfs_partuuid (String uuid)
+    throws LibGuestFSException
+  {
+    if (g == 0)
+      throw new LibGuestFSException ("findfs_partuuid: handle is closed");
+
+    return _findfs_partuuid (g, uuid);
+  }
+
+  private native String _findfs_partuuid (long g, String uuid)
     throws LibGuestFSException;
 
   /**
@@ -8820,6 +8877,9 @@ public class GuestFS {
    * "centos"
    * CentOS.
    * </p><p>
+   * "circle"
+   * Circle Linux.
+   * </p><p>
    * "cirros"
    * Cirros.
    * </p><p>
@@ -8873,6 +8933,9 @@ public class GuestFS {
    * </p><p>
    * "openbsd"
    * OpenBSD.
+   * </p><p>
+   * "openeuler"
+   * openEuler.
    * </p><p>
    * "openmandriva"
    * OpenMandriva Lx.
@@ -16250,8 +16313,6 @@ public class GuestFS {
    * Return the disk identifier (GUID) of a GPT-partitioned
    * "device". Behaviour is undefined for other partition
    * types.
-   * </p><p>
-   * This function depends on the feature "gdisk".  See also {@link #feature_available}.
    * </p>
    * @since 1.33.2
    * @throws LibGuestFSException If there is a libguestfs error.
@@ -16274,8 +16335,6 @@ public class GuestFS {
    * </p><p>
    * Return the attribute flags of numbered GPT partition
    * "partnum". An error is returned for MBR partitions.
-   * </p><p>
-   * This function depends on the feature "gdisk".  See also {@link #feature_available}.
    * </p>
    * @since 1.21.1
    * @throws LibGuestFSException If there is a libguestfs error.
@@ -16297,8 +16356,6 @@ public class GuestFS {
    * get the GUID of a GPT partition
    * </p><p>
    * Return the GUID of numbered GPT partition "partnum".
-   * </p><p>
-   * This function depends on the feature "gdisk".  See also {@link #feature_available}.
    * </p>
    * @since 1.29.25
    * @throws LibGuestFSException If there is a libguestfs error.
@@ -16321,8 +16378,6 @@ public class GuestFS {
    * </p><p>
    * Return the type GUID of numbered GPT partition
    * "partnum".
-   * </p><p>
-   * This function depends on the feature "gdisk".  See also {@link #feature_available}.
    * </p>
    * @since 1.21.1
    * @throws LibGuestFSException If there is a libguestfs error.
@@ -16619,8 +16674,6 @@ public class GuestFS {
    * "device" to "guid". Return an error if the partition
    * table of "device" isn't GPT, or if "guid" is not a valid
    * GUID.
-   * </p><p>
-   * This function depends on the feature "gdisk".  See also {@link #feature_available}.
    * </p>
    * @since 1.33.2
    * @throws LibGuestFSException If there is a libguestfs error.
@@ -16644,8 +16697,6 @@ public class GuestFS {
    * Set the disk identifier (GUID) of a GPT-partitioned
    * "device" to a randomly generated value. Return an error
    * if the partition table of "device" isn't GPT.
-   * </p><p>
-   * This function depends on the feature "gdisk".  See also {@link #feature_available}.
    * </p>
    * @since 1.33.2
    * @throws LibGuestFSException If there is a libguestfs error.
@@ -16674,8 +16725,6 @@ public class GuestFS {
    * &lt;https://en.wikipedia.org/wiki/GUID_Partition_Table#Part
    * ition_entries&gt; for a useful list of partition
    * attributes.
-   * </p><p>
-   * This function depends on the feature "gdisk".  See also {@link #feature_available}.
    * </p>
    * @since 1.21.1
    * @throws LibGuestFSException If there is a libguestfs error.
@@ -16699,8 +16748,6 @@ public class GuestFS {
    * Set the GUID of numbered GPT partition "partnum" to
    * "guid". Return an error if the partition table of
    * "device" isn't GPT, or if "guid" is not a valid GUID.
-   * </p><p>
-   * This function depends on the feature "gdisk".  See also {@link #feature_available}.
    * </p>
    * @since 1.29.25
    * @throws LibGuestFSException If there is a libguestfs error.
@@ -16728,8 +16775,6 @@ public class GuestFS {
    * See
    * &lt;https://en.wikipedia.org/wiki/GUID_Partition_Table#Part
    * ition_type_GUIDs&gt; for a useful list of type GUIDs.
-   * </p><p>
-   * This function depends on the feature "gdisk".  See also {@link #feature_available}.
    * </p>
    * @since 1.21.1
    * @throws LibGuestFSException If there is a libguestfs error.

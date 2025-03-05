@@ -218,7 +218,7 @@ struct command_entry cryptsetup_open_cmd_entry = {
           "    cryptsetup-open - open an encrypted block device\n"
           "\n"
           "SYNOPSIS\n"
-          "     cryptsetup-open device mapname [readonly:true|false] [crypttype:..]\n"
+          "     cryptsetup-open device mapname [readonly:true|false] [crypttype:..] [cipher:..]\n"
           "\n"
           "DESCRIPTION\n"
           "    This command opens a block device which has been encrypted according to\n"
@@ -250,6 +250,8 @@ struct command_entry cryptsetup_open_cmd_entry = {
           "    The optional \"readonly\" flag, if set to true, creates a read-only\n"
           "    mapping.\n"
           "\n"
+          "    The optional \"cipher\" parameter allows specifying which cipher to use.\n"
+          "\n"
           "    If this block device contains LVM volume groups, then calling \"lvm_scan\"\n"
           "    with the \"activate\" parameter \"true\" will make them visible.\n"
           "\n"
@@ -259,7 +261,7 @@ struct command_entry cryptsetup_open_cmd_entry = {
           "    will prompt for these separately.\n"
           "\n"
           "",
-  .synopsis = "cryptsetup-open device mapname [readonly:true|false] [crypttype:..]",
+  .synopsis = "cryptsetup-open device mapname [readonly:true|false] [crypttype:..] [cipher:..]",
   .run = run_cryptsetup_open
 };
 

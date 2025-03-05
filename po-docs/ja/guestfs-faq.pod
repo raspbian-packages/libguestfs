@@ -667,7 +667,7 @@ In the source tree the license is in the file C<COPYING.LIB> (LGPLv2+ for the li
 
 =head2 Help, it’s not working!
 
-If no libguestfs program seems to work at all, run the program below and paste the B<complete, unedited> output into an email to C<libguestfs> @ C<redhat.com>:
+If no libguestfs program seems to work at all, run the program below and paste the B<complete, unedited> output into an email to C<guestfs@lists.libguestfs.org>:
 
  libguestfs-test-tool
 

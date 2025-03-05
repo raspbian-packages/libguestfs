@@ -38,6 +38,7 @@
 struct _GuestfsCryptsetupOpenPrivate {
   GuestfsTristate readonly;
   gchar *crypttype;
+  gchar *cipher;
 };
 
 G_DEFINE_TYPE_WITH_CODE (GuestfsCryptsetupOpen, guestfs_cryptsetup_open, G_TYPE_OBJECT,
@@ -46,7 +47,8 @@ G_DEFINE_TYPE_WITH_CODE (GuestfsCryptsetupOpen, guestfs_cryptsetup_open, G_TYPE_
 enum {
   PROP_GUESTFS_CRYPTSETUP_OPEN_PROP0,
   PROP_GUESTFS_CRYPTSETUP_OPEN_READONLY,
-  PROP_GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE
+  PROP_GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE,
+  PROP_GUESTFS_CRYPTSETUP_OPEN_CIPHER
 };
 
 static void
@@ -63,6 +65,11 @@ guestfs_cryptsetup_open_set_property(GObject *object, guint property_id, const G
     case PROP_GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE:
       g_free (priv->crypttype);
       priv->crypttype = g_value_dup_string (value);
+      break;
+
+    case PROP_GUESTFS_CRYPTSETUP_OPEN_CIPHER:
+      g_free (priv->cipher);
+      priv->cipher = g_value_dup_string (value);
       break;
 
     default:
@@ -86,6 +93,10 @@ guestfs_cryptsetup_open_get_property(GObject *object, guint property_id, GValue 
       g_value_set_string (value, priv->crypttype);
       break;
 
+    case PROP_GUESTFS_CRYPTSETUP_OPEN_CIPHER:
+      g_value_set_string (value, priv->cipher);
+      break;
+
     default:
       /* Invalid property */
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -99,6 +110,7 @@ guestfs_cryptsetup_open_finalize (GObject *object)
   GuestfsCryptsetupOpenPrivate *priv = self->priv;
 
   g_free (priv->crypttype);
+  g_free (priv->cipher);
   G_OBJECT_CLASS (guestfs_cryptsetup_open_parent_class)->finalize (object);
 }
 
@@ -137,6 +149,23 @@ guestfs_cryptsetup_open_class_init (GuestfsCryptsetupOpenClass *klass)
     g_param_spec_string (
       "crypttype",
       "crypttype",
+      "A string.",
+      NULL,
+      G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS
+    )
+  );
+
+  /**
+   * GuestfsCryptsetupOpen:cipher:
+   *
+   * A string.
+   */
+  g_object_class_install_property (
+    object_class,
+    PROP_GUESTFS_CRYPTSETUP_OPEN_CIPHER,
+    g_param_spec_string (
+      "cipher",
+      "cipher",
       "A string.",
       NULL,
       G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS

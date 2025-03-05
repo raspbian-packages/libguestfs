@@ -145,15 +145,6 @@ extern int optgroup_zerofree_available (void);
 
 #define OPTGROUP_GDISK_NOT_AVAILABLE \
   int __attribute__((noreturn)) do_part_expand_gpt (const char *device) { abort (); } \
-  char *__attribute__((noreturn)) do_part_get_disk_guid (const char *device) { abort (); } \
-  int64_t __attribute__((noreturn)) do_part_get_gpt_attributes (const char *device, int partnum) { abort (); } \
-  char *__attribute__((noreturn)) do_part_get_gpt_guid (const char *device, int partnum) { abort (); } \
-  char *__attribute__((noreturn)) do_part_get_gpt_type (const char *device, int partnum) { abort (); } \
-  int __attribute__((noreturn)) do_part_set_disk_guid (const char *device, const char *guid) { abort (); } \
-  int __attribute__((noreturn)) do_part_set_disk_guid_random (const char *device) { abort (); } \
-  int __attribute__((noreturn)) do_part_set_gpt_attributes (const char *device, int partnum, int64_t attributes) { abort (); } \
-  int __attribute__((noreturn)) do_part_set_gpt_guid (const char *device, int partnum, const char *guid) { abort (); } \
-  int __attribute__((noreturn)) do_part_set_gpt_type (const char *device, int partnum, const char *guid) { abort (); } \
   int optgroup_gdisk_available (void) { return 0; }
 
 #define OPTGROUP_GRUB_NOT_AVAILABLE \
@@ -258,7 +249,7 @@ extern int optgroup_zerofree_available (void);
 
 #define OPTGROUP_LUKS_NOT_AVAILABLE \
   int __attribute__((noreturn)) do_cryptsetup_close (const char *device) { abort (); } \
-  int __attribute__((noreturn)) do_cryptsetup_open (const char *device, const char *key, const char *mapname, int readonly, const char *crypttype) { abort (); } \
+  int __attribute__((noreturn)) do_cryptsetup_open (const char *device, const char *key, const char *mapname, int readonly, const char *crypttype, const char *cipher) { abort (); } \
   int __attribute__((noreturn)) do_luks_add_key (const char *device, const char *key, const char *newkey, int keyslot) { abort (); } \
   int __attribute__((noreturn)) do_luks_close (const char *device) { abort (); } \
   int __attribute__((noreturn)) do_luks_format (const char *device, const char *key, int keyslot) { abort (); } \

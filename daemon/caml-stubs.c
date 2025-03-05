@@ -527,12 +527,13 @@ do_cryptsetup_open (const char *device,
                     const char *key,
                     const char *mapname,
                     int readonly,
-                    const char *crypttype)
+                    const char *crypttype,
+                    const char *cipher)
 {
   static const value *cb = NULL;
   CAMLparam0 ();
   CAMLlocal2 (v, retv);
-  CAMLlocalN (args, 5);
+  CAMLlocalN (args, 6);
 
   if (cb == NULL)
     cb = caml_named_value ("Cryptsetup.cryptsetup_open");
@@ -551,10 +552,17 @@ do_cryptsetup_open (const char *device,
     args[1] = caml_alloc (1, 0);
     Store_field (args[1], 0, v);
   }
-  args[2] = caml_copy_string (device);
-  args[3] = caml_copy_string (key);
-  args[4] = caml_copy_string (mapname);
-  retv = caml_callbackN_exn (*cb, 5, args);
+  if ((optargs_bitmask & GUESTFS_CRYPTSETUP_OPEN_CIPHER_BITMASK) == 0)
+    args[2] = Val_int (0); /* None */
+  else {
+    v = caml_copy_string (cipher);
+    args[2] = caml_alloc (1, 0);
+    Store_field (args[2], 0, v);
+  }
+  args[3] = caml_copy_string (device);
+  args[4] = caml_copy_string (key);
+  args[5] = caml_copy_string (mapname);
+  retv = caml_callbackN_exn (*cb, 6, args);
 
   if (Is_exception_result (retv)) {
     retv = Extract_exception (retv);
@@ -641,6 +649,64 @@ do_findfs_label (const char *label)
   if (Is_exception_result (retv)) {
     retv = Extract_exception (retv);
     guestfs_int_daemon_exn_to_reply_with_error ("findfs_label", retv);
+    CAMLreturnT (void *, NULL);
+  }
+
+  char *ret = strdup (String_val (retv));
+  if (ret == NULL) {
+    reply_with_perror ("strdup");
+    CAMLreturnT (char *, NULL);
+  }
+  CAMLreturnT (char *, ret); /* caller frees */
+}
+
+/* Wrapper for OCaml function ‘Findfs.findfs_partlabel’. */
+char *
+do_findfs_partlabel (const char *label)
+{
+  static const value *cb = NULL;
+  CAMLparam0 ();
+  CAMLlocal2 (v, retv);
+  CAMLlocalN (args, 1);
+
+  if (cb == NULL)
+    cb = caml_named_value ("Findfs.findfs_partlabel");
+
+  args[0] = caml_copy_string (label);
+  retv = caml_callbackN_exn (*cb, 1, args);
+
+  if (Is_exception_result (retv)) {
+    retv = Extract_exception (retv);
+    guestfs_int_daemon_exn_to_reply_with_error ("findfs_partlabel", retv);
+    CAMLreturnT (void *, NULL);
+  }
+
+  char *ret = strdup (String_val (retv));
+  if (ret == NULL) {
+    reply_with_perror ("strdup");
+    CAMLreturnT (char *, NULL);
+  }
+  CAMLreturnT (char *, ret); /* caller frees */
+}
+
+/* Wrapper for OCaml function ‘Findfs.findfs_partuuid’. */
+char *
+do_findfs_partuuid (const char *uuid)
+{
+  static const value *cb = NULL;
+  CAMLparam0 ();
+  CAMLlocal2 (v, retv);
+  CAMLlocalN (args, 1);
+
+  if (cb == NULL)
+    cb = caml_named_value ("Findfs.findfs_partuuid");
+
+  args[0] = caml_copy_string (uuid);
+  retv = caml_callbackN_exn (*cb, 1, args);
+
+  if (Is_exception_result (retv)) {
+    retv = Extract_exception (retv);
+    guestfs_int_daemon_exn_to_reply_with_error ("findfs_partuuid", retv);
     CAMLreturnT (void *, NULL);
   }
 
@@ -1971,7 +2037,36 @@ do_nr_devices (void)
   CAMLreturnT (int, Int_val (retv));
 }
 
-/* Wrapper for OCaml function ‘Parted.part_get_gpt_attributes’. */
+/* Wrapper for OCaml function ‘Sfdisk.part_get_disk_guid’. */
+char *
+do_part_get_disk_guid (const char *device)
+{
+  static const value *cb = NULL;
+  CAMLparam0 ();
+  CAMLlocal2 (v, retv);
+  CAMLlocalN (args, 1);
+
+  if (cb == NULL)
+    cb = caml_named_value ("Sfdisk.part_get_disk_guid");
+
+  args[0] = caml_copy_string (device);
+  retv = caml_callbackN_exn (*cb, 1, args);
+
+  if (Is_exception_result (retv)) {
+    retv = Extract_exception (retv);
+    guestfs_int_daemon_exn_to_reply_with_error ("part_get_disk_guid", retv);
+    CAMLreturnT (void *, NULL);
+  }
+
+  char *ret = strdup (String_val (retv));
+  if (ret == NULL) {
+    reply_with_perror ("strdup");
+    CAMLreturnT (char *, NULL);
+  }
+  CAMLreturnT (char *, ret); /* caller frees */
+}
+
+/* Wrapper for OCaml function ‘Sfdisk.part_get_gpt_attributes’. */
 int64_t
 do_part_get_gpt_attributes (const char *device,
                             int partnum)
@@ -1982,7 +2077,7 @@ do_part_get_gpt_attributes (const char *device,
   CAMLlocalN (args, 2);
 
   if (cb == NULL)
-    cb = caml_named_value ("Parted.part_get_gpt_attributes");
+    cb = caml_named_value ("Sfdisk.part_get_gpt_attributes");
 
   args[0] = caml_copy_string (device);
   args[1] = Val_int (partnum);
@@ -1997,7 +2092,7 @@ do_part_get_gpt_attributes (const char *device,
   CAMLreturnT (int64_t, Int64_val (retv));
 }
 
-/* Wrapper for OCaml function ‘Parted.part_get_gpt_guid’. */
+/* Wrapper for OCaml function ‘Sfdisk.part_get_gpt_guid’. */
 char *
 do_part_get_gpt_guid (const char *device,
                       int partnum)
@@ -2008,7 +2103,7 @@ do_part_get_gpt_guid (const char *device,
   CAMLlocalN (args, 2);
 
   if (cb == NULL)
-    cb = caml_named_value ("Parted.part_get_gpt_guid");
+    cb = caml_named_value ("Sfdisk.part_get_gpt_guid");
 
   args[0] = caml_copy_string (device);
   args[1] = Val_int (partnum);
@@ -2028,7 +2123,7 @@ do_part_get_gpt_guid (const char *device,
   CAMLreturnT (char *, ret); /* caller frees */
 }
 
-/* Wrapper for OCaml function ‘Parted.part_get_gpt_type’. */
+/* Wrapper for OCaml function ‘Sfdisk.part_get_gpt_type’. */
 char *
 do_part_get_gpt_type (const char *device,
                       int partnum)
@@ -2039,7 +2134,7 @@ do_part_get_gpt_type (const char *device,
   CAMLlocalN (args, 2);
 
   if (cb == NULL)
-    cb = caml_named_value ("Parted.part_get_gpt_type");
+    cb = caml_named_value ("Sfdisk.part_get_gpt_type");
 
   args[0] = caml_copy_string (device);
   args[1] = Val_int (partnum);
@@ -2059,7 +2154,7 @@ do_part_get_gpt_type (const char *device,
   CAMLreturnT (char *, ret); /* caller frees */
 }
 
-/* Wrapper for OCaml function ‘Parted.part_get_mbr_id’. */
+/* Wrapper for OCaml function ‘Sfdisk.part_get_mbr_id’. */
 int
 do_part_get_mbr_id (const char *device,
                     int partnum)
@@ -2070,7 +2165,7 @@ do_part_get_mbr_id (const char *device,
   CAMLlocalN (args, 2);
 
   if (cb == NULL)
-    cb = caml_named_value ("Parted.part_get_mbr_id");
+    cb = caml_named_value ("Sfdisk.part_get_mbr_id");
 
   args[0] = caml_copy_string (device);
   args[1] = Val_int (partnum);
@@ -2172,7 +2267,57 @@ do_part_list (const char *device)
   CAMLreturnT (guestfs_int_partition_list *, ret);
 }
 
-/* Wrapper for OCaml function ‘Parted.part_set_gpt_attributes’. */
+/* Wrapper for OCaml function ‘Sfdisk.part_set_disk_guid’. */
+int
+do_part_set_disk_guid (const char *device,
+                       const char *guid)
+{
+  static const value *cb = NULL;
+  CAMLparam0 ();
+  CAMLlocal2 (v, retv);
+  CAMLlocalN (args, 2);
+
+  if (cb == NULL)
+    cb = caml_named_value ("Sfdisk.part_set_disk_guid");
+
+  args[0] = caml_copy_string (device);
+  args[1] = caml_copy_string (guid);
+  retv = caml_callbackN_exn (*cb, 2, args);
+
+  if (Is_exception_result (retv)) {
+    retv = Extract_exception (retv);
+    guestfs_int_daemon_exn_to_reply_with_error ("part_set_disk_guid", retv);
+    CAMLreturnT (int, -1);
+  }
+
+  CAMLreturnT (int, 0);
+}
+
+/* Wrapper for OCaml function ‘Sfdisk.part_set_disk_guid_random’. */
+int
+do_part_set_disk_guid_random (const char *device)
+{
+  static const value *cb = NULL;
+  CAMLparam0 ();
+  CAMLlocal2 (v, retv);
+  CAMLlocalN (args, 1);
+
+  if (cb == NULL)
+    cb = caml_named_value ("Sfdisk.part_set_disk_guid_random");
+
+  args[0] = caml_copy_string (device);
+  retv = caml_callbackN_exn (*cb, 1, args);
+
+  if (Is_exception_result (retv)) {
+    retv = Extract_exception (retv);
+    guestfs_int_daemon_exn_to_reply_with_error ("part_set_disk_guid_random", retv);
+    CAMLreturnT (int, -1);
+  }
+
+  CAMLreturnT (int, 0);
+}
+
+/* Wrapper for OCaml function ‘Sfdisk.part_set_gpt_attributes’. */
 int
 do_part_set_gpt_attributes (const char *device,
                             int partnum,
@@ -2184,7 +2329,7 @@ do_part_set_gpt_attributes (const char *device,
   CAMLlocalN (args, 3);
 
   if (cb == NULL)
-    cb = caml_named_value ("Parted.part_set_gpt_attributes");
+    cb = caml_named_value ("Sfdisk.part_set_gpt_attributes");
 
   args[0] = caml_copy_string (device);
   args[1] = Val_int (partnum);
@@ -2194,6 +2339,62 @@ do_part_set_gpt_attributes (const char *device,
   if (Is_exception_result (retv)) {
     retv = Extract_exception (retv);
     guestfs_int_daemon_exn_to_reply_with_error ("part_set_gpt_attributes", retv);
+    CAMLreturnT (int, -1);
+  }
+
+  CAMLreturnT (int, 0);
+}
+
+/* Wrapper for OCaml function ‘Sfdisk.part_set_gpt_guid’. */
+int
+do_part_set_gpt_guid (const char *device,
+                      int partnum,
+                      const char *guid)
+{
+  static const value *cb = NULL;
+  CAMLparam0 ();
+  CAMLlocal2 (v, retv);
+  CAMLlocalN (args, 3);
+
+  if (cb == NULL)
+    cb = caml_named_value ("Sfdisk.part_set_gpt_guid");
+
+  args[0] = caml_copy_string (device);
+  args[1] = Val_int (partnum);
+  args[2] = caml_copy_string (guid);
+  retv = caml_callbackN_exn (*cb, 3, args);
+
+  if (Is_exception_result (retv)) {
+    retv = Extract_exception (retv);
+    guestfs_int_daemon_exn_to_reply_with_error ("part_set_gpt_guid", retv);
+    CAMLreturnT (int, -1);
+  }
+
+  CAMLreturnT (int, 0);
+}
+
+/* Wrapper for OCaml function ‘Sfdisk.part_set_gpt_type’. */
+int
+do_part_set_gpt_type (const char *device,
+                      int partnum,
+                      const char *guid)
+{
+  static const value *cb = NULL;
+  CAMLparam0 ();
+  CAMLlocal2 (v, retv);
+  CAMLlocalN (args, 3);
+
+  if (cb == NULL)
+    cb = caml_named_value ("Sfdisk.part_set_gpt_type");
+
+  args[0] = caml_copy_string (device);
+  args[1] = Val_int (partnum);
+  args[2] = caml_copy_string (guid);
+  retv = caml_callbackN_exn (*cb, 3, args);
+
+  if (Is_exception_result (retv)) {
+    retv = Extract_exception (retv);
+    guestfs_int_daemon_exn_to_reply_with_error ("part_set_gpt_type", retv);
     CAMLreturnT (int, -1);
   }
 

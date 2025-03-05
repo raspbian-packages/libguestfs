@@ -1285,7 +1285,7 @@ val cryptsetup_close : t -> string -> unit
     @since 1.43.2
  *)
 
-val cryptsetup_open : t -> ?readonly:bool -> ?crypttype:string -> string -> string -> string -> unit
+val cryptsetup_open : t -> ?readonly:bool -> ?crypttype:string -> ?cipher:string -> string -> string -> string -> unit
 (** open an encrypted block device
 
     This function depends on the feature "luks".  See also {!feature_available}.
@@ -1581,6 +1581,18 @@ val findfs_label : t -> string -> string
 (** find a filesystem by label
 
     @since 1.5.3
+ *)
+
+val findfs_partlabel : t -> string -> string
+(** find a partition by label
+
+    @since 1.53.5
+ *)
+
+val findfs_partuuid : t -> string -> string
+(** find a partition by UUID
+
+    @since 1.53.5
  *)
 
 val findfs_uuid : t -> string -> string
@@ -3498,15 +3510,11 @@ val part_get_bootable : t -> string -> int -> bool
 val part_get_disk_guid : t -> string -> string
 (** get the GUID of a GPT-partitioned disk
 
-    This function depends on the feature "gdisk".  See also {!feature_available}.
-
     @since 1.33.2
  *)
 
 val part_get_gpt_attributes : t -> string -> int -> int64
 (** get the attribute flags of a GPT partition
-
-    This function depends on the feature "gdisk".  See also {!feature_available}.
 
     @since 1.21.1
  *)
@@ -3514,15 +3522,11 @@ val part_get_gpt_attributes : t -> string -> int -> int64
 val part_get_gpt_guid : t -> string -> int -> string
 (** get the GUID of a GPT partition
 
-    This function depends on the feature "gdisk".  See also {!feature_available}.
-
     @since 1.29.25
  *)
 
 val part_get_gpt_type : t -> string -> int -> string
 (** get the type GUID of a GPT partition
-
-    This function depends on the feature "gdisk".  See also {!feature_available}.
 
     @since 1.21.1
  *)
@@ -3578,15 +3582,11 @@ val part_set_bootable : t -> string -> int -> bool -> unit
 val part_set_disk_guid : t -> string -> string -> unit
 (** set the GUID of a GPT-partitioned disk
 
-    This function depends on the feature "gdisk".  See also {!feature_available}.
-
     @since 1.33.2
  *)
 
 val part_set_disk_guid_random : t -> string -> unit
 (** set the GUID of a GPT-partitioned disk to random value
-
-    This function depends on the feature "gdisk".  See also {!feature_available}.
 
     @since 1.33.2
  *)
@@ -3594,23 +3594,17 @@ val part_set_disk_guid_random : t -> string -> unit
 val part_set_gpt_attributes : t -> string -> int -> int64 -> unit
 (** set the attribute flags of a GPT partition
 
-    This function depends on the feature "gdisk".  See also {!feature_available}.
-
     @since 1.21.1
  *)
 
 val part_set_gpt_guid : t -> string -> int -> string -> unit
 (** set the GUID of a GPT partition
 
-    This function depends on the feature "gdisk".  See also {!feature_available}.
-
     @since 1.29.25
  *)
 
 val part_set_gpt_type : t -> string -> int -> string -> unit
 (** set the type GUID of a GPT partition
-
-    This function depends on the feature "gdisk".  See also {!feature_available}.
 
     @since 1.21.1
  *)
@@ -5515,7 +5509,7 @@ class guestfs : ?environment:bool -> ?close_on_exit:bool -> unit -> object
 
     @since 1.43.2
    *)
-  method cryptsetup_open : ?readonly:bool -> ?crypttype:string -> string -> string -> string -> unit
+  method cryptsetup_open : ?readonly:bool -> ?crypttype:string -> ?cipher:string -> string -> string -> string -> unit
   (** open an encrypted block device
 
     This function depends on the feature "luks".  See also {!feature_available}.
@@ -5766,6 +5760,16 @@ class guestfs : ?environment:bool -> ?close_on_exit:bool -> unit -> object
   (** find a filesystem by label
 
     @since 1.5.3
+   *)
+  method findfs_partlabel : string -> string
+  (** find a partition by label
+
+    @since 1.53.5
+   *)
+  method findfs_partuuid : string -> string
+  (** find a partition by UUID
+
+    @since 1.53.5
    *)
   method findfs_uuid : string -> string
   (** find a filesystem by UUID
@@ -7396,28 +7400,20 @@ class guestfs : ?environment:bool -> ?close_on_exit:bool -> unit -> object
   method part_get_disk_guid : string -> string
   (** get the GUID of a GPT-partitioned disk
 
-    This function depends on the feature "gdisk".  See also {!feature_available}.
-
     @since 1.33.2
    *)
   method part_get_gpt_attributes : string -> int -> int64
   (** get the attribute flags of a GPT partition
-
-    This function depends on the feature "gdisk".  See also {!feature_available}.
 
     @since 1.21.1
    *)
   method part_get_gpt_guid : string -> int -> string
   (** get the GUID of a GPT partition
 
-    This function depends on the feature "gdisk".  See also {!feature_available}.
-
     @since 1.29.25
    *)
   method part_get_gpt_type : string -> int -> string
   (** get the type GUID of a GPT partition
-
-    This function depends on the feature "gdisk".  See also {!feature_available}.
 
     @since 1.21.1
    *)
@@ -7464,35 +7460,25 @@ class guestfs : ?environment:bool -> ?close_on_exit:bool -> unit -> object
   method part_set_disk_guid : string -> string -> unit
   (** set the GUID of a GPT-partitioned disk
 
-    This function depends on the feature "gdisk".  See also {!feature_available}.
-
     @since 1.33.2
    *)
   method part_set_disk_guid_random : string -> unit
   (** set the GUID of a GPT-partitioned disk to random value
-
-    This function depends on the feature "gdisk".  See also {!feature_available}.
 
     @since 1.33.2
    *)
   method part_set_gpt_attributes : string -> int -> int64 -> unit
   (** set the attribute flags of a GPT partition
 
-    This function depends on the feature "gdisk".  See also {!feature_available}.
-
     @since 1.21.1
    *)
   method part_set_gpt_guid : string -> int -> string -> unit
   (** set the GUID of a GPT partition
 
-    This function depends on the feature "gdisk".  See also {!feature_available}.
-
     @since 1.29.25
    *)
   method part_set_gpt_type : string -> int -> string -> unit
   (** set the type GUID of a GPT partition
-
-    This function depends on the feature "gdisk".  See also {!feature_available}.
 
     @since 1.21.1
    *)

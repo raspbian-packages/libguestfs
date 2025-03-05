@@ -884,6 +884,40 @@ guestfs_int_py_file_architecture (PyObject *self, PyObject *args)
 }
 #endif
 
+#ifdef GUESTFS_HAVE_FINDFS_PARTLABEL
+PyObject *
+guestfs_int_py_findfs_partlabel (PyObject *self, PyObject *args)
+{
+  PyObject *py_g;
+  guestfs_h *g;
+  PyObject *py_r = NULL;
+  char *r;
+  const char *label;
+
+  if (!PyArg_ParseTuple (args, (char *) "Os:guestfs_findfs_partlabel",
+                         &py_g, &label))
+    goto out;
+  g = get_handle (py_g);
+
+  Py_BEGIN_ALLOW_THREADS
+  r = guestfs_findfs_partlabel (g, label);
+  Py_END_ALLOW_THREADS
+
+  if (r == NULL) {
+    PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
+    goto out;
+  }
+
+  py_r = guestfs_int_py_fromstring (r);
+  free (r);
+  if (py_r == NULL) goto out;
+
+  PyErr_Clear ();
+ out:
+  return py_r;
+}
+#endif
+
 #ifdef GUESTFS_HAVE_GET_BACKEND
 PyObject *
 guestfs_int_py_get_backend (PyObject *self, PyObject *args)

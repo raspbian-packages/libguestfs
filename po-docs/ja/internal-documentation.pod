@@ -1534,14 +1534,6 @@ Test if option is supported by qemu command line (just by grepping the help text
 
 Test if device is supported by qemu (currently just greps the C<qemu -device ?> output).
 
-=head4 Function C<lib/qemu.c:guestfs_int_qemu_mandatory_locking>
-
- int
- guestfs_int_qemu_mandatory_locking (guestfs_h *g,
-                                     const struct qemu_data *data)
-
-Test if the qemu binary uses mandatory file locking, added in QEMU >= 2.10 (but sometimes disabled).
-
 =head4 Function C<lib/qemu.c:guestfs_int_qemu_escape_param>
 
  char *

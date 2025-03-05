@@ -106,6 +106,7 @@ guestfs.3: guestfs.pod guestfs-actions.pod guestfs-availability.pod guestfs-stru
 guestfish.1: guestfish.pod guestfish-actions.pod guestfish-commands.pod guestfish-prepopts.pod blocksize-option.pod key-option.pod keys-from-stdin-option.pod
 	$(PODWRAPPER) \
 	  --no-strict-checks \
+	  --path $(top_srcdir)/common/options \
 	  --man $@ \
 	  --path $(srcdir) \
 	  --license GPLv2+ \
@@ -114,6 +115,7 @@ guestfish.1: guestfish.pod guestfish-actions.pod guestfish-commands.pod guestfis
 guestmount.1: guestmount.pod blocksize-option.pod key-option.pod keys-from-stdin-option.pod
 	$(PODWRAPPER) \
 	  --no-strict-checks \
+	  --path $(top_srcdir)/common/options \
 	  --man $@ \
 	  --license GPLv2+ \
 	  $<

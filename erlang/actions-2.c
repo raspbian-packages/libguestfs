@@ -540,6 +540,22 @@ run_file_architecture (ei_x_buff *retbuff, const char *buff, int *idx)
 }
 
 int
+run_findfs_partlabel (ei_x_buff *retbuff, const char *buff, int *idx)
+{
+  CLEANUP_FREE char *label;
+  if (decode_string (buff, idx, &label) != 0) return -1;
+  char *r;
+
+  r = guestfs_findfs_partlabel (g, label);
+  if (r == NULL)
+    return make_error (retbuff, "findfs_partlabel");
+
+  if (ei_x_encode_string (retbuff, r) != 0) return -1;
+  free (r);
+  return 0;
+}
+
+int
 run_get_backend (ei_x_buff *retbuff, const char *buff, int *idx)
 {
   char *r;

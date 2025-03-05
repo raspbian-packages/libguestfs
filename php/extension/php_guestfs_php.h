@@ -199,6 +199,8 @@ PHP_FUNCTION (guestfs_find);
 PHP_FUNCTION (guestfs_find0);
 PHP_FUNCTION (guestfs_find_inode);
 PHP_FUNCTION (guestfs_findfs_label);
+PHP_FUNCTION (guestfs_findfs_partlabel);
+PHP_FUNCTION (guestfs_findfs_partuuid);
 PHP_FUNCTION (guestfs_findfs_uuid);
 PHP_FUNCTION (guestfs_fsck);
 PHP_FUNCTION (guestfs_fstrim);

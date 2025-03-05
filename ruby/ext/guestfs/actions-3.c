@@ -1040,6 +1040,11 @@ guestfs_int_ruby_cap_get_file (VALUE gv, VALUE pathv)
  * Compute the cyclic redundancy check (CRC) specified
  * by POSIX for the "cksum" command.
  * 
+ * "gost"
+ * "gost12"
+ * Compute the checksum using GOST R34.11-94 or GOST
+ * R34.11-2012 message digest.
+ * 
  * "md5"
  * Compute the MD5 hash (using the md5sum(1) program).
  * 
@@ -3894,8 +3899,6 @@ guestfs_int_ruby_part_del (VALUE gv, VALUE devicev, VALUE partnumv)
  *
  *
  * [Since] Added in version 1.21.1.
- *
- * [Feature] This function depends on the feature +gdisk+.  See also {#feature_available}[rdoc-ref:feature_available].
  *
  * [C API] For the C API documentation for this function, see
  *         {guestfs_part_get_gpt_type}[http://libguestfs.org/guestfs.3.html#guestfs_part_get_gpt_type].

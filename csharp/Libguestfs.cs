@@ -2787,6 +2787,36 @@ namespace Guestfs
     }
 
     [DllImport ("libguestfs.so.0")]
+    static extern string guestfs_findfs_partlabel (IntPtr h, [In] string label);
+
+    /// <summary>
+    /// find a partition by label
+    /// </summary>
+    public string findfs_partlabel (string label)
+    {
+      string r;
+      r = guestfs_findfs_partlabel (_handle, label);
+      if (r == null)
+        throw new Error (guestfs_last_error (_handle));
+      return r;
+    }
+
+    [DllImport ("libguestfs.so.0")]
+    static extern string guestfs_findfs_partuuid (IntPtr h, [In] string uuid);
+
+    /// <summary>
+    /// find a partition by UUID
+    /// </summary>
+    public string findfs_partuuid (string uuid)
+    {
+      string r;
+      r = guestfs_findfs_partuuid (_handle, uuid);
+      if (r == null)
+        throw new Error (guestfs_last_error (_handle));
+      return r;
+    }
+
+    [DllImport ("libguestfs.so.0")]
     static extern string guestfs_findfs_uuid (IntPtr h, [In] string uuid);
 
     /// <summary>

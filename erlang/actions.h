@@ -248,6 +248,8 @@ int run_find (ei_x_buff *retbuff, const char *buff, int *index);
 int run_find0 (ei_x_buff *retbuff, const char *buff, int *index);
 int run_find_inode (ei_x_buff *retbuff, const char *buff, int *index);
 int run_findfs_label (ei_x_buff *retbuff, const char *buff, int *index);
+int run_findfs_partlabel (ei_x_buff *retbuff, const char *buff, int *index);
+int run_findfs_partuuid (ei_x_buff *retbuff, const char *buff, int *index);
 int run_findfs_uuid (ei_x_buff *retbuff, const char *buff, int *index);
 int run_fsck (ei_x_buff *retbuff, const char *buff, int *index);
 int run_fstrim (ei_x_buff *retbuff, const char *buff, int *index);

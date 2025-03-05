@@ -207,6 +207,8 @@ extern struct command_entry find_cmd_entry;
 extern struct command_entry find0_cmd_entry;
 extern struct command_entry find_inode_cmd_entry;
 extern struct command_entry findfs_label_cmd_entry;
+extern struct command_entry findfs_partlabel_cmd_entry;
+extern struct command_entry findfs_partuuid_cmd_entry;
 extern struct command_entry findfs_uuid_cmd_entry;
 extern struct command_entry fsck_cmd_entry;
 extern struct command_entry fstrim_cmd_entry;
@@ -960,6 +962,10 @@ find_inode, &find_inode_cmd_entry
 find-inode, &find_inode_cmd_entry
 findfs_label, &findfs_label_cmd_entry
 findfs-label, &findfs_label_cmd_entry
+findfs_partlabel, &findfs_partlabel_cmd_entry
+findfs-partlabel, &findfs_partlabel_cmd_entry
+findfs_partuuid, &findfs_partuuid_cmd_entry
+findfs-partuuid, &findfs_partuuid_cmd_entry
 findfs_uuid, &findfs_uuid_cmd_entry
 findfs-uuid, &findfs_uuid_cmd_entry
 fsck, &fsck_cmd_entry

@@ -98,17 +98,11 @@ struct command_entry add_drive_cmd_entry = {
           "            filename is interpreted as a local file or device. This is the\n"
           "            default if the optional protocol parameter is omitted.\n"
           "\n"
-          "        \"protocol = \"ftp\"|\"ftps\"|\"http\"|\"https\"|\"tftp\"\"\n"
-          "            Connect to a remote FTP, HTTP or TFTP server. The \"server\"\n"
-          "            parameter must also be supplied - see below.\n"
+          "        \"protocol = \"ftp\"|\"ftps\"|\"http\"|\"https\"\"\n"
+          "            Connect to a remote FTP or HTTP server. The \"server\" parameter\n"
+          "            must also be supplied - see below.\n"
           "\n"
-          "            See also: \"FTP, HTTP AND TFTP\" in guestfs(3)\n"
-          "\n"
-          "        \"protocol = \"gluster\"\"\n"
-          "            Connect to the GlusterFS server. The \"server\" parameter must\n"
-          "            also be supplied - see below.\n"
-          "\n"
-          "            See also: \"GLUSTER\" in guestfs(3)\n"
+          "            See also: \"FTP AND HTTP\" in guestfs(3)\n"
           "\n"
           "        \"protocol = \"iscsi\"\"\n"
           "            Connect to the iSCSI server. The \"server\" parameter must also be\n"
@@ -131,12 +125,6 @@ struct command_entry add_drive_cmd_entry = {
           "\n"
           "            See also: \"CEPH\" in guestfs(3).\n"
           "\n"
-          "        \"protocol = \"sheepdog\"\"\n"
-          "            Connect to the Sheepdog server. The \"server\" parameter may also\n"
-          "            be supplied - see below.\n"
-          "\n"
-          "            See also: \"SHEEPDOG\" in guestfs(3).\n"
-          "\n"
           "        \"protocol = \"ssh\"\"\n"
           "            Connect to the Secure Shell (ssh) server.\n"
           "\n"
@@ -152,12 +140,10 @@ struct command_entry add_drive_cmd_entry = {
           "         Protocol       Number of servers required\n"
           "         --------       --------------------------\n"
           "         file           List must be empty or param not used at all\n"
-          "         ftp|ftps|http|https|tftp  Exactly one\n"
-          "         gluster        Exactly one\n"
+          "         ftp|ftps|http|https  Exactly one\n"
           "         iscsi          Exactly one\n"
           "         nbd            Exactly one\n"
           "         rbd            Zero or more\n"
-          "         sheepdog       Zero or more\n"
           "         ssh            Exactly one\n"
           "\n"
           "        Each list element is a string specifying a server. The string must\n"
@@ -173,8 +159,8 @@ struct command_entry add_drive_cmd_entry = {
           "        protocol is used (see /etc/services).\n"
           "\n"
           "    \"username\"\n"
-          "        For the \"ftp\", \"ftps\", \"http\", \"https\", \"iscsi\", \"rbd\", \"ssh\" and\n"
-          "        \"tftp\" protocols, this specifies the remote username.\n"
+          "        For the \"ftp\", \"ftps\", \"http\", \"https\", \"iscsi\", \"rbd\" and \"ssh\"\n"
+          "        protocols, this specifies the remote username.\n"
           "\n"
           "        If not given, then the local username is used for \"ssh\", and no\n"
           "        authentication is attempted for ceph. But note this sometimes may\n"
@@ -669,6 +655,9 @@ struct command_entry file_architecture_cmd_entry = {
           "    \"ppc64le\"\n"
           "        64 bit Power PC (little endian).\n"
           "\n"
+          "    \"loongarch64\"\n"
+          "        64 bit LoongArch64 (little endian).\n"
+          "\n"
           "    \"riscv32\"\n"
           "    \"riscv64\"\n"
           "    \"riscv128\"\n"
@@ -727,6 +716,25 @@ struct command_entry file_architecture_cmd_entry = {
           "",
   .synopsis = "file-architecture filename",
   .run = run_file_architecture
+};
+
+struct command_entry findfs_partlabel_cmd_entry = {
+  .name = "findfs-partlabel",
+  .help = "NAME\n"
+          "    findfs-partlabel - find a partition by label\n"
+          "\n"
+          "SYNOPSIS\n"
+          "     findfs-partlabel label\n"
+          "\n"
+          "DESCRIPTION\n"
+          "    This command searches the partitions and returns the one which has the\n"
+          "    given label. An error is returned if no such partition can be found.\n"
+          "\n"
+          "    To find the label of a partition, use \"blkid\" (\"PART_ENTRY_NAME\").\n"
+          "\n"
+          "",
+  .synopsis = "findfs-partlabel label",
+  .run = run_findfs_partlabel
 };
 
 struct command_entry get_backend_cmd_entry = {

@@ -1271,6 +1271,9 @@ guestfs_cryptsetup_open_va (guestfs_h *g,
     case GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE:
       optargs_s.crypttype = va_arg (args, const char *);
       break;
+    case GUESTFS_CRYPTSETUP_OPEN_CIPHER:
+      optargs_s.cipher = va_arg (args, const char *);
+      break;
     default:
       error (g, "%s: unknown option %d (this can happen if a program is compiled against a newer version of libguestfs, then dynamically linked to an older version)",
              "cryptsetup_open", i);

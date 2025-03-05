@@ -26,6 +26,11 @@
 #ifndef GUESTFS_INTERNAL_H_
 #define GUESTFS_INTERNAL_H_
 
+#ifdef __APPLE__
+#include <crt_externs.h>
+#define environ (*_NSGetEnviron())
+#endif // __APPLE__
+
 #include <stdbool.h>
 #include <assert.h>
 
@@ -213,24 +218,18 @@ enum drive_protocol {
   drive_protocol_file,
   drive_protocol_ftp,
   drive_protocol_ftps,
-  drive_protocol_gluster,
   drive_protocol_http,
   drive_protocol_https,
   drive_protocol_iscsi,
   drive_protocol_nbd,
   drive_protocol_rbd,
-  drive_protocol_sheepdog,
   drive_protocol_ssh,
-  drive_protocol_tftp,
 };
 
 enum drive_transport {
   drive_transport_none = 0,     /* no transport specified */
   drive_transport_tcp,          /* +tcp */
   drive_transport_unix,         /* +unix */
-  /* XXX In theory gluster+rdma could be supported here, but
-   * I have no idea what gluster+rdma URLs would look like.
-   */
 };
 
 struct drive_server {
@@ -665,11 +664,7 @@ extern void guestfs_int_end_stringsbuf (guestfs_h *g, struct stringsbuf *sb);
 
 extern void guestfs_int_free_stringsbuf (struct stringsbuf *sb);
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
 #define CLEANUP_FREE_STRINGSBUF __attribute__((cleanup(guestfs_int_cleanup_free_stringsbuf)))
-#else
-#define CLEANUP_FREE_STRINGSBUF
-#endif
 extern void guestfs_int_cleanup_free_stringsbuf (struct stringsbuf *sb);
 
 /* proto.c */
@@ -789,11 +784,7 @@ extern int guestfs_int_cmd_pipe_run (struct command *cmd, const char *mode);
 extern int guestfs_int_cmd_pipe_wait (struct command *cmd);
 extern char *guestfs_int_cmd_get_pipe_errors (struct command *cmd);
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
 #define CLEANUP_CMD_CLOSE __attribute__((cleanup(guestfs_int_cleanup_cmd_close)))
-#else
-#define CLEANUP_CMD_CLOSE
-#endif
 extern void guestfs_int_cleanup_cmd_close (struct command **);
 
 /* launch-*.c constructors */
@@ -808,7 +799,6 @@ extern struct qemu_data *guestfs_int_test_qemu (guestfs_h *g);
 extern struct version guestfs_int_qemu_version (guestfs_h *g, struct qemu_data *);
 extern int guestfs_int_qemu_supports (guestfs_h *g, const struct qemu_data *, const char *option);
 extern int guestfs_int_qemu_supports_device (guestfs_h *g, const struct qemu_data *, const char *device_name);
-extern int guestfs_int_qemu_mandatory_locking (guestfs_h *g, const struct qemu_data *data);
 extern bool guestfs_int_platform_has_kvm (guestfs_h *g, const struct qemu_data *data);
 extern char *guestfs_int_drive_source_qemu_param (guestfs_h *g, const struct drive_source *src);
 extern bool guestfs_int_discard_possible (guestfs_h *g, struct drive *drv, const struct version *qemu_version);

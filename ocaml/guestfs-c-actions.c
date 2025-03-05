@@ -5671,17 +5671,17 @@ guestfs_int_ocaml_cryptsetup_close (value gv, value devicev)
 }
 
 /* Automatically generated wrapper for function
- * val cryptsetup_open : t -> ?readonly:bool -> ?crypttype:string -> string -> string -> string -> unit
+ * val cryptsetup_open : t -> ?readonly:bool -> ?crypttype:string -> ?cipher:string -> string -> string -> string -> unit
  */
 
 /* Emit prototype to appease gcc's -Wmissing-prototypes. */
-value guestfs_int_ocaml_cryptsetup_open (value gv, value readonlyv, value crypttypev, value devicev, value keyv, value mapnamev);
+value guestfs_int_ocaml_cryptsetup_open (value gv, value readonlyv, value crypttypev, value cipherv, value devicev, value keyv, value mapnamev);
 
 value
-guestfs_int_ocaml_cryptsetup_open (value gv, value readonlyv, value crypttypev, value devicev, value keyv, value mapnamev)
+guestfs_int_ocaml_cryptsetup_open (value gv, value readonlyv, value crypttypev, value cipherv, value devicev, value keyv, value mapnamev)
 {
-  CAMLparam5 (gv, readonlyv, crypttypev, devicev, keyv);
-  CAMLxparam1 (mapnamev);
+  CAMLparam5 (gv, readonlyv, crypttypev, cipherv, devicev);
+  CAMLxparam2 (keyv, mapnamev);
   CAMLlocal1 (rv);
 
   guestfs_h *g = Guestfs_val (gv);
@@ -5708,6 +5708,11 @@ guestfs_int_ocaml_cryptsetup_open (value gv, value readonlyv, value crypttypev, 
     optargs_s.crypttype = strdup (String_val (Field (crypttypev, 0)));
     if (optargs_s.crypttype == NULL) caml_raise_out_of_memory ();
   }
+  if (cipherv != Val_int (0)) {
+    optargs_s.bitmask |= GUESTFS_CRYPTSETUP_OPEN_CIPHER_BITMASK;
+    optargs_s.cipher = strdup (String_val (Field (cipherv, 0)));
+    if (optargs_s.cipher == NULL) caml_raise_out_of_memory ();
+  }
   int r;
 
   caml_release_runtime_system ();
@@ -5718,6 +5723,8 @@ guestfs_int_ocaml_cryptsetup_open (value gv, value readonlyv, value crypttypev, 
   free (mapname);
   if (crypttypev != Val_int (0))
     free ((char *) optargs_s.crypttype);
+  if (cipherv != Val_int (0))
+    free ((char *) optargs_s.cipher);
   if (r == -1)
     guestfs_int_ocaml_raise_error (g, "cryptsetup_open");
 
@@ -5731,7 +5738,7 @@ value guestfs_int_ocaml_cryptsetup_open_byte (value *argv, int argn);
 value
 guestfs_int_ocaml_cryptsetup_open_byte (value *argv, int argn ATTRIBUTE_UNUSED)
 {
-  return guestfs_int_ocaml_cryptsetup_open (argv[0], argv[1], argv[2], argv[3], argv[4], argv[5]);
+  return guestfs_int_ocaml_cryptsetup_open (argv[0], argv[1], argv[2], argv[3], argv[4], argv[5], argv[6]);
 }
 
 /* Automatically generated wrapper for function
@@ -7357,6 +7364,74 @@ guestfs_int_ocaml_findfs_label (value gv, value labelv)
   free (label);
   if (r == NULL)
     guestfs_int_ocaml_raise_error (g, "findfs_label");
+
+  rv = caml_copy_string (r);
+  free (r);
+  CAMLreturn (rv);
+}
+
+/* Automatically generated wrapper for function
+ * val findfs_partlabel : t -> string -> string
+ */
+
+/* Emit prototype to appease gcc's -Wmissing-prototypes. */
+value guestfs_int_ocaml_findfs_partlabel (value gv, value labelv);
+
+value
+guestfs_int_ocaml_findfs_partlabel (value gv, value labelv)
+{
+  CAMLparam2 (gv, labelv);
+  CAMLlocal1 (rv);
+
+  guestfs_h *g = Guestfs_val (gv);
+  if (g == NULL)
+    guestfs_int_ocaml_raise_closed ("findfs_partlabel");
+
+  char *label;
+  label = strdup (String_val (labelv));
+  if (label == NULL) caml_raise_out_of_memory ();
+  char *r;
+
+  caml_release_runtime_system ();
+  r = guestfs_findfs_partlabel (g, label);
+  caml_acquire_runtime_system ();
+  free (label);
+  if (r == NULL)
+    guestfs_int_ocaml_raise_error (g, "findfs_partlabel");
+
+  rv = caml_copy_string (r);
+  free (r);
+  CAMLreturn (rv);
+}
+
+/* Automatically generated wrapper for function
+ * val findfs_partuuid : t -> string -> string
+ */
+
+/* Emit prototype to appease gcc's -Wmissing-prototypes. */
+value guestfs_int_ocaml_findfs_partuuid (value gv, value uuidv);
+
+value
+guestfs_int_ocaml_findfs_partuuid (value gv, value uuidv)
+{
+  CAMLparam2 (gv, uuidv);
+  CAMLlocal1 (rv);
+
+  guestfs_h *g = Guestfs_val (gv);
+  if (g == NULL)
+    guestfs_int_ocaml_raise_closed ("findfs_partuuid");
+
+  char *uuid;
+  uuid = strdup (String_val (uuidv));
+  if (uuid == NULL) caml_raise_out_of_memory ();
+  char *r;
+
+  caml_release_runtime_system ();
+  r = guestfs_findfs_partuuid (g, uuid);
+  caml_acquire_runtime_system ();
+  free (uuid);
+  if (r == NULL)
+    guestfs_int_ocaml_raise_error (g, "findfs_partuuid");
 
   rv = caml_copy_string (r);
   free (r);

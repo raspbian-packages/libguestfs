@@ -1647,6 +1647,7 @@ extern GUESTFS_DLL_PUBLIC int guestfs_cryptsetup_close (guestfs_h *g, const char
 #define GUESTFS_HAVE_CRYPTSETUP_OPEN 1
 #define GUESTFS_CRYPTSETUP_OPEN_READONLY 0
 #define GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE 1
+#define GUESTFS_CRYPTSETUP_OPEN_CIPHER 2
 extern GUESTFS_DLL_PUBLIC int guestfs_cryptsetup_open (guestfs_h *g, const char *device, const char *key, const char *mapname, ...);
 extern GUESTFS_DLL_PUBLIC int guestfs_cryptsetup_open_va (guestfs_h *g, const char *device, const char *key, const char *mapname, va_list args);
 
@@ -1656,6 +1657,8 @@ struct guestfs_cryptsetup_open_argv {
   int readonly;
 # define GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK (UINT64_C(1)<<1)
   const char *crypttype;
+# define GUESTFS_CRYPTSETUP_OPEN_CIPHER_BITMASK (UINT64_C(1)<<2)
+  const char *cipher;
 };
 
 extern GUESTFS_DLL_PUBLIC int guestfs_cryptsetup_open_argv (guestfs_h *g, const char *device, const char *key, const char *mapname, const struct guestfs_cryptsetup_open_argv *optargs);
@@ -1860,6 +1863,12 @@ extern GUESTFS_DLL_PUBLIC struct guestfs_tsk_dirent_list *guestfs_find_inode (gu
 
 #define GUESTFS_HAVE_FINDFS_LABEL 1
 extern GUESTFS_DLL_PUBLIC char *guestfs_findfs_label (guestfs_h *g, const char *label);
+
+#define GUESTFS_HAVE_FINDFS_PARTLABEL 1
+extern GUESTFS_DLL_PUBLIC char *guestfs_findfs_partlabel (guestfs_h *g, const char *label);
+
+#define GUESTFS_HAVE_FINDFS_PARTUUID 1
+extern GUESTFS_DLL_PUBLIC char *guestfs_findfs_partuuid (guestfs_h *g, const char *uuid);
 
 #define GUESTFS_HAVE_FINDFS_UUID 1
 extern GUESTFS_DLL_PUBLIC char *guestfs_findfs_uuid (guestfs_h *g, const char *uuid);
@@ -4676,6 +4685,8 @@ extern GUESTFS_DLL_PUBLIC void guestfs_free_internal_mountable_list (struct gues
 #define LIBGUESTFS_HAVE_FIND0 1
 #define LIBGUESTFS_HAVE_FIND_INODE 1
 #define LIBGUESTFS_HAVE_FINDFS_LABEL 1
+#define LIBGUESTFS_HAVE_FINDFS_PARTLABEL 1
+#define LIBGUESTFS_HAVE_FINDFS_PARTUUID 1
 #define LIBGUESTFS_HAVE_FINDFS_UUID 1
 #define LIBGUESTFS_HAVE_FSCK 1
 #define LIBGUESTFS_HAVE_FSTRIM 1

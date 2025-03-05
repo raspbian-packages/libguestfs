@@ -682,6 +682,12 @@ extern PyObject *guestfs_int_py_find_inode (PyObject *self, PyObject *args);
 #ifdef GUESTFS_HAVE_FINDFS_LABEL
 extern PyObject *guestfs_int_py_findfs_label (PyObject *self, PyObject *args);
 #endif
+#ifdef GUESTFS_HAVE_FINDFS_PARTLABEL
+extern PyObject *guestfs_int_py_findfs_partlabel (PyObject *self, PyObject *args);
+#endif
+#ifdef GUESTFS_HAVE_FINDFS_PARTUUID
+extern PyObject *guestfs_int_py_findfs_partuuid (PyObject *self, PyObject *args);
+#endif
 #ifdef GUESTFS_HAVE_FINDFS_UUID
 extern PyObject *guestfs_int_py_findfs_uuid (PyObject *self, PyObject *args);
 #endif

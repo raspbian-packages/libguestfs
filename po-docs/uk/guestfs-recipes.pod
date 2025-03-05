@@ -337,16 +337,16 @@ L<https://rwmj.wordpress.com/2011/03/31/tip-code-for-getting-dhcp-address-from-a
 
 Зробіть скрипт придатним до виконання і запустіть його на іменованій гостьовій системі:
 
- # product-name.sh RHEL60x64
- Red Hat Enterprise Linux Server release 6.0 (Santiago)
+ $ product-name.sh fedora-40.img
+ Fedora Linux 40 (Forty)
 
 Крім того, ви можете скористатися запитом XPath у XML L<virt-inspector(1)> за допомогою засобу командного рядка C<xpath> або з вашої улюбленої мови програмування:
 
- # virt-inspector RHEL60x64 > xml
- # xpath '//product_name' < xml
- Found 1 nodes:
+ $ virt-inspector -a fedora-40.img > xml
+ $ xpath -e '//product_name' < xml
+ Found 1 nodes in stdin:
  -- NODE --
- <product_name>Red Hat Enterprise Linux Server release 6.0 (Santiago)</product_name>
+ <product_name>Fedora Linux 40 (Forty)</product_name>
 
 =head1 Отримання типового ядра для завантаження для віртуальної машини Linux
 

@@ -157,6 +157,8 @@ module Guestfs (
   find,
   find0,
   findfs_label,
+  findfs_partlabel,
+  findfs_partuuid,
   findfs_uuid,
   fsck,
   get_attach_method,
@@ -2168,6 +2170,30 @@ foreign import ccall unsafe "guestfs.h guestfs_findfs_label" c_findfs_label
 findfs_label :: GuestfsH -> String -> IO String
 findfs_label h label = do
   r <- withCString label $ \label -> withForeignPtr h (\p -> c_findfs_label p label)
+  if (r == nullPtr)
+    then do
+      err <- last_error h
+      fail err
+    else peekCString r
+
+foreign import ccall unsafe "guestfs.h guestfs_findfs_partlabel" c_findfs_partlabel
+  :: GuestfsP -> CString -> IO CString
+
+findfs_partlabel :: GuestfsH -> String -> IO String
+findfs_partlabel h label = do
+  r <- withCString label $ \label -> withForeignPtr h (\p -> c_findfs_partlabel p label)
+  if (r == nullPtr)
+    then do
+      err <- last_error h
+      fail err
+    else peekCString r
+
+foreign import ccall unsafe "guestfs.h guestfs_findfs_partuuid" c_findfs_partuuid
+  :: GuestfsP -> CString -> IO CString
+
+findfs_partuuid :: GuestfsH -> String -> IO String
+findfs_partuuid h uuid = do
+  r <- withCString uuid $ \uuid -> withForeignPtr h (\p -> c_findfs_partuuid p uuid)
   if (r == nullPtr)
     then do
       err <- last_error h

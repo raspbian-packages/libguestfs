@@ -674,7 +674,7 @@ VFAT зберігає довгі назви файлів у форматі на�
 
 =head2 Допоможіть, не працює!
 
-Якщо не працює жодна із програм libguestfs, віддайте вказану нижче команду і вставте виведений текст B<повністю, без змін> до повідомлення на адресу C<libguestfs> @ C<redhat.com>:
+If no libguestfs program seems to work at all, run the program below and paste the B<complete, unedited> output into an email to C<guestfs@lists.libguestfs.org>:
 
  libguestfs-test-tool
 

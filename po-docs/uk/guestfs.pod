@@ -474,9 +474,9 @@ the encrypted RBD disk is specified as a backing file at some level in the qcow2
 
 This limitation is due to libvirt's (justified) separate handling of disks vs. secrets.  When the RBD username and secret are provided inside a qcow2 backing file specification, libvirt does not construct an ephemeral secret object from those, for Ceph authentication.  Refer to L<https://bugzilla.redhat.com/2033247>.
 
-=head3 FTP, HTTP ТА TFTP
+=head3 FTP AND HTTP
 
-Libguestfs може отримувати доступ до віддалених дисків за допомогою протоколів FTP, FTPS, HTTP, HTTPS та TFTP.
+Libguestfs can access remote disks over FTP, FTPS, HTTP or HTTPS protocols.
 
 Для цього встановіть необов'язкові параметри C<protocol> і C<server> у виклику L</guestfs_add_drive_opts>, ось так:
 
@@ -487,26 +487,13 @@ Libguestfs може отримувати доступ до віддалених 
                          GUESTFS_ADD_DRIVE_OPTS_SERVER, servers,
                          -1);
 
-Значенням параметра C<protocol> може бути один з таких рядків: C<"ftp">, C<"ftps">, C<"http">, C<"https"> або C<"tftp">.
+The C<protocol> can be one of C<"ftp">, C<"ftps">, C<"http">, or C<"https">.
 
-C<servers> (параметр C<server>) — список, який має складатися з одного запису. Цей єдиний запис є рядком, який визначає вебсервер або сервер FTP чи TFTP. Документацію щодо рядка server наведено у описі L</guestfs_add_drive_opts>.
+C<servers> (the C<server> parameter) is a list which must have a single element.  The single element is a string defining the web or FTP server. The format of this string is documented in L</guestfs_add_drive_opts>.
 
 =head3 GLUSTER
 
-Libguestfs може отримувати доступ до дисків Gluster.
-
-Для цього встановіть необов'язкові параметри C<protocol> і C<server> у виклику L</guestfs_add_drive_opts>, ось так:
-
- char **servers = { "gluster.example.org:24007", NULL };
- guestfs_add_drive_opts (g, "volname/image",
-                         GUESTFS_ADD_DRIVE_OPTS_FORMAT, "raw",
-                         GUESTFS_ADD_DRIVE_OPTS_PROTOCOL, "gluster",
-                         GUESTFS_ADD_DRIVE_OPTS_SERVER, servers,
-                         -1);
-
-C<servers> (параметр C<server>) — список, який має складатися з одного запису. Цей єдиний запис є рядком, який визначає сервер Gluster. Документацію щодо рядка server наведено у описі L</guestfs_add_drive_opts>.
-
-Зауважте, що, зазвичай, gluster потребує запуску клієнтського процесу (тобто libguestfs) від імені користувача B<root> і повідомляє про незрозумілі помилки, якщо процес запущено від звичайного користувача (наприклад, «No data available» або «Дані недоступні»).
+Glusterfs support was removed in libguestfs 1.54 (2024).
 
 =head3 ISCSI
 
@@ -572,18 +559,7 @@ C<сервер> фактично є списком серверів. Для до
 
 =head3 SHEEPDOG
 
-Libguestfs може отримувати доступ до дисків Sheepdog.
-
-Для цього встановіть необов'язкові параметри C<protocol> і C<server> у виклику L</guestfs_add_drive_opts>, ось так:
-
- char **servers = { /* optional servers ... */ NULL };
- guestfs_add_drive_opts (g, "volume",
-                         GUESTFS_ADD_DRIVE_OPTS_FORMAT, "raw",
-                         GUESTFS_ADD_DRIVE_OPTS_PROTOCOL, "sheepdog",
-                         GUESTFS_ADD_DRIVE_OPTS_SERVER, servers,
-                         -1);
-
-Необов'язковий список C<servers> має складатися із нуля або якоїсь кількості адрес серверів (C<"назва_вузла:порт">). Формат рядків server описано у документації з L</guestfs_add_drive_opts>.
+Sheepdog support was removed in libguestfs 1.54 (2024).
 
 =head3 SSH
 

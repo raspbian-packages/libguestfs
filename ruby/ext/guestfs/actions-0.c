@@ -1736,6 +1736,9 @@ guestfs_int_ruby_hivex_value_type (VALUE gv, VALUE valuehv)
  * "centos"
  * CentOS.
  * 
+ * "circle"
+ * Circle Linux.
+ * 
  * "cirros"
  * Cirros.
  * 
@@ -1789,6 +1792,9 @@ guestfs_int_ruby_hivex_value_type (VALUE gv, VALUE valuehv)
  * 
  * "openbsd"
  * OpenBSD.
+ * 
+ * "openeuler"
+ * openEuler.
  * 
  * "openmandriva"
  * OpenMandriva Lx.

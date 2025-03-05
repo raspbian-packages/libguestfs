@@ -1,6 +1,6 @@
-# generated automatically by aclocal 1.16.5 -*- Autoconf -*-
+# generated automatically by aclocal 1.17 -*- Autoconf -*-
 
-# Copyright (C) 1996-2021 Free Software Foundation, Inc.
+# Copyright (C) 1996-2024 Free Software Foundation, Inc.
 
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -20,11 +20,13 @@ You have another version of autoconf.  It may work, but is not guaranteed to.
 If you have problems, you may need to regenerate the build system entirely.
 To do so, use the procedure documented by the package, typically 'autoreconf'.])])
 
-# build-to-host.m4 serial 3
+# build-to-host.m4
+# serial 5
 dnl Copyright (C) 2023-2024 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
+dnl This file is offered as-is, without any warranty.
 
 dnl Written by Bruno Haible.
 
@@ -100,8 +102,202 @@ changequote([,])dnl
   esac
 ])
 
-# gettext.m4 serial 78 (gettext-0.22.4)
-dnl Copyright (C) 1995-2014, 2016, 2018-2023 Free Software Foundation, Inc.
+
+dnl The following macros are convenience invocations of gl_BUILD_TO_HOST
+dnl for some of the variables that are defined by Autoconf.
+dnl To do so for _all_ the possible variables, use the module 'configmake'.
+
+dnl Defines bindir_c and bindir_c_make.
+AC_DEFUN_ONCE([gl_BUILD_TO_HOST_BINDIR],
+[
+  dnl Find the final value of bindir.
+  gl_saved_prefix="${prefix}"
+  gl_saved_exec_prefix="${exec_prefix}"
+  gl_saved_bindir="${bindir}"
+  dnl Unfortunately, prefix and exec_prefix get only finally determined
+  dnl at the end of configure.
+  if test "X$prefix" = "XNONE"; then
+    prefix="$ac_default_prefix"
+  fi
+  if test "X$exec_prefix" = "XNONE"; then
+    exec_prefix='${prefix}'
+  fi
+  eval exec_prefix="$exec_prefix"
+  eval bindir="$bindir"
+  gl_BUILD_TO_HOST([bindir])
+  bindir="${gl_saved_bindir}"
+  exec_prefix="${gl_saved_exec_prefix}"
+  prefix="${gl_saved_prefix}"
+])
+
+dnl Defines datadir_c and datadir_c_make,
+dnl where datadir = $(datarootdir)
+AC_DEFUN_ONCE([gl_BUILD_TO_HOST_DATADIR],
+[
+  dnl Find the final value of datadir.
+  gl_saved_prefix="${prefix}"
+  gl_saved_datarootdir="${datarootdir}"
+  gl_saved_datadir="${datadir}"
+  dnl Unfortunately, prefix gets only finally determined at the end of
+  dnl configure.
+  if test "X$prefix" = "XNONE"; then
+    prefix="$ac_default_prefix"
+  fi
+  eval datarootdir="$datarootdir"
+  eval datadir="$datadir"
+  gl_BUILD_TO_HOST([datadir])
+  datadir="${gl_saved_datadir}"
+  datarootdir="${gl_saved_datarootdir}"
+  prefix="${gl_saved_prefix}"
+])
+
+dnl Defines libdir_c and libdir_c_make.
+AC_DEFUN_ONCE([gl_BUILD_TO_HOST_LIBDIR],
+[
+  dnl Find the final value of libdir.
+  gl_saved_prefix="${prefix}"
+  gl_saved_exec_prefix="${exec_prefix}"
+  gl_saved_libdir="${libdir}"
+  dnl Unfortunately, prefix and exec_prefix get only finally determined
+  dnl at the end of configure.
+  if test "X$prefix" = "XNONE"; then
+    prefix="$ac_default_prefix"
+  fi
+  if test "X$exec_prefix" = "XNONE"; then
+    exec_prefix='${prefix}'
+  fi
+  eval exec_prefix="$exec_prefix"
+  eval libdir="$libdir"
+  gl_BUILD_TO_HOST([libdir])
+  libdir="${gl_saved_libdir}"
+  exec_prefix="${gl_saved_exec_prefix}"
+  prefix="${gl_saved_prefix}"
+])
+
+dnl Defines libexecdir_c and libexecdir_c_make.
+AC_DEFUN_ONCE([gl_BUILD_TO_HOST_LIBEXECDIR],
+[
+  dnl Find the final value of libexecdir.
+  gl_saved_prefix="${prefix}"
+  gl_saved_exec_prefix="${exec_prefix}"
+  gl_saved_libexecdir="${libexecdir}"
+  dnl Unfortunately, prefix and exec_prefix get only finally determined
+  dnl at the end of configure.
+  if test "X$prefix" = "XNONE"; then
+    prefix="$ac_default_prefix"
+  fi
+  if test "X$exec_prefix" = "XNONE"; then
+    exec_prefix='${prefix}'
+  fi
+  eval exec_prefix="$exec_prefix"
+  eval libexecdir="$libexecdir"
+  gl_BUILD_TO_HOST([libexecdir])
+  libexecdir="${gl_saved_libexecdir}"
+  exec_prefix="${gl_saved_exec_prefix}"
+  prefix="${gl_saved_prefix}"
+])
+
+dnl Defines localedir_c and localedir_c_make.
+AC_DEFUN_ONCE([gl_BUILD_TO_HOST_LOCALEDIR],
+[
+  dnl Find the final value of localedir.
+  gl_saved_prefix="${prefix}"
+  gl_saved_datarootdir="${datarootdir}"
+  gl_saved_localedir="${localedir}"
+  dnl Unfortunately, prefix gets only finally determined at the end of
+  dnl configure.
+  if test "X$prefix" = "XNONE"; then
+    prefix="$ac_default_prefix"
+  fi
+  eval datarootdir="$datarootdir"
+  eval localedir="$localedir"
+  gl_BUILD_TO_HOST([localedir])
+  localedir="${gl_saved_localedir}"
+  datarootdir="${gl_saved_datarootdir}"
+  prefix="${gl_saved_prefix}"
+])
+
+dnl Defines pkgdatadir_c and pkgdatadir_c_make,
+dnl where pkgdatadir = $(datadir)/$(PACKAGE)
+AC_DEFUN_ONCE([gl_BUILD_TO_HOST_PKGDATADIR],
+[
+  dnl Find the final value of pkgdatadir.
+  gl_saved_prefix="${prefix}"
+  gl_saved_datarootdir="${datarootdir}"
+  gl_saved_datadir="${datadir}"
+  gl_saved_pkgdatadir="${pkgdatadir}"
+  dnl Unfortunately, prefix gets only finally determined at the end of
+  dnl configure.
+  if test "X$prefix" = "XNONE"; then
+    prefix="$ac_default_prefix"
+  fi
+  eval datarootdir="$datarootdir"
+  eval datadir="$datadir"
+  eval pkgdatadir="$pkgdatadir"
+  gl_BUILD_TO_HOST([pkgdatadir])
+  pkgdatadir="${gl_saved_pkgdatadir}"
+  datadir="${gl_saved_datadir}"
+  datarootdir="${gl_saved_datarootdir}"
+  prefix="${gl_saved_prefix}"
+])
+
+dnl Defines pkglibdir_c and pkglibdir_c_make,
+dnl where pkglibdir = $(libdir)/$(PACKAGE)
+AC_DEFUN_ONCE([gl_BUILD_TO_HOST_PKGLIBDIR],
+[
+  dnl Find the final value of pkglibdir.
+  gl_saved_prefix="${prefix}"
+  gl_saved_exec_prefix="${exec_prefix}"
+  gl_saved_libdir="${libdir}"
+  gl_saved_pkglibdir="${pkglibdir}"
+  dnl Unfortunately, prefix and exec_prefix get only finally determined
+  dnl at the end of configure.
+  if test "X$prefix" = "XNONE"; then
+    prefix="$ac_default_prefix"
+  fi
+  if test "X$exec_prefix" = "XNONE"; then
+    exec_prefix='${prefix}'
+  fi
+  eval exec_prefix="$exec_prefix"
+  eval libdir="$libdir"
+  eval pkglibdir="$pkglibdir"
+  gl_BUILD_TO_HOST([pkglibdir])
+  pkglibdir="${gl_saved_pkglibdir}"
+  libdir="${gl_saved_libdir}"
+  exec_prefix="${gl_saved_exec_prefix}"
+  prefix="${gl_saved_prefix}"
+])
+
+dnl Defines pkglibexecdir_c and pkglibexecdir_c_make,
+dnl where pkglibexecdir = $(libexecdir)/$(PACKAGE)
+AC_DEFUN_ONCE([gl_BUILD_TO_HOST_PKGLIBEXECDIR],
+[
+  dnl Find the final value of pkglibexecdir.
+  gl_saved_prefix="${prefix}"
+  gl_saved_exec_prefix="${exec_prefix}"
+  gl_saved_libexecdir="${libexecdir}"
+  gl_saved_pkglibexecdir="${pkglibexecdir}"
+  dnl Unfortunately, prefix and exec_prefix get only finally determined
+  dnl at the end of configure.
+  if test "X$prefix" = "XNONE"; then
+    prefix="$ac_default_prefix"
+  fi
+  if test "X$exec_prefix" = "XNONE"; then
+    exec_prefix='${prefix}'
+  fi
+  eval exec_prefix="$exec_prefix"
+  eval libexecdir="$libexecdir"
+  eval pkglibexecdir="$pkglibexecdir"
+  gl_BUILD_TO_HOST([pkglibexecdir])
+  pkglibexecdir="${gl_saved_pkglibexecdir}"
+  libexecdir="${gl_saved_libexecdir}"
+  exec_prefix="${gl_saved_exec_prefix}"
+  prefix="${gl_saved_prefix}"
+])
+
+# gettext.m4
+# serial 81 (gettext-0.23)
+dnl Copyright (C) 1995-2014, 2016, 2018-2024 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -117,7 +313,7 @@ dnl They are *not* in the public domain.
 
 dnl Authors:
 dnl   Ulrich Drepper <drepper@cygnus.com>, 1995-2000.
-dnl   Bruno Haible <haible@clisp.cons.org>, 2000-2006, 2008-2010.
+dnl   Bruno Haible <bruno@clisp.org>, 2000-2024.
 
 dnl Macro to add for using GNU gettext.
 
@@ -284,9 +480,9 @@ return * gettext ("")$gt_expression_test_code + __GNU_GETTEXT_SYMBOL_EXPRESSION
           AC_LIB_LINKFLAGS_BODY([intl])
           AC_CACHE_CHECK([for GNU gettext in libintl],
             [$gt_func_gnugettext_libintl],
-           [gt_save_CPPFLAGS="$CPPFLAGS"
+           [gt_saved_CPPFLAGS="$CPPFLAGS"
             CPPFLAGS="$CPPFLAGS $INCINTL"
-            gt_save_LIBS="$LIBS"
+            gt_saved_LIBS="$LIBS"
             LIBS="$LIBS $LIBINTL"
             dnl Now see whether libintl exists and does not depend on libiconv.
             AC_LINK_IFELSE(
@@ -348,8 +544,8 @@ return * gettext ("")$gt_expression_test_code + __GNU_GETTEXT_SYMBOL_EXPRESSION
                  eval "$gt_func_gnugettext_libintl=yes"
                 ])
             fi
-            CPPFLAGS="$gt_save_CPPFLAGS"
-            LIBS="$gt_save_LIBS"])
+            CPPFLAGS="$gt_saved_CPPFLAGS"
+            LIBS="$gt_saved_LIBS"])
         fi
 
         dnl If an already present or preinstalled GNU gettext() is found,
@@ -466,21 +662,7 @@ return * gettext ("")$gt_expression_test_code + __GNU_GETTEXT_SYMBOL_EXPRESSION
   AC_SUBST([POSUB])
 
   dnl Define localedir_c and localedir_c_make.
-  dnl Find the final value of localedir.
-  gt_save_prefix="${prefix}"
-  gt_save_datarootdir="${datarootdir}"
-  gt_save_localedir="${localedir}"
-  dnl Unfortunately, prefix gets only finally determined at the end of
-  dnl configure.
-  if test "X$prefix" = "XNONE"; then
-    prefix="$ac_default_prefix"
-  fi
-  eval datarootdir="$datarootdir"
-  eval localedir="$localedir"
-  gl_BUILD_TO_HOST([localedir])
-  localedir="${gt_save_localedir}"
-  datarootdir="${gt_save_datarootdir}"
-  prefix="${gt_save_prefix}"
+  gl_BUILD_TO_HOST_LOCALEDIR
 ])
 
 
@@ -506,11 +688,13 @@ AC_DEFUN([AM_GNU_GETTEXT_VERSION], [])
 dnl Usage: AM_GNU_GETTEXT_REQUIRE_VERSION([gettext-version])
 AC_DEFUN([AM_GNU_GETTEXT_REQUIRE_VERSION], [])
 
-# host-cpu-c-abi.m4 serial 17
+# host-cpu-c-abi.m4
+# serial 18
 dnl Copyright (C) 2002-2024 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
+dnl This file is offered as-is, without any warranty.
 
 dnl From Bruno Haible and Sam Steingold.
 
@@ -543,7 +727,7 @@ dnl * The same canonical name is used for different endiannesses. You can
 dnl   determine the endianness through preprocessor symbols:
 dnl   - 'arm': test __ARMEL__.
 dnl   - 'mips', 'mipsn32', 'mips64': test _MIPSEB vs. _MIPSEL.
-dnl   - 'powerpc64': test _BIG_ENDIAN vs. _LITTLE_ENDIAN.
+dnl   - 'powerpc64': test __BIG_ENDIAN__ vs. __LITTLE_ENDIAN__.
 dnl * The same name 'i386' is used for CPUs of type i386, i486, i586
 dnl   (Pentium), AMD K7, Pentium II, Pentium IV, etc., because
 dnl   - Instructions that do not exist on all of these CPUs (cmpxchg,
@@ -1034,12 +1218,14 @@ changequote([,])dnl
   HOST_CPU_C_ABI_32BIT="$gl_cv_host_cpu_c_abi_32bit"
 ])
 
-# iconv.m4 serial 27
+# iconv.m4
+# serial 28
 dnl Copyright (C) 2000-2002, 2007-2014, 2016-2024 Free Software Foundation,
 dnl Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
+dnl This file is offered as-is, without any warranty.
 
 dnl From Bruno Haible.
 
@@ -1110,7 +1296,7 @@ AC_DEFUN([AM_ICONV_LINK],
   if test "$am_cv_func_iconv" = yes; then
     AC_CACHE_CHECK([for working iconv], [am_cv_func_iconv_works], [
       dnl This tests against bugs in AIX 5.1, AIX 6.1..7.1, HP-UX 11.11,
-      dnl Solaris 10.
+      dnl Solaris 10, macOS 14.4.
       gl_saved_LIBS="$LIBS"
       if test $am_cv_lib_iconv = yes; then
         LIBS="$LIBS $LIBICONV"
@@ -1149,6 +1335,35 @@ AC_DEFUN([AM_ICONV_LINK],
         iconv_close (cd_utf8_to_88591);
       }
   }
+  /* Test against macOS 14.4 bug: Failures are not distinguishable from
+     successful returns.
+     POSIX:2018 says: "The iconv() function shall ... return the number of
+     non-identical conversions performed."
+     But here, the conversion always does transliteration (the suffixes
+     "//TRANSLIT" and "//IGNORE" have no effect, nor does iconvctl()) and
+     does not report when it does a non-identical conversion.  */
+  {
+    iconv_t cd_utf8_to_88591 = iconv_open ("ISO-8859-1", "UTF-8");
+    if (cd_utf8_to_88591 != (iconv_t)(-1))
+      {
+        static ICONV_CONST char input[] = "\305\202"; /* LATIN SMALL LETTER L WITH STROKE */
+        char buf[10];
+        ICONV_CONST char *inptr = input;
+        size_t inbytesleft = strlen (input);
+        char *outptr = buf;
+        size_t outbytesleft = sizeof (buf);
+        size_t res = iconv (cd_utf8_to_88591,
+                            &inptr, &inbytesleft,
+                            &outptr, &outbytesleft);
+        /* Here:
+           With glibc, GNU libiconv (including macOS up to 13): res == (size_t)-1, errno == EILSEQ.
+           With musl libc, NetBSD 10, Solaris 11: res == 1.
+           With macOS 14.4: res == 0, output is "l".  */
+        if (res == 0)
+          result |= 2;
+        iconv_close (cd_utf8_to_88591);
+      }
+  }
   /* Test against Solaris 10 bug: Failures are not distinguishable from
      successful returns.  */
   {
@@ -1165,7 +1380,7 @@ AC_DEFUN([AM_ICONV_LINK],
                             &inptr, &inbytesleft,
                             &outptr, &outbytesleft);
         if (res == 0)
-          result |= 2;
+          result |= 4;
         iconv_close (cd_ascii_to_88591);
       }
   }
@@ -1184,7 +1399,7 @@ AC_DEFUN([AM_ICONV_LINK],
                             &inptr, &inbytesleft,
                             &outptr, &outbytesleft);
         if (res != (size_t)(-1) || outptr - buf > 1 || buf[1] != (char)0xAD)
-          result |= 4;
+          result |= 8;
         iconv_close (cd_88591_to_utf8);
       }
   }
@@ -1204,7 +1419,7 @@ AC_DEFUN([AM_ICONV_LINK],
                             &inptr, &inbytesleft,
                             &outptr, &outbytesleft);
         if ((int)res > 0)
-          result |= 8;
+          result |= 16;
         iconv_close (cd_88591_to_utf8);
       }
   }
@@ -1222,7 +1437,7 @@ AC_DEFUN([AM_ICONV_LINK],
     iconv_t cd4 = iconv_open ("utf8", "eucJP");
     if (cd1 == (iconv_t)(-1) && cd2 == (iconv_t)(-1)
         && cd3 == (iconv_t)(-1) && cd4 == (iconv_t)(-1))
-      result |= 16;
+      result |= 32;
     if (cd1 != (iconv_t)(-1))
       iconv_close (cd1);
     if (cd2 != (iconv_t)(-1))
@@ -1328,11 +1543,13 @@ size_t iconv (iconv_t cd, char * *inbuf, size_t *inbytesleft, char * *outbuf, si
   fi
 ])
 
-# intlmacosx.m4 serial 10 (gettext-0.23)
+# intlmacosx.m4
+# serial 10 (gettext-0.23)
 dnl Copyright (C) 2004-2014, 2016, 2019-2024 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
+dnl This file is offered as-is, without any warranty.
 dnl
 dnl This file can be used in projects which are not available under
 dnl the GNU General Public License or the GNU Lesser General Public
@@ -1398,11 +1615,13 @@ AC_DEFUN([gt_INTL_MACOSX],
   AC_SUBST([INTL_MACOSX_LIBS])
 ])
 
-# lib-ld.m4 serial 13
+# lib-ld.m4
+# serial 13
 dnl Copyright (C) 1996-2003, 2009-2024 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
+dnl This file is offered as-is, without any warranty.
 
 dnl Subroutines of libtool.m4,
 dnl with replacements s/_*LT_PATH/AC_LIB_PROG/ and s/lt_/acl_/ to avoid
@@ -1567,11 +1786,13 @@ fi
 AC_LIB_PROG_LD_GNU
 ])
 
-# lib-link.m4 serial 34
+# lib-link.m4
+# serial 34
 dnl Copyright (C) 2001-2024 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
+dnl This file is offered as-is, without any warranty.
 
 dnl From Bruno Haible.
 
@@ -2381,11 +2602,13 @@ AC_DEFUN([AC_LIB_LINKFLAGS_FROM_LIBS],
   AC_SUBST([$1])
 ])
 
-# lib-prefix.m4 serial 22
+# lib-prefix.m4
+# serial 23
 dnl Copyright (C) 2001-2005, 2008-2024 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
+dnl This file is offered as-is, without any warranty.
 
 dnl From Bruno Haible.
 
@@ -2557,7 +2780,7 @@ AC_DEFUN([AC_LIB_PREPARE_MULTILIB],
 
   AC_CACHE_CHECK([for ELF binary format], [gl_cv_elf],
     [AC_EGREP_CPP([Extensible Linking Format],
-       [#if defined __ELF__ || (defined __linux__ && defined __EDG__)
+       [#if defined __ELF__ || (defined __linux__ && (defined __EDG__ || defined __SUNPRO_C))
         Extensible Linking Format
         #endif
        ],
@@ -2714,7 +2937,8 @@ changequote(,)dnl
 changequote([,])dnl
 ])
 
-# nls.m4 serial 6 (gettext-0.20.2)
+# nls.m4
+# serial 6 (gettext-0.20.2)
 dnl Copyright (C) 1995-2003, 2005-2006, 2008-2014, 2016, 2019-2024 Free
 dnl Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
@@ -2795,8 +3019,8 @@ m4_if(m4_version_compare(PKG_MACROS_VERSION, [$1]), -1,
     [m4_fatal([pkg.m4 version $1 or higher is required but ]PKG_MACROS_VERSION[ found])])
 ])dnl PKG_PREREQ
 
-dnl PKG_PROG_PKG_CONFIG([MIN-VERSION])
-dnl ----------------------------------
+dnl PKG_PROG_PKG_CONFIG([MIN-VERSION], [ACTION-IF-NOT-FOUND])
+dnl ---------------------------------------------------------
 dnl Since: 0.16
 dnl
 dnl Search for the pkg-config tool and set the PKG_CONFIG variable to
@@ -2804,6 +3028,12 @@ dnl first found in the path. Checks that the version of pkg-config found
 dnl is at least MIN-VERSION. If MIN-VERSION is not specified, 0.9.0 is
 dnl used since that's the first version where most current features of
 dnl pkg-config existed.
+dnl
+dnl If pkg-config is not found or older than specified, it will result
+dnl in an empty PKG_CONFIG variable. To avoid widespread issues with
+dnl scripts not checking it, ACTION-IF-NOT-FOUND defaults to aborting.
+dnl You can specify [PKG_CONFIG=false] as an action instead, which would
+dnl result in pkg-config tests failing, but no bogus error messages.
 AC_DEFUN([PKG_PROG_PKG_CONFIG],
 [m4_pattern_forbid([^_?PKG_[A-Z_]+$])
 m4_pattern_allow([^PKG_CONFIG(_(PATH|LIBDIR|SYSROOT_DIR|ALLOW_SYSTEM_(CFLAGS|LIBS)))?$])
@@ -2824,6 +3054,9 @@ if test -n "$PKG_CONFIG"; then
 		AC_MSG_RESULT([no])
 		PKG_CONFIG=""
 	fi
+fi
+if test -z "$PKG_CONFIG"; then
+	m4_default([$2], [AC_MSG_ERROR([pkg-config not found])])
 fi[]dnl
 ])dnl PKG_PROG_PKG_CONFIG
 
@@ -3091,7 +3324,8 @@ AS_IF([test "$AS_TR_SH([with_]m4_tolower([$1]))" = "yes"],
         [AC_DEFINE([HAVE_][$1], 1, [Enable ]m4_tolower([$1])[ support])])
 ])dnl PKG_HAVE_DEFINE_WITH_MODULES
 
-# po.m4 serial 32 (gettext-0.21.1)
+# po.m4
+# serial 33 (gettext-0.23)
 dnl Copyright (C) 1995-2014, 2016, 2018-2022, 2024 Free Software Foundation,
 dnl Inc.
 dnl This file is free software; the Free Software Foundation
@@ -3109,7 +3343,7 @@ dnl They are *not* in the public domain.
 
 dnl Authors:
 dnl   Ulrich Drepper <drepper@cygnus.com>, 1995-2000.
-dnl   Bruno Haible <haible@clisp.cons.org>, 2000-2003.
+dnl   Bruno Haible <bruno@clisp.org>, 2000-2024.
 
 AC_PREREQ([2.60])
 
@@ -3124,7 +3358,7 @@ AC_DEFUN([AM_PO_SUBDIRS],
 
   dnl Release version of the gettext macros. This is used to ensure that
   dnl the gettext macros and po/Makefile.in.in are in sync.
-  AC_SUBST([GETTEXT_MACRO_VERSION], [0.20])
+  AC_SUBST([GETTEXT_MACRO_VERSION], [0.22])
 
   dnl Perform the following tests also if --disable-nls has been given,
   dnl because they are needed for "make dist" to work.
@@ -3547,7 +3781,8 @@ AC_DEFUN([AM_XGETTEXT_OPTION],
   XGETTEXT_EXTRA_OPTIONS="$XGETTEXT_EXTRA_OPTIONS $1"
 ])
 
-# progtest.m4 serial 10 (gettext-0.23)
+# progtest.m4
+# serial 10 (gettext-0.23)
 dnl Copyright (C) 1996-2003, 2005, 2008-2024 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -3639,7 +3874,7 @@ fi
 AC_SUBST([$1])dnl
 ])
 
-# Copyright (C) 2002-2021 Free Software Foundation, Inc.
+# Copyright (C) 2002-2024 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -3651,10 +3886,10 @@ AC_SUBST([$1])dnl
 # generated from the m4 files accompanying Automake X.Y.
 # (This private macro should not be called outside this file.)
 AC_DEFUN([AM_AUTOMAKE_VERSION],
-[am__api_version='1.16'
+[am__api_version='1.17'
 dnl Some users find AM_AUTOMAKE_VERSION and mistake it for a way to
 dnl require some minimum version.  Point them to the right macro.
-m4_if([$1], [1.16.5], [],
+m4_if([$1], [1.17], [],
       [AC_FATAL([Do not call $0, use AM_INIT_AUTOMAKE([$1]).])])dnl
 ])
 
@@ -3670,14 +3905,14 @@ m4_define([_AM_AUTOCONF_VERSION], [])
 # Call AM_AUTOMAKE_VERSION and AM_AUTOMAKE_VERSION so they can be traced.
 # This function is AC_REQUIREd by AM_INIT_AUTOMAKE.
 AC_DEFUN([AM_SET_CURRENT_AUTOMAKE_VERSION],
-[AM_AUTOMAKE_VERSION([1.16.5])dnl
+[AM_AUTOMAKE_VERSION([1.17])dnl
 m4_ifndef([AC_AUTOCONF_VERSION],
   [m4_copy([m4_PACKAGE_VERSION], [AC_AUTOCONF_VERSION])])dnl
 _AM_AUTOCONF_VERSION(m4_defn([AC_AUTOCONF_VERSION]))])
 
 # AM_AUX_DIR_EXPAND                                         -*- Autoconf -*-
 
-# Copyright (C) 2001-2021 Free Software Foundation, Inc.
+# Copyright (C) 2001-2024 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -3729,7 +3964,7 @@ am_aux_dir=`cd "$ac_aux_dir" && pwd`
 
 # AM_CONDITIONAL                                            -*- Autoconf -*-
 
-# Copyright (C) 1997-2021 Free Software Foundation, Inc.
+# Copyright (C) 1997-2024 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -3760,7 +3995,7 @@ AC_CONFIG_COMMANDS_PRE(
 Usually this means the macro was only invoked conditionally.]])
 fi])])
 
-# Copyright (C) 1999-2021 Free Software Foundation, Inc.
+# Copyright (C) 1999-2024 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -3892,7 +4127,7 @@ AC_CACHE_CHECK([dependency style of $depcc],
       # icc doesn't choke on unknown options, it will just issue warnings
       # or remarks (even with -Werror).  So we grep stderr for any message
       # that says an option was ignored or not supported.
-      # When given -MP, icc 7.0 and 7.1 complain thusly:
+      # When given -MP, icc 7.0 and 7.1 complain thus:
       #   icc: Command line warning: ignoring option '-M'; no argument required
       # The diagnosis changed in icc 8.0:
       #   icc: Command line remark: option '-MP' not supported
@@ -3951,7 +4186,7 @@ _AM_SUBST_NOTMAKE([am__nodep])dnl
 
 # Generate code to set up dependency tracking.              -*- Autoconf -*-
 
-# Copyright (C) 1999-2021 Free Software Foundation, Inc.
+# Copyright (C) 1999-2024 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -4019,7 +4254,7 @@ AC_DEFUN([AM_OUTPUT_DEPENDENCY_COMMANDS],
 
 # Do all the work for Automake.                             -*- Autoconf -*-
 
-# Copyright (C) 1996-2021 Free Software Foundation, Inc.
+# Copyright (C) 1996-2024 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -4153,7 +4388,7 @@ if test -z "$CSCOPE"; then
 fi
 AC_SUBST([CSCOPE])
 
-AC_REQUIRE([AM_SILENT_RULES])dnl
+AC_REQUIRE([_AM_SILENT_RULES])dnl
 dnl The testsuite driver may need to know about EXEEXT, so add the
 dnl 'am__EXEEXT' conditional if _AM_COMPILER_EXEEXT was seen.  This
 dnl macro is hooked onto _AC_COMPILER_EXEEXT early, see below.
@@ -4161,47 +4396,9 @@ AC_CONFIG_COMMANDS_PRE(dnl
 [m4_provide_if([_AM_COMPILER_EXEEXT],
   [AM_CONDITIONAL([am__EXEEXT], [test -n "$EXEEXT"])])])dnl
 
-# POSIX will say in a future version that running "rm -f" with no argument
-# is OK; and we want to be able to make that assumption in our Makefile
-# recipes.  So use an aggressive probe to check that the usage we want is
-# actually supported "in the wild" to an acceptable degree.
-# See automake bug#10828.
-# To make any issue more visible, cause the running configure to be aborted
-# by default if the 'rm' program in use doesn't match our expectations; the
-# user can still override this though.
-if rm -f && rm -fr && rm -rf; then : OK; else
-  cat >&2 <<'END'
-Oops!
+AC_REQUIRE([_AM_PROG_RM_F])
+AC_REQUIRE([_AM_PROG_XARGS_N])
 
-Your 'rm' program seems unable to run without file operands specified
-on the command line, even when the '-f' option is present.  This is contrary
-to the behaviour of most rm programs out there, and not conforming with
-the upcoming POSIX standard: <http://austingroupbugs.net/view.php?id=542>
-
-Please tell bug-automake@gnu.org about your system, including the value
-of your $PATH and any error possibly output before this message.  This
-can help us improve future automake versions.
-
-END
-  if test x"$ACCEPT_INFERIOR_RM_PROGRAM" = x"yes"; then
-    echo 'Configuration will proceed anyway, since you have set the' >&2
-    echo 'ACCEPT_INFERIOR_RM_PROGRAM variable to "yes"' >&2
-    echo >&2
-  else
-    cat >&2 <<'END'
-Aborting the configuration process, to ensure you take notice of the issue.
-
-You can download and install GNU coreutils to get an 'rm' implementation
-that behaves properly: <https://www.gnu.org/software/coreutils/>.
-
-If you want to complete the configuration process using your problematic
-'rm' anyway, export the environment variable ACCEPT_INFERIOR_RM_PROGRAM
-to "yes", and re-run configure.
-
-END
-    AC_MSG_ERROR([Your 'rm' program is bad, sorry.])
-  fi
-fi
 dnl The trailing newline in this macro's definition is deliberate, for
 dnl backward compatibility and to allow trailing 'dnl'-style comments
 dnl after the AM_INIT_AUTOMAKE invocation. See automake bug#16841.
@@ -4234,7 +4431,7 @@ for _am_header in $config_headers :; do
 done
 echo "timestamp for $_am_arg" >`AS_DIRNAME(["$_am_arg"])`/stamp-h[]$_am_stamp_count])
 
-# Copyright (C) 2001-2021 Free Software Foundation, Inc.
+# Copyright (C) 2001-2024 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -4255,7 +4452,7 @@ if test x"${install_sh+set}" != xset; then
 fi
 AC_SUBST([install_sh])])
 
-# Copyright (C) 2003-2021 Free Software Foundation, Inc.
+# Copyright (C) 2003-2024 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -4276,7 +4473,7 @@ AC_SUBST([am__leading_dot])])
 
 # Check to see how 'make' treats includes.	            -*- Autoconf -*-
 
-# Copyright (C) 2001-2021 Free Software Foundation, Inc.
+# Copyright (C) 2001-2024 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -4319,7 +4516,7 @@ AC_SUBST([am__quote])])
 
 # Fake the existence of programs that GNU maintainers use.  -*- Autoconf -*-
 
-# Copyright (C) 1997-2021 Free Software Foundation, Inc.
+# Copyright (C) 1997-2024 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -4353,7 +4550,7 @@ fi
 
 # Helper functions for option handling.                     -*- Autoconf -*-
 
-# Copyright (C) 2001-2021 Free Software Foundation, Inc.
+# Copyright (C) 2001-2024 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -4382,7 +4579,7 @@ AC_DEFUN([_AM_SET_OPTIONS],
 AC_DEFUN([_AM_IF_OPTION],
 [m4_ifset(_AM_MANGLE_OPTION([$1]), [$2], [$3])])
 
-# Copyright (C) 1999-2021 Free Software Foundation, Inc.
+# Copyright (C) 1999-2024 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -4429,7 +4626,23 @@ AC_LANG_POP([C])])
 # For backward compatibility.
 AC_DEFUN_ONCE([AM_PROG_CC_C_O], [AC_REQUIRE([AC_PROG_CC])])
 
-# Copyright (C) 2001-2021 Free Software Foundation, Inc.
+# Copyright (C) 2022-2024 Free Software Foundation, Inc.
+#
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# _AM_PROG_RM_F
+# ---------------
+# Check whether 'rm -f' without any arguments works.
+# https://bugs.gnu.org/10828
+AC_DEFUN([_AM_PROG_RM_F],
+[am__rm_f_notfound=
+AS_IF([(rm -f && rm -fr && rm -rf) 2>/dev/null], [], [am__rm_f_notfound='""'])
+AC_SUBST(am__rm_f_notfound)
+])
+
+# Copyright (C) 2001-2024 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -4448,16 +4661,169 @@ AC_DEFUN([AM_RUN_LOG],
 
 # Check to make sure that the build environment is sane.    -*- Autoconf -*-
 
-# Copyright (C) 1996-2021 Free Software Foundation, Inc.
+# Copyright (C) 1996-2024 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
 
+# _AM_SLEEP_FRACTIONAL_SECONDS
+# ----------------------------
+AC_DEFUN([_AM_SLEEP_FRACTIONAL_SECONDS], [dnl
+AC_CACHE_CHECK([whether sleep supports fractional seconds],
+               am_cv_sleep_fractional_seconds, [dnl
+AS_IF([sleep 0.001 2>/dev/null], [am_cv_sleep_fractional_seconds=yes],
+                                 [am_cv_sleep_fractional_seconds=no])
+])])
+
+# _AM_FILESYSTEM_TIMESTAMP_RESOLUTION
+# -----------------------------------
+# Determine the filesystem's resolution for file modification
+# timestamps.  The coarsest we know of is FAT, with a resolution
+# of only two seconds, even with the most recent "exFAT" extensions.
+# The finest (e.g. ext4 with large inodes, XFS, ZFS) is one
+# nanosecond, matching clock_gettime.  However, it is probably not
+# possible to delay execution of a shell script for less than one
+# millisecond, due to process creation overhead and scheduling
+# granularity, so we don't check for anything finer than that. (See below.)
+AC_DEFUN([_AM_FILESYSTEM_TIMESTAMP_RESOLUTION], [dnl
+AC_REQUIRE([_AM_SLEEP_FRACTIONAL_SECONDS])
+AC_CACHE_CHECK([filesystem timestamp resolution],
+               am_cv_filesystem_timestamp_resolution, [dnl
+# Default to the worst case.
+am_cv_filesystem_timestamp_resolution=2
+
+# Only try to go finer than 1 sec if sleep can do it.
+# Don't try 1 sec, because if 0.01 sec and 0.1 sec don't work,
+# - 1 sec is not much of a win compared to 2 sec, and
+# - it takes 2 seconds to perform the test whether 1 sec works.
+# 
+# Instead, just use the default 2s on platforms that have 1s resolution,
+# accept the extra 1s delay when using $sleep in the Automake tests, in
+# exchange for not incurring the 2s delay for running the test for all
+# packages.
+#
+am_try_resolutions=
+if test "$am_cv_sleep_fractional_seconds" = yes; then
+  # Even a millisecond often causes a bunch of false positives,
+  # so just try a hundredth of a second. The time saved between .001 and
+  # .01 is not terribly consequential.
+  am_try_resolutions="0.01 0.1 $am_try_resolutions"
+fi
+
+# In order to catch current-generation FAT out, we must *modify* files
+# that already exist; the *creation* timestamp is finer.  Use names
+# that make ls -t sort them differently when they have equal
+# timestamps than when they have distinct timestamps, keeping
+# in mind that ls -t prints the *newest* file first.
+rm -f conftest.ts?
+: > conftest.ts1
+: > conftest.ts2
+: > conftest.ts3
+
+# Make sure ls -t actually works.  Do 'set' in a subshell so we don't
+# clobber the current shell's arguments. (Outer-level square brackets
+# are removed by m4; they're present so that m4 does not expand
+# <dollar><star>; be careful, easy to get confused.)
+if (
+     set X `[ls -t conftest.ts[12]]` &&
+     {
+       test "$[]*" != "X conftest.ts1 conftest.ts2" ||
+       test "$[]*" != "X conftest.ts2 conftest.ts1";
+     }
+); then :; else
+  # If neither matched, then we have a broken ls.  This can happen
+  # if, for instance, CONFIG_SHELL is bash and it inherits a
+  # broken ls alias from the environment.  This has actually
+  # happened.  Such a system could not be considered "sane".
+  _AS_ECHO_UNQUOTED(
+    ["Bad output from ls -t: \"`[ls -t conftest.ts[12]]`\""],
+    [AS_MESSAGE_LOG_FD])
+  AC_MSG_FAILURE([ls -t produces unexpected output.
+Make sure there is not a broken ls alias in your environment.])
+fi
+
+for am_try_res in $am_try_resolutions; do
+  # Any one fine-grained sleep might happen to cross the boundary
+  # between two values of a coarser actual resolution, but if we do
+  # two fine-grained sleeps in a row, at least one of them will fall
+  # entirely within a coarse interval.
+  echo alpha > conftest.ts1
+  sleep $am_try_res
+  echo beta > conftest.ts2
+  sleep $am_try_res
+  echo gamma > conftest.ts3
+
+  # We assume that 'ls -t' will make use of high-resolution
+  # timestamps if the operating system supports them at all.
+  if (set X `ls -t conftest.ts?` &&
+      test "$[]2" = conftest.ts3 &&
+      test "$[]3" = conftest.ts2 &&
+      test "$[]4" = conftest.ts1); then
+    #
+    # Ok, ls -t worked. If we're at a resolution of 1 second, we're done,
+    # because we don't need to test make.
+    make_ok=true
+    if test $am_try_res != 1; then
+      # But if we've succeeded so far with a subsecond resolution, we
+      # have one more thing to check: make. It can happen that
+      # everything else supports the subsecond mtimes, but make doesn't;
+      # notably on macOS, which ships make 3.81 from 2006 (the last one
+      # released under GPLv2). https://bugs.gnu.org/68808
+      # 
+      # We test $MAKE if it is defined in the environment, else "make".
+      # It might get overridden later, but our hope is that in practice
+      # it does not matter: it is the system "make" which is (by far)
+      # the most likely to be broken, whereas if the user overrides it,
+      # probably they did so with a better, or at least not worse, make.
+      # https://lists.gnu.org/archive/html/automake/2024-06/msg00051.html
+      #
+      # Create a Makefile (real tab character here):
+      rm -f conftest.mk
+      echo 'conftest.ts1: conftest.ts2' >conftest.mk
+      echo '	touch conftest.ts2' >>conftest.mk
+      #
+      # Now, running
+      #   touch conftest.ts1; touch conftest.ts2; make
+      # should touch ts1 because ts2 is newer. This could happen by luck,
+      # but most often, it will fail if make's support is insufficient. So
+      # test for several consecutive successes.
+      #
+      # (We reuse conftest.ts[12] because we still want to modify existing
+      # files, not create new ones, per above.)
+      n=0
+      make=${MAKE-make}
+      until test $n -eq 3; do
+        echo one > conftest.ts1
+        sleep $am_try_res
+        echo two > conftest.ts2 # ts2 should now be newer than ts1
+        if $make -f conftest.mk | grep 'up to date' >/dev/null; then
+          make_ok=false
+          break # out of $n loop
+        fi
+        n=`expr $n + 1`
+      done
+    fi
+    #
+    if $make_ok; then
+      # Everything we know to check worked out, so call this resolution good.
+      am_cv_filesystem_timestamp_resolution=$am_try_res
+      break # out of $am_try_res loop
+    fi
+    # Otherwise, we'll go on to check the next resolution.
+  fi
+done
+rm -f conftest.ts?
+# (end _am_filesystem_timestamp_resolution)
+])])
+
 # AM_SANITY_CHECK
 # ---------------
 AC_DEFUN([AM_SANITY_CHECK],
-[AC_MSG_CHECKING([whether build environment is sane])
+[AC_REQUIRE([_AM_FILESYSTEM_TIMESTAMP_RESOLUTION])
+# This check should not be cached, as it may vary across builds of
+# different projects.
+AC_MSG_CHECKING([whether build environment is sane])
 # Reject unsafe characters in $srcdir or the absolute working directory
 # name.  Accept space and tab only in the latter.
 am_lf='
@@ -4476,49 +4842,40 @@ esac
 # symlink; some systems play weird games with the mod time of symlinks
 # (eg FreeBSD returns the mod time of the symlink's containing
 # directory).
-if (
-   am_has_slept=no
-   for am_try in 1 2; do
-     echo "timestamp, slept: $am_has_slept" > conftest.file
-     set X `ls -Lt "$srcdir/configure" conftest.file 2> /dev/null`
-     if test "$[*]" = "X"; then
-	# -L didn't work.
-	set X `ls -t "$srcdir/configure" conftest.file`
-     fi
-     if test "$[*]" != "X $srcdir/configure conftest.file" \
-	&& test "$[*]" != "X conftest.file $srcdir/configure"; then
+am_build_env_is_sane=no
+am_has_slept=no
+rm -f conftest.file
+for am_try in 1 2; do
+  echo "timestamp, slept: $am_has_slept" > conftest.file
+  if (
+    set X `ls -Lt "$srcdir/configure" conftest.file 2> /dev/null`
+    if test "$[]*" = "X"; then
+      # -L didn't work.
+      set X `ls -t "$srcdir/configure" conftest.file`
+    fi
+    test "$[]2" = conftest.file
+  ); then
+    am_build_env_is_sane=yes
+    break
+  fi
+  # Just in case.
+  sleep "$am_cv_filesystem_timestamp_resolution"
+  am_has_slept=yes
+done
 
-	# If neither matched, then we have a broken ls.  This can happen
-	# if, for instance, CONFIG_SHELL is bash and it inherits a
-	# broken ls alias from the environment.  This has actually
-	# happened.  Such a system could not be considered "sane".
-	AC_MSG_ERROR([ls -t appears to fail.  Make sure there is not a broken
-  alias in your environment])
-     fi
-     if test "$[2]" = conftest.file || test $am_try -eq 2; then
-       break
-     fi
-     # Just in case.
-     sleep 1
-     am_has_slept=yes
-   done
-   test "$[2]" = conftest.file
-   )
-then
-   # Ok.
-   :
-else
-   AC_MSG_ERROR([newly created file is older than distributed files!
+AC_MSG_RESULT([$am_build_env_is_sane])
+if test "$am_build_env_is_sane" = no; then
+  AC_MSG_ERROR([newly created file is older than distributed files!
 Check your system clock])
 fi
-AC_MSG_RESULT([yes])
+
 # If we didn't sleep, we still need to ensure time stamps of config.status and
 # generated files are strictly newer.
 am_sleep_pid=
-if grep 'slept: no' conftest.file >/dev/null 2>&1; then
-  ( sleep 1 ) &
+AS_IF([test -e conftest.file || grep 'slept: no' conftest.file >/dev/null 2>&1],, [dnl
+  ( sleep "$am_cv_filesystem_timestamp_resolution" ) &
   am_sleep_pid=$!
-fi
+])
 AC_CONFIG_COMMANDS_PRE(
   [AC_MSG_CHECKING([that generated files are newer than configure])
    if test -n "$am_sleep_pid"; then
@@ -4529,18 +4886,18 @@ AC_CONFIG_COMMANDS_PRE(
 rm -f conftest.file
 ])
 
-# Copyright (C) 2009-2021 Free Software Foundation, Inc.
+# Copyright (C) 2009-2024 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
 
-# AM_SILENT_RULES([DEFAULT])
-# --------------------------
-# Enable less verbose build rules; with the default set to DEFAULT
-# ("yes" being less verbose, "no" or empty being verbose).
-AC_DEFUN([AM_SILENT_RULES],
-[AC_ARG_ENABLE([silent-rules], [dnl
+# _AM_SILENT_RULES
+# ----------------
+# Enable less verbose build rules support.
+AC_DEFUN([_AM_SILENT_RULES],
+[AM_DEFAULT_VERBOSITY=1
+AC_ARG_ENABLE([silent-rules], [dnl
 AS_HELP_STRING(
   [--enable-silent-rules],
   [less verbose build output (undo: "make V=1")])
@@ -4548,11 +4905,6 @@ AS_HELP_STRING(
   [--disable-silent-rules],
   [verbose build output (undo: "make V=0")])dnl
 ])
-case $enable_silent_rules in @%:@ (((
-  yes) AM_DEFAULT_VERBOSITY=0;;
-   no) AM_DEFAULT_VERBOSITY=1;;
-    *) AM_DEFAULT_VERBOSITY=m4_if([$1], [yes], [0], [1]);;
-esac
 dnl
 dnl A few 'make' implementations (e.g., NonStop OS and NextStep)
 dnl do not support nested variable expansions.
@@ -4571,14 +4923,6 @@ am__doit:
 else
   am_cv_make_support_nested_variables=no
 fi])
-if test $am_cv_make_support_nested_variables = yes; then
-  dnl Using '$V' instead of '$(V)' breaks IRIX make.
-  AM_V='$(V)'
-  AM_DEFAULT_V='$(AM_DEFAULT_VERBOSITY)'
-else
-  AM_V=$AM_DEFAULT_VERBOSITY
-  AM_DEFAULT_V=$AM_DEFAULT_VERBOSITY
-fi
 AC_SUBST([AM_V])dnl
 AM_SUBST_NOTMAKE([AM_V])dnl
 AC_SUBST([AM_DEFAULT_V])dnl
@@ -4587,9 +4931,33 @@ AC_SUBST([AM_DEFAULT_VERBOSITY])dnl
 AM_BACKSLASH='\'
 AC_SUBST([AM_BACKSLASH])dnl
 _AM_SUBST_NOTMAKE([AM_BACKSLASH])dnl
+dnl Delay evaluation of AM_DEFAULT_VERBOSITY to the end to allow multiple calls
+dnl to AM_SILENT_RULES to change the default value.
+AC_CONFIG_COMMANDS_PRE([dnl
+case $enable_silent_rules in @%:@ (((
+  yes) AM_DEFAULT_VERBOSITY=0;;
+   no) AM_DEFAULT_VERBOSITY=1;;
+esac
+if test $am_cv_make_support_nested_variables = yes; then
+  dnl Using '$V' instead of '$(V)' breaks IRIX make.
+  AM_V='$(V)'
+  AM_DEFAULT_V='$(AM_DEFAULT_VERBOSITY)'
+else
+  AM_V=$AM_DEFAULT_VERBOSITY
+  AM_DEFAULT_V=$AM_DEFAULT_VERBOSITY
+fi
+])dnl
 ])
 
-# Copyright (C) 2001-2021 Free Software Foundation, Inc.
+# AM_SILENT_RULES([DEFAULT])
+# --------------------------
+# Set the default verbosity level to DEFAULT ("yes" being less verbose, "no" or
+# empty being verbose).
+AC_DEFUN([AM_SILENT_RULES],
+[AC_REQUIRE([_AM_SILENT_RULES])
+AM_DEFAULT_VERBOSITY=m4_if([$1], [yes], [0], [1])])
+
+# Copyright (C) 2001-2024 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -4617,7 +4985,7 @@ fi
 INSTALL_STRIP_PROGRAM="\$(install_sh) -c -s"
 AC_SUBST([INSTALL_STRIP_PROGRAM])])
 
-# Copyright (C) 2006-2021 Free Software Foundation, Inc.
+# Copyright (C) 2006-2024 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -4636,7 +5004,7 @@ AC_DEFUN([AM_SUBST_NOTMAKE], [_AM_SUBST_NOTMAKE($@)])
 
 # Check how to create a tarball.                            -*- Autoconf -*-
 
-# Copyright (C) 2004-2021 Free Software Foundation, Inc.
+# Copyright (C) 2004-2024 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -4682,15 +5050,19 @@ m4_if([$1], [v7],
       am_uid=`id -u || echo unknown`
       am_gid=`id -g || echo unknown`
       AC_MSG_CHECKING([whether UID '$am_uid' is supported by ustar format])
-      if test $am_uid -le $am_max_uid; then
-         AC_MSG_RESULT([yes])
+      if test x$am_uid = xunknown; then
+        AC_MSG_WARN([ancient id detected; assuming current UID is ok, but dist-ustar might not work])
+      elif test $am_uid -le $am_max_uid; then
+        AC_MSG_RESULT([yes])
       else
-         AC_MSG_RESULT([no])
-         _am_tools=none
+        AC_MSG_RESULT([no])
+        _am_tools=none
       fi
       AC_MSG_CHECKING([whether GID '$am_gid' is supported by ustar format])
-      if test $am_gid -le $am_max_gid; then
-         AC_MSG_RESULT([yes])
+      if test x$gm_gid = xunknown; then
+        AC_MSG_WARN([ancient id detected; assuming current GID is ok, but dist-ustar might not work])
+      elif test $am_gid -le $am_max_gid; then
+        AC_MSG_RESULT([yes])
       else
         AC_MSG_RESULT([no])
         _am_tools=none
@@ -4766,6 +5138,26 @@ m4_if([$1], [v7],
 AC_SUBST([am__tar])
 AC_SUBST([am__untar])
 ]) # _AM_PROG_TAR
+
+# Copyright (C) 2022-2024 Free Software Foundation, Inc.
+#
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# _AM_PROG_XARGS_N
+# ----------------
+# Check whether 'xargs -n' works.  It should work everywhere, so the fallback
+# is not optimized at all as we never expect to use it.
+AC_DEFUN([_AM_PROG_XARGS_N],
+[AC_CACHE_CHECK([xargs -n works], am_cv_xargs_n_works, [dnl
+AS_IF([test "`echo 1 2 3 | xargs -n2 echo`" = "1 2
+3"], [am_cv_xargs_n_works=yes], [am_cv_xargs_n_works=no])])
+AS_IF([test "$am_cv_xargs_n_works" = yes], [am__xargs_n='xargs -n'], [dnl
+  am__xargs_n='am__xargs_n () { shift; sed "s/ /\\n/g" | while read am__xargs_n_arg; do "$@" "$am__xargs_n_arg"; done; }'
+])dnl
+AC_SUBST(am__xargs_n)
+])
 
 m4_include([m4/introspection.m4])
 m4_include([m4/libtool.m4])

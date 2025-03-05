@@ -315,17 +315,11 @@ See also: L<guestfs(3)/REMOTE STORAGE>.
 
 F<filename> is interpreted as a local file or device.  This is the default if the optional protocol parameter is omitted.
 
-=item C<protocol = "ftp"|"ftps"|"http"|"https"|"tftp">
+=item C<protocol = "ftp"|"ftps"|"http"|"https">
 
-Connect to a remote FTP, HTTP or TFTP server.  The C<server> parameter must also be supplied - see below.
+Connect to a remote FTP or HTTP server.  The C<server> parameter must also be supplied - see below.
 
-See also: L<guestfs(3)/FTP, HTTP AND TFTP>
-
-=item C<protocol = "gluster">
-
-Connect to the GlusterFS server.  The C<server> parameter must also be supplied - see below.
-
-See also: L<guestfs(3)/GLUSTER>
+See also: L<guestfs(3)/FTP AND HTTP>
 
 =item C<protocol = "iscsi">
 
@@ -345,12 +339,6 @@ Connect to the Ceph (librbd/RBD) server.  The C<server> parameter must also be s
 
 See also: L<guestfs(3)/CEPH>.
 
-=item C<protocol = "sheepdog">
-
-Connect to the Sheepdog server.  The C<server> parameter may also be supplied - see below.
-
-See also: L<guestfs(3)/SHEEPDOG>.
-
 =item C<protocol = "ssh">
 
 Connect to the Secure Shell (ssh) server.
@@ -368,12 +356,10 @@ For protocols which require access to a remote server, this is a list of server(
  Protocol       Number of servers required
  --------       --------------------------
  file           List must be empty or param not used at all
- ftp|ftps|http|https|tftp  Exactly one
- gluster        Exactly one
+ ftp|ftps|http|https  Exactly one
  iscsi          Exactly one
  nbd            Exactly one
  rbd            Zero or more
- sheepdog       Zero or more
  ssh            Exactly one
 
 Each list element is a string specifying a server.  The string must be in one of the following formats:
@@ -388,7 +374,7 @@ If the port number is omitted, then the standard port number for the protocol is
 
 =item C<username>
 
-For the C<ftp>, C<ftps>, C<http>, C<https>, C<iscsi>, C<rbd>, C<ssh> and C<tftp> protocols, this specifies the remote username.
+For the C<ftp>, C<ftps>, C<http>, C<https>, C<iscsi>, C<rbd> and C<ssh> protocols, this specifies the remote username.
 
 If not given, then the local username is used for C<ssh>, and no authentication is attempted for ceph.  But note this sometimes may give unexpected results, for example if using the libvirt backend and if the libvirt backend is configured to start the qemu appliance as a special user such as C<qemu.qemu>.  If in doubt, specify the remote username you want.
 
@@ -2180,6 +2166,12 @@ Because, in C, this function returns a C<char *>, there is no way to differentia
 
 C<cksum> コマンドに対して POSIX により指定された巡回冗長検査 (CRC: cyclic redundancy check) を計算します。
 
+=item C<gost>
+
+=item C<gost12>
+
+Compute the checksum using GOST R34.11-94 or GOST R34.11-2012 message digest.
+
 =item C<md5>
 
 Compute the MD5 hash (using the L<md5sum(1)> program).
@@ -2931,6 +2923,7 @@ You may supply a list of optional arguments to this call.  Use zero or more of t
 
  GUESTFS_CRYPTSETUP_OPEN_READONLY, int readonly,
  GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE, const char *crypttype,
+ GUESTFS_CRYPTSETUP_OPEN_CIPHER, const char *cipher,
 
 This command opens a block device which has been encrypted according to the Linux Unified Key Setup (LUKS) standard, Windows BitLocker, or some other types.
 
@@ -2957,6 +2950,8 @@ A Windows BitLocker device.
 =back
 
 The optional C<readonly> flag, if set to true, creates a read-only mapping.
+
+The optional C<cipher> parameter allows specifying which cipher to use.
 
 If this block device contains LVM volume groups, then calling C<guestfs_lvm_scan> with the C<activate> parameter C<true> will make them visible.
 
@@ -3700,6 +3695,10 @@ Intel Itanium.
 
 64 bit Power PC (little endian).
 
+=item "loongarch64"
+
+64 bit LoongArch64 (little endian).
+
 =item "riscv32"
 
 =item "riscv64"
@@ -4099,6 +4098,34 @@ To find the label of a filesystem, use C<guestfs_vfs_label>.
 この関数は文字列を返します。エラー時は NULL です。 I<呼び出し元は使用後に返された文字列を開放する必要があります>。
 
 (1.5.3 において追加)
+
+=head2 guestfs_findfs_partlabel
+
+ char *
+ guestfs_findfs_partlabel (guestfs_h *g,
+                           const char *label);
+
+This command searches the partitions and returns the one which has the given label.  An error is returned if no such partition can be found.
+
+To find the label of a partition, use C<guestfs_blkid> (C<PART_ENTRY_NAME>).
+
+この関数は文字列を返します。エラー時は NULL です。 I<呼び出し元は使用後に返された文字列を開放する必要があります>。
+
+(Added in 1.53.5)
+
+=head2 guestfs_findfs_partuuid
+
+ char *
+ guestfs_findfs_partuuid (guestfs_h *g,
+                          const char *uuid);
+
+This command searches the partitions and returns the one which has the given partition UUID.  An error is returned if no such partition can be found.
+
+To find the UUID of a partition, use C<guestfs_blkid> (C<PART_ENTRY_UUID>).
+
+この関数は文字列を返します。エラー時は NULL です。 I<呼び出し元は使用後に返された文字列を開放する必要があります>。
+
+(Added in 1.53.5)
 
 =head2 guestfs_findfs_uuid
 
@@ -5583,6 +5610,10 @@ Buildroot 派生のディストリビューション. 具体的にどれかを�
 
 CentOS.
 
+=item "circle"
+
+Circle Linux.
+
 =item "cirros"
 
 Cirros.
@@ -5654,6 +5685,10 @@ NetBSD.
 =item "openbsd"
 
 OpenBSD.
+
+=item "openeuler"
+
+openEuler.
 
 =item "openmandriva"
 
@@ -9652,8 +9687,6 @@ Return the disk identifier (GUID) of a GPT-partitioned C<device>.  Behaviour is 
 
 この関数は文字列を返します。エラー時は NULL です。 I<呼び出し元は使用後に返された文字列を開放する必要があります>。
 
-This function depends on the feature C<gdisk>.  See also L</guestfs_feature_available>.
-
 (Added in 1.33.2)
 
 =head2 guestfs_part_get_gpt_attributes
@@ -9666,8 +9699,6 @@ This function depends on the feature C<gdisk>.  See also L</guestfs_feature_avai
 Return the attribute flags of numbered GPT partition C<partnum>.  An error is returned for MBR partitions.
 
 この関数はエラーのとき -1 を返します。
-
-This function depends on the feature C<gdisk>.  See also L</guestfs_feature_available>.
 
 (1.21.1 において追加)
 
@@ -9682,8 +9713,6 @@ Return the GUID of numbered GPT partition C<partnum>.
 
 この関数は文字列を返します。エラー時は NULL です。 I<呼び出し元は使用後に返された文字列を開放する必要があります>。
 
-This function depends on the feature C<gdisk>.  See also L</guestfs_feature_available>.
-
 (Added in 1.29.25)
 
 =head2 guestfs_part_get_gpt_type
@@ -9696,8 +9725,6 @@ This function depends on the feature C<gdisk>.  See also L</guestfs_feature_avai
 Return the type GUID of numbered GPT partition C<partnum>.
 
 この関数は文字列を返します。エラー時は NULL です。 I<呼び出し元は使用後に返された文字列を開放する必要があります>。
-
-This function depends on the feature C<gdisk>.  See also L</guestfs_feature_available>.
 
 (1.21.1 において追加)
 
@@ -9914,8 +9941,6 @@ Set the disk identifier (GUID) of a GPT-partitioned C<device> to C<guid>. Return
 
 この関数は、成功のとき 0 を、エラーのとき -1 を返します。
 
-This function depends on the feature C<gdisk>.  See also L</guestfs_feature_available>.
-
 (Added in 1.33.2)
 
 =head2 guestfs_part_set_disk_guid_random
@@ -9927,8 +9952,6 @@ This function depends on the feature C<gdisk>.  See also L</guestfs_feature_avai
 Set the disk identifier (GUID) of a GPT-partitioned C<device> to a randomly generated value.  Return an error if the partition table of C<device> isn't GPT.
 
 この関数は、成功のとき 0 を、エラーのとき -1 を返します。
-
-This function depends on the feature C<gdisk>.  See also L</guestfs_feature_available>.
 
 (Added in 1.33.2)
 
@@ -9946,8 +9969,6 @@ See L<https://en.wikipedia.org/wiki/GUID_Partition_Table#Partition_entries> for 
 
 この関数は、成功のとき 0 を、エラーのとき -1 を返します。
 
-This function depends on the feature C<gdisk>.  See also L</guestfs_feature_available>.
-
 (1.21.1 において追加)
 
 =head2 guestfs_part_set_gpt_guid
@@ -9961,8 +9982,6 @@ This function depends on the feature C<gdisk>.  See also L</guestfs_feature_avai
 Set the GUID of numbered GPT partition C<partnum> to C<guid>.  Return an error if the partition table of C<device> isn't GPT, or if C<guid> is not a valid GUID.
 
 この関数は、成功のとき 0 を、エラーのとき -1 を返します。
-
-This function depends on the feature C<gdisk>.  See also L</guestfs_feature_available>.
 
 (Added in 1.29.25)
 
@@ -9979,8 +9998,6 @@ Set the type GUID of numbered GPT partition C<partnum> to C<guid>. Return an err
 See L<https://en.wikipedia.org/wiki/GUID_Partition_Table#Partition_type_GUIDs> for a useful list of type GUIDs.
 
 この関数は、成功のとき 0 を、エラーのとき -1 を返します。
-
-This function depends on the feature C<gdisk>.  See also L</guestfs_feature_available>.
 
 (1.21.1 において追加)
 

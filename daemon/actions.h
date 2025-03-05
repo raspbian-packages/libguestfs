@@ -66,6 +66,7 @@
 #define GUESTFS_CPIO_OUT_FORMAT_BITMASK (UINT64_C(1)<<0)
 #define GUESTFS_CRYPTSETUP_OPEN_READONLY_BITMASK (UINT64_C(1)<<0)
 #define GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK (UINT64_C(1)<<1)
+#define GUESTFS_CRYPTSETUP_OPEN_CIPHER_BITMASK (UINT64_C(1)<<2)
 #define GUESTFS_DOWNLOAD_BLOCKS_UNALLOCATED_BITMASK (UINT64_C(1)<<0)
 #define GUESTFS_E2FSCK_CORRECT_BITMASK (UINT64_C(1)<<0)
 #define GUESTFS_E2FSCK_FORCEALL_BITMASK (UINT64_C(1)<<1)
@@ -314,7 +315,7 @@ extern int do_cp_a (const char *src, const char *dest);
 extern int do_cp_r (const char *src, const char *dest);
 extern int do_cpio_out (const char *directory, const char *format);
 extern int do_cryptsetup_close (const char *device);
-extern int do_cryptsetup_open (const char *device, const char *key, const char *mapname, int readonly, const char *crypttype);
+extern int do_cryptsetup_open (const char *device, const char *key, const char *mapname, int readonly, const char *crypttype, const char *cipher);
 extern int do_dd (const char *src, const char *dest);
 extern char *do_debug (const char *subcmd, char *const *extraargs);
 extern int do_debug_upload (const char *tmpname, int mode);
@@ -349,6 +350,8 @@ extern int do_fill_dir (const char *dir, int nr);
 extern int do_fill_pattern (const char *pattern, int len, const char *path);
 extern int do_find0 (const char *directory);
 extern char *do_findfs_label (const char *label);
+extern char *do_findfs_partlabel (const char *label);
+extern char *do_findfs_partuuid (const char *uuid);
 extern char *do_findfs_uuid (const char *uuid);
 extern int do_fsck (const char *fstype, const char *device);
 extern int do_fstrim (const char *mountpoint, int64_t offset, int64_t length, int64_t minimumfreeextent);

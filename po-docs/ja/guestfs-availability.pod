@@ -61,7 +61,7 @@ The following functions: L</guestfs_f2fs_expand>
 
 =item B<gdisk>
 
-The following functions: L</guestfs_part_expand_gpt> L</guestfs_part_get_disk_guid> L</guestfs_part_get_gpt_attributes> L</guestfs_part_get_gpt_guid> L</guestfs_part_get_gpt_type> L</guestfs_part_set_disk_guid> L</guestfs_part_set_disk_guid_random> L</guestfs_part_set_gpt_attributes> L</guestfs_part_set_gpt_guid> L</guestfs_part_set_gpt_type>
+The following functions: L</guestfs_part_expand_gpt>
 
 =item B<grub>
 

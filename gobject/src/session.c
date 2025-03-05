@@ -864,17 +864,11 @@ guestfs_session_add_domain (GuestfsSession *session, const gchar *dom, GuestfsAd
  * filename is interpreted as a local file or device. This is the
  * default if the optional protocol parameter is omitted.
  * 
- * "protocol = "ftp"|"ftps"|"http"|"https"|"tftp""
- * Connect to a remote FTP, HTTP or TFTP server. The @server
- * parameter must also be supplied - see below.
+ * "protocol = "ftp"|"ftps"|"http"|"https""
+ * Connect to a remote FTP or HTTP server. The @server parameter
+ * must also be supplied - see below.
  * 
- * See also: "FTP, HTTP AND TFTP" in guestfs(3)
- * 
- * "protocol = "gluster""
- * Connect to the GlusterFS server. The @server parameter must also
- * be supplied - see below.
- * 
- * See also: "GLUSTER" in guestfs(3)
+ * See also: "FTP AND HTTP" in guestfs(3)
  * 
  * "protocol = "iscsi""
  * Connect to the iSCSI server. The @server parameter must also be
@@ -897,12 +891,6 @@ guestfs_session_add_domain (GuestfsSession *session, const gchar *dom, GuestfsAd
  * 
  * See also: "CEPH" in guestfs(3).
  * 
- * "protocol = "sheepdog""
- * Connect to the Sheepdog server. The @server parameter may also
- * be supplied - see below.
- * 
- * See also: "SHEEPDOG" in guestfs(3).
- * 
  * "protocol = "ssh""
  * Connect to the Secure Shell (ssh) server.
  * 
@@ -921,17 +909,13 @@ guestfs_session_add_domain (GuestfsSession *session, const gchar *dom, GuestfsAd
  * 
  * <![CDATA[file           List must be empty or param not used at all]]>
  * 
- * <![CDATA[ftp|ftps|http|https|tftp  Exactly one]]>
- * 
- * <![CDATA[gluster        Exactly one]]>
+ * <![CDATA[ftp|ftps|http|https  Exactly one]]>
  * 
  * <![CDATA[iscsi          Exactly one]]>
  * 
  * <![CDATA[nbd            Exactly one]]>
  * 
  * <![CDATA[rbd            Zero or more]]>
- * 
- * <![CDATA[sheepdog       Zero or more]]>
  * 
  * <![CDATA[ssh            Exactly one]]>
  * 
@@ -952,8 +936,8 @@ guestfs_session_add_domain (GuestfsSession *session, const gchar *dom, GuestfsAd
  * protocol is used (see /etc/services).
  * 
  * @username
- * For the @ftp, @ftps, @http, @https, @iscsi, @rbd, @ssh and @tftp
- * protocols, this specifies the remote username.
+ * For the @ftp, @ftps, @http, @https, @iscsi, @rbd and @ssh protocols,
+ * this specifies the remote username.
  * 
  * If not given, then the local username is used for @ssh, and no
  * authentication is attempted for ceph. But note this sometimes may
@@ -4845,6 +4829,11 @@ guestfs_session_cat (GuestfsSession *session, const gchar *path, GError **err)
  * Compute the cyclic redundancy check (CRC) specified by POSIX for the
  * @cksum command.
  * 
+ * @gost
+ * @gost12
+ * Compute the checksum using GOST R34.11-94 or GOST R34.11-2012
+ * message digest.
+ * 
  * @md5
  * Compute the MD5 hash (using the md5sum(1) program).
  * 
@@ -6296,6 +6285,8 @@ guestfs_session_cryptsetup_close (GuestfsSession *session, const gchar *device, 
  * The optional @readonly flag, if set to true, creates a read-only
  * mapping.
  * 
+ * The optional @cipher parameter allows specifying which cipher to use.
+ * 
  * If this block device contains LVM volume groups, then calling
  * guestfs_session_lvm_scan() with the @activate parameter @true will make
  * them visible.
@@ -6340,6 +6331,14 @@ guestfs_session_cryptsetup_open (GuestfsSession *session, const gchar *device, c
     if (crypttype != NULL) {
       argv.bitmask |= GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK;
       argv.crypttype = crypttype;
+    }
+    GValue cipher_v = {0, };
+    g_value_init (&cipher_v, G_TYPE_STRING);
+    g_object_get_property (G_OBJECT (optargs), "cipher", &cipher_v);
+    const gchar *cipher = g_value_get_string (&cipher_v);
+    if (cipher != NULL) {
+      argv.bitmask |= GUESTFS_CRYPTSETUP_OPEN_CIPHER_BITMASK;
+      argv.cipher = cipher;
     }
     argvp = &argv;
   }
@@ -7928,6 +7927,9 @@ guestfs_session_file (GuestfsSession *session, const gchar *path, GError **err)
  * "ppc64le"
  * 64 bit Power PC (little endian).
  * 
+ * "loongarch64"
+ * 64 bit LoongArch64 (little endian).
+ * 
  * "riscv32"
  * "riscv64"
  * "riscv128"
@@ -8587,6 +8589,81 @@ guestfs_session_findfs_label (GuestfsSession *session, const gchar *label, GErro
   }
 
   char *ret = guestfs_findfs_label (g, label);
+  if (ret == NULL) {
+    g_set_error_literal (err, GUESTFS_ERROR, 0, guestfs_last_error (g));
+    return NULL;
+  }
+
+  return ret;
+}
+
+/**
+ * guestfs_session_findfs_partlabel:
+ * @session: (transfer none): A GuestfsSession object
+ * @label: (transfer none) (type utf8):
+ * @err: A GError object to receive any generated errors
+ *
+ * find a partition by label
+ *
+ * This command searches the partitions and returns the one which has the
+ * given label. An error is returned if no such partition can be found.
+ * 
+ * To find the label of a partition, use guestfs_session_blkid()
+ * (@PART_ENTRY_NAME).
+ * 
+ * Returns: (transfer full): the returned string, or NULL on error
+ * Since: 1.53.5
+ */
+gchar *
+guestfs_session_findfs_partlabel (GuestfsSession *session, const gchar *label, GError **err)
+{
+  guestfs_h *g = session->priv->g;
+  if (g == NULL) {
+    g_set_error (err, GUESTFS_ERROR, 0,
+                "attempt to call %s after the session has been closed",
+                "findfs_partlabel");
+    return NULL;
+  }
+
+  char *ret = guestfs_findfs_partlabel (g, label);
+  if (ret == NULL) {
+    g_set_error_literal (err, GUESTFS_ERROR, 0, guestfs_last_error (g));
+    return NULL;
+  }
+
+  return ret;
+}
+
+/**
+ * guestfs_session_findfs_partuuid:
+ * @session: (transfer none): A GuestfsSession object
+ * @uuid: (transfer none) (type utf8):
+ * @err: A GError object to receive any generated errors
+ *
+ * find a partition by UUID
+ *
+ * This command searches the partitions and returns the one which has the
+ * given partition UUID. An error is returned if no such partition can be
+ * found.
+ * 
+ * To find the UUID of a partition, use guestfs_session_blkid()
+ * (@PART_ENTRY_UUID).
+ * 
+ * Returns: (transfer full): the returned string, or NULL on error
+ * Since: 1.53.5
+ */
+gchar *
+guestfs_session_findfs_partuuid (GuestfsSession *session, const gchar *uuid, GError **err)
+{
+  guestfs_h *g = session->priv->g;
+  if (g == NULL) {
+    g_set_error (err, GUESTFS_ERROR, 0,
+                "attempt to call %s after the session has been closed",
+                "findfs_partuuid");
+    return NULL;
+  }
+
+  char *ret = guestfs_findfs_partuuid (g, uuid);
   if (ret == NULL) {
     g_set_error_literal (err, GUESTFS_ERROR, 0, guestfs_last_error (g));
     return NULL;
@@ -11765,6 +11842,9 @@ guestfs_session_inspect_get_build_id (GuestfsSession *session, const gchar *root
  * "centos"
  * CentOS.
  * 
+ * "circle"
+ * Circle Linux.
+ * 
  * "cirros"
  * Cirros.
  * 
@@ -11818,6 +11898,9 @@ guestfs_session_inspect_get_build_id (GuestfsSession *session, const gchar *root
  * 
  * "openbsd"
  * OpenBSD.
+ * 
+ * "openeuler"
+ * openEuler.
  * 
  * "openmandriva"
  * OpenMandriva Lx.
@@ -22108,9 +22191,6 @@ guestfs_session_part_get_bootable (GuestfsSession *session, const gchar *device,
  * Return the disk identifier (GUID) of a GPT-partitioned @device.
  * Behaviour is undefined for other partition types.
  * 
- * This function depends on the feature "gdisk".
- * See also guestfs_session_feature_available().
- *
  * Returns: (transfer full): the returned string, or NULL on error
  * Since: 1.33.2
  */
@@ -22146,9 +22226,6 @@ guestfs_session_part_get_disk_guid (GuestfsSession *session, const gchar *device
  * Return the attribute flags of numbered GPT partition @partnum. An error
  * is returned for MBR partitions.
  * 
- * This function depends on the feature "gdisk".
- * See also guestfs_session_feature_available().
- *
  * Returns: the returned value, or -1 on error
  * Since: 1.21.1
  */
@@ -22183,9 +22260,6 @@ guestfs_session_part_get_gpt_attributes (GuestfsSession *session, const gchar *d
  *
  * Return the GUID of numbered GPT partition @partnum.
  * 
- * This function depends on the feature "gdisk".
- * See also guestfs_session_feature_available().
- *
  * Returns: (transfer full): the returned string, or NULL on error
  * Since: 1.29.25
  */
@@ -22220,9 +22294,6 @@ guestfs_session_part_get_gpt_guid (GuestfsSession *session, const gchar *device,
  *
  * Return the type GUID of numbered GPT partition @partnum.
  * 
- * This function depends on the feature "gdisk".
- * See also guestfs_session_feature_available().
- *
  * Returns: (transfer full): the returned string, or NULL on error
  * Since: 1.21.1
  */
@@ -22638,9 +22709,6 @@ guestfs_session_part_set_bootable (GuestfsSession *session, const gchar *device,
  * Return an error if the partition table of @device isn't GPT, or if @guid
  * is not a valid GUID.
  * 
- * This function depends on the feature "gdisk".
- * See also guestfs_session_feature_available().
- *
  * Returns: true on success, false on error
  * Since: 1.33.2
  */
@@ -22676,9 +22744,6 @@ guestfs_session_part_set_disk_guid (GuestfsSession *session, const gchar *device
  * randomly generated value. Return an error if the partition table of
  * @device isn't GPT.
  * 
- * This function depends on the feature "gdisk".
- * See also guestfs_session_feature_available().
- *
  * Returns: true on success, false on error
  * Since: 1.33.2
  */
@@ -22721,9 +22786,6 @@ guestfs_session_part_set_disk_guid_random (GuestfsSession *session, const gchar 
  * s'> http://en.wikipedia.org/wiki/GUID_Partition_Table#Partition_entries
  * </ulink> for a useful list of partition attributes.
  * 
- * This function depends on the feature "gdisk".
- * See also guestfs_session_feature_available().
- *
  * Returns: true on success, false on error
  * Since: 1.21.1
  */
@@ -22761,9 +22823,6 @@ guestfs_session_part_set_gpt_attributes (GuestfsSession *session, const gchar *d
  * error if the partition table of @device isn't GPT, or if @guid is not a
  * valid GUID.
  * 
- * This function depends on the feature "gdisk".
- * See also guestfs_session_feature_available().
- *
  * Returns: true on success, false on error
  * Since: 1.29.25
  */
@@ -22807,9 +22866,6 @@ guestfs_session_part_set_gpt_guid (GuestfsSession *session, const gchar *device,
  * http://en.wikipedia.org/wiki/GUID_Partition_Table#Partition_type_GUIDs
  * </ulink> for a useful list of type GUIDs.
  * 
- * This function depends on the feature "gdisk".
- * See also guestfs_session_feature_available().
- *
  * Returns: true on success, false on error
  * Since: 1.21.1
  */

@@ -2522,6 +2522,10 @@ PREINIT:
           optargs_s.crypttype = SvPV_nolen (ST (items_i+1));
           this_mask = GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK;
         }
+        else if (STREQ (this_arg, "cipher")) {
+          optargs_s.cipher = SvPV_nolen (ST (items_i+1));
+          this_mask = GUESTFS_CRYPTSETUP_OPEN_CIPHER_BITMASK;
+        }
         else croak ("unknown optional argument '%s'", this_arg);
         if (optargs_s.bitmask & this_mask)
           croak ("optional argument '%s' given more than once",
@@ -3309,6 +3313,36 @@ PREINIT:
       char *r;
    CODE:
       r = guestfs_findfs_label (g, label);
+      if (r == NULL)
+        croak ("%s", guestfs_last_error (g));
+      RETVAL = newSVpv (r, 0);
+      free (r);
+ OUTPUT:
+      RETVAL
+
+SV *
+findfs_partlabel (g, label)
+      guestfs_h *g;
+      char *label;
+PREINIT:
+      char *r;
+   CODE:
+      r = guestfs_findfs_partlabel (g, label);
+      if (r == NULL)
+        croak ("%s", guestfs_last_error (g));
+      RETVAL = newSVpv (r, 0);
+      free (r);
+ OUTPUT:
+      RETVAL
+
+SV *
+findfs_partuuid (g, uuid)
+      guestfs_h *g;
+      char *uuid;
+PREINIT:
+      char *r;
+   CODE:
+      r = guestfs_findfs_partuuid (g, uuid);
       if (r == NULL)
         croak ("%s", guestfs_last_error (g));
       RETVAL = newSVpv (r, 0);

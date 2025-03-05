@@ -3491,6 +3491,10 @@ guestfs_int_lua_cryptsetup_open (lua_State *L)
       optargs_s.bitmask |= GUESTFS_CRYPTSETUP_OPEN_CRYPTTYPE_BITMASK;
       optargs_s.crypttype = luaL_checkstring (L, -1);
     );
+    OPTARG_IF_SET (5, "cipher",
+      optargs_s.bitmask |= GUESTFS_CRYPTSETUP_OPEN_CIPHER_BITMASK;
+      optargs_s.cipher = luaL_checkstring (L, -1);
+    );
   }
 
   r = guestfs_cryptsetup_open_argv (g, device, key, mapname, optargs);
@@ -4585,6 +4589,52 @@ guestfs_int_lua_findfs_label (lua_State *L)
   label = luaL_checkstring (L, 2);
 
   r = guestfs_findfs_label (g, label);
+  if (r == NULL)
+    return last_error (L, g);
+
+  lua_pushstring (L, r);
+  free (r);
+  return 1;
+}
+
+static int
+guestfs_int_lua_findfs_partlabel (lua_State *L)
+{
+  char *r;
+  struct userdata *u = get_handle (L, 1);
+  guestfs_h *g = u->g;
+  const char *label;
+
+  if (g == NULL)
+    return luaL_error (L, "Guestfs.%s: handle is closed",
+                       "findfs_partlabel");
+
+  label = luaL_checkstring (L, 2);
+
+  r = guestfs_findfs_partlabel (g, label);
+  if (r == NULL)
+    return last_error (L, g);
+
+  lua_pushstring (L, r);
+  free (r);
+  return 1;
+}
+
+static int
+guestfs_int_lua_findfs_partuuid (lua_State *L)
+{
+  char *r;
+  struct userdata *u = get_handle (L, 1);
+  guestfs_h *g = u->g;
+  const char *uuid;
+
+  if (g == NULL)
+    return luaL_error (L, "Guestfs.%s: handle is closed",
+                       "findfs_partuuid");
+
+  uuid = luaL_checkstring (L, 2);
+
+  r = guestfs_findfs_partuuid (g, uuid);
   if (r == NULL)
     return last_error (L, g);
 
@@ -17506,6 +17556,8 @@ static luaL_Reg methods[] = {
   { "find0", guestfs_int_lua_find0 },
   { "find_inode", guestfs_int_lua_find_inode },
   { "findfs_label", guestfs_int_lua_findfs_label },
+  { "findfs_partlabel", guestfs_int_lua_findfs_partlabel },
+  { "findfs_partuuid", guestfs_int_lua_findfs_partuuid },
   { "findfs_uuid", guestfs_int_lua_findfs_uuid },
   { "fsck", guestfs_int_lua_fsck },
   { "fstrim", guestfs_int_lua_fstrim },

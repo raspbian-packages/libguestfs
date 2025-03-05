@@ -47,6 +47,10 @@ guestfs_impl_inspect_get_osinfo (guestfs_h *g, const char *root)
       else if (major == 6)
         return safe_asprintf (g, "%s%d.%d", distro, major, minor);
     }
+    else if (STREQ (distro, "circle")) {
+      if (major >= 8)
+        return safe_asprintf (g, "%s%d", distro, major);
+    }
     else if (STREQ (distro, "rocky")) {
       if (major >= 8)
         return safe_asprintf (g, "%s%d", distro, major);
@@ -138,7 +142,9 @@ guestfs_impl_inspect_get_osinfo (guestfs_h *g, const char *root)
       switch (minor) {
       case 0:
         if (strstr (product_variant, "Server")) {
-          if (strstr (product_name, "2022"))
+          if (strstr (product_name, "2025"))
+            return safe_strdup (g, "win2k25");
+          else if (strstr (product_name, "2022"))
             return safe_strdup (g, "win2k22");
           else if (strstr (product_name, "2019"))
             return safe_strdup (g, "win2k19");

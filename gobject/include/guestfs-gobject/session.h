@@ -290,6 +290,8 @@ gchar **guestfs_session_find (GuestfsSession *session, const gchar *directory, G
 gboolean guestfs_session_find0 (GuestfsSession *session, const gchar *directory, const gchar *files, GCancellable *cancellable, GError **err);
 GuestfsTSKDirent **guestfs_session_find_inode (GuestfsSession *session, const gchar *device, gint64 inode, GCancellable *cancellable, GError **err);
 gchar *guestfs_session_findfs_label (GuestfsSession *session, const gchar *label, GError **err);
+gchar *guestfs_session_findfs_partlabel (GuestfsSession *session, const gchar *label, GError **err);
+gchar *guestfs_session_findfs_partuuid (GuestfsSession *session, const gchar *uuid, GError **err);
 gchar *guestfs_session_findfs_uuid (GuestfsSession *session, const gchar *uuid, GError **err);
 gint32 guestfs_session_fsck (GuestfsSession *session, const gchar *fstype, const gchar *device, GError **err);
 gboolean guestfs_session_fstrim (GuestfsSession *session, const gchar *mountpoint, GuestfsFstrim *optargs, GError **err);

@@ -19,7 +19,7 @@ This avoids build failures in separate builds such as this one:
  1 file changed, 3 insertions(+)
 
 diff --git a/configure.ac b/configure.ac
-index 709ed52..977926e 100644
+index ea71d11..b836f3c 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -268,6 +268,9 @@ AC_CONFIG_FILES([Makefile

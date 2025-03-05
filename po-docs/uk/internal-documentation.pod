@@ -1537,14 +1537,6 @@ C<*size_rtn> повертає розмір повернутого повідом
 
 Перевірити, чи передбачено підтримку пристрою у qemu (у поточній версії просте використання grep із критерієм пошуку C<qemu -device ?> у виведених даних).
 
-=head4 Функція C<lib/qemu.c:guestfs_int_qemu_mandatory_locking>
-
- int
- guestfs_int_qemu_mandatory_locking (guestfs_h *g,
-                                     const struct qemu_data *data)
-
-Перевірити, чи використовується у виконуваному файлі qemu обов'язкове блокування файлів, яке було додано у QEMU >= 2.10 (але іноді вимикається).
-
 =head4 Функція C<lib/qemu.c:guestfs_int_qemu_escape_param>
 
  char *

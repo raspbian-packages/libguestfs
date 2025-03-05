@@ -689,6 +689,8 @@ list_commands (void)
   printf ("%-20s %s\n", "find0", _("find all files and directories, returning NUL-separated list"));
   printf ("%-20s %s\n", "find-inode", _("search the entries associated to the given inode"));
   printf ("%-20s %s\n", "findfs-label", _("find a filesystem by label"));
+  printf ("%-20s %s\n", "findfs-partlabel", _("find a partition by label"));
+  printf ("%-20s %s\n", "findfs-partuuid", _("find a partition by UUID"));
   printf ("%-20s %s\n", "findfs-uuid", _("find a filesystem by UUID"));
   printf ("%-20s %s\n", "fsck", _("run the filesystem checker"));
   printf ("%-20s %s\n", "fstrim", _("trim free space in a filesystem"));

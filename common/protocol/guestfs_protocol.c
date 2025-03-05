@@ -2797,6 +2797,8 @@ xdr_guestfs_cryptsetup_open_args (XDR *xdrs, guestfs_cryptsetup_open_args *objp)
 		 return FALSE;
 	 if (!xdr_string (xdrs, &objp->crypttype, ~0))
 		 return FALSE;
+	 if (!xdr_string (xdrs, &objp->cipher, ~0))
+		 return FALSE;
 	return TRUE;
 }
 
@@ -3324,6 +3326,46 @@ xdr_guestfs_findfs_label_args (XDR *xdrs, guestfs_findfs_label_args *objp)
 
 bool_t
 xdr_guestfs_findfs_label_ret (XDR *xdrs, guestfs_findfs_label_ret *objp)
+{
+	register int32_t *buf;
+
+	 if (!xdr_string (xdrs, &objp->device, ~0))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_guestfs_findfs_partlabel_args (XDR *xdrs, guestfs_findfs_partlabel_args *objp)
+{
+	register int32_t *buf;
+
+	 if (!xdr_string (xdrs, &objp->label, ~0))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_guestfs_findfs_partlabel_ret (XDR *xdrs, guestfs_findfs_partlabel_ret *objp)
+{
+	register int32_t *buf;
+
+	 if (!xdr_string (xdrs, &objp->device, ~0))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_guestfs_findfs_partuuid_args (XDR *xdrs, guestfs_findfs_partuuid_args *objp)
+{
+	register int32_t *buf;
+
+	 if (!xdr_string (xdrs, &objp->uuid, ~0))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_guestfs_findfs_partuuid_ret (XDR *xdrs, guestfs_findfs_partuuid_ret *objp)
 {
 	register int32_t *buf;
 

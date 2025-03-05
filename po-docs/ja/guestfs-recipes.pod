@@ -337,16 +337,16 @@ Save the following script into a file called F<product-name.sh>:
 
 スクリプトを実行可能にして、名前付き仮想マシンにおいて実行します:
 
- # product-name.sh RHEL60x64
- Red Hat Enterprise Linux Server release 6.0 (Santiago)
+ $ product-name.sh fedora-40.img
+ Fedora Linux 40 (Forty)
 
 C<xpath> コマンドラインツールを使用して、またはお気に入りのプログラミング言語から、L<virt-inspector(1)> XML において XPath クエリーを使用することもできます:
 
- # virt-inspector RHEL60x64 > xml
- # xpath '//product_name' < xml
- Found 1 nodes:
+ $ virt-inspector -a fedora-40.img > xml
+ $ xpath -e '//product_name' < xml
+ Found 1 nodes in stdin:
  -- NODE --
- <product_name>Red Hat Enterprise Linux Server release 6.0 (Santiago)</product_name>
+ <product_name>Fedora Linux 40 (Forty)</product_name>
 
 =head1 Linux 仮想マシンのデフォルトの起動カーネルを取得します
 

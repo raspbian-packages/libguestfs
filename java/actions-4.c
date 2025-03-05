@@ -723,6 +723,33 @@ Java_com_redhat_et_libguestfs_GuestFS__1find_1inode  (JNIEnv *env, jobject obj, 
 
 
 JNIEXPORT jstring JNICALL
+Java_com_redhat_et_libguestfs_GuestFS__1findfs_1partuuid  (JNIEnv *env, jobject obj, jlong jg, jstring juuid)
+{
+  guestfs_h *g = (guestfs_h *) (long) jg;
+  jstring jr;
+  char *r;
+  const char *uuid;
+
+  uuid = (*env)->GetStringUTFChars (env, juuid, NULL);
+
+  r = guestfs_findfs_partuuid (g, uuid);
+
+  (*env)->ReleaseStringUTFChars (env, juuid, uuid);
+
+  if (r == NULL) {
+    throw_exception (env, guestfs_last_error (g));
+    goto ret_error;
+  }
+  jr = (*env)->NewStringUTF (env, r);
+  free (r);
+  return jr;
+
+ ret_error:
+  return NULL;
+}
+
+
+JNIEXPORT jstring JNICALL
 Java_com_redhat_et_libguestfs_GuestFS__1findfs_1uuid  (JNIEnv *env, jobject obj, jlong jg, jstring juuid)
 {
   guestfs_h *g = (guestfs_h *) (long) jg;

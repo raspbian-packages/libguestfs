@@ -370,6 +370,10 @@ dispatch (ei_x_buff *retbuff, const char *buff, int *index)
     return run_find_inode (retbuff, buff, index);
   else if (atom_equals (fun, "findfs_label"))
     return run_findfs_label (retbuff, buff, index);
+  else if (atom_equals (fun, "findfs_partlabel"))
+    return run_findfs_partlabel (retbuff, buff, index);
+  else if (atom_equals (fun, "findfs_partuuid"))
+    return run_findfs_partuuid (retbuff, buff, index);
   else if (atom_equals (fun, "findfs_uuid"))
     return run_findfs_uuid (retbuff, buff, index);
   else if (atom_equals (fun, "fsck"))

@@ -723,10 +723,10 @@ a qcow2 backing file specification, libvirt does not construct an
 ephemeral secret object from those, for Ceph authentication.  Refer to
 L<https://bugzilla.redhat.com/2033247>.
 
-=head3 FTP, HTTP AND TFTP
+=head3 FTP AND HTTP
 
-Libguestfs can access remote disks over FTP, FTPS, HTTP, HTTPS
-or TFTP protocols.
+Libguestfs can access remote disks over FTP, FTPS, HTTP or HTTPS
+protocols.
 
 To do this, set the optional C<protocol> and C<server> parameters of
 L</guestfs_add_drive_opts> like this:
@@ -739,35 +739,16 @@ L</guestfs_add_drive_opts> like this:
                          -1);
 
 The C<protocol> can be one of C<"ftp">, C<"ftps">, C<"http">,
-C<"https"> or C<"tftp">.
+or C<"https">.
 
 C<servers> (the C<server> parameter) is a list which must have a
-single element.  The single element is a string defining the web,
-FTP or TFTP server.  The format of this string is documented in
+single element.  The single element is a string defining the web
+or FTP server.  The format of this string is documented in
 L</guestfs_add_drive_opts>.
 
 =head3 GLUSTER
 
-Libguestfs can access Gluster disks.
-
-To do this, set the optional C<protocol> and C<server> parameters of
-L</guestfs_add_drive_opts> like this:
-
- char **servers = { "gluster.example.org:24007", NULL };
- guestfs_add_drive_opts (g, "volname/image",
-                         GUESTFS_ADD_DRIVE_OPTS_FORMAT, "raw",
-                         GUESTFS_ADD_DRIVE_OPTS_PROTOCOL, "gluster",
-                         GUESTFS_ADD_DRIVE_OPTS_SERVER, servers,
-                         -1);
-
-C<servers> (the C<server> parameter) is a list which must have a
-single element.  The single element is a string defining the Gluster
-server.  The format of this string is documented in
-L</guestfs_add_drive_opts>.
-
-Note that gluster usually requires the client process (ie. libguestfs)
-to run as B<root> and will give unfathomable errors if it is not
-(eg. "No data available").
+Glusterfs support was removed in libguestfs 1.54 (2024).
 
 =head3 ISCSI
 
@@ -851,21 +832,7 @@ L<https://bugs.launchpad.net/qemu/+bug/1155677>
 
 =head3 SHEEPDOG
 
-Libguestfs can access Sheepdog disks.
-
-To do this, set the optional C<protocol> and C<server> parameters of
-L</guestfs_add_drive_opts> like this:
-
- char **servers = { /* optional servers ... */ NULL };
- guestfs_add_drive_opts (g, "volume",
-                         GUESTFS_ADD_DRIVE_OPTS_FORMAT, "raw",
-                         GUESTFS_ADD_DRIVE_OPTS_PROTOCOL, "sheepdog",
-                         GUESTFS_ADD_DRIVE_OPTS_SERVER, servers,
-                         -1);
-
-The optional list of C<servers> may be zero or more server addresses
-(C<"hostname:port">).  The format of the server strings is documented
-in L</guestfs_add_drive_opts>.
+Sheepdog support was removed in libguestfs 1.54 (2024).
 
 =head3 SSH
 

@@ -97,7 +97,6 @@ xmlBufferDetach (xmlBufferPtr buf)
 }
 #endif
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
 #define CLEANUP_VIRSECRETFREE __attribute__((cleanup(cleanup_virSecretFree)))
 
 static void
@@ -107,10 +106,6 @@ cleanup_virSecretFree (void *ptr)
   if (secret_obj)
     virSecretFree (secret_obj);
 }
-
-#else /* !HAVE_ATTRIBUTE_CLEANUP */
-#define CLEANUP_VIRSECRETFREE
-#endif
 
 /* List used to store a mapping of secret to libvirt secret UUID. */
 struct secret {
@@ -625,12 +620,8 @@ launch_libvirt (guestfs_h *g, void *datav, const char *libvirt_uri)
   dom = virDomainCreateXML (conn, (char *) xml, VIR_DOMAIN_START_AUTODESTROY);
   if (!dom) {
     libvirt_error (g, _(
-                        "could not create appliance through libvirt.\n"
-                        "\n"
-                        "Try running qemu directly without libvirt using this environment variable:\n"
-                        "export LIBGUESTFS_BACKEND=direct\n"
-                        "\n"
-                        "Original error from libvirt"));
+                        "could not create appliance through libvirt. "
+			"Original error from libvirt"));
     goto cleanup;
   }
 
@@ -1541,16 +1532,12 @@ construct_libvirt_xml_disk (guestfs_h *g,
          * or:
          *       <host transport='unix' socket='/path/to/socket'/>
          */
-      case drive_protocol_gluster:
-        protocol_str = "gluster"; goto network_protocols;
       case drive_protocol_iscsi:
         protocol_str = "iscsi"; goto network_protocols;
       case drive_protocol_nbd:
         protocol_str = "nbd"; goto network_protocols;
       case drive_protocol_rbd:
         protocol_str = "rbd"; goto network_protocols;
-      case drive_protocol_sheepdog:
-        protocol_str = "sheepdog"; goto network_protocols;
       case drive_protocol_ssh:
         protocol_str = "ssh";
         /*FALLTHROUGH*/
@@ -1591,7 +1578,6 @@ construct_libvirt_xml_disk (guestfs_h *g,
       case drive_protocol_ftps:
       case drive_protocol_http:
       case drive_protocol_https:
-      case drive_protocol_tftp:
         error (g, _("libvirt does not support the qemu curl driver protocols (ftp, http, etc.); try setting LIBGUESTFS_BACKEND=direct"));
         return -1;
       }
@@ -2004,14 +1990,11 @@ add_secret (guestfs_h *g, virConnectPtr conn,
   case drive_protocol_file:
   case drive_protocol_ftp:
   case drive_protocol_ftps:
-  case drive_protocol_gluster:
   case drive_protocol_http:
   case drive_protocol_https:
   case drive_protocol_iscsi:
   case drive_protocol_nbd:
-  case drive_protocol_sheepdog:
   case drive_protocol_ssh:
-  case drive_protocol_tftp:
     secret_raw = (unsigned char *) safe_strdup (g, secret);
     secret_raw_len = strlen (secret);
   }
@@ -2086,13 +2069,10 @@ find_secret (guestfs_h *g,
       case drive_protocol_file:
       case drive_protocol_ftp:
       case drive_protocol_ftps:
-      case drive_protocol_gluster:
       case drive_protocol_http:
       case drive_protocol_https:
       case drive_protocol_nbd:
-      case drive_protocol_sheepdog:
       case drive_protocol_ssh:
-      case drive_protocol_tftp:
         /* set to a default value above */ ;
       }
 

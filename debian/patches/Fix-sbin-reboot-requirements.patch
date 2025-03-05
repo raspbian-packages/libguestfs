@@ -7,10 +7,10 @@ Subject: Fix /sbin/reboot requirements
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/appliance/packagelist.in b/appliance/packagelist.in
-index 3095234..eeb53bb 100644
+index 854d254..a1bc8ed 100644
 --- a/appliance/packagelist.in
 +++ b/appliance/packagelist.in
-@@ -86,8 +86,8 @@ dnl iproute has been renamed to iproute2
+@@ -89,8 +89,8 @@ dnl isc-dhcp-client has been replaced with dhcpcd-base
    ntfs-3g
    openssh-client
    reiserfsprogs

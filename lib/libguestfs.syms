@@ -346,6 +346,8 @@
         guestfs_find0;
         guestfs_find_inode;
         guestfs_findfs_label;
+        guestfs_findfs_partlabel;
+        guestfs_findfs_partuuid;
         guestfs_findfs_uuid;
         guestfs_first_private;
         guestfs_free_application;

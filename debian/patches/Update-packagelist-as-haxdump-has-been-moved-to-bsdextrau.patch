@@ -8,7 +8,7 @@ Subject: Update packagelist as haxdump has been moved to bsdextrautils in
  1 file changed, 1 insertion(+)
 
 diff --git a/appliance/packagelist.in b/appliance/packagelist.in
-index 7bc5ad1..29277cd 100644
+index 1a3ad1d..fb5d459 100644
 --- a/appliance/packagelist.in
 +++ b/appliance/packagelist.in
 @@ -56,6 +56,7 @@ ifelse(REDHAT,1,

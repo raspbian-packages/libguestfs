@@ -23,3 +23,5 @@
 
 val findfs_uuid : string -> string
 val findfs_label : string -> string
+val findfs_partuuid : string -> string
+val findfs_partlabel : string -> string

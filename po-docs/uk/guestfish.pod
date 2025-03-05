@@ -931,23 +931,11 @@ I<Документацію рівня програмного інтерфейс�
 
 =head2 B<-a https://[user@]example.com[:порт]/disk.img>
 
-=head2 B<-a tftp://[user@]example.com[:порт]/disk.img>
-
-Додати диск на віддаленому сервері FTP, HTTP або TFTP.
+Add a disk located on a remote FTP or HTTP server.
 
 Еквівалентною командою із програмного інтерфейсу є така:
 
  ><fs> add /disk.img protocol:(ftp|...) server:tcp:example.com username:root
-
-=head2 B<-a gluster://example.com[:порт]/назва_тому/образ>
-
-Додати образ диска, розташований у сховищі даних GlusterFS.
-
-Сервером є комп'ютер, на якому запущено C<glusterd>, ним може бути C<localhost>.
-
-Еквівалентною командою із програмного інтерфейсу є така:
-
- ><fs> add volname/image protocol:gluster server:tcp:example.com
 
 =head2 B<-a iscsi://example.com[:порт]/назваt-iqn-призначення[/lun]>
 
@@ -986,16 +974,6 @@ The I<exportname> part of the URI specifies an NBD export name, but is usually l
 Еквівалентною командою із програмного інтерфейсу є така:
 
  ><fs> add pool/disk protocol:rbd server:tcp:example.com:порт
-
-=head2 B<-a sheepdog://[example.com[:порт]]/том/образ>
-
-Додати образ диска, розташований на томі Sheepdog.
-
-Назва сервера є необов'язковою. Хоча у libguestfs та Sheepdog передбачено підтримку декількох серверів, при використанні цього синтаксису адреси можна вказати не більше одного сервера.
-
-Еквівалентною командою із програмного інтерфейсу є така:
-
- ><fs> add volume protocol:sheepdog [server:tcp:example.com]
 
 =head2 B<-a ssh://[користувач@]example.com[:порт]/диск.img>
 

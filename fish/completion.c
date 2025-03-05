@@ -215,6 +215,8 @@ static const char *const commands[] = {
   "find0",
   "find-inode",
   "findfs-label",
+  "findfs-partlabel",
+  "findfs-partuuid",
   "findfs-uuid",
   "fsck",
   "fstrim",

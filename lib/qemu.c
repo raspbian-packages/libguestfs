@@ -46,7 +46,6 @@
 #include "guestfs-internal.h"
 #include "guestfs_protocol.h"
 
-#ifdef HAVE_ATTRIBUTE_CLEANUP
 #define CLEANUP_JSON_T_DECREF __attribute__((cleanup(cleanup_json_t_decref)))
 
 static void
@@ -54,10 +53,6 @@ cleanup_json_t_decref (void *ptr)
 {
   json_decref (* (json_t **) ptr);
 }
-
-#else
-#define CLEANUP_JSON_T_DECREF
-#endif
 
 struct qemu_data {
   int generation;               /* MEMO_GENERATION read from qemu.stat */
@@ -309,7 +304,7 @@ test_qemu_devices (guestfs_h *g, struct qemu_data *data)
 #ifdef MACHINE_TYPE
                            MACHINE_TYPE ","
 #endif
-                           "accel=kvm:tcg");
+                           "accel=kvm:hvf:tcg");
   guestfs_int_cmd_add_arg (cmd, "-device");
   guestfs_int_cmd_add_arg (cmd, "?");
   guestfs_int_cmd_clear_capture_errors (cmd);
@@ -574,7 +569,7 @@ generic_qmp_test (guestfs_h *g, struct qemu_data *data,
 #ifdef MACHINE_TYPE
                                      MACHINE_TYPE ","
 #endif
-                                     "accel=kvm:tcg");
+                                     "accel=kvm:hvf:tcg");
   guestfs_int_cmd_add_string_unquoted (cmd, " -qmp stdio");
   guestfs_int_cmd_clear_capture_errors (cmd);
 
@@ -665,54 +660,6 @@ guestfs_int_qemu_supports_device (guestfs_h *g,
                                   const char *device_name)
 {
   return strstr (data->qemu_devices, device_name) != NULL;
-}
-
-/**
- * Test if the qemu binary uses mandatory file locking, added in
- * QEMU >= 2.10 (but sometimes disabled).
- */
-int
-guestfs_int_qemu_mandatory_locking (guestfs_h *g,
-                                    const struct qemu_data *data)
-{
-  json_t *schema, *v, *meta_type, *members, *m, *name;
-  size_t i, j;
-
-  /* If there's no QMP schema, fall back to checking the version. */
-  if (!data->qmp_schema_tree) {
-  fallback:
-    return guestfs_int_version_ge (&data->qemu_version, 2, 10, 0);
-  }
-
-  /* Top element of qmp_schema_tree is the { "return": ... } wrapper.
-   * Extract the schema from the wrapper.  Note the returned ‘schema’
-   * will be an array.
-   */
-  schema = json_object_get (data->qmp_schema_tree, "return");
-  if (!json_is_array (schema))
-    goto fallback;
-
-  /* Now look for any member of the array which has:
-   * { "meta-type": "object",
-   *   "members": [ ... { "name": "locking", ... } ... ] ... }
-   */
-  json_array_foreach (schema, i, v) {
-    meta_type = json_object_get (v, "meta-type");
-    if (json_is_string (meta_type) &&
-        STREQ (json_string_value (meta_type), "object")) {
-      members = json_object_get (v, "members");
-      if (json_is_array (members)) {
-        json_array_foreach (members, j, m) {
-          name = json_object_get (m, "name");
-          if (json_is_string (name) &&
-              STREQ (json_string_value (name), "locking"))
-            return 1;
-        }
-      }
-    }
-  }
-
-  return 0;
 }
 
 bool
@@ -827,20 +774,6 @@ guestfs_int_drive_source_qemu_param (guestfs_h *g,
     return make_uri (g, "ftps", src->username, src->secret,
                      &src->servers[0], src->u.exportname);
 
-  case drive_protocol_gluster:
-    switch (src->servers[0].transport) {
-    case drive_transport_none:
-      return make_uri (g, "gluster", NULL, NULL,
-                       &src->servers[0], src->u.exportname);
-    case drive_transport_tcp:
-      return make_uri (g, "gluster+tcp", NULL, NULL,
-                       &src->servers[0], src->u.exportname);
-    case drive_transport_unix:
-      return make_uri (g, "gluster+unix", NULL, NULL,
-                       &src->servers[0], NULL);
-    }
-    break;
-
   case drive_protocol_http:
     return make_uri (g, "http", src->username, src->secret,
                      &src->servers[0], src->u.exportname);
@@ -940,20 +873,8 @@ guestfs_int_drive_source_qemu_param (guestfs_h *g,
                           secret ? secret : "");
   }
 
-  case drive_protocol_sheepdog:
-    if (src->nr_servers == 0)
-      return safe_asprintf (g, "sheepdog:%s", src->u.exportname);
-    else                        /* XXX How to pass multiple hosts? */
-      return safe_asprintf (g, "sheepdog:%s:%d:%s",
-                            src->servers[0].u.hostname, src->servers[0].port,
-                            src->u.exportname);
-
   case drive_protocol_ssh:
     return make_uri (g, "ssh", src->username, src->secret,
-                     &src->servers[0], src->u.exportname);
-
-  case drive_protocol_tftp:
-    return make_uri (g, "tftp", src->username, src->secret,
                      &src->servers[0], src->u.exportname);
   }
 
@@ -1023,11 +944,9 @@ guestfs_int_discard_possible (guestfs_h *g, struct drive *drv,
   switch (drv->src.protocol) {
     /* Protocols which support discard. */
   case drive_protocol_file:
-  case drive_protocol_gluster:
   case drive_protocol_iscsi:
   case drive_protocol_nbd:
   case drive_protocol_rbd:
-  case drive_protocol_sheepdog: /* XXX depends on server version */
     break;
 
     /* Protocols which don't support discard. */
@@ -1036,7 +955,6 @@ guestfs_int_discard_possible (guestfs_h *g, struct drive *drv,
   case drive_protocol_http:
   case drive_protocol_https:
   case drive_protocol_ssh:
-  case drive_protocol_tftp:
     NOT_SUPPORTED (g, -1,
                    _("discard cannot be enabled on this drive: "
                      "protocol ‘%s’ does not support discard"),

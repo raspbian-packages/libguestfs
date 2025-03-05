@@ -1,6 +1,8 @@
 appliance/libguestfs-make-fixed-appliance.pod
 common/mlcustomize/customize-options.pod
 common/mlcustomize/customize-synopsis.pod
+common/mlcustomize/v2v-customize-options.pod
+common/mlcustomize/v2v-customize-synopsis.pod
 common/options/blocksize-option.pod
 common/options/key-option.pod
 common/options/keys-from-stdin-option.pod
@@ -34,6 +36,7 @@ docs/guestfs-release-notes-1.46.pod
 docs/guestfs-release-notes-1.48.pod
 docs/guestfs-release-notes-1.50.pod
 docs/guestfs-release-notes-1.52.pod
+docs/guestfs-release-notes-1.54.pod
 docs/guestfs-release-notes-1.6.pod
 docs/guestfs-release-notes-1.8.pod
 docs/guestfs-release-notes.pod

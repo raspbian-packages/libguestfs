@@ -224,17 +224,11 @@ This field used to be passed as a hint for guest inspection, but it is no longer
 
 F<filename> вважатиметься локальним файлом або пристроєм. Це типова поведінка програми, якщо не вказано додатковий параметр протоколу.
 
-=item C<protocol = "ftp"|"ftps"|"http"|"https"|"tftp">
+=item C<protocol = "ftp"|"ftps"|"http"|"https">
 
-З'єднатися із віддаленим сервером FTP, HTTP або TFTP. Також має бути надано параметр C<server>, див. нижче.
+Connect to a remote FTP or HTTP server.  The C<server> parameter must also be supplied - see below.
 
-Див. також L<guestfs(3)/FTP, HTTP AND TFTP>
-
-=item C<protocol = "gluster">
-
-З'єднатися із сервером GlusterFS. Також має бути надано параметр C<server>, див. нижче.
-
-Див. також L<guestfs(3)/GLUSTER>
+See also: L<guestfs(3)/FTP AND HTTP>
 
 =item C<protocol = "iscsi">
 
@@ -254,12 +248,6 @@ F<filename> вважатиметься локальним файлом або п
 
 Див. також L<guestfs(3)/CEPH>.
 
-=item C<protocol = "sheepdog">
-
-З'єднатися із сервером Sheepdog. Також може бути надано параметр C<server>, див. нижче.
-
-Див. також L<guestfs(3)/SHEEPDOG>.
-
 =item C<protocol = "ssh">
 
 Встановити з’єднання з сервером Secure Shell (ssh).
@@ -274,16 +262,14 @@ F<filename> вважатиметься локальним файлом або п
 
 Для протоколів, які потребують доступу до віддаленого сервера, це список серверів.
 
- Протокол       Кількість потрібних серверів
+ Protocol       Number of servers required
  --------       --------------------------
- file           Список має бути порожнім або не слід користуватися параметром взагалі
- ftp|ftps|http|https|tftp  Точно один
- gluster        Точно один
- iscsi          Точно один
- nbd            Точно один
- rbd            Нуль або більше
- sheepdog       Нуль або більше
- ssh            Точно один
+ file           List must be empty or param not used at all
+ ftp|ftps|http|https  Exactly one
+ iscsi          Exactly one
+ nbd            Exactly one
+ rbd            Zero or more
+ ssh            Exactly one
 
 Кожен елемент у списку є рядком, який вказує на сервер. Рядок має бути записано у одному з таких форматів:
 
@@ -297,7 +283,7 @@ F<filename> вважатиметься локальним файлом або п
 
 =item C<username>
 
-Для протоколів C<ftp>, C<ftps>, C<http>, C<https>, C<iscsi>, C<rbd>, C<ssh> та C<tftp> визначає ім’я користувача віддаленої системи.
+For the C<ftp>, C<ftps>, C<http>, C<https>, C<iscsi>, C<rbd> and C<ssh> protocols, this specifies the remote username.
 
 Якщо не вказано, для C<ssh> буде використано ім'я локального користувача, а для ceph спроба пройти розпізнавання не виконуватиметься. Втім, зауважте, що іноді це може призводити до неочікуваних результатів, наприклад, якщо використовується модуль обробки libvirt, і модуль обробки libvirt налаштовано на запуск базової системи qemu від імені спеціального користувача, зокрема C<qemu.qemu>. Якщо сумніваєтеся, вкажіть потрібне вам ім'я користувача віддаленої системи.
 
@@ -1245,6 +1231,12 @@ I<Зауваження>: ця функція не обробляє назви д
 
 Обчислити суму циклічної перевірки надлишковості (CRC) за стандартом POSIX для команди C<cksum>.
 
+=item C<gost>
+
+=item C<gost12>
+
+Compute the checksum using GOST R34.11-94 or GOST R34.11-2012 message digest.
+
 =item C<md5>
 
 Обчислити хеш-суму MD5 (за допомогою програми L<md5sum(1)>).
@@ -1550,7 +1542,7 @@ This closes an encrypted device that was created earlier by L</cryptsetup-open>.
 
 =head2 cryptsetup-open
 
- cryptsetup-open device mapname [readonly:true|false] [crypttype:..]
+ cryptsetup-open device mapname [readonly:true|false] [crypttype:..] [cipher:..]
 
 This command opens a block device which has been encrypted according to the Linux Unified Key Setup (LUKS) standard, Windows BitLocker, or some other types.
 
@@ -1577,6 +1569,8 @@ A Windows BitLocker device.
 =back
 
 The optional C<readonly> flag, if set to true, creates a read-only mapping.
+
+The optional C<cipher> parameter allows specifying which cipher to use.
 
 Якщо на цьому блоковому пристрої містяться групи томів LVM, видимими їх можна зробити за допомогою виклику L</lvm-scan> зі значенням параметра C<activate> рівним C<true>.
 
@@ -1996,6 +1990,10 @@ Intel Itanium.
 
 64-бітовий Power PC (прямий порядок байтів).
 
+=item "loongarch64"
+
+64 bit LoongArch64 (little endian).
+
 =item "riscv32"
 
 =item "riscv64"
@@ -2318,6 +2316,22 @@ FIFO (іменований канал)
 Ця команда виконує пошук у файлових системах і повертає ту з них, яка має вказану мітку. Якщо таких систем не буде знайдено, буде повернуто повідомлення про помилку.
 
 Для визначення мітки файлової системи скористайтеся L</vfs-label>.
+
+=head2 findfs-partlabel
+
+ findfs-partlabel label
+
+This command searches the partitions and returns the one which has the given label.  An error is returned if no such partition can be found.
+
+To find the label of a partition, use L</blkid> (C<PART_ENTRY_NAME>).
+
+=head2 findfs-partuuid
+
+ findfs-partuuid uuid
+
+This command searches the partitions and returns the one which has the given partition UUID.  An error is returned if no such partition can be found.
+
+To find the UUID of a partition, use L</blkid> (C<PART_ENTRY_UUID>).
 
 =head2 findfs-uuid
 
@@ -3227,6 +3241,10 @@ Arch Linux.
 
 CentOS.
 
+=item "circle"
+
+Circle Linux.
+
 =item "cirros"
 
 Cirros.
@@ -3298,6 +3316,10 @@ NetBSD.
 =item "openbsd"
 
 OpenBSD.
+
+=item "openeuler"
+
+openEuler.
 
 =item "openmandriva"
 
@@ -5545,15 +5567,11 @@ I<У більшості програм потреби у виконанні ці
 
 Повертає ідентифікатор диска (GUID) пристрою C<пристрій> із таблицею розділів GPT. Для інших типів таблиць розділів поведінку команди не визначено.
 
-Працездатність цієї команди залежить від можливості C<gdisk>. Див. також L</feature-available>.
-
 =head2 part-get-gpt-attributes
 
  part-get-gpt-attributes пристрій номер_розділу
 
 Повертає прапорці атрибутів вказаного за номером розділу GPT C<номер_розділу>. Повертає помилку для розділів MBR.
-
-Працездатність цієї команди залежить від можливості C<gdisk>. Див. також L</feature-available>.
 
 =head2 part-get-gpt-guid
 
@@ -5561,15 +5579,11 @@ I<У більшості програм потреби у виконанні ці
 
 Повертає GUID вказаного за номером розділу GPT C<номер_розділу>.
 
-Працездатність цієї команди залежить від можливості C<gdisk>. Див. також L</feature-available>.
-
 =head2 part-get-gpt-type
 
  part-get-gpt-type пристрій номер_розділу
 
 Return the type GUID of numbered GPT partition C<partnum>.
-
-Працездатність цієї команди залежить від можливості C<gdisk>. Див. також L</feature-available>.
 
 =head2 part-get-mbr-id
 
@@ -5723,15 +5737,11 @@ DASD, використовувалися у мейнфреймах IBM.
 
 Встановлює ідентифікатор диска (GUID) пристрою із таблицею розділів GPT C<пристрій> у значення C<guid>. Повертає помилку, якщо таблицею розділів пристрою C<пристрій> не є GPT або якщо C<guid> не є коректним GUID.
 
-Працездатність цієї команди залежить від можливості C<gdisk>. Див. також L</feature-available>.
-
 =head2 part-set-disk-guid-random
 
  part-set-disk-guid-random пристрій
 
 Встановлює ідентифікатор диска (GUID) пристрою із таблицею розділів GPT C<пристрій> у створене випадковим чином значення. Повертає помилку, якщо таблицею розділів пристрою C<пристрій> не є GPT.
-
-Працездатність цієї команди залежить від можливості C<gdisk>. Див. також L</feature-available>.
 
 =head2 part-set-gpt-attributes
 
@@ -5741,15 +5751,11 @@ DASD, використовувалися у мейнфреймах IBM.
 
 Див. L<https://en.wikipedia.org/wiki/GUID_Partition_Table#Partition_entries>, де наведено корисний список атрибутів розділів.
 
-Працездатність цієї команди залежить від можливості C<gdisk>. Див. також L</feature-available>.
-
 =head2 part-set-gpt-guid
 
  part-set-gpt-guid пристрій номер_розділу guid
 
 Встановлює GUID вказаного за номером C<номер_розділу> пристрою із таблицею розділів GPT C<пристрій> у значення C<guid>. Повертає помилку, якщо таблицею розділів пристрою C<пристрій> не є GPT або якщо C<guid> не є коректним GUID.
-
-Працездатність цієї команди залежить від можливості C<gdisk>. Див. також L</feature-available>.
 
 =head2 part-set-gpt-type
 
@@ -5758,8 +5764,6 @@ DASD, використовувалися у мейнфреймах IBM.
 Встановлює GUID типу пристрою вказаного за номером C<номер_розділу> пристрою із таблицею розділів GPT у значення C<guid>. Повертає помилку, якщо таблицею розділів пристрою C<пристрій> не є GPT або якщо C<guid> не є коректним GUID.
 
 Див. <https://en.wikipedia.org/wiki/GUID_Partition_Table#Partition_type_GUIDs>, де наведено корисний список GUID типів.
-
-Працездатність цієї команди залежить від можливості C<gdisk>. Див. також L</feature-available>.
 
 =head2 part-set-mbr-id
 

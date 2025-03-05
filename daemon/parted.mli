@@ -23,9 +23,4 @@
 
 val part_list : string -> Structs.partition list
 val part_get_parttype : string -> string
-val part_get_mbr_id : string -> int -> int
-val part_get_gpt_type : string -> int -> string
-val part_set_gpt_attributes : string -> int -> int64 -> unit
-val part_get_gpt_attributes : string -> int -> int64
-val part_get_gpt_guid : string -> int -> string
 val part_get_mbr_part_type : string -> int -> string

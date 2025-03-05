@@ -2564,6 +2564,104 @@ guestfs_download_offset (guestfs_h *g,
 }
 
 GUESTFS_DLL_PUBLIC char *
+guestfs_findfs_partuuid (guestfs_h *g,
+                         const char *uuid)
+{
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
+  struct guestfs_findfs_partuuid_args args;
+  guestfs_message_header hdr;
+  guestfs_message_error err;
+  struct guestfs_findfs_partuuid_ret ret;
+  int serial;
+  int r;
+  int trace_flag = g->trace;
+  struct trace_buffer trace_buffer;
+  char *ret_v;
+  const uint64_t progress_hint = 0;
+
+  guestfs_int_call_callbacks_message (g, GUESTFS_EVENT_ENTER,
+                                      "findfs_partuuid", 15);
+  if (uuid == NULL) {
+    error (g, "%s: %s: parameter cannot be NULL",
+           "findfs_partuuid", "uuid");
+    return NULL;
+  }
+
+  if (trace_flag) {
+    guestfs_int_trace_open (&trace_buffer);
+    fprintf (trace_buffer.fp, "%s", "findfs_partuuid");
+    fprintf (trace_buffer.fp, " \"%s\"", uuid);
+    guestfs_int_trace_send_line (g, &trace_buffer);
+  }
+
+  if (guestfs_int_check_appliance_up (g, "findfs_partuuid") == -1) {
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "findfs_partuuid", "NULL");
+    return NULL;
+  }
+
+  args.uuid = (char *) uuid;
+  serial = guestfs_int_send (g, GUESTFS_PROC_FINDFS_PARTUUID,
+                             progress_hint, 0,
+                             (xdrproc_t) xdr_guestfs_findfs_partuuid_args, (char *) &args);
+  if (serial == -1) {
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "findfs_partuuid", "NULL");
+    return NULL;
+  }
+
+  memset (&hdr, 0, sizeof hdr);
+  memset (&err, 0, sizeof err);
+  memset (&ret, 0, sizeof ret);
+
+  r = guestfs_int_recv (g, "findfs_partuuid", &hdr, &err,
+        (xdrproc_t) xdr_guestfs_findfs_partuuid_ret, (char *) &ret);
+  if (r == -1) {
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "findfs_partuuid", "NULL");
+    return NULL;
+  }
+
+  if (guestfs_int_check_reply_header (g, &hdr, GUESTFS_PROC_FINDFS_PARTUUID, serial) == -1) {
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "findfs_partuuid", "NULL");
+    return NULL;
+  }
+
+  if (hdr.status == GUESTFS_STATUS_ERROR) {
+    int errnum = 0;
+
+    if (trace_flag)
+      guestfs_int_trace (g, "%s = %s (error)",
+                         "findfs_partuuid", "NULL");
+    if (err.errno_string[0] != '\0')
+      errnum = guestfs_int_string_to_errno (err.errno_string);
+    if (errnum <= 0)
+      error (g, "%s: %s", "findfs_partuuid", err.error_message);
+    else
+      guestfs_int_error_errno (g, errnum, "%s: %s", "findfs_partuuid",
+                               err.error_message);
+    free (err.error_message);
+    free (err.errno_string);
+    return NULL;
+  }
+
+  ret_v = ret.device; /* caller will free */
+  if (trace_flag) {
+    guestfs_int_trace_open (&trace_buffer);
+    fprintf (trace_buffer.fp, "%s = ", "findfs_partuuid");
+    fprintf (trace_buffer.fp, "\"%s\"", ret_v);
+    guestfs_int_trace_send_line (g, &trace_buffer);
+  }
+
+  return ret_v;
+}
+
+GUESTFS_DLL_PUBLIC char *
 guestfs_findfs_uuid (guestfs_h *g,
                      const char *uuid)
 {

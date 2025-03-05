@@ -43,7 +43,7 @@ virt-p2v-make-disk у новій версії надає вам змогу вк�
 
 У новій версії режиму virt-v2v I<--in-place> передбачено підтримку встановлення драйверів virtio-scsi до гостьової системи (Roman Kagan).
 
-Нова версія virt-v2v може перетворювати гостьові системи SUSE та гостьові системи SUSE з використанням UEFI (Cédric Bosdonnat і Jim Fehlig).
+virt-v2v can now convert SUSE guests with and without UEFI (Cédric Bosdonnat and Jim Fehlig).
 
 Нова версія virt-v2v може перетворювати гостьові системи Glance із декількома дисками. Раніше програма показувала повідомлення про помилку для таких гостьових систем.
 

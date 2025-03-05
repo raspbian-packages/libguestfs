@@ -7,10 +7,10 @@ Subject: Add util-linux-extra to appliance list
  1 file changed, 1 insertion(+)
 
 diff --git a/appliance/packagelist.in b/appliance/packagelist.in
-index 0ffb8db..fd02c17 100644
+index 28cd049..87bfbf1 100644
 --- a/appliance/packagelist.in
 +++ b/appliance/packagelist.in
-@@ -289,6 +289,7 @@ syslinux
+@@ -291,6 +291,7 @@ syslinux
  tar
  udev
  util-linux

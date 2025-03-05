@@ -1016,6 +1016,7 @@ struct guestfs_cryptsetup_open_args {
   string mapname<>;
   bool readonly;
   string crypttype<>;
+  string cipher<>;
 };
 
 struct guestfs_dd_args {
@@ -1230,6 +1231,22 @@ struct guestfs_findfs_label_args {
 };
 
 struct guestfs_findfs_label_ret {
+  string device<>;
+};
+
+struct guestfs_findfs_partlabel_args {
+  string label<>;
+};
+
+struct guestfs_findfs_partlabel_ret {
+  string device<>;
+};
+
+struct guestfs_findfs_partuuid_args {
+  string uuid<>;
+};
+
+struct guestfs_findfs_partuuid_ret {
   string device<>;
 };
 
@@ -3630,6 +3647,8 @@ enum guestfs_procedure {
   GUESTFS_PROC_FILL_PATTERN = 245,
   GUESTFS_PROC_FIND0 = 196,
   GUESTFS_PROC_FINDFS_LABEL = 266,
+  GUESTFS_PROC_FINDFS_PARTLABEL = 515,
+  GUESTFS_PROC_FINDFS_PARTUUID = 514,
   GUESTFS_PROC_FINDFS_UUID = 265,
   GUESTFS_PROC_FSCK = 84,
   GUESTFS_PROC_FSTRIM = 334,
@@ -3991,7 +4010,7 @@ enum guestfs_procedure {
   GUESTFS_PROC_ZGREPI = 160
 };
 
-const GUESTFS_MAX_PROC_NR = 513;
+const GUESTFS_MAX_PROC_NR = 515;
 
 /* The remote procedure call protocol. */
 

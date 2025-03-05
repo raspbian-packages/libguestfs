@@ -68,7 +68,7 @@ and file_architecture_of_magic magic orig_path path =
  *)
 and canonical_elf_arch bits endianness elf_arch =
   let substr s = String.find elf_arch s >= 0 in
-  if substr "Intel 80386" || substr "Intel 80486" then
+  if substr "Intel 80386" || substr "Intel i386" || substr "Intel 80486" then
     "i386"
   else if substr "x86-64" || substr "AMD x86-64" then
     "x86_64"
@@ -98,6 +98,8 @@ and canonical_elf_arch bits endianness elf_arch =
     | "64" -> "s390x"
     | _ -> failwithf "unknown S/390 bit size: %s" bits
   )
+  else if substr "LoongArch" then
+    sprintf "loongarch%s" bits
   else
     elf_arch
 
