@@ -1,0 +1,20 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Sat, 18 May 2024 22:25:27 +0200
+Subject: Add util-linux-extra to appliance list
+
+---
+ appliance/packagelist.in | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/appliance/packagelist.in b/appliance/packagelist.in
+index 28cd049..87bfbf1 100644
+--- a/appliance/packagelist.in
++++ b/appliance/packagelist.in
+@@ -291,6 +291,7 @@ syslinux
+ tar
+ udev
+ util-linux
++util-linux-extra
+ util-linux-ng
+ xfsprogs
+ zerofree

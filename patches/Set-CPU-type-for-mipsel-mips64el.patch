@@ -1,0 +1,25 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Thu, 30 Dec 2021 21:05:43 +0100
+Subject: Set CPU type for mipsel, mips64el
+
+---
+ lib/appliance-cpu.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/lib/appliance-cpu.c b/lib/appliance-cpu.c
+index 8ce5084..841e601 100644
+--- a/lib/appliance-cpu.c
++++ b/lib/appliance-cpu.c
+@@ -90,6 +90,12 @@ guestfs_int_get_cpu_model (int kvm)
+ #elif defined(__loongarch64)
+   /* qemu-system-loongarch64 doesn't yet support -cpu max */
+   return NULL;
++#elif defined(__mips64)
++  /* Taken from https://gist.github.com/bradfa/46ceff759a0cf9f392cc069c4f0f095a */
++  return "5KEc";
++#elif defined(__mips)
++  /* Guessed from mips64 */
++  return "4KEc";
+ #else
+   /* On most architectures we can use "max" to get the best possible CPU.
+    * For recent qemu this should work even on TCG.
