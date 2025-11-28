@@ -1,0 +1,6 @@
+usr/share/man/man1/guestmount*
+usr/share/man/*/man1/guestmount*
+usr/share/man/man1/guestunmount*
+usr/share/man/*/man1/guestunmount*
+
+usr/share/bash-completion/completions/guest*mount
