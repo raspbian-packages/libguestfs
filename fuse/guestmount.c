@@ -16,8 +16,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#define FUSE_USE_VERSION 26
-
 #include <config.h>
 
 #include <stdio.h>
