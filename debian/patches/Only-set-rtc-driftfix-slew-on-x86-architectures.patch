@@ -1,0 +1,23 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Tue, 25 Jul 2023 22:32:03 +0200
+Subject: Only set -rtc driftfix=slew on x86 architectures
+
+---
+ lib/launch-direct.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/lib/launch-direct.c b/lib/launch-direct.c
+index 9d0c221..ea07a28 100644
+--- a/lib/launch-direct.c
++++ b/lib/launch-direct.c
+@@ -644,8 +644,10 @@ launch_direct (guestfs_h *g, void *datav, const char *arg)
+   /* Force exit instead of reboot on panic */
+   flag ("-no-reboot");
+ 
++#if defined(__i386__) || defined(__x86_64__)
+   /* These are recommended settings, see RHBZ#1053847. */
+   arg ("-rtc", "driftfix=slew");
++#endif
+   if (guestfs_int_qemu_supports (g, data->qemu_data, "-no-hpet"))
+     flag ("-no-hpet");
+ #if defined(__i386__) || defined(__x86_64__)
