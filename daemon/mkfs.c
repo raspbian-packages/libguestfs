@@ -52,6 +52,14 @@ do_mkfs (const char *fstype, const char *device, int blocksize,
   CLEANUP_FREE char *err = NULL;
   int extfs = 0;
 
+  /* Wait up to 15s for device to appear */
+  for (int j=0; i < 150; i++) {
+    if (!access (device, F_OK)) {
+      break;
+    }
+    usleep(100000);
+  }
+
   if (fstype_is_extfs (fstype))
     extfs = 1;
 
