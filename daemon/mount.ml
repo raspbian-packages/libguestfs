@@ -30,6 +30,18 @@ let mount_vfs options vfs mountable mountpoint =
 
   let args = ref [] in
 
+  (* Wait up to 15s for device to appear *)
+  (match mountable.m_type with
+  | MountableDevice | MountablePath ->
+    if String.starts_with "/dev/" mountable.m_device then
+      let i = ref 0 in
+      while (not (Sys.file_exists mountable.m_device)) && (!i < 150) do
+        Unix.sleepf 0.1;
+        i := !i + 1;
+      done
+  | _ -> ()
+  );
+
   (* -o options *)
   (match options, mountable.m_type with
    | "", (MountableDevice | MountablePath) -> ()
