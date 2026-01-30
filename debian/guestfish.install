@@ -1,0 +1,13 @@
+usr/bin/guestfish
+usr/share/man/man1/guestfish*
+usr/share/man/*/man1/guestfish*
+usr/share/bash-completion/completions/guestfish
+
+usr/bin/virt-*
+usr/share/man/man1/virt-*
+usr/share/man/*/man1/virt-*
+usr/share/bash-completion/completions/virt-*
+
+etc/libguestfs-tools.conf
+usr/share/man/man5/libguestfs-tools.conf*
+usr/share/man/*/man5/libguestfs-tools.conf*

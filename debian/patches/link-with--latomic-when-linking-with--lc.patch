@@ -1,0 +1,34 @@
+From: =?utf-8?q?St=C3=A9phane_Glondu?= <glondu@debian.org>
+Date: Sun, 11 Aug 2024 07:03:06 +0200
+Subject: Link with -latomic when linking with -lcamlrun
+
+Bug-Debian: https://bugs.debian.org/1078470
+---
+ daemon/Makefile.am | 1 +
+ daemon/Makefile.in | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/daemon/Makefile.am b/daemon/Makefile.am
+index a602248..d0c8411 100644
+--- a/daemon/Makefile.am
++++ b/daemon/Makefile.am
+@@ -385,6 +385,7 @@ OCAML_LIBS = \
+ 	-l$(CAMLSTR) \
+ 	-l$(CAMLUNIX) \
+ 	-l$(CAMLRUN) \
++	-latomic \
+ 	$(LIBZSTD_LIBS) \
+ 	-ldl -lm
+ 
+diff --git a/daemon/Makefile.in b/daemon/Makefile.in
+index f923637..58d2172 100644
+--- a/daemon/Makefile.in
++++ b/daemon/Makefile.in
+@@ -1371,6 +1371,7 @@ OCAML_LIBS = \
+ 	-l$(CAMLSTR) \
+ 	-l$(CAMLUNIX) \
+ 	-l$(CAMLRUN) \
++	-latomic \
+ 	$(LIBZSTD_LIBS) \
+ 	-ldl -lm
+ 
