@@ -1,0 +1,51 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Sat, 3 Jan 2026 15:05:07 +0100
+Subject: Wait for device name to appearr before mount, mkfs
+
+---
+ daemon/mkfs.c   |  8 ++++++++
+ daemon/mount.ml | 12 ++++++++++++
+ 2 files changed, 20 insertions(+)
+
+diff --git a/daemon/mkfs.c b/daemon/mkfs.c
+index fe2e678..66c937b 100644
+--- a/daemon/mkfs.c
++++ b/daemon/mkfs.c
+@@ -52,6 +52,14 @@ do_mkfs (const char *fstype, const char *device, int blocksize,
+   CLEANUP_FREE char *err = NULL;
+   int extfs = 0;
+ 
++  /* Wait up to 15s for device to appear */
++  for (int j=0; i < 150; i++) {
++    if (!access (device, F_OK)) {
++      break;
++    }
++    usleep(100000);
++  }
++
+   if (fstype_is_extfs (fstype))
+     extfs = 1;
+ 
+diff --git a/daemon/mount.ml b/daemon/mount.ml
+index 171bea1..148d79e 100644
+--- a/daemon/mount.ml
++++ b/daemon/mount.ml
+@@ -30,6 +30,18 @@ let mount_vfs options vfs mountable mountpoint =
+ 
+   let args = ref [] in
+ 
++  (* Wait up to 15s for device to appear *)
++  (match mountable.m_type with
++  | MountableDevice | MountablePath ->
++    if String.starts_with "/dev/" mountable.m_device then
++      let i = ref 0 in
++      while (not (Sys.file_exists mountable.m_device)) && (!i < 150) do
++        Unix.sleepf 0.1;
++        i := !i + 1;
++      done
++  | _ -> ()
++  );
++
+   (* -o options *)
+   (match options, mountable.m_type with
+    | "", (MountableDevice | MountablePath) -> ()
