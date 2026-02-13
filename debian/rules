@@ -73,6 +73,7 @@ $(CURDIR)/debian/build-$1/config.status::
 		--disable-gnulib-tests     \
 		--with-readline	           \
 		--disable-haskell          \
+		--disable-rust             \
 		--with-guestfs-path=/usr/lib/$(DEB_HOST_MULTIARCH)/guestfs \
 		--with-qemu=qemu-system-$(QEMU_CPU) \
 		$(if $(findstring powerpcspe,$(DEB_HOST_GNU_CPU)),\
@@ -135,14 +136,11 @@ override_dh_autoreconf:
 # Just run the test on the last build.
 override_dh_auto_test:
 ifneq "" "$(findstring x$(DEB_HOST_ARCH)x,$(patsubst %,x%x,$(QUICKCHECK_ARCHITECTURES)))"
-	printenv
-	mount
-	unset XDG_RUNTIME_DIR; export TMPDIR=$(CURDIR)/tmp; \
-		mkdir -p $(CURDIR)/tmp; \
-		if ! test -w /dev/kvm; then \
-			export LIBGUESTFS_BACKEND_SETTINGS=force_tcg; \
-		fi; \
-		make -C $(CURDIR)/debian/build-$(BUILD_COUNT) quickcheck
+	if test -w /dev/kvm; then \
+		unset XDG_RUNTIME_DIR; \
+		export TMPDIR=$(CURDIR)/tmp; rm -rf $(CURDIR)/tmp; mkdir -p $(CURDIR)/tmp; \
+		dh_auto_test --builddir=$(CURDIR)/debian/build-$(BUILD_COUNT) --no-parallel -- quickcheck; \
+	fi
 endif
 
 # Installation needs to happen in order because only the last build

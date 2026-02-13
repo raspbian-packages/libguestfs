@@ -7,7 +7,7 @@ Subject: Only set -rtc driftfix=slew on x86 architectures
  1 file changed, 2 insertions(+)
 
 diff --git a/lib/launch-direct.c b/lib/launch-direct.c
-index 9d0c221..ea07a28 100644
+index 18eadf9..420cb18 100644
 --- a/lib/launch-direct.c
 +++ b/lib/launch-direct.c
 @@ -644,8 +644,10 @@ launch_direct (guestfs_h *g, void *datav, const char *arg)

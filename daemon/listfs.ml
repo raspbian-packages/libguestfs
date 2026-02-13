@@ -1,5 +1,5 @@
 (* guestfs-inspection
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,12 +25,17 @@ open Std_utils
  * contain filesystems, so we filter them out.
  *)
 let rec list_filesystems () =
+  if verbose () then
+    eprintf "list_filesystems: start\n";
+
   let has_lvm2 = Optgroups.lvm2_available () in
   let has_ldm = Optgroups.ldm_available () in
 
-  let ret = ref [] in
+  let ret : (Mountable.t * string) list ref = ref [] in
 
   (* Devices. *)
+  if verbose () then
+    eprintf "list_filesystems: checking for whole devices\n";
   let devices = Devsparts.list_devices () in
   let devices = List.filter is_not_partitioned_device devices in
   List.iter (check_with_vfs_type ret) devices;
@@ -39,32 +44,44 @@ let rec list_filesystems () =
    * We include these in case any encrypted devices contain
    * direct filesystems.
    *)
+  if verbose () then
+    eprintf "list_filesystems: checking for device-mapper devices\n";
   let devices = Lvm_dm.list_dm_devices () in
   let devices = List.filter is_not_partitioned_device devices in
   List.iter (check_with_vfs_type ret) devices;
 
   (* Partitions. *)
+  if verbose () then
+    eprintf "list_filesystems: checking for partitions\n";
   let partitions = Devsparts.list_partitions () in
   let partitions = List.filter is_partition_can_hold_filesystem partitions in
   List.iter (check_with_vfs_type ret) partitions;
 
   (* MD. *)
+  if verbose () then
+    eprintf "list_filesystems: checking for MD devices\n";
   let mds = Md.list_md_devices () in
   let mds = List.filter is_not_partitioned_device mds in
   List.iter (check_with_vfs_type ret) mds;
 
   (* LVM. *)
   if has_lvm2 then (
+    if verbose () then
+      eprintf "list_filesystems: checking for logical volumes\n";
     let lvs = Lvm.lvs () in
     List.iter (check_with_vfs_type ret) lvs
   );
 
   (* LDM. *)
   if has_ldm then (
+    if verbose () then
+      eprintf "list_filesystems: checking for LDM volumes\n";
     let ldmvols = Ldm.list_ldm_volumes () in
     List.iter (check_with_vfs_type ret) ldmvols
   );
 
+  if verbose () then
+    eprintf "list_filesystems: finished\n%!";
   !ret
 
 (* Look to see if device can directly contain filesystem (RHBZ#590167).
@@ -73,18 +90,18 @@ let rec list_filesystems () =
  *)
 and is_not_partitioned_device device =
   let device =
-    if String.is_prefix device "/dev/mapper/" then
+    if String.starts_with "/dev/mapper/" device then
       Unix_utils.Realpath.realpath device
     else
       device in
-  assert (String.is_prefix device "/dev/");
+  assert (String.starts_with "/dev/" device);
   let dev_name = String.sub device 5 (String.length device - 5) in
   let dev_dir = "/sys/block/" ^ dev_name in
 
   (* Open the device's directory under /sys/block/<dev_name> and
    * look for entries starting with <dev_name>, eg. /sys/block/sda/sda1
    *)
-  let is_device_partition file = String.is_prefix file dev_name in
+  let is_device_partition file = String.starts_with dev_name file in
   let files = Array.to_list (Sys.readdir dev_dir) in
   let has_partition = List.exists is_device_partition files in
 
@@ -146,18 +163,21 @@ and check_with_vfs_type ret device =
     try Blkid.vfs_type mountable
     with exn ->
        if verbose () then
-         eprintf "check_with_vfs_type: %s: %s\n"
+         eprintf "list_filesystems: check_with_vfs_type: %s: %s\n"
                  device (Printexc.to_string exn);
        "" in
 
-  if vfs_type = "" then
-    List.push_back ret (mountable, "unknown")
+  if vfs_type = "" then (
+    let fs = mountable, "unknown" in
+    debug_one_fs fs;
+    List.push_back ret fs
+  )
 
   (* Ignore all "*_member" strings.  In libblkid these are returned
    * for things which are members of some RAID or LVM set, most
    * importantly "LVM2_member" which is a PV.
    *)
-  else if String.is_suffix vfs_type "_member" then
+  else if String.ends_with "_member" vfs_type then
     ()
 
   (* Ignore encrypted partitions.  These are also containers, as above. *)
@@ -179,17 +199,30 @@ and check_with_vfs_type ret device =
       ) vols in
 
     (* whole device = default volume *)
-    List.push_back ret (mountable, vfs_type);
+    let fs = mountable, vfs_type in
+    debug_one_fs fs;
+    List.push_back ret fs;
 
     (* subvolumes *)
     List.push_back_list ret (
       List.map (
         fun { Structs.btrfssubvolume_path = path } ->
           let mountable = Mountable.of_btrfsvol device path in
-          (mountable, "btrfs")
+          let fs = mountable, "btrfs" in
+          debug_one_fs fs;
+          fs
       ) vols
     )
   )
 
-  else
-    List.push_back ret (mountable, vfs_type)
+  (* Otherwise it's some other VFS type. *)
+  else (
+    let fs = mountable, vfs_type in
+    debug_one_fs fs;
+    List.push_back ret fs
+  )
+
+and debug_one_fs (mountable, vfs_type) =
+  if verbose () then
+    eprintf "list_filesystems: adding %S, %S\n"
+      (Mountable.to_string mountable) vfs_type

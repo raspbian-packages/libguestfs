@@ -1,5 +1,5 @@
 (* guestfs-inspection
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -267,6 +267,7 @@ and check_package_format { distro } =
   | Some DISTRO_MEEGO
   | Some DISTRO_NEOKYLIN
   | Some DISTRO_OPENCLOUDOS
+  | Some DISTRO_TENCENTOS
   | Some DISTRO_OPENEULER
   | Some DISTRO_OPENMANDRIVA
   | Some DISTRO_OPENSUSE
@@ -385,6 +386,9 @@ and check_package_management { distro; version } =
      Some PACKAGE_MANAGEMENT_DNF
 
   | Some DISTRO_OPENCLOUDOS ->
+     Some PACKAGE_MANAGEMENT_DNF
+
+  | Some DISTRO_TENCENTOS ->
      Some PACKAGE_MANAGEMENT_DNF
 
   | Some DISTRO_OPENEULER->

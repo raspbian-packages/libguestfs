@@ -4,7 +4,7 @@
 #          and from the code in the generator/ subdirectory.
 # ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 #
-# Copyright (C) 2009-2023 Red Hat Inc.
+# Copyright (C) 2009-2025 Red Hat Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -1320,6 +1320,13 @@ filesystem is stored.
 This function depends on the feature C<btrfs>.  See also
 C<$g-E<gt>feature-available>.
 
+I<This function is deprecated.>
+In new code, use the L</btrfs_scrub_full> call instead.
+
+Deprecated functions will not be removed from the API, but the
+fact that they are deprecated indicates that there are problems
+with correct use of these functions.
+
 =item $g->btrfs_image (\@source, $image [, compresslevel => $compresslevel]);
 
 This is used to create an image of a btrfs filesystem.
@@ -1416,6 +1423,14 @@ C<$g-E<gt>feature-available>.
 =item $g->btrfs_scrub_cancel ($path);
 
 Cancel a running scrub on a btrfs filesystem.
+
+This function depends on the feature C<btrfs>.  See also
+C<$g-E<gt>feature-available>.
+
+=item $g->btrfs_scrub_full ($path [, readonly => $readonly]);
+
+Run a full scrub on a btrfs filesystem and wait for it to finish.
+If the filesystem has errors this will return an error.
 
 This function depends on the feature C<btrfs>.  See also
 C<$g-E<gt>feature-available>.
@@ -1627,8 +1642,8 @@ as F<C:\windows> may appear as F</WINDOWS> or F</windows>
 they were created.  In Windows itself this would not be
 a problem.
 
-Bug or feature?  You decide:
-L<https://www.tuxera.com/community/ntfs-3g-faq/#posixfilenames1>
+Bug or feature?  You decide. See the relevant entry in the ntfs-3g FAQ:
+L<https://github.com/tuxera/ntfs-3g/wiki/NTFS-3G-FAQ>
 
 C<$g-E<gt>case_sensitive_path> attempts to resolve the true case of
 each element in the path. It will return a resolved path if either the
@@ -1785,7 +1800,7 @@ C<device> is the encrypted block device.
 
 The appliance will connect to the Tang servers noted in the tree of
 Clevis pins that is bound to a keyslot of the LUKS header.  The Clevis
-pin tree may comprise C<sss> (redudancy) pins as internal nodes
+pin tree may comprise C<sss> (redundancy) pins as internal nodes
 (optionally), and C<tang> pins as leaves.  C<tpm2> pins are not
 supported.  The appliance unlocks the encrypted block device by
 combining responses from the Tang servers with metadata from the LUKS
@@ -1855,6 +1870,14 @@ See also: C<$g-E<gt>sh_lines>
 
 Because of the message protocol, there is a transfer limit
 of somewhere between 2MB and 4MB.  See L<guestfs(3)/PROTOCOL LIMITS>.
+
+=item $g->command_out (\@arguments, $output);
+
+This is the same as C<$g-E<gt>command>, but streams the output
+back, handling the case where the output from the command is
+larger than the protocol limit.
+
+See also: C<$g-E<gt>sh_out>
 
 =item $g->compress_device_out ($ctype, $device, $zdevice [, level => $level]);
 
@@ -2340,7 +2363,7 @@ subdirectories (recursively).
 The result is the estimated size in I<kilobytes>
 (ie. units of 1024 bytes).
 
-=item $g->e2fsck ($device [, correct => $correct] [, forceall => $forceall]);
+=item $g->e2fsck ($device [, correct => $correct] [, forceall => $forceall] [, forceno => $forceno]);
 
 This runs the ext2/ext3 filesystem checker on C<device>.
 It can take the following optional arguments:
@@ -2353,14 +2376,24 @@ Automatically repair the file system. This option will cause e2fsck
 to automatically fix any filesystem problems that can be safely
 fixed without human intervention.
 
-This option may not be specified at the same time as the C<forceall> option.
+This option may not be specified at the same time as the C<forceall>
+or C<forceno> options.
 
 =item C<forceall>
 
 Assume an answer of ‘yes’ to all questions; allows e2fsck to be used
 non-interactively.
 
-This option may not be specified at the same time as the C<correct> option.
+This option may not be specified at the same time as the C<correct>
+or C<forceno> options.
+
+=item C<forceno>
+
+Open the filesystem readonly and assume an answer of ‘no’ to all
+questions; allows e2fsck to be used non-interactively.
+
+This option may not be specified at the same time as the C<correct>
+or C<forceall> options.
 
 =back
 
@@ -8205,6 +8238,14 @@ into a list of lines.
 
 See also: C<$g-E<gt>command_lines>
 
+=item $g->sh_out ($command, $output);
+
+This is the same as C<$g-E<gt>sh>, but streams the output
+back, handling the case where the output from the command is
+larger than the protocol limit.
+
+See also: C<$g-E<gt>command_out>
+
 =item $g->shutdown ();
 
 This is the opposite of C<$g-E<gt>launch>.  It performs an orderly
@@ -9428,7 +9469,7 @@ with some unique string, to avoid conflicts with other users.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2009-2023 Red Hat Inc.
+Copyright (C) 2009-2025 Red Hat Inc.
 
 =head1 LICENSE
 

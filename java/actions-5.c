@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -365,6 +365,35 @@ Java_com_redhat_et_libguestfs_GuestFS__1btrfs_1scrub_1cancel  (JNIEnv *env, jobj
   path = (*env)->GetStringUTFChars (env, jpath, NULL);
 
   r = guestfs_btrfs_scrub_cancel (g, path);
+
+  (*env)->ReleaseStringUTFChars (env, jpath, path);
+
+  if (r == -1) {
+    throw_exception (env, guestfs_last_error (g));
+    goto ret_error;
+  }
+  return;
+
+ ret_error:
+  return;
+}
+
+
+JNIEXPORT void JNICALL
+Java_com_redhat_et_libguestfs_GuestFS__1btrfs_1scrub_1full  (JNIEnv *env, jobject obj, jlong jg, jstring jpath, jlong joptargs_bitmask, jboolean jreadonly)
+{
+  guestfs_h *g = (guestfs_h *) (long) jg;
+  int r;
+  const char *path;
+  struct guestfs_btrfs_scrub_full_argv optargs_s;
+  const struct guestfs_btrfs_scrub_full_argv *optargs = &optargs_s;
+
+  path = (*env)->GetStringUTFChars (env, jpath, NULL);
+
+  optargs_s.readonly = jreadonly;
+  optargs_s.bitmask = joptargs_bitmask;
+
+  r = guestfs_btrfs_scrub_full_argv (g, path, optargs);
 
   (*env)->ReleaseStringUTFChars (env, jpath, path);
 

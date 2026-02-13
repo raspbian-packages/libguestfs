@@ -1,5 +1,5 @@
 (* guestfs-inspection
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -100,6 +100,8 @@ and canonical_elf_arch bits endianness elf_arch =
   )
   else if substr "LoongArch" then
     sprintf "loongarch%s" bits
+  else if substr "*unknown arch 0x102*" then (* file command on RHEL 9 *)
+    sprintf "loongarch%s" bits
   else
     elf_arch
 
@@ -114,7 +116,7 @@ and cpio_arch magic orig_path path =
   let tmpdir = Mkdtemp.temp_dir "filearch" in
   let finally () = ignore (Sys.command (sprintf "rm -rf %s" (quote tmpdir))) in
 
-  protect ~finally ~f:(
+  Fun.protect ~finally (
     fun () ->
       (* Construct a command to extract named binaries from the initrd file. *)
       let cmd =

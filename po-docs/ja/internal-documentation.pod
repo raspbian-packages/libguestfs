@@ -1481,7 +1481,7 @@ Parse the first line of C<qemu_help> into the major and minor version of qemu, b
 =head4 Function C<lib/qemu.c:parse_json>
 
  static void
- parse_json (guestfs_h *g, const char *json, json_t **treep)
+ parse_json (guestfs_h *g, const char *json, json_object **treep)
 
 Parse the json output from QMP.  But don't fail if parsing is not possible.
 

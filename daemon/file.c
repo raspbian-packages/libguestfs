@@ -1,5 +1,5 @@
 /* libguestfs - the guestfsd daemon
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -531,7 +531,7 @@ do_copy_attributes (const char *src, const char *dest, int all, int mode, int xa
   static const unsigned int file_mask = 07777;
 
   /* If it was specified to copy everything, manually enable all the flags
-   * not manually specified to avoid checking for flag || all everytime.
+   * not manually specified to avoid checking for flag || all every time.
    */
   if (all) {
     if (!(optargs_bitmask & GUESTFS_COPY_ATTRIBUTES_MODE_BITMASK))

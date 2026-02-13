@@ -1,5 +1,5 @@
 (* guestfs-inspection
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,8 +61,8 @@ let rec umount_all () =
         let mp = proc_unmangle_path mp in
 
         (* Allow a mount directory like "/sysroot" or "/sysroot/..." *)
-        if (sysroot_len > 0 && String.is_prefix mp sysroot) ||
-           (String.is_prefix mp sysroot &&
+        if (sysroot_len > 0 && String.starts_with sysroot mp) ||
+           (String.starts_with sysroot mp &&
             String.length mp > sysroot_len &&
             mp.[sysroot_len] = '/') then
           List.push_front mp mps

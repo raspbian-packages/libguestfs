@@ -7,7 +7,7 @@ Subject: Fix include path for generating localized manpages
  1 file changed, 4 insertions(+)
 
 diff --git a/po-docs/language.mk b/po-docs/language.mk
-index 62a148e..0c48c82 100644
+index 2bfe2a4..26d4bcb 100644
 --- a/po-docs/language.mk
 +++ b/po-docs/language.mk
 @@ -106,13 +106,16 @@ guestfs.3: guestfs.pod guestfs-actions.pod guestfs-availability.pod guestfs-stru

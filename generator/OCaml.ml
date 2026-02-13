@@ -1,5 +1,5 @@
 (* libguestfs
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -512,7 +512,7 @@ copy_table (char * const * argv)
       List.iteri (
         fun i col ->
           (match col with
-           | name, FString ->
+           | name, (FString|FDevice) ->
                pr "  v = caml_copy_string (%s->%s);\n" typ name
            | name, FBuffer ->
                pr "  v = caml_alloc_initialized_string (%s->%s_len, %s->%s);\n"
@@ -839,9 +839,7 @@ and generate_ocaml_structure_decls () =
       pr "type %s = {\n" typ;
       List.iter (
         function
-        | name, FString -> pr "  %s : string;\n" name
-        | name, FBuffer -> pr "  %s : string;\n" name
-        | name, FUUID -> pr "  %s : string;\n" name
+        | name, (FString|FDevice|FBuffer|FUUID) -> pr "  %s : string;\n" name
         | name, (FBytes|FInt64|FUInt64) -> pr "  %s : int64;\n" name
         | name, (FInt32|FUInt32) -> pr "  %s : int32;\n" name
         | name, FChar -> pr "  %s : char;\n" name

@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -1367,6 +1367,8 @@ PREINIT:
       struct guestfs_btrfs_fsck_argv *optargs = &optargs_s;
       size_t items_i;
  PPCODE:
+      Perl_ck_warner (aTHX_ packWARN(WARN_DEPRECATED),
+        "Sys::Guestfs::btrfs_fsck is deprecated; use Sys::Guestfs::btrfs_scrub_full instead");
       if (((items - 2) & 1) != 0)
         croak ("expecting an even number of extra parameters");
       for (items_i = 2; items_i < items; items_i += 2) {
@@ -1577,6 +1579,38 @@ PREINIT:
       int r;
  PPCODE:
       r = guestfs_btrfs_scrub_cancel (g, path);
+      if (r == -1)
+        croak ("%s", guestfs_last_error (g));
+
+void
+btrfs_scrub_full (g, path, ...)
+      guestfs_h *g;
+      char *path;
+PREINIT:
+      int r;
+      struct guestfs_btrfs_scrub_full_argv optargs_s = { .bitmask = 0 };
+      struct guestfs_btrfs_scrub_full_argv *optargs = &optargs_s;
+      size_t items_i;
+ PPCODE:
+      if (((items - 2) & 1) != 0)
+        croak ("expecting an even number of extra parameters");
+      for (items_i = 2; items_i < items; items_i += 2) {
+        uint64_t this_mask;
+        const char *this_arg;
+
+        this_arg = SvPV_nolen (ST (items_i));
+        if (STREQ (this_arg, "readonly")) {
+          optargs_s.readonly = SvIV (ST (items_i+1));
+          this_mask = GUESTFS_BTRFS_SCRUB_FULL_READONLY_BITMASK;
+        }
+        else croak ("unknown optional argument '%s'", this_arg);
+        if (optargs_s.bitmask & this_mask)
+          croak ("optional argument '%s' given more than once",
+                 this_arg);
+        optargs_s.bitmask |= this_mask;
+      }
+
+      r = guestfs_btrfs_scrub_full_argv (g, path, optargs);
       if (r == -1)
         croak ("%s", guestfs_last_error (g));
 
@@ -2054,6 +2088,19 @@ PREINIT:
         free (r[i]);
       }
       free (r);
+
+void
+command_out (g, arguments, output)
+      guestfs_h *g;
+      char **arguments;
+      char *output;
+PREINIT:
+      int r;
+ PPCODE:
+      r = guestfs_command_out (g, arguments, output);
+      free (arguments);
+      if (r == -1)
+        croak ("%s", guestfs_last_error (g));
 
 void
 compress_device_out (g, ctype, device, zdevice, ...)
@@ -2886,6 +2933,10 @@ PREINIT:
         else if (STREQ (this_arg, "forceall")) {
           optargs_s.forceall = SvIV (ST (items_i+1));
           this_mask = GUESTFS_E2FSCK_FORCEALL_BITMASK;
+        }
+        else if (STREQ (this_arg, "forceno")) {
+          optargs_s.forceno = SvIV (ST (items_i+1));
+          this_mask = GUESTFS_E2FSCK_FORCENO_BITMASK;
         }
         else croak ("unknown optional argument '%s'", this_arg);
         if (optargs_s.bitmask & this_mask)
@@ -10296,6 +10347,18 @@ PREINIT:
         free (r[i]);
       }
       free (r);
+
+void
+sh_out (g, command, output)
+      guestfs_h *g;
+      char *command;
+      char *output;
+PREINIT:
+      int r;
+ PPCODE:
+      r = guestfs_sh_out (g, command, output);
+      if (r == -1)
+        croak ("%s", guestfs_last_error (g));
 
 void
 shutdown (g)

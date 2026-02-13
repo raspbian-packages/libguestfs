@@ -1,5 +1,5 @@
 # libguestfs
-# Copyright (C) 2009-2023 Red Hat Inc.
+# Copyright (C) 2009-2025 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -121,6 +121,7 @@ if test "x$ENABLE_APPLIANCE" = "xyes"; then
                         [ARCH | MANJARO | ARTIX],[DISTRO=ARCHLINUX],
                         [OPENMANDRIVA],[DISTRO=OPENMANDRIVA],
                         [OPENCLOUDOS],[DISTRO=OPENCLOUDOS],
+                        [TENCENTOS],[DISTRO=TENCENTOS],
                         [OPENEULER],[DISTRO=OPENEULER])
                 AC_MSG_RESULT([$DISTRO (from /etc/os-release)])
             else
@@ -131,7 +132,7 @@ if test "x$ENABLE_APPLIANCE" = "xyes"; then
     AC_SUBST([DISTRO])
 fi
 AM_CONDITIONAL([HAVE_RPM],
-    [AS_CASE([$DISTRO], [REDHAT | SUSE | OPENMANDRIVA | MAGEIA | OPENCLOUDOS | OPENEULER ], [true],
+    [AS_CASE([$DISTRO], [REDHAT | SUSE | OPENMANDRIVA | MAGEIA | OPENCLOUDOS | TENCENTOS | OPENEULER ], [true],
                         [*], [false])])
 AM_CONDITIONAL([HAVE_DPKG],
     [AS_CASE([$DISTRO], [DEBIAN | UBUNTU | RASPBIAN ], [true],

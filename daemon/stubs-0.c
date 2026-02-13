@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -640,8 +640,9 @@ e2fsck_stub (XDR *xdr_in)
   CLEANUP_FREE char *device = NULL;
   int correct;
   int forceall;
+  int forceno;
 
-  if (optargs_bitmask & UINT64_C(0xfffffffffffffffc)) {
+  if (optargs_bitmask & UINT64_C(0xfffffffffffffff8)) {
     reply_with_error ("unknown option in optional arguments bitmask (this can happen if a program is compiled against a newer version of libguestfs, then run against an older version of the daemon)");
     return;
   }
@@ -653,8 +654,9 @@ e2fsck_stub (XDR *xdr_in)
   RESOLVE_DEVICE (args.device, device, false);
   correct = args.correct;
   forceall = args.forceall;
+  forceno = args.forceno;
 
-  r = do_e2fsck (device, correct, forceall);
+  r = do_e2fsck (device, correct, forceall, forceno);
   if (r == -1)
     /* do_e2fsck has already called reply_with_error */
     return;

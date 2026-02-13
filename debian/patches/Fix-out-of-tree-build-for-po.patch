@@ -7,7 +7,7 @@ Subject: Fix out-of-tree build for po/*
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/po/Makefile.am b/po/Makefile.am
-index 961dea6..3b5a05c 100644
+index 24c2c18..2f83e54 100644
 --- a/po/Makefile.am
 +++ b/po/Makefile.am
 @@ -69,7 +69,7 @@ $(DOMAIN).pot: Makefile POTFILES $(POTFILES)

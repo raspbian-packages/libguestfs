@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -231,6 +231,8 @@ guestfs_int_ruby_btrfs_balance_resume (VALUE gv, VALUE pathv)
  *
  * [Since] Added in version 1.17.43.
  *
+ * [Deprecated] In new code, use rdoc-ref:btrfs_scrub_full instead.
+ *
  * [Feature] This function depends on the feature +btrfs+.  See also {#feature_available}[rdoc-ref:feature_available].
  *
  * [C API] For the C API documentation for this function, see
@@ -249,6 +251,8 @@ guestfs_int_ruby_btrfs_fsck (int argc, VALUE *argv, VALUE gv)
 
   volatile VALUE devicev = argv[0];
   volatile VALUE optargsv = argc > 1 ? argv[1] : rb_hash_new ();
+
+  rb_warn ("Guestfs#btrfs_fsck is deprecated; use #btrfs_scrub_full instead");
 
   const char *device = StringValueCStr (devicev);
 

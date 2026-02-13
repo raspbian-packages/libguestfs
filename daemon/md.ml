@@ -1,5 +1,5 @@
 (* guestfs-inspection
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@ let md_detail md =
        * remainder to lower case.
        *)
       let key =
-        if String.is_prefix key "MD_" then
+        if String.starts_with "MD_" key then
           String.sub key 3 (String.length key - 3)
         else
           key in

@@ -1,5 +1,5 @@
 (* guestfs-inspection
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -94,11 +94,11 @@ and get_windows_systemroot_from_boot_ini boot_ini_path =
       *)
      let rec loop = function
        | [] -> None
-       | str :: rest when String.is_prefix str "[operating systems]" ->
+       | str :: rest when String.starts_with "[operating systems]" str ->
           let rec loop2 = function
             | [] -> []
-            | str :: rest when String.is_prefix str "multi(" ||
-                               String.is_prefix str "scsi(" ->
+            | str :: rest when String.starts_with "multi(" str ||
+                               String.starts_with "scsi(" str ->
                str :: loop2 rest
             | _ -> []
           in
@@ -340,7 +340,7 @@ and get_drive_mappings h root data =
             let device =
               if typ = Hivex.REG_BINARY then (
                 if String.length blob >= 24 &&
-                   String.is_prefix blob "DMIO:ID:" (* GPT *) then
+                   String.starts_with "DMIO:ID:" blob (* GPT *) then
                   map_registry_disk_blob_gpt (Lazy.force partitions) blob
                 else if String.length blob = 12 then
                   map_registry_disk_blob_mbr (Lazy.force devices) blob
@@ -428,7 +428,7 @@ and map_registry_disk_blob_gpt partitions blob =
   | Not_found -> None
 
 (* Extracts the binary GUID stored in blob from Windows registry
- * HKLM\SYSTYEM\MountedDevices\DosDevices value and converts it to a
+ * HKLM\SYSTEM\MountedDevices\DosDevices value and converts it to a
  * GUID string so that it can be matched against libguestfs partition
  * device GPT GUID.
  *)

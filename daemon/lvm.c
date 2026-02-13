@@ -1,5 +1,5 @@
 /* libguestfs - the guestfsd daemon
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -137,55 +137,6 @@ do_vgs (void)
   }
 
   return convert_lvm_output (out, NULL);
-}
-
-/* These were so complex to implement that I ended up auto-generating
- * the code.  That code is in stubs.c, and it is generated as usual
- * by generator.ml.
- */
-guestfs_int_lvm_pv_list *
-do_pvs_full (void)
-{
-  guestfs_int_lvm_pv_list *r;
-  size_t i;
-  char *din, *dout;
-
-  r = parse_command_line_pvs ();
-  if (r == NULL)
-    /* parse_command_line_pvs has already called reply_with_error */
-    return NULL;
-
-  /* The pv_name fields contain device names which must be reverse
-   * translated.  The problem here is that the generator does not have
-   * a "FMountable" field type in types.mli.
-   */
-  for (i = 0; i < r->guestfs_int_lvm_pv_list_len; ++i) {
-    din = r->guestfs_int_lvm_pv_list_val[i].pv_name;
-    if (din) {
-      dout = reverse_device_name_translation (din);
-      if (!dout) {
-        /* reverse_device_name_translation has already called reply_with_error*/
-        /* XXX memory leak here */
-        return NULL;
-      }
-      r->guestfs_int_lvm_pv_list_val[i].pv_name = dout;
-      free (din);
-    }
-  }
-
-  return r;
-}
-
-guestfs_int_lvm_vg_list *
-do_vgs_full (void)
-{
-  return parse_command_line_vgs ();
-}
-
-guestfs_int_lvm_lv_list *
-do_lvs_full (void)
-{
-  return parse_command_line_lvs ();
 }
 
 int

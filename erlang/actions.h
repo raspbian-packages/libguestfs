@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -157,6 +157,7 @@ int run_btrfs_replace (ei_x_buff *retbuff, const char *buff, int *index);
 int run_btrfs_rescue_chunk_recover (ei_x_buff *retbuff, const char *buff, int *index);
 int run_btrfs_rescue_super_recover (ei_x_buff *retbuff, const char *buff, int *index);
 int run_btrfs_scrub_cancel (ei_x_buff *retbuff, const char *buff, int *index);
+int run_btrfs_scrub_full (ei_x_buff *retbuff, const char *buff, int *index);
 int run_btrfs_scrub_resume (ei_x_buff *retbuff, const char *buff, int *index);
 int run_btrfs_scrub_start (ei_x_buff *retbuff, const char *buff, int *index);
 int run_btrfs_scrub_status (ei_x_buff *retbuff, const char *buff, int *index);
@@ -186,6 +187,7 @@ int run_clear_backend_setting (ei_x_buff *retbuff, const char *buff, int *index)
 int run_clevis_luks_unlock (ei_x_buff *retbuff, const char *buff, int *index);
 int run_command (ei_x_buff *retbuff, const char *buff, int *index);
 int run_command_lines (ei_x_buff *retbuff, const char *buff, int *index);
+int run_command_out (ei_x_buff *retbuff, const char *buff, int *index);
 int run_compress_device_out (ei_x_buff *retbuff, const char *buff, int *index);
 int run_compress_out (ei_x_buff *retbuff, const char *buff, int *index);
 int run_config (ei_x_buff *retbuff, const char *buff, int *index);
@@ -626,6 +628,7 @@ int run_sfdisk_kernel_geometry (ei_x_buff *retbuff, const char *buff, int *index
 int run_sfdisk_l (ei_x_buff *retbuff, const char *buff, int *index);
 int run_sh (ei_x_buff *retbuff, const char *buff, int *index);
 int run_sh_lines (ei_x_buff *retbuff, const char *buff, int *index);
+int run_sh_out (ei_x_buff *retbuff, const char *buff, int *index);
 int run_shutdown (ei_x_buff *retbuff, const char *buff, int *index);
 int run_sleep (ei_x_buff *retbuff, const char *buff, int *index);
 int run_stat (ei_x_buff *retbuff, const char *buff, int *index);

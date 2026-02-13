@@ -4,7 +4,7 @@
 %           and from the code in the generator/ subdirectory.
 %  ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 % 
-%  Copyright (C) 2009-2023 Red Hat Inc.
+%  Copyright (C) 2009-2025 Red Hat Inc.
 % 
 %  This library is free software; you can redistribute it and/or
 %  modify it under the terms of the GNU Lesser General Public
@@ -96,6 +96,7 @@
 -export([btrfs_rescue_chunk_recover/2]).
 -export([btrfs_rescue_super_recover/2]).
 -export([btrfs_scrub_cancel/2]).
+-export([btrfs_scrub_full/2, btrfs_scrub_full/3]).
 -export([btrfs_scrub_resume/2]).
 -export([btrfs_scrub_start/2]).
 -export([btrfs_scrub_status/2]).
@@ -127,6 +128,7 @@
 -export([clevis_luks_unlock/3]).
 -export([command/2]).
 -export([command_lines/2]).
+-export([command_out/3]).
 -export([compress_device_out/4, compress_device_out/5]).
 -export([compress_out/4, compress_out/5]).
 -export([config/3]).
@@ -578,6 +580,7 @@
 -export([sfdisk_l/2]).
 -export([sh/2]).
 -export([sh_lines/2]).
+-export([sh_out/3]).
 -export([shutdown/1]).
 -export([sleep/2]).
 -export([stat/2]).
@@ -939,6 +942,11 @@ btrfs_rescue_super_recover(G, Device) ->
 btrfs_scrub_cancel(G, Path) ->
   call_port(G, {btrfs_scrub_cancel, Path}).
 
+btrfs_scrub_full(G, Path, Optargs) ->
+  call_port(G, {btrfs_scrub_full, Path, Optargs}).
+btrfs_scrub_full(G, Path) ->
+  btrfs_scrub_full(G, Path, []).
+
 btrfs_scrub_resume(G, Path) ->
   call_port(G, {btrfs_scrub_resume, Path}).
 
@@ -1037,6 +1045,9 @@ command(G, Arguments) ->
 
 command_lines(G, Arguments) ->
   call_port(G, {command_lines, Arguments}).
+
+command_out(G, Arguments, Output) ->
+  call_port(G, {command_out, Arguments, Output}).
 
 compress_device_out(G, Ctype, Device, Zdevice, Optargs) ->
   call_port(G, {compress_device_out, Ctype, Device, Zdevice, Optargs}).
@@ -2489,6 +2500,9 @@ sh(G, Command) ->
 
 sh_lines(G, Command) ->
   call_port(G, {sh_lines, Command}).
+
+sh_out(G, Command, Output) ->
+  call_port(G, {sh_out, Command, Output}).
 
 shutdown(G) ->
   call_port(G, {shutdown}).

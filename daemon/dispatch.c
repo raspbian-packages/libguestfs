@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -228,6 +228,9 @@ dispatch_incoming_message (XDR *xdr_in)
     case GUESTFS_PROC_BTRFS_SCRUB_CANCEL:
       btrfs_scrub_cancel_stub (xdr_in);
       break;
+    case GUESTFS_PROC_BTRFS_SCRUB_FULL:
+      btrfs_scrub_full_stub (xdr_in);
+      break;
     case GUESTFS_PROC_BTRFS_SCRUB_RESUME:
       btrfs_scrub_resume_stub (xdr_in);
       break;
@@ -302,6 +305,9 @@ dispatch_incoming_message (XDR *xdr_in)
       break;
     case GUESTFS_PROC_COMMAND_LINES:
       command_lines_stub (xdr_in);
+      break;
+    case GUESTFS_PROC_COMMAND_OUT:
+      command_out_stub (xdr_in);
       break;
     case GUESTFS_PROC_COMPRESS_DEVICE_OUT:
       compress_device_out_stub (xdr_in);
@@ -1304,6 +1310,9 @@ dispatch_incoming_message (XDR *xdr_in)
       break;
     case GUESTFS_PROC_SH_LINES:
       sh_lines_stub (xdr_in);
+      break;
+    case GUESTFS_PROC_SH_OUT:
+      sh_out_stub (xdr_in);
       break;
     case GUESTFS_PROC_SLEEP:
       sleep_stub (xdr_in);

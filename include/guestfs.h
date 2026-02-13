@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -1278,7 +1278,10 @@ extern GUESTFS_DLL_PUBLIC int guestfs_btrfs_filesystem_sync (guestfs_h *g, const
 #define GUESTFS_HAVE_BTRFS_FSCK 1
 #define GUESTFS_BTRFS_FSCK_SUPERBLOCK 0
 #define GUESTFS_BTRFS_FSCK_REPAIR 1
-extern GUESTFS_DLL_PUBLIC int guestfs_btrfs_fsck (guestfs_h *g, const char *device, ...);
+#ifndef GUESTFS_NO_DEPRECATED
+extern GUESTFS_DLL_PUBLIC int guestfs_btrfs_fsck (guestfs_h *g, const char *device, ...)
+  GUESTFS_DEPRECATED_REPLACED_BY ("btrfs_scrub_full");
+#endif /* !GUESTFS_NO_DEPRECATED */
 extern GUESTFS_DLL_PUBLIC int guestfs_btrfs_fsck_va (guestfs_h *g, const char *device, va_list args);
 
 struct guestfs_btrfs_fsck_argv {
@@ -1339,6 +1342,19 @@ extern GUESTFS_DLL_PUBLIC int guestfs_btrfs_rescue_super_recover (guestfs_h *g, 
 
 #define GUESTFS_HAVE_BTRFS_SCRUB_CANCEL 1
 extern GUESTFS_DLL_PUBLIC int guestfs_btrfs_scrub_cancel (guestfs_h *g, const char *path);
+
+#define GUESTFS_HAVE_BTRFS_SCRUB_FULL 1
+#define GUESTFS_BTRFS_SCRUB_FULL_READONLY 0
+extern GUESTFS_DLL_PUBLIC int guestfs_btrfs_scrub_full (guestfs_h *g, const char *path, ...);
+extern GUESTFS_DLL_PUBLIC int guestfs_btrfs_scrub_full_va (guestfs_h *g, const char *path, va_list args);
+
+struct guestfs_btrfs_scrub_full_argv {
+  uint64_t bitmask;
+# define GUESTFS_BTRFS_SCRUB_FULL_READONLY_BITMASK (UINT64_C(1)<<0)
+  int readonly;
+};
+
+extern GUESTFS_DLL_PUBLIC int guestfs_btrfs_scrub_full_argv (guestfs_h *g, const char *path, const struct guestfs_btrfs_scrub_full_argv *optargs);
 
 #define GUESTFS_HAVE_BTRFS_SCRUB_RESUME 1
 extern GUESTFS_DLL_PUBLIC int guestfs_btrfs_scrub_resume (guestfs_h *g, const char *path);
@@ -1455,6 +1471,9 @@ extern GUESTFS_DLL_PUBLIC char *guestfs_command (guestfs_h *g, char *const *argu
 
 #define GUESTFS_HAVE_COMMAND_LINES 1
 extern GUESTFS_DLL_PUBLIC char **guestfs_command_lines (guestfs_h *g, char *const *arguments);
+
+#define GUESTFS_HAVE_COMMAND_OUT 1
+extern GUESTFS_DLL_PUBLIC int guestfs_command_out (guestfs_h *g, char *const *arguments, const char *output);
 
 #define GUESTFS_HAVE_COMPRESS_DEVICE_OUT 1
 #define GUESTFS_COMPRESS_DEVICE_OUT_LEVEL 0
@@ -1758,6 +1777,7 @@ extern GUESTFS_DLL_PUBLIC int64_t guestfs_du (guestfs_h *g, const char *path);
 #define GUESTFS_HAVE_E2FSCK 1
 #define GUESTFS_E2FSCK_CORRECT 0
 #define GUESTFS_E2FSCK_FORCEALL 1
+#define GUESTFS_E2FSCK_FORCENO 2
 extern GUESTFS_DLL_PUBLIC int guestfs_e2fsck (guestfs_h *g, const char *device, ...);
 extern GUESTFS_DLL_PUBLIC int guestfs_e2fsck_va (guestfs_h *g, const char *device, va_list args);
 
@@ -1767,6 +1787,8 @@ struct guestfs_e2fsck_argv {
   int correct;
 # define GUESTFS_E2FSCK_FORCEALL_BITMASK (UINT64_C(1)<<1)
   int forceall;
+# define GUESTFS_E2FSCK_FORCENO_BITMASK (UINT64_C(1)<<2)
+  int forceno;
 };
 
 extern GUESTFS_DLL_PUBLIC int guestfs_e2fsck_argv (guestfs_h *g, const char *device, const struct guestfs_e2fsck_argv *optargs);
@@ -3597,6 +3619,9 @@ extern GUESTFS_DLL_PUBLIC char *guestfs_sh (guestfs_h *g, const char *command);
 #define GUESTFS_HAVE_SH_LINES 1
 extern GUESTFS_DLL_PUBLIC char **guestfs_sh_lines (guestfs_h *g, const char *command);
 
+#define GUESTFS_HAVE_SH_OUT 1
+extern GUESTFS_DLL_PUBLIC int guestfs_sh_out (guestfs_h *g, const char *command, const char *output);
+
 #define GUESTFS_HAVE_SHUTDOWN 1
 extern GUESTFS_DLL_PUBLIC int guestfs_shutdown (guestfs_h *g);
 
@@ -4594,6 +4619,7 @@ extern GUESTFS_DLL_PUBLIC void guestfs_free_internal_mountable_list (struct gues
 #define LIBGUESTFS_HAVE_BTRFS_RESCUE_CHUNK_RECOVER 1
 #define LIBGUESTFS_HAVE_BTRFS_RESCUE_SUPER_RECOVER 1
 #define LIBGUESTFS_HAVE_BTRFS_SCRUB_CANCEL 1
+#define LIBGUESTFS_HAVE_BTRFS_SCRUB_FULL 1
 #define LIBGUESTFS_HAVE_BTRFS_SCRUB_RESUME 1
 #define LIBGUESTFS_HAVE_BTRFS_SCRUB_START 1
 #define LIBGUESTFS_HAVE_BTRFS_SCRUB_STATUS 1
@@ -4623,6 +4649,7 @@ extern GUESTFS_DLL_PUBLIC void guestfs_free_internal_mountable_list (struct gues
 #define LIBGUESTFS_HAVE_CLEVIS_LUKS_UNLOCK 1
 #define LIBGUESTFS_HAVE_COMMAND 1
 #define LIBGUESTFS_HAVE_COMMAND_LINES 1
+#define LIBGUESTFS_HAVE_COMMAND_OUT 1
 #define LIBGUESTFS_HAVE_COMPRESS_DEVICE_OUT 1
 #define LIBGUESTFS_HAVE_COMPRESS_OUT 1
 #define LIBGUESTFS_HAVE_CONFIG 1
@@ -5036,6 +5063,7 @@ extern GUESTFS_DLL_PUBLIC void guestfs_free_internal_mountable_list (struct gues
 #define LIBGUESTFS_HAVE_SFDISK_L 1
 #define LIBGUESTFS_HAVE_SH 1
 #define LIBGUESTFS_HAVE_SH_LINES 1
+#define LIBGUESTFS_HAVE_SH_OUT 1
 #define LIBGUESTFS_HAVE_SHUTDOWN 1
 #define LIBGUESTFS_HAVE_SLEEP 1
 #define LIBGUESTFS_HAVE_STAT 1

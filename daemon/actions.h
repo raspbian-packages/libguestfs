@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@
 #define GUESTFS_BTRFS_FSCK_SUPERBLOCK_BITMASK (UINT64_C(1)<<0)
 #define GUESTFS_BTRFS_FSCK_REPAIR_BITMASK (UINT64_C(1)<<1)
 #define GUESTFS_BTRFS_IMAGE_COMPRESSLEVEL_BITMASK (UINT64_C(1)<<0)
+#define GUESTFS_BTRFS_SCRUB_FULL_READONLY_BITMASK (UINT64_C(1)<<0)
 #define GUESTFS_BTRFS_SUBVOLUME_CREATE_QGROUPID_BITMASK (UINT64_C(1)<<0)
 #define GUESTFS_BTRFS_SUBVOLUME_SNAPSHOT_RO_BITMASK (UINT64_C(1)<<0)
 #define GUESTFS_BTRFS_SUBVOLUME_SNAPSHOT_QGROUPID_BITMASK (UINT64_C(1)<<1)
@@ -70,6 +71,7 @@
 #define GUESTFS_DOWNLOAD_BLOCKS_UNALLOCATED_BITMASK (UINT64_C(1)<<0)
 #define GUESTFS_E2FSCK_CORRECT_BITMASK (UINT64_C(1)<<0)
 #define GUESTFS_E2FSCK_FORCEALL_BITMASK (UINT64_C(1)<<1)
+#define GUESTFS_E2FSCK_FORCENO_BITMASK (UINT64_C(1)<<2)
 #define GUESTFS_FSTRIM_OFFSET_BITMASK (UINT64_C(1)<<0)
 #define GUESTFS_FSTRIM_LENGTH_BITMASK (UINT64_C(1)<<1)
 #define GUESTFS_FSTRIM_MINIMUMFREEEXTENT_BITMASK (UINT64_C(1)<<2)
@@ -277,6 +279,7 @@ extern int do_btrfs_replace (const char *srcdev, const char *targetdev, const ch
 extern int do_btrfs_rescue_chunk_recover (const char *device);
 extern int do_btrfs_rescue_super_recover (const char *device);
 extern int do_btrfs_scrub_cancel (const char *path);
+extern int do_btrfs_scrub_full (const char *path, int readonly);
 extern int do_btrfs_scrub_resume (const char *path);
 extern int do_btrfs_scrub_start (const char *path);
 extern guestfs_int_btrfsscrub *do_btrfs_scrub_status (const char *path);
@@ -302,6 +305,7 @@ extern int do_chown (int owner, int group, const char *path);
 extern int do_clevis_luks_unlock (const char *device, const char *mapname);
 extern char *do_command (char *const *arguments);
 extern char **do_command_lines (char *const *arguments);
+extern int do_command_out (char *const *arguments);
 extern int do_compress_device_out (const char *ctype, const char *device, int level);
 extern int do_compress_out (const char *ctype, const char *file, int level);
 extern int do_copy_attributes (const char *src, const char *dest, int all, int mode, int xattributes, int ownership);
@@ -328,7 +332,7 @@ extern int do_download_inode (const mountable_t *device, int64_t inode);
 extern int do_download_offset (const char *remotefilename, int64_t offset, int64_t size);
 extern int do_drop_caches (int whattodrop);
 extern int64_t do_du (const char *path);
-extern int do_e2fsck (const char *device, int correct, int forceall);
+extern int do_e2fsck (const char *device, int correct, int forceall, int forceno);
 extern int do_e2fsck_f (const char *device);
 extern char *do_echo_daemon (char *const *words);
 extern char **do_egrep (const char *regex, const char *path);
@@ -636,6 +640,7 @@ extern char *do_sfdisk_kernel_geometry (const char *device);
 extern char *do_sfdisk_l (const char *device);
 extern char *do_sh (const char *command);
 extern char **do_sh_lines (const char *command);
+extern int do_sh_out (const char *command);
 extern int do_sleep (int secs);
 extern guestfs_int_statns *do_statns (const char *path);
 extern guestfs_int_statvfs *do_statvfs (const char *path);

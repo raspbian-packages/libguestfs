@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -829,11 +829,12 @@ guestfs_int_py_e2fsck (PyObject *self, PyObject *args)
   const char *device;
   PyObject *py_correct;
   PyObject *py_forceall;
+  PyObject *py_forceno;
 
   optargs_s.bitmask = 0;
 
-  if (!PyArg_ParseTuple (args, (char *) "OsOO:guestfs_e2fsck",
-                         &py_g, &device, &py_correct, &py_forceall))
+  if (!PyArg_ParseTuple (args, (char *) "OsOOO:guestfs_e2fsck",
+                         &py_g, &device, &py_correct, &py_forceall, &py_forceno))
     goto out;
   g = get_handle (py_g);
 
@@ -848,6 +849,13 @@ guestfs_int_py_e2fsck (PyObject *self, PyObject *args)
   if (py_forceall != Py_None) {
     optargs_s.bitmask |= GUESTFS_E2FSCK_FORCEALL_BITMASK;
     optargs_s.forceall = PyLong_AsLong (py_forceall);
+    if (PyErr_Occurred ()) goto out;
+  }
+#endif
+#ifdef GUESTFS_E2FSCK_FORCENO_BITMASK
+  if (py_forceno != Py_None) {
+    optargs_s.bitmask |= GUESTFS_E2FSCK_FORCENO_BITMASK;
+    optargs_s.forceno = PyLong_AsLong (py_forceno);
     if (PyErr_Occurred ()) goto out;
   }
 #endif

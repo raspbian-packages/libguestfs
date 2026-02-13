@@ -984,7 +984,7 @@ Ntfs-3g tries to rewrite "Junction Points" and NTFS "symbolic links"
 to provide something which looks like a Linux symlink.  The way it
 tries to do the rewriting is described here:
 
-L<http://www.tuxera.com/community/ntfs-3g-advanced/junction-points-and-symbolic-links/>
+L<https://github.com/tuxera/ntfs-3g/wiki/Junctions-Points,-Symbolic-Links-and-Reparse-Points>
 
 The essential problem is that ntfs-3g simply does not have enough
 information to do a correct job.  NTFS links can contain drive letters
@@ -1003,7 +1003,7 @@ format documented in various places around the web).
 There are other useful extended attributes that can be read from
 ntfs-3g filesystems (using L</guestfs_getxattr>).  See:
 
-L<http://www.tuxera.com/community/ntfs-3g-advanced/extended-attributes/>
+L<https://github.com/tuxera/ntfs-3g/wiki/Using-Extended-Attributes>
 
 =head3 WINDOWS HIBERNATION AND WINDOWS 8 FAST STARTUP
 
@@ -1104,13 +1104,6 @@ at the top of F<csharp/Libguestfs.cs>.
 =item B<Erlang>
 
 See L<guestfs-erlang(3)>.
-
-=item B<GObject>
-
-Experimental GObject bindings (with GObject Introspection support) are
-available.
-
-See L<guestfs-gobject(3)>.
 
 =item B<Go>
 
@@ -3202,7 +3195,6 @@ L<guestfs-examples(3)>.
 
 Language bindings:
 L<guestfs-erlang(3)>,
-L<guestfs-gobject(3)>,
 L<guestfs-golang(3)>,
 L<guestfs-java(3)>,
 L<guestfs-lua(3)>,
@@ -3279,4 +3271,4 @@ Richard W.M. Jones (C<rjones at redhat dot com>)
 
 =head1 COPYRIGHT
 
-Copyright (C) 2009-2023 Red Hat Inc.
+Copyright (C) 2009-2025 Red Hat Inc.

@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -126,6 +126,13 @@ struct command_entry btrfs_fsck_cmd_entry = {
           "DESCRIPTION\n"
           "    Used to check a btrfs filesystem, \"device\" is the device file where the\n"
           "    filesystem is stored.\n"
+          "\n"
+          "    *This function is deprecated.* In new code, use the \"btrfs-scrub-full\"\n"
+          "    call instead.\n"
+          "\n"
+          "    Deprecated functions will not be removed from the API, but the fact that\n"
+          "    they are deprecated indicates that there are problems with correct use\n"
+          "    of these functions.\n"
           "\n"
           "",
   .synopsis = "btrfs-fsck device [superblock:N] [repair:true|false]",

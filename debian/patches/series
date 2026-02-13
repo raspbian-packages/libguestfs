@@ -19,5 +19,6 @@ Only-set-rtc-driftfix-slew-on-x86-architectures.patch
 Add-util-linux-extra-to-appliance-list.patch
 udev-rules-path.patch
 link-with--latomic-when-linking-with--lc.patch
+Add-FUSE-3-support.patch
 recognise-raspbian.diff
 disable-some-translations-to-workaround-.patch

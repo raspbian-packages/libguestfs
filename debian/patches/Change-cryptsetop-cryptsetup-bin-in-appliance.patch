@@ -7,7 +7,7 @@ Subject: Change cryptsetop->cryptsetup-bin in appliance
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/appliance/packagelist.in b/appliance/packagelist.in
-index e47dc00..1a3ad1d 100644
+index dee561c..066165a1 100644
 --- a/appliance/packagelist.in
 +++ b/appliance/packagelist.in
 @@ -59,7 +59,7 @@ ifelse(DEBIAN,1,

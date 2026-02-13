@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -391,6 +391,52 @@ guestfs_int_py_btrfs_scrub_cancel (PyObject *self, PyObject *args)
 
   Py_BEGIN_ALLOW_THREADS
   r = guestfs_btrfs_scrub_cancel (g, path);
+  Py_END_ALLOW_THREADS
+
+  if (r == -1) {
+    PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
+    goto out;
+  }
+
+  Py_INCREF (Py_None);
+  py_r = Py_None;
+
+  PyErr_Clear ();
+ out:
+  return py_r;
+}
+#endif
+
+#ifdef GUESTFS_HAVE_BTRFS_SCRUB_FULL
+PyObject *
+guestfs_int_py_btrfs_scrub_full (PyObject *self, PyObject *args)
+{
+  PyObject *py_g;
+  guestfs_h *g;
+  PyObject *py_r = NULL;
+  struct guestfs_btrfs_scrub_full_argv optargs_s;
+  struct guestfs_btrfs_scrub_full_argv *optargs = &optargs_s;
+  int r;
+  const char *path;
+  PyObject *py_readonly;
+
+  optargs_s.bitmask = 0;
+
+  if (!PyArg_ParseTuple (args, (char *) "OsO:guestfs_btrfs_scrub_full",
+                         &py_g, &path, &py_readonly))
+    goto out;
+  g = get_handle (py_g);
+
+#ifdef GUESTFS_BTRFS_SCRUB_FULL_READONLY_BITMASK
+  if (py_readonly != Py_None) {
+    optargs_s.bitmask |= GUESTFS_BTRFS_SCRUB_FULL_READONLY_BITMASK;
+    optargs_s.readonly = PyLong_AsLong (py_readonly);
+    if (PyErr_Occurred ()) goto out;
+  }
+#endif
+
+  Py_BEGIN_ALLOW_THREADS
+  r = guestfs_btrfs_scrub_full_argv (g, path, optargs);
   Py_END_ALLOW_THREADS
 
   if (r == -1) {

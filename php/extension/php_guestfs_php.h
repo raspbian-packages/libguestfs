@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -108,6 +108,7 @@ PHP_FUNCTION (guestfs_btrfs_replace);
 PHP_FUNCTION (guestfs_btrfs_rescue_chunk_recover);
 PHP_FUNCTION (guestfs_btrfs_rescue_super_recover);
 PHP_FUNCTION (guestfs_btrfs_scrub_cancel);
+PHP_FUNCTION (guestfs_btrfs_scrub_full);
 PHP_FUNCTION (guestfs_btrfs_scrub_resume);
 PHP_FUNCTION (guestfs_btrfs_scrub_start);
 PHP_FUNCTION (guestfs_btrfs_scrub_status);
@@ -137,6 +138,7 @@ PHP_FUNCTION (guestfs_clear_backend_setting);
 PHP_FUNCTION (guestfs_clevis_luks_unlock);
 PHP_FUNCTION (guestfs_command);
 PHP_FUNCTION (guestfs_command_lines);
+PHP_FUNCTION (guestfs_command_out);
 PHP_FUNCTION (guestfs_compress_device_out);
 PHP_FUNCTION (guestfs_compress_out);
 PHP_FUNCTION (guestfs_config);
@@ -577,6 +579,7 @@ PHP_FUNCTION (guestfs_sfdisk_kernel_geometry);
 PHP_FUNCTION (guestfs_sfdisk_l);
 PHP_FUNCTION (guestfs_sh);
 PHP_FUNCTION (guestfs_sh_lines);
+PHP_FUNCTION (guestfs_sh_out);
 PHP_FUNCTION (guestfs_shutdown);
 PHP_FUNCTION (guestfs_sleep);
 PHP_FUNCTION (guestfs_stat);

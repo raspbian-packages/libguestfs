@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -854,6 +854,8 @@ val btrfs_fsck : t -> ?superblock:int64 -> ?repair:bool -> string -> unit
 
     This function depends on the feature "btrfs".  See also {!feature_available}.
 
+    @deprecated Use {!btrfs_scrub_full} instead
+
     @since 1.17.43
  *)
 
@@ -959,6 +961,14 @@ val btrfs_scrub_cancel : t -> string -> unit
     This function depends on the feature "btrfs".  See also {!feature_available}.
 
     @since 1.29.22
+ *)
+
+val btrfs_scrub_full : t -> ?readonly:bool -> string -> unit
+(** run a full scrub on a btrfs filesystem
+
+    This function depends on the feature "btrfs".  See also {!feature_available}.
+
+    @since 1.55.12
  *)
 
 val btrfs_scrub_resume : t -> string -> unit
@@ -1185,6 +1195,12 @@ val command_lines : t -> string array -> string array
     @since 1.9.1
  *)
 
+val command_out : t -> string array -> string -> unit
+(** run a command from the guest filesystem
+
+    @since 1.55.6
+ *)
+
 val compress_device_out : t -> ?level:int -> string -> string -> string -> unit
 (** output compressed device
 
@@ -1407,7 +1423,7 @@ val du : t -> string -> int64
     @since 1.0.54
  *)
 
-val e2fsck : t -> ?correct:bool -> ?forceall:bool -> string -> unit
+val e2fsck : t -> ?correct:bool -> ?forceall:bool -> ?forceno:bool -> string -> unit
 (** check an ext2/ext3 filesystem
 
     @since 1.15.17
@@ -4173,6 +4189,12 @@ val sh_lines : t -> string -> string array
     @since 1.0.50
  *)
 
+val sh_out : t -> string -> string -> unit
+(** run a command via the shell
+
+    @since 1.55.6
+ *)
+
 val shutdown : t -> unit
 (** shutdown the hypervisor
 
@@ -5139,6 +5161,8 @@ class guestfs : ?environment:bool -> ?close_on_exit:bool -> unit -> object
 
     This function depends on the feature "btrfs".  See also {!feature_available}.
 
+    @deprecated Use {!btrfs_scrub_full} instead
+
     @since 1.17.43
    *)
   method btrfs_image : ?compresslevel:int -> string array -> string -> unit
@@ -5231,6 +5255,13 @@ class guestfs : ?environment:bool -> ?close_on_exit:bool -> unit -> object
     This function depends on the feature "btrfs".  See also {!feature_available}.
 
     @since 1.29.22
+   *)
+  method btrfs_scrub_full : ?readonly:bool -> string -> unit
+  (** run a full scrub on a btrfs filesystem
+
+    This function depends on the feature "btrfs".  See also {!feature_available}.
+
+    @since 1.55.12
    *)
   method btrfs_scrub_resume : string -> unit
   (** resume a previously canceled or interrupted scrub
@@ -5425,6 +5456,11 @@ class guestfs : ?environment:bool -> ?close_on_exit:bool -> unit -> object
 
     @since 1.9.1
    *)
+  method command_out : string array -> string -> unit
+  (** run a command from the guest filesystem
+
+    @since 1.55.6
+   *)
   method compress_device_out : ?level:int -> string -> string -> string -> unit
   (** output compressed device
 
@@ -5611,7 +5647,7 @@ class guestfs : ?environment:bool -> ?close_on_exit:bool -> unit -> object
 
     @since 1.0.54
    *)
-  method e2fsck : ?correct:bool -> ?forceall:bool -> string -> unit
+  method e2fsck : ?correct:bool -> ?forceall:bool -> ?forceno:bool -> string -> unit
   (** check an ext2/ext3 filesystem
 
     @since 1.15.17
@@ -7961,6 +7997,11 @@ class guestfs : ?environment:bool -> ?close_on_exit:bool -> unit -> object
   (** run a command via the shell returning lines
 
     @since 1.0.50
+   *)
+  method sh_out : string -> string -> unit
+  (** run a command via the shell
+
+    @since 1.55.6
    *)
   method shutdown : unit -> unit
   (** shutdown the hypervisor

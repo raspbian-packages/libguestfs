@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -386,8 +386,8 @@ struct command_entry case_sensitive_path_cmd_entry = {
           "    precise details of how they were created. In Windows itself this would\n"
           "    not be a problem.\n"
           "\n"
-          "    Bug or feature? You decide:\n"
-          "    <https://www.tuxera.com/community/ntfs-3g-faq/#posixfilenames1>\n"
+          "    Bug or feature? You decide. See the relevant entry in the ntfs-3g FAQ:\n"
+          "    <https://github.com/tuxera/ntfs-3g/wiki/NTFS-3G-FAQ>\n"
           "\n"
           "    \"case_sensitive_path\" attempts to resolve the true case of each element\n"
           "    in the path. It will return a resolved path if either the full path or\n"
@@ -1501,6 +1501,25 @@ struct command_entry sh_lines_cmd_entry = {
           "",
   .synopsis = "sh-lines command",
   .run = run_sh_lines
+};
+
+struct command_entry sh_out_cmd_entry = {
+  .name = "sh-out",
+  .help = "NAME\n"
+          "    sh-out - run a command via the shell\n"
+          "\n"
+          "SYNOPSIS\n"
+          "     sh-out command output\n"
+          "\n"
+          "DESCRIPTION\n"
+          "    This is the same as \"sh\", but streams the output back, handling the case\n"
+          "    where the output from the command is larger than the protocol limit.\n"
+          "\n"
+          "    See also: \"command_out\"\n"
+          "\n"
+          "",
+  .synopsis = "sh-out command output",
+  .run = run_sh_out
 };
 
 struct command_entry shutdown_cmd_entry = {

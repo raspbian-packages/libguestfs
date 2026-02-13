@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@
 #include <string.h>
 #include <inttypes.h>
 #include <errno.h>
+#include <assert.h>
 
 #include <caml/alloc.h>
 #include <caml/callback.h>
@@ -39,6 +40,125 @@
 #include "daemon.h"
 #include "actions.h"
 #include "daemon-c.h"
+
+/* Implement RStruct ("lvm_lv", _). */
+static guestfs_int_lvm_lv *
+return_lvm_lv (value retv)
+{
+  CLEANUP_FREE_LVM_LV guestfs_int_lvm_lv *ret = NULL;
+  guestfs_int_lvm_lv *real_ret;
+  value v;
+
+  ret = calloc (1, sizeof (*ret));
+  if (ret == NULL) {
+    reply_with_perror ("calloc");
+    return NULL;
+  }
+
+  v = Field (retv, 0);
+  ret->lv_name = strdup (String_val (v));
+  if (ret->lv_name == NULL) return NULL;
+  v = Field (retv, 1);
+  assert (caml_string_length (v) == sizeof ret->lv_uuid);
+  memcpy (ret->lv_uuid, String_val (v), sizeof ret->lv_uuid);
+  v = Field (retv, 2);
+  ret->lv_attr = strdup (String_val (v));
+  if (ret->lv_attr == NULL) return NULL;
+  v = Field (retv, 3);
+  ret->lv_major = Int64_val (v);
+  v = Field (retv, 4);
+  ret->lv_minor = Int64_val (v);
+  v = Field (retv, 5);
+  ret->lv_kernel_major = Int64_val (v);
+  v = Field (retv, 6);
+  ret->lv_kernel_minor = Int64_val (v);
+  v = Field (retv, 7);
+  ret->lv_size = Int64_val (v);
+  v = Field (retv, 8);
+  ret->seg_count = Int64_val (v);
+  v = Field (retv, 9);
+  ret->origin = strdup (String_val (v));
+  if (ret->origin == NULL) return NULL;
+  v = Field (retv, 10);
+  if (v == Val_int (0)) /* None */
+    ret->snap_percent = -1;
+  else {
+    v = Field (v, 0);
+    ret->snap_percent = Double_val (v);
+  }
+  v = Field (retv, 11);
+  if (v == Val_int (0)) /* None */
+    ret->copy_percent = -1;
+  else {
+    v = Field (v, 0);
+    ret->copy_percent = Double_val (v);
+  }
+  v = Field (retv, 12);
+  ret->move_pv = strdup (String_val (v));
+  if (ret->move_pv == NULL) return NULL;
+  v = Field (retv, 13);
+  ret->lv_tags = strdup (String_val (v));
+  if (ret->lv_tags == NULL) return NULL;
+  v = Field (retv, 14);
+  ret->mirror_log = strdup (String_val (v));
+  if (ret->mirror_log == NULL) return NULL;
+  v = Field (retv, 15);
+  ret->modules = strdup (String_val (v));
+  if (ret->modules == NULL) return NULL;
+
+  real_ret = ret;
+  ret = NULL;
+  return real_ret;
+}
+
+/* Implement RStructList ("lvm_lv", _). */
+static guestfs_int_lvm_lv_list *
+return_lvm_lv_list (value retv)
+{
+  CLEANUP_FREE_LVM_LV_LIST guestfs_int_lvm_lv_list *ret = NULL;
+  guestfs_int_lvm_lv_list *real_ret;
+  guestfs_int_lvm_lv *r;
+  size_t i, len;
+  value v, rv;
+
+  /* Count the number of elements in the list. */
+  rv = retv;
+  len = 0;
+  while (rv != Val_int (0)) {
+    len++;
+    rv = Field (rv, 1);
+  }
+
+  ret = calloc (1, sizeof *ret);
+  if (ret == NULL) {
+    reply_with_perror ("calloc");
+    return NULL;
+  }
+  if (len > 0) {
+    ret->guestfs_int_lvm_lv_list_val =
+      calloc (len, sizeof (guestfs_int_lvm_lv));
+    if (ret->guestfs_int_lvm_lv_list_val == NULL) {
+      reply_with_perror ("calloc");
+      return NULL;
+    }
+    ret->guestfs_int_lvm_lv_list_len = len;
+  }
+
+  rv = retv;
+  for (i = 0; i < len; ++i) {
+    v = Field (rv, 0);
+    r = return_lvm_lv (v);
+    if (r == NULL)
+      return NULL;
+    memcpy (&ret->guestfs_int_lvm_lv_list_val[i], r, sizeof (*r));
+    free (r);
+    rv = Field (rv, 1);
+  }
+
+  real_ret = ret;
+  ret = NULL;
+  return real_ret;
+}
 
 /* Implement RStruct ("partition", _). */
 static guestfs_int_partition *
@@ -293,6 +413,221 @@ return_isoinfo (value retv)
   ret->iso_volume_expiration_t = Int64_val (v);
   v = Field (retv, 16);
   ret->iso_volume_effective_t = Int64_val (v);
+
+  real_ret = ret;
+  ret = NULL;
+  return real_ret;
+}
+
+/* Implement RStruct ("lvm_pv", _). */
+static guestfs_int_lvm_pv *
+return_lvm_pv (value retv)
+{
+  CLEANUP_FREE_LVM_PV guestfs_int_lvm_pv *ret = NULL;
+  guestfs_int_lvm_pv *real_ret;
+  value v;
+
+  ret = calloc (1, sizeof (*ret));
+  if (ret == NULL) {
+    reply_with_perror ("calloc");
+    return NULL;
+  }
+
+  v = Field (retv, 0);
+  ret->pv_name = strdup (String_val (v));
+  if (ret->pv_name == NULL) return NULL;
+  v = Field (retv, 1);
+  assert (caml_string_length (v) == sizeof ret->pv_uuid);
+  memcpy (ret->pv_uuid, String_val (v), sizeof ret->pv_uuid);
+  v = Field (retv, 2);
+  ret->pv_fmt = strdup (String_val (v));
+  if (ret->pv_fmt == NULL) return NULL;
+  v = Field (retv, 3);
+  ret->pv_size = Int64_val (v);
+  v = Field (retv, 4);
+  ret->dev_size = Int64_val (v);
+  v = Field (retv, 5);
+  ret->pv_free = Int64_val (v);
+  v = Field (retv, 6);
+  ret->pv_used = Int64_val (v);
+  v = Field (retv, 7);
+  ret->pv_attr = strdup (String_val (v));
+  if (ret->pv_attr == NULL) return NULL;
+  v = Field (retv, 8);
+  ret->pv_pe_count = Int64_val (v);
+  v = Field (retv, 9);
+  ret->pv_pe_alloc_count = Int64_val (v);
+  v = Field (retv, 10);
+  ret->pv_tags = strdup (String_val (v));
+  if (ret->pv_tags == NULL) return NULL;
+  v = Field (retv, 11);
+  ret->pe_start = Int64_val (v);
+  v = Field (retv, 12);
+  ret->pv_mda_count = Int64_val (v);
+  v = Field (retv, 13);
+  ret->pv_mda_free = Int64_val (v);
+
+  real_ret = ret;
+  ret = NULL;
+  return real_ret;
+}
+
+/* Implement RStructList ("lvm_pv", _). */
+static guestfs_int_lvm_pv_list *
+return_lvm_pv_list (value retv)
+{
+  CLEANUP_FREE_LVM_PV_LIST guestfs_int_lvm_pv_list *ret = NULL;
+  guestfs_int_lvm_pv_list *real_ret;
+  guestfs_int_lvm_pv *r;
+  size_t i, len;
+  value v, rv;
+
+  /* Count the number of elements in the list. */
+  rv = retv;
+  len = 0;
+  while (rv != Val_int (0)) {
+    len++;
+    rv = Field (rv, 1);
+  }
+
+  ret = calloc (1, sizeof *ret);
+  if (ret == NULL) {
+    reply_with_perror ("calloc");
+    return NULL;
+  }
+  if (len > 0) {
+    ret->guestfs_int_lvm_pv_list_val =
+      calloc (len, sizeof (guestfs_int_lvm_pv));
+    if (ret->guestfs_int_lvm_pv_list_val == NULL) {
+      reply_with_perror ("calloc");
+      return NULL;
+    }
+    ret->guestfs_int_lvm_pv_list_len = len;
+  }
+
+  rv = retv;
+  for (i = 0; i < len; ++i) {
+    v = Field (rv, 0);
+    r = return_lvm_pv (v);
+    if (r == NULL)
+      return NULL;
+    memcpy (&ret->guestfs_int_lvm_pv_list_val[i], r, sizeof (*r));
+    free (r);
+    rv = Field (rv, 1);
+  }
+
+  real_ret = ret;
+  ret = NULL;
+  return real_ret;
+}
+
+/* Implement RStruct ("lvm_vg", _). */
+static guestfs_int_lvm_vg *
+return_lvm_vg (value retv)
+{
+  CLEANUP_FREE_LVM_VG guestfs_int_lvm_vg *ret = NULL;
+  guestfs_int_lvm_vg *real_ret;
+  value v;
+
+  ret = calloc (1, sizeof (*ret));
+  if (ret == NULL) {
+    reply_with_perror ("calloc");
+    return NULL;
+  }
+
+  v = Field (retv, 0);
+  ret->vg_name = strdup (String_val (v));
+  if (ret->vg_name == NULL) return NULL;
+  v = Field (retv, 1);
+  assert (caml_string_length (v) == sizeof ret->vg_uuid);
+  memcpy (ret->vg_uuid, String_val (v), sizeof ret->vg_uuid);
+  v = Field (retv, 2);
+  ret->vg_fmt = strdup (String_val (v));
+  if (ret->vg_fmt == NULL) return NULL;
+  v = Field (retv, 3);
+  ret->vg_attr = strdup (String_val (v));
+  if (ret->vg_attr == NULL) return NULL;
+  v = Field (retv, 4);
+  ret->vg_size = Int64_val (v);
+  v = Field (retv, 5);
+  ret->vg_free = Int64_val (v);
+  v = Field (retv, 6);
+  ret->vg_sysid = strdup (String_val (v));
+  if (ret->vg_sysid == NULL) return NULL;
+  v = Field (retv, 7);
+  ret->vg_extent_size = Int64_val (v);
+  v = Field (retv, 8);
+  ret->vg_extent_count = Int64_val (v);
+  v = Field (retv, 9);
+  ret->vg_free_count = Int64_val (v);
+  v = Field (retv, 10);
+  ret->max_lv = Int64_val (v);
+  v = Field (retv, 11);
+  ret->max_pv = Int64_val (v);
+  v = Field (retv, 12);
+  ret->pv_count = Int64_val (v);
+  v = Field (retv, 13);
+  ret->lv_count = Int64_val (v);
+  v = Field (retv, 14);
+  ret->snap_count = Int64_val (v);
+  v = Field (retv, 15);
+  ret->vg_seqno = Int64_val (v);
+  v = Field (retv, 16);
+  ret->vg_tags = strdup (String_val (v));
+  if (ret->vg_tags == NULL) return NULL;
+  v = Field (retv, 17);
+  ret->vg_mda_count = Int64_val (v);
+  v = Field (retv, 18);
+  ret->vg_mda_free = Int64_val (v);
+
+  real_ret = ret;
+  ret = NULL;
+  return real_ret;
+}
+
+/* Implement RStructList ("lvm_vg", _). */
+static guestfs_int_lvm_vg_list *
+return_lvm_vg_list (value retv)
+{
+  CLEANUP_FREE_LVM_VG_LIST guestfs_int_lvm_vg_list *ret = NULL;
+  guestfs_int_lvm_vg_list *real_ret;
+  guestfs_int_lvm_vg *r;
+  size_t i, len;
+  value v, rv;
+
+  /* Count the number of elements in the list. */
+  rv = retv;
+  len = 0;
+  while (rv != Val_int (0)) {
+    len++;
+    rv = Field (rv, 1);
+  }
+
+  ret = calloc (1, sizeof *ret);
+  if (ret == NULL) {
+    reply_with_perror ("calloc");
+    return NULL;
+  }
+  if (len > 0) {
+    ret->guestfs_int_lvm_vg_list_val =
+      calloc (len, sizeof (guestfs_int_lvm_vg));
+    if (ret->guestfs_int_lvm_vg_list_val == NULL) {
+      reply_with_perror ("calloc");
+      return NULL;
+    }
+    ret->guestfs_int_lvm_vg_list_len = len;
+  }
+
+  rv = retv;
+  for (i = 0; i < len; ++i) {
+    v = Field (rv, 0);
+    r = return_lvm_vg (v);
+    if (r == NULL)
+      return NULL;
+    memcpy (&ret->guestfs_int_lvm_vg_list_val[i], r, sizeof (*r));
+    free (r);
+    rv = Field (rv, 1);
+  }
 
   real_ret = ret;
   ret = NULL;
@@ -1877,6 +2212,33 @@ do_lvs (void)
   CAMLreturnT (char **, ret); /* caller frees */
 }
 
+/* Wrapper for OCaml function ‘Lvm_full.lvs_full’. */
+guestfs_int_lvm_lv_list *
+do_lvs_full (void)
+{
+  static const value *cb = NULL;
+  CAMLparam0 ();
+  CAMLlocal2 (v, retv);
+  CAMLlocalN (args, 1);
+
+  if (cb == NULL)
+    cb = caml_named_value ("Lvm_full.lvs_full");
+
+  args[0] = Val_unit;
+  retv = caml_callbackN_exn (*cb, 1, args);
+
+  if (Is_exception_result (retv)) {
+    retv = Extract_exception (retv);
+    guestfs_int_daemon_exn_to_reply_with_error ("lvs_full", retv);
+    CAMLreturnT (void *, NULL);
+  }
+
+  guestfs_int_lvm_lv_list *ret =
+    return_lvm_lv_list (retv);
+  /* caller frees */
+  CAMLreturnT (guestfs_int_lvm_lv_list *, ret);
+}
+
 /* Wrapper for OCaml function ‘Md.md_detail’. */
 char **
 do_md_detail (const char *md)
@@ -2454,6 +2816,33 @@ do_part_to_partnum (const char *partition)
   CAMLreturnT (int, Int_val (retv));
 }
 
+/* Wrapper for OCaml function ‘Lvm_full.pvs_full’. */
+guestfs_int_lvm_pv_list *
+do_pvs_full (void)
+{
+  static const value *cb = NULL;
+  CAMLparam0 ();
+  CAMLlocal2 (v, retv);
+  CAMLlocalN (args, 1);
+
+  if (cb == NULL)
+    cb = caml_named_value ("Lvm_full.pvs_full");
+
+  args[0] = Val_unit;
+  retv = caml_callbackN_exn (*cb, 1, args);
+
+  if (Is_exception_result (retv)) {
+    retv = Extract_exception (retv);
+    guestfs_int_daemon_exn_to_reply_with_error ("pvs_full", retv);
+    CAMLreturnT (void *, NULL);
+  }
+
+  guestfs_int_lvm_pv_list *ret =
+    return_lvm_pv_list (retv);
+  /* caller frees */
+  CAMLreturnT (guestfs_int_lvm_pv_list *, ret);
+}
+
 /* Wrapper for OCaml function ‘Link.readlink’. */
 char *
 do_readlink (const char *path)
@@ -2566,5 +2955,32 @@ do_vfs_type (const mountable_t *mountable)
     CAMLreturnT (char *, NULL);
   }
   CAMLreturnT (char *, ret); /* caller frees */
+}
+
+/* Wrapper for OCaml function ‘Lvm_full.vgs_full’. */
+guestfs_int_lvm_vg_list *
+do_vgs_full (void)
+{
+  static const value *cb = NULL;
+  CAMLparam0 ();
+  CAMLlocal2 (v, retv);
+  CAMLlocalN (args, 1);
+
+  if (cb == NULL)
+    cb = caml_named_value ("Lvm_full.vgs_full");
+
+  args[0] = Val_unit;
+  retv = caml_callbackN_exn (*cb, 1, args);
+
+  if (Is_exception_result (retv)) {
+    retv = Extract_exception (retv);
+    guestfs_int_daemon_exn_to_reply_with_error ("vgs_full", retv);
+    CAMLreturnT (void *, NULL);
+  }
+
+  guestfs_int_lvm_vg_list *ret =
+    return_lvm_vg_list (retv);
+  /* caller frees */
+  CAMLreturnT (guestfs_int_lvm_vg_list *, ret);
 }
 

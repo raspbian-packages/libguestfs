@@ -1,5 +1,5 @@
 (* guestfs-inspection
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -100,6 +100,7 @@ and distro =
   | DISTRO_OPENEULER
   | DISTRO_OPENMANDRIVA
   | DISTRO_OPENCLOUDOS
+  | DISTRO_TENCENTOS
   | DISTRO_OPENSUSE
   | DISTRO_ORACLE_LINUX
   | DISTRO_PARDUS

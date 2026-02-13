@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -521,6 +521,11 @@ run_e2fsck (ei_x_buff *retbuff, const char *buff, int *idx)
     if (atom_equals (hd_name, "forceall")) {
       optargs_s.bitmask |= GUESTFS_E2FSCK_FORCEALL_BITMASK;
       if (decode_bool (buff, idx, &optargs_s.forceall) != 0) return -1;;
+    }
+    else
+    if (atom_equals (hd_name, "forceno")) {
+      optargs_s.bitmask |= GUESTFS_E2FSCK_FORCENO_BITMASK;
+      if (decode_bool (buff, idx, &optargs_s.forceno) != 0) return -1;;
     }
     else
       return unknown_optarg (retbuff, "e2fsck", hd_name);

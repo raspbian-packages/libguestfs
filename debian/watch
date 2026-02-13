@@ -1,2 +1,2 @@
 version=4
-https://download.libguestfs.org/1.54-stable/ libguestfs-([\d\.]*)\.tar\.gz
+https://download.libguestfs.org/1.56-stable/ libguestfs-([\d\.]*)\.tar\.gz

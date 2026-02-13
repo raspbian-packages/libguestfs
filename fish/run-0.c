@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -786,7 +786,7 @@ run_e2fsck (const char *cmd, size_t argc, char *argv[])
   struct guestfs_e2fsck_argv *optargs = &optargs_s;
   size_t i = 0;
 
-  if (argc < 1 || argc > 3) {
+  if (argc < 1 || argc > 4) {
     ret = RUN_WRONG_ARGS;
     goto out_noargs;
   }
@@ -821,6 +821,19 @@ run_e2fsck (const char *cmd, size_t argc, char *argv[])
       }
       this_mask = GUESTFS_E2FSCK_FORCEALL_BITMASK;
       this_arg = "forceall";
+    }
+    else if (STRPREFIX (argv[i], "forceno:")) {
+      switch (guestfs_int_is_true (&argv[i][8])) {
+        case -1:
+          fprintf (stderr,
+                   _("%s: '%s': invalid boolean value, use 'true' or 'false'\n"),
+                   getprogname (), &argv[i][8]);
+          goto out;
+        case 0:  optargs_s.forceno = 0; break;
+        default: optargs_s.forceno = 1;
+      }
+      this_mask = GUESTFS_E2FSCK_FORCENO_BITMASK;
+      this_arg = "forceno";
     }
     else {
       fprintf (stderr, _("%s: unknown optional argument \"%s\"\n"),

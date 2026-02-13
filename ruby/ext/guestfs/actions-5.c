@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -496,6 +496,63 @@ guestfs_int_ruby_btrfs_scrub_cancel (VALUE gv, VALUE pathv)
   int r;
 
   r = guestfs_btrfs_scrub_cancel (g, path);
+  if (r == -1)
+    rb_raise (e_Error, "%s", guestfs_last_error (g));
+
+  return Qnil;
+}
+
+/*
+ * call-seq:
+ *   g.btrfs_scrub_full(path, {optargs...}) -> nil
+ *
+ * run a full scrub on a btrfs filesystem
+ *
+ * Run a full scrub on a btrfs filesystem and wait for it
+ * to finish. If the filesystem has errors this will return
+ * an error.
+ * 
+ * Optional arguments are supplied in the final hash
+ * parameter, which is a hash of the argument name to its
+ * value. Pass an empty {} for no optional arguments.
+ *
+ *
+ * [Since] Added in version 1.55.12.
+ *
+ * [Feature] This function depends on the feature +btrfs+.  See also {#feature_available}[rdoc-ref:feature_available].
+ *
+ * [C API] For the C API documentation for this function, see
+ *         {guestfs_btrfs_scrub_full}[http://libguestfs.org/guestfs.3.html#guestfs_btrfs_scrub_full].
+ */
+VALUE
+guestfs_int_ruby_btrfs_scrub_full (int argc, VALUE *argv, VALUE gv)
+{
+  guestfs_h *g;
+  Data_Get_Struct (gv, guestfs_h, g);
+  if (!g)
+    rb_raise (rb_eArgError, "%s: used handle after closing it", "btrfs_scrub_full");
+
+  if (argc < 1 || argc > 2)
+    rb_raise (rb_eArgError, "expecting 1 or 2 arguments");
+
+  volatile VALUE pathv = argv[0];
+  volatile VALUE optargsv = argc > 1 ? argv[1] : rb_hash_new ();
+
+  const char *path = StringValueCStr (pathv);
+
+  Check_Type (optargsv, T_HASH);
+  struct guestfs_btrfs_scrub_full_argv optargs_s = { .bitmask = 0 };
+  struct guestfs_btrfs_scrub_full_argv *optargs = &optargs_s;
+  volatile VALUE v;
+  v = rb_hash_lookup (optargsv, ID2SYM (rb_intern ("readonly")));
+  if (v != Qnil) {
+    optargs_s.readonly = RTEST (v);
+    optargs_s.bitmask |= GUESTFS_BTRFS_SCRUB_FULL_READONLY_BITMASK;
+  }
+
+  int r;
+
+  r = guestfs_btrfs_scrub_full_argv (g, path, optargs);
   if (r == -1)
     rb_raise (e_Error, "%s", guestfs_last_error (g));
 

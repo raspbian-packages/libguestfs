@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -139,6 +139,7 @@ extern VALUE guestfs_int_ruby_btrfs_replace (VALUE gv, VALUE srcdevv, VALUE targ
 extern VALUE guestfs_int_ruby_btrfs_rescue_chunk_recover (VALUE gv, VALUE devicev);
 extern VALUE guestfs_int_ruby_btrfs_rescue_super_recover (VALUE gv, VALUE devicev);
 extern VALUE guestfs_int_ruby_btrfs_scrub_cancel (VALUE gv, VALUE pathv);
+extern VALUE guestfs_int_ruby_btrfs_scrub_full (int argc, VALUE *argv, VALUE gv);
 extern VALUE guestfs_int_ruby_btrfs_scrub_resume (VALUE gv, VALUE pathv);
 extern VALUE guestfs_int_ruby_btrfs_scrub_start (VALUE gv, VALUE pathv);
 extern VALUE guestfs_int_ruby_btrfs_scrub_status (VALUE gv, VALUE pathv);
@@ -168,6 +169,7 @@ extern VALUE guestfs_int_ruby_clear_backend_setting (VALUE gv, VALUE namev);
 extern VALUE guestfs_int_ruby_clevis_luks_unlock (VALUE gv, VALUE devicev, VALUE mapnamev);
 extern VALUE guestfs_int_ruby_command (VALUE gv, VALUE argumentsv);
 extern VALUE guestfs_int_ruby_command_lines (VALUE gv, VALUE argumentsv);
+extern VALUE guestfs_int_ruby_command_out (VALUE gv, VALUE argumentsv, VALUE outputv);
 extern VALUE guestfs_int_ruby_compress_device_out (int argc, VALUE *argv, VALUE gv);
 extern VALUE guestfs_int_ruby_compress_out (int argc, VALUE *argv, VALUE gv);
 extern VALUE guestfs_int_ruby_config (VALUE gv, VALUE hvparamv, VALUE hvvaluev);
@@ -608,6 +610,7 @@ extern VALUE guestfs_int_ruby_sfdisk_kernel_geometry (VALUE gv, VALUE devicev);
 extern VALUE guestfs_int_ruby_sfdisk_l (VALUE gv, VALUE devicev);
 extern VALUE guestfs_int_ruby_sh (VALUE gv, VALUE commandv);
 extern VALUE guestfs_int_ruby_sh_lines (VALUE gv, VALUE commandv);
+extern VALUE guestfs_int_ruby_sh_out (VALUE gv, VALUE commandv, VALUE outputv);
 extern VALUE guestfs_int_ruby_shutdown (VALUE gv);
 extern VALUE guestfs_int_ruby_sleep (VALUE gv, VALUE secsv);
 extern VALUE guestfs_int_ruby_stat (VALUE gv, VALUE pathv);

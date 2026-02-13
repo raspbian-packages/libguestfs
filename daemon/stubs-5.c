@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -502,6 +502,53 @@ btrfs_scrub_cancel_stub (XDR *xdr_in)
   r = do_btrfs_scrub_cancel (path);
   if (r == -1)
     /* do_btrfs_scrub_cancel has already called reply_with_error */
+    return;
+
+  reply (NULL, NULL);
+}
+
+#define CLEANUP_XDR_FREE_BTRFS_SCRUB_FULL_ARGS \
+    __attribute__((cleanup(cleanup_xdr_free_btrfs_scrub_full_args)))
+
+static void
+cleanup_xdr_free_btrfs_scrub_full_args (struct guestfs_btrfs_scrub_full_args *argsp)
+{
+  xdr_free ((xdrproc_t) xdr_guestfs_btrfs_scrub_full_args, (char *) argsp);
+}
+
+
+void
+btrfs_scrub_full_stub (XDR *xdr_in)
+{
+  int r;
+  CLEANUP_XDR_FREE_BTRFS_SCRUB_FULL_ARGS struct guestfs_btrfs_scrub_full_args args;
+  memset (&args, 0, sizeof args);
+  const char *path;
+  int readonly;
+
+  /* The caller should have checked before calling this. */
+  if (! optgroup_btrfs_available ()) {
+    reply_with_unavailable_feature ("btrfs");
+    return;
+  }
+
+  if (optargs_bitmask & UINT64_C(0xfffffffffffffffe)) {
+    reply_with_error ("unknown option in optional arguments bitmask (this can happen if a program is compiled against a newer version of libguestfs, then run against an older version of the daemon)");
+    return;
+  }
+
+  if (!xdr_guestfs_btrfs_scrub_full_args (xdr_in, &args)) {
+    reply_with_error ("daemon failed to decode procedure arguments");
+    return;
+  }
+  path = args.path;
+  ABS_PATH (path, false, return);
+  readonly = args.readonly;
+
+  NEED_ROOT (false, return);
+  r = do_btrfs_scrub_full (path, readonly);
+  if (r == -1)
+    /* do_btrfs_scrub_full has already called reply_with_error */
     return;
 
   reply (NULL, NULL);

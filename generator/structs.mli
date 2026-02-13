@@ -1,5 +1,5 @@
 (* libguestfs
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,13 +33,6 @@ type struc = {
 
 val structs : struc list
 (** List of structures. *)
-
-val lvm_pv_cols : cols
-val lvm_vg_cols : cols
-val lvm_lv_cols : cols
-(** These are exported to the daemon code generator where they are
-    used to generate code for parsing the output of commands like
-    [lvs].  One day replace this with liblvm API calls. *)
 
 val lookup_struct : string -> struc
 (** Lookup a struct by name. *)

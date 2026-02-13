@@ -64,16 +64,16 @@ endif
 
 stamp-mlguestfs: libguestfsocaml.a $(guestfs_cmm)
 	$(OCAMLMKLIB) -o mlguestfs \
-	  -ldopt '$(LDFLAGS)' \
+	  -ldopt '$(LDFLAGS) -L../lib/.libs' \
 	  $(libguestfsocaml_a_OBJECTS) guestfs.cmo \
 	  $(LTLIBINTL) \
-	  -L../lib/.libs -lguestfs
+	  -lguestfs
 if HAVE_OCAMLOPT
 	$(OCAMLMKLIB) -o mlguestfs \
-	  -ldopt '$(LDFLAGS)' \
+	  -ldopt '$(LDFLAGS) -L../lib/.libs' \
 	  $(libguestfsocaml_a_OBJECTS) guestfs.cmx \
 	  $(LTLIBINTL) \
-	  -L../lib/.libs -lguestfs
+	  -lguestfs
 endif
 	touch $@
 
@@ -165,7 +165,7 @@ endif
 
 if HAVE_OCAMLOPT
 %.opt: %.cmx mlguestfs.cmxa
-	$(guestfs_am_v_ocamlopt)$(OCAMLFIND) ocamlopt $(OCAMLFLAGS) -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlguestfs.cmxa $< -o $@
+	$(guestfs_am_v_ocamlopt)$(OCAMLFIND) ocamlopt $(OCAMLFLAGS) -ccopt -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlguestfs.cmxa $< -o $@
 endif
 
 check-valgrind:

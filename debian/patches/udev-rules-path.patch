@@ -9,7 +9,7 @@ Subject: udev-rules-path
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/appliance/Makefile.am b/appliance/Makefile.am
-index 2839bab..225cd78 100644
+index 02d7c5d..d9fe3e5 100644
 --- a/appliance/Makefile.am
 +++ b/appliance/Makefile.am
 @@ -163,7 +163,7 @@ supermin.d/udev-rules.tar.gz: 99-guestfs-serial.rules

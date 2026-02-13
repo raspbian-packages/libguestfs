@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -3877,6 +3877,45 @@ guestfs_int_ocaml_btrfs_scrub_cancel (value gv, value pathv)
 }
 
 /* Automatically generated wrapper for function
+ * val btrfs_scrub_full : t -> ?readonly:bool -> string -> unit
+ */
+
+/* Emit prototype to appease gcc's -Wmissing-prototypes. */
+value guestfs_int_ocaml_btrfs_scrub_full (value gv, value readonlyv, value pathv);
+
+value
+guestfs_int_ocaml_btrfs_scrub_full (value gv, value readonlyv, value pathv)
+{
+  CAMLparam3 (gv, readonlyv, pathv);
+  CAMLlocal1 (rv);
+
+  guestfs_h *g = Guestfs_val (gv);
+  if (g == NULL)
+    guestfs_int_ocaml_raise_closed ("btrfs_scrub_full");
+
+  char *path;
+  path = strdup (String_val (pathv));
+  if (path == NULL) caml_raise_out_of_memory ();
+  struct guestfs_btrfs_scrub_full_argv optargs_s = { .bitmask = 0 };
+  struct guestfs_btrfs_scrub_full_argv *optargs = &optargs_s;
+  if (readonlyv != Val_int (0)) {
+    optargs_s.bitmask |= GUESTFS_BTRFS_SCRUB_FULL_READONLY_BITMASK;
+    optargs_s.readonly = Bool_val (Field (readonlyv, 0));
+  }
+  int r;
+
+  caml_release_runtime_system ();
+  r = guestfs_btrfs_scrub_full_argv (g, path, optargs);
+  caml_acquire_runtime_system ();
+  free (path);
+  if (r == -1)
+    guestfs_int_ocaml_raise_error (g, "btrfs_scrub_full");
+
+  rv = Val_unit;
+  CAMLreturn (rv);
+}
+
+/* Automatically generated wrapper for function
  * val btrfs_scrub_resume : t -> string -> unit
  */
 
@@ -4891,6 +4930,41 @@ guestfs_int_ocaml_command_lines (value gv, value argumentsv)
   rv = caml_copy_string_array ((const char **) r);
   for (i = 0; r[i] != NULL; ++i) free (r[i]);
   free (r);
+  CAMLreturn (rv);
+}
+
+/* Automatically generated wrapper for function
+ * val command_out : t -> string array -> string -> unit
+ */
+
+/* Emit prototype to appease gcc's -Wmissing-prototypes. */
+value guestfs_int_ocaml_command_out (value gv, value argumentsv, value outputv);
+
+value
+guestfs_int_ocaml_command_out (value gv, value argumentsv, value outputv)
+{
+  CAMLparam3 (gv, argumentsv, outputv);
+  CAMLlocal1 (rv);
+
+  guestfs_h *g = Guestfs_val (gv);
+  if (g == NULL)
+    guestfs_int_ocaml_raise_closed ("command_out");
+
+  char **arguments = guestfs_int_ocaml_strings_val (g, argumentsv);
+  char *output;
+  output = strdup (String_val (outputv));
+  if (output == NULL) caml_raise_out_of_memory ();
+  int r;
+
+  caml_release_runtime_system ();
+  r = guestfs_command_out (g, arguments, output);
+  caml_acquire_runtime_system ();
+  guestfs_int_free_string_list (arguments);
+  free (output);
+  if (r == -1)
+    guestfs_int_ocaml_raise_error (g, "command_out");
+
+  rv = Val_unit;
   CAMLreturn (rv);
 }
 
@@ -6451,16 +6525,16 @@ guestfs_int_ocaml_du (value gv, value pathv)
 }
 
 /* Automatically generated wrapper for function
- * val e2fsck : t -> ?correct:bool -> ?forceall:bool -> string -> unit
+ * val e2fsck : t -> ?correct:bool -> ?forceall:bool -> ?forceno:bool -> string -> unit
  */
 
 /* Emit prototype to appease gcc's -Wmissing-prototypes. */
-value guestfs_int_ocaml_e2fsck (value gv, value correctv, value forceallv, value devicev);
+value guestfs_int_ocaml_e2fsck (value gv, value correctv, value forceallv, value forcenov, value devicev);
 
 value
-guestfs_int_ocaml_e2fsck (value gv, value correctv, value forceallv, value devicev)
+guestfs_int_ocaml_e2fsck (value gv, value correctv, value forceallv, value forcenov, value devicev)
 {
-  CAMLparam4 (gv, correctv, forceallv, devicev);
+  CAMLparam5 (gv, correctv, forceallv, forcenov, devicev);
   CAMLlocal1 (rv);
 
   guestfs_h *g = Guestfs_val (gv);
@@ -6479,6 +6553,10 @@ guestfs_int_ocaml_e2fsck (value gv, value correctv, value forceallv, value devic
   if (forceallv != Val_int (0)) {
     optargs_s.bitmask |= GUESTFS_E2FSCK_FORCEALL_BITMASK;
     optargs_s.forceall = Bool_val (Field (forceallv, 0));
+  }
+  if (forcenov != Val_int (0)) {
+    optargs_s.bitmask |= GUESTFS_E2FSCK_FORCENO_BITMASK;
+    optargs_s.forceno = Bool_val (Field (forcenov, 0));
   }
   int r;
 
@@ -20899,6 +20977,43 @@ guestfs_int_ocaml_sh_lines (value gv, value commandv)
   rv = caml_copy_string_array ((const char **) r);
   for (i = 0; r[i] != NULL; ++i) free (r[i]);
   free (r);
+  CAMLreturn (rv);
+}
+
+/* Automatically generated wrapper for function
+ * val sh_out : t -> string -> string -> unit
+ */
+
+/* Emit prototype to appease gcc's -Wmissing-prototypes. */
+value guestfs_int_ocaml_sh_out (value gv, value commandv, value outputv);
+
+value
+guestfs_int_ocaml_sh_out (value gv, value commandv, value outputv)
+{
+  CAMLparam3 (gv, commandv, outputv);
+  CAMLlocal1 (rv);
+
+  guestfs_h *g = Guestfs_val (gv);
+  if (g == NULL)
+    guestfs_int_ocaml_raise_closed ("sh_out");
+
+  char *command;
+  command = strdup (String_val (commandv));
+  if (command == NULL) caml_raise_out_of_memory ();
+  char *output;
+  output = strdup (String_val (outputv));
+  if (output == NULL) caml_raise_out_of_memory ();
+  int r;
+
+  caml_release_runtime_system ();
+  r = guestfs_sh_out (g, command, output);
+  caml_acquire_runtime_system ();
+  free (command);
+  free (output);
+  if (r == -1)
+    guestfs_int_ocaml_raise_error (g, "sh_out");
+
+  rv = Val_unit;
   CAMLreturn (rv);
 }
 

@@ -7,7 +7,7 @@ libguestfs generated file
           and from the code in the generator/ subdirectory.
  ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 
- Copyright (C) 2009-2023 Red Hat Inc.
+ Copyright (C) 2009-2025 Red Hat Inc.
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -895,6 +895,10 @@ btrfs ファイルシステムをチェックするために使用されると�
 
 このコマンドは 1 つまたはそれ以上のオプション引数を持つ必要があります。 L</オプション引数> を参照してください。
 
+I<This function is deprecated.> In new code, use the L</btrfs-scrub-full> call instead.
+
+Deprecated functions will not be removed from the API, but the fact that they are deprecated indicates that there are problems with correct use of these functions.
+
 This command depends on the feature C<btrfs>.  See also L</feature-available>.
 
 =head2 btrfs-image
@@ -1002,6 +1006,16 @@ This command depends on the feature C<btrfs>.  See also L</feature-available>.
  btrfs-scrub-cancel path
 
 Cancel a running scrub on a btrfs filesystem.
+
+This command depends on the feature C<btrfs>.  See also L</feature-available>.
+
+=head2 btrfs-scrub-full
+
+ btrfs-scrub-full path [readonly:true|false]
+
+Run a full scrub on a btrfs filesystem and wait for it to finish.  If the filesystem has errors this will return an error.
+
+このコマンドは 1 つまたはそれ以上のオプション引数を持つ必要があります。 L</オプション引数> を参照してください。
 
 This command depends on the feature C<btrfs>.  See also L</feature-available>.
 
@@ -1321,7 +1335,7 @@ This command opens a block device that has been encrypted according to the Linux
 
 C<device> is the encrypted block device.
 
-The appliance will connect to the Tang servers noted in the tree of Clevis pins that is bound to a keyslot of the LUKS header.  The Clevis pin tree may comprise C<sss> (redudancy) pins as internal nodes (optionally), and C<tang> pins as leaves.  C<tpm2> pins are not supported.  The appliance unlocks the encrypted block device by combining responses from the Tang servers with metadata from the LUKS header; there is no C<key> parameter.
+The appliance will connect to the Tang servers noted in the tree of Clevis pins that is bound to a keyslot of the LUKS header.  The Clevis pin tree may comprise C<sss> (redundancy) pins as internal nodes (optionally), and C<tang> pins as leaves.  C<tpm2> pins are not supported.  The appliance unlocks the encrypted block device by combining responses from the Tang servers with metadata from the LUKS header; there is no C<key> parameter.
 
 This command will fail if networking has not been enabled for the appliance. Refer to L</set-network>.
 
@@ -1362,6 +1376,16 @@ This is the same as L</command>, but splits the result into a list of lines.
 関連項目: L</sh-lines>
 
 Because of the message protocol, there is a transfer limit of somewhere between 2MB and 4MB.  See L<guestfs(3)/PROTOCOL LIMITS>.
+
+=head2 command-out
+
+ command-out 'arguments ...' (output|-)
+
+This is the same as L</command>, but streams the output back, handling the case where the output from the command is larger than the protocol limit.
+
+See also: L</sh-out>
+
+標準入力/標準出力から読み込み/書き込みするには、ファイル名の代わりに C<-> を使用します。
 
 =head2 compress-device-out
 
@@ -1779,7 +1803,7 @@ C<path> can be a file or a directory.  If C<path> is a directory then the estima
 
 =head2 e2fsck
 
- e2fsck device [correct:true|false] [forceall:true|false]
+ e2fsck device [correct:true|false] [forceall:true|false] [forceno:true|false]
 
 This runs the ext2/ext3 filesystem checker on C<device>.  It can take the following optional arguments:
 
@@ -1789,13 +1813,19 @@ This runs the ext2/ext3 filesystem checker on C<device>.  It can take the follow
 
 Automatically repair the file system. This option will cause e2fsck to automatically fix any filesystem problems that can be safely fixed without human intervention.
 
-This option may not be specified at the same time as the C<forceall> option.
+This option may not be specified at the same time as the C<forceall> or C<forceno> options.
 
 =item C<forceall>
 
 Assume an answer of ‘yes’ to all questions; allows e2fsck to be used non-interactively.
 
-このオプションは C<correct> オプションと同時に指定できません。
+This option may not be specified at the same time as the C<correct> or C<forceno> options.
+
+=item C<forceno>
+
+Open the filesystem readonly and assume an answer of ‘no’ to all questions; allows e2fsck to be used non-interactively.
+
+This option may not be specified at the same time as the C<correct> or C<forceall> options.
 
 =back
 
@@ -6793,6 +6823,16 @@ All the provisos about L</command> apply to this call.
 This is the same as L</sh>, but splits the result into a list of lines.
 
 関連項目: L</command-lines>
+
+=head2 sh-out
+
+ sh-out command (output|-)
+
+This is the same as L</sh>, but streams the output back, handling the case where the output from the command is larger than the protocol limit.
+
+See also: L</command-out>
+
+標準入力/標準出力から読み込み/書き込みするには、ファイル名の代わりに C<-> を使用します。
 
 =head2 shutdown
 

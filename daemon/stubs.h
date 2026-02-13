@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -86,6 +86,7 @@ extern void btrfs_replace_stub (XDR *xdr_in);
 extern void btrfs_rescue_chunk_recover_stub (XDR *xdr_in);
 extern void btrfs_rescue_super_recover_stub (XDR *xdr_in);
 extern void btrfs_scrub_cancel_stub (XDR *xdr_in);
+extern void btrfs_scrub_full_stub (XDR *xdr_in);
 extern void btrfs_scrub_resume_stub (XDR *xdr_in);
 extern void btrfs_scrub_start_stub (XDR *xdr_in);
 extern void btrfs_scrub_status_stub (XDR *xdr_in);
@@ -111,6 +112,7 @@ extern void chown_stub (XDR *xdr_in);
 extern void clevis_luks_unlock_stub (XDR *xdr_in);
 extern void command_stub (XDR *xdr_in);
 extern void command_lines_stub (XDR *xdr_in);
+extern void command_out_stub (XDR *xdr_in);
 extern void compress_device_out_stub (XDR *xdr_in);
 extern void compress_out_stub (XDR *xdr_in);
 extern void copy_attributes_stub (XDR *xdr_in);
@@ -445,6 +447,7 @@ extern void sfdisk_kernel_geometry_stub (XDR *xdr_in);
 extern void sfdisk_l_stub (XDR *xdr_in);
 extern void sh_stub (XDR *xdr_in);
 extern void sh_lines_stub (XDR *xdr_in);
+extern void sh_out_stub (XDR *xdr_in);
 extern void sleep_stub (XDR *xdr_in);
 extern void statns_stub (XDR *xdr_in);
 extern void statvfs_stub (XDR *xdr_in);

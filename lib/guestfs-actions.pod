@@ -6,7 +6,7 @@ libguestfs generated file
           and from the code in the generator/ subdirectory.
  ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 
- Copyright (C) 2009-2023 Red Hat Inc.
+ Copyright (C) 2009-2025 Red Hat Inc.
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -1781,6 +1781,13 @@ L</guestfs_feature_available>.
                      const char *device,
                      ...);
 
+I<This function is deprecated.>
+In new code, use the L</guestfs_btrfs_scrub_full> call instead.
+
+Deprecated functions will not be removed from the API, but the
+fact that they are deprecated indicates that there are problems
+with correct use of these functions.
+
 You may supply a list of optional arguments to this call.
 Use zero or more of the following pairs of parameters,
 and terminate the list with C<-1> on its own.
@@ -2069,6 +2076,52 @@ This function depends on the feature C<btrfs>.  See also
 L</guestfs_feature_available>.
 
 (Added in 1.29.22)
+
+=head2 guestfs_btrfs_scrub_full
+
+ int
+ guestfs_btrfs_scrub_full (guestfs_h *g,
+                           const char *path,
+                           ...);
+
+You may supply a list of optional arguments to this call.
+Use zero or more of the following pairs of parameters,
+and terminate the list with C<-1> on its own.
+See L</CALLS WITH OPTIONAL ARGUMENTS>.
+
+ GUESTFS_BTRFS_SCRUB_FULL_READONLY, int readonly,
+
+Run a full scrub on a btrfs filesystem and wait for it to finish.
+If the filesystem has errors this will return an error.
+
+This function returns 0 on success or -1 on error.
+
+This function depends on the feature C<btrfs>.  See also
+L</guestfs_feature_available>.
+
+(Added in 1.55.12)
+
+=head2 guestfs_btrfs_scrub_full_va
+
+ int
+ guestfs_btrfs_scrub_full_va (guestfs_h *g,
+                              const char *path,
+                              va_list args);
+
+This is the "va_list variant" of L</guestfs_btrfs_scrub_full>.
+
+See L</CALLS WITH OPTIONAL ARGUMENTS>.
+
+=head2 guestfs_btrfs_scrub_full_argv
+
+ int
+ guestfs_btrfs_scrub_full_argv (guestfs_h *g,
+                                const char *path,
+                                const struct guestfs_btrfs_scrub_full_argv *optargs);
+
+This is the "argv variant" of L</guestfs_btrfs_scrub_full>.
+
+See L</CALLS WITH OPTIONAL ARGUMENTS>.
 
 =head2 guestfs_btrfs_scrub_resume
 
@@ -2505,8 +2558,8 @@ as F<C:\windows> may appear as F</WINDOWS> or F</windows>
 they were created.  In Windows itself this would not be
 a problem.
 
-Bug or feature?  You decide:
-L<https://www.tuxera.com/community/ntfs-3g-faq/#posixfilenames1>
+Bug or feature?  You decide. See the relevant entry in the ntfs-3g FAQ:
+L<https://github.com/tuxera/ntfs-3g/wiki/NTFS-3G-FAQ>
 
 C<guestfs_case_sensitive_path> attempts to resolve the true case of
 each element in the path. It will return a resolved path if either the
@@ -2739,7 +2792,7 @@ C<device> is the encrypted block device.
 
 The appliance will connect to the Tang servers noted in the tree of
 Clevis pins that is bound to a keyslot of the LUKS header.  The Clevis
-pin tree may comprise C<sss> (redudancy) pins as internal nodes
+pin tree may comprise C<sss> (redundancy) pins as internal nodes
 (optionally), and C<tang> pins as leaves.  C<tpm2> pins are not
 supported.  The appliance unlocks the encrypted block device by
 combining responses from the Tang servers with metadata from the LUKS
@@ -2832,6 +2885,28 @@ Because of the message protocol, there is a transfer limit
 of somewhere between 2MB and 4MB.  See L<guestfs(3)/PROTOCOL LIMITS>.
 
 (Added in 1.9.1)
+
+=head2 guestfs_command_out
+
+ int
+ guestfs_command_out (guestfs_h *g,
+                      char *const *arguments,
+                      const char *output);
+
+This is the same as C<guestfs_command>, but streams the output
+back, handling the case where the output from the command is
+larger than the protocol limit.
+
+See also: C<guestfs_sh_out>
+
+This function returns 0 on success or -1 on error.
+
+This long-running command can generate progress notification messages
+so that the caller can display a progress bar or indicator.
+To receive these messages, the caller must register a progress
+event callback.  See L<guestfs(3)/GUESTFS_EVENT_PROGRESS>.
+
+(Added in 1.55.6)
 
 =head2 guestfs_compress_device_out
 
@@ -4072,6 +4147,7 @@ See L</CALLS WITH OPTIONAL ARGUMENTS>.
 
  GUESTFS_E2FSCK_CORRECT, int correct,
  GUESTFS_E2FSCK_FORCEALL, int forceall,
+ GUESTFS_E2FSCK_FORCENO, int forceno,
 
 This runs the ext2/ext3 filesystem checker on C<device>.
 It can take the following optional arguments:
@@ -4084,14 +4160,24 @@ Automatically repair the file system. This option will cause e2fsck
 to automatically fix any filesystem problems that can be safely
 fixed without human intervention.
 
-This option may not be specified at the same time as the C<forceall> option.
+This option may not be specified at the same time as the C<forceall>
+or C<forceno> options.
 
 =item C<forceall>
 
 Assume an answer of ‘yes’ to all questions; allows e2fsck to be used
 non-interactively.
 
-This option may not be specified at the same time as the C<correct> option.
+This option may not be specified at the same time as the C<correct>
+or C<forceno> options.
+
+=item C<forceno>
+
+Open the filesystem readonly and assume an answer of ‘no’ to all
+questions; allows e2fsck to be used non-interactively.
+
+This option may not be specified at the same time as the C<correct>
+or C<forceall> options.
 
 =back
 
@@ -14352,6 +14438,23 @@ This function returns a NULL-terminated array of strings
 I<The caller must free the strings and the array after use>.
 
 (Added in 1.0.50)
+
+=head2 guestfs_sh_out
+
+ int
+ guestfs_sh_out (guestfs_h *g,
+                 const char *command,
+                 const char *output);
+
+This is the same as C<guestfs_sh>, but streams the output
+back, handling the case where the output from the command is
+larger than the protocol limit.
+
+See also: C<guestfs_command_out>
+
+This function returns 0 on success or -1 on error.
+
+(Added in 1.55.6)
 
 =head2 guestfs_shutdown
 

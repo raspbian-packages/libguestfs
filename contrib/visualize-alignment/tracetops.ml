@@ -1,7 +1,7 @@
 #!/usr/bin/ocamlrun /usr/bin/ocaml
 
 (* Convert *.qtr (qemu block device trace) to Postscript.
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  * By Richard W.M. Jones <rjones@redhat.com>.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -185,7 +185,7 @@ let ranges =
           loop i0 rest
       | (false, i1) :: rest ->
           let i1 = i1 - 1 in
-          let rest = List.dropwhile (function (v, _) -> not v) rest in
+          let rest = List.drop_while (function (v, _) -> not v) rest in
           (match rest with
            | [] -> [i0, i1]
            | (_, i2) :: rest -> (i0, i1) :: loop i2 rest)

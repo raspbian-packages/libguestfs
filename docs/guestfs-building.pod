@@ -88,11 +88,6 @@ C<virtio-pci>, C<virtio-serial>, C<virtio-block>, C<virtio-net>.
 I<Required>.  For alternatives, see L</USING A PREBUILT BINARY APPLIANCE>
 below.
 
-=item glibc
-
-I<Required>.  We use the custom printf formatters extension of
-glibc (see L<guestfs-hacking(1)/DAEMON CUSTOM PRINTF FORMATTERS>).
-
 =item XDR (tirpc, glibc or other)
 
 I<Required>.  We use the XDR implementation from
@@ -119,7 +114,7 @@ virt tools which are still written in Perl.
 
 I<Required>.  Part of Perl core.
 
-=item OCaml E<ge> 4.07
+=item OCaml E<ge> 4.08
 
 =item OCaml findlib
 
@@ -143,12 +138,6 @@ I<Required>.
 I<Required>.
 
 =item realpath
-
-I<Required>.
-
-=item flex
-
-=item bison
 
 I<Required>.
 
@@ -185,7 +174,7 @@ I<Required>.
 
 I<Required>.
 
-=item Jansson E<ge> 2.7
+=item json-c E<ge> 0.14
 
 I<Required>.
 
@@ -200,10 +189,6 @@ Optional if compiling from tarball.
 
 I<Required>.  ocaml-hivex is the OCaml binding for hivex, which is
 required when building the daemon.
-
-=item libmagic
-
-I<Required>.  This is the library used by the L<file(1)> command.
 
 =item libvirt E<ge> 0.10.2
 
@@ -276,34 +261,7 @@ Optional.  Used only for testing.
 
 =item qemu-nbd
 
-=item nbdkit E<ge> 1.12
-
 Optional.  qemu-nbd is used for testing.
-
-=item curl
-
-Optional.  Used by virt-builder for downloads.
-
-=item GNU Privacy Guard (GnuPG, gpg) v1 or v2
-
-Optional.  Used by virt-builder for checking digital signatures.
-
-=item liblzma
-
-Optional.  If available, virt-builder will use this library
-for fast, parallel uncompression of templates.
-
-=item python-evtx
-
-Optional.  Used by L<virt-log(1)> to parse Windows Event Log files.
-
-=item OCaml gettext
-
-Optional.  For localizing OCaml virt tools.
-
-=item ocaml-ounit E<ge> 2.0.0
-
-Optional.  For testing the common OCaml modules.
 
 =item Perl C<Module::Build> E<ge> 0.19
 
@@ -761,7 +719,7 @@ We backport upstream features.
 
 =back
 
-The patches we apply to RHEL releases are available publically in the
+The patches we apply to RHEL releases are available publicly in the
 upstream git repository, in a branch called C<rhel-x.y>
 
 For example, the RHEL 7.3 patches are available here:
@@ -790,4 +748,4 @@ Richard W.M. Jones (C<rjones at redhat dot com>)
 
 =head1 COPYRIGHT
 
-Copyright (C) 2009-2023 Red Hat Inc.
+Copyright (C) 2009-2025 Red Hat Inc.

@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -603,6 +603,58 @@ guestfs_btrfs_image_va (guestfs_h *g,
   }
 
   return guestfs_btrfs_image_argv (g, source, image, optargs);
+}
+
+int
+guestfs_btrfs_scrub_full (guestfs_h *g,
+                          const char *path,
+                          ...)
+{
+  va_list optargs;
+
+  int r;
+
+  va_start (optargs, path);
+  r = guestfs_btrfs_scrub_full_va (g, path, optargs);
+  va_end (optargs);
+
+  return r;
+}
+
+int
+guestfs_btrfs_scrub_full_va (guestfs_h *g,
+                             const char *path,
+                             va_list args)
+{
+  ACQUIRE_LOCK_FOR_CURRENT_SCOPE (&g->lock);
+  struct guestfs_btrfs_scrub_full_argv optargs_s;
+  struct guestfs_btrfs_scrub_full_argv *optargs = &optargs_s;
+  int i;
+  uint64_t i_mask;
+
+  optargs_s.bitmask = 0;
+
+  while ((i = va_arg (args, int)) >= 0) {
+    switch (i) {
+    case GUESTFS_BTRFS_SCRUB_FULL_READONLY:
+      optargs_s.readonly = va_arg (args, int);
+      break;
+    default:
+      error (g, "%s: unknown option %d (this can happen if a program is compiled against a newer version of libguestfs, then dynamically linked to an older version)",
+             "btrfs_scrub_full", i);
+      return -1;
+    }
+
+    i_mask = UINT64_C(1) << i;
+    if (optargs_s.bitmask & i_mask) {
+      error (g, "%s: same optional argument specified more than once",
+             "btrfs_scrub_full");
+      return -1;
+    }
+    optargs_s.bitmask |= i_mask;
+  }
+
+  return guestfs_btrfs_scrub_full_argv (g, path, optargs);
 }
 
 int
@@ -1454,6 +1506,9 @@ guestfs_e2fsck_va (guestfs_h *g,
       break;
     case GUESTFS_E2FSCK_FORCEALL:
       optargs_s.forceall = va_arg (args, int);
+      break;
+    case GUESTFS_E2FSCK_FORCENO:
+      optargs_s.forceno = va_arg (args, int);
       break;
     default:
       error (g, "%s: unknown option %d (this can happen if a program is compiled against a newer version of libguestfs, then dynamically linked to an older version)",

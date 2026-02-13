@@ -1,5 +1,5 @@
 /* libguestfs - the guestfsd daemon
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -170,7 +170,7 @@ device_name_translation (const char *device)
     start = &device[5+len+1];
     len = strspn (start, "abcdefghijklmnopqrstuvwxyz");
     if (len >= sizeof dev - 1) {
-      fprintf (stderr, "unparseable device name: %s\n", device);
+      fprintf (stderr, "unparsable device name: %s\n", device);
       return NULL;
     }
     strcpy (dev, start);

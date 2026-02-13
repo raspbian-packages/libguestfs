@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -850,9 +850,9 @@ guestfs_int_ruby_canonical_device_name (VALUE gv, VALUE devicev)
  * they were created. In Windows itself this would not be a
  * problem.
  * 
- * Bug or feature? You decide:
- * <https://www.tuxera.com/community/ntfs-3g-faq/#posixfile
- * names1>
+ * Bug or feature? You decide. See the relevant entry in
+ * the ntfs-3g FAQ:
+ * <https://github.com/tuxera/ntfs-3g/wiki/NTFS-3G-FAQ>
  * 
  * "g.case_sensitive_path" attempts to resolve the true
  * case of each element in the path. It will return a
@@ -3241,6 +3241,44 @@ guestfs_int_ruby_sh_lines (VALUE gv, VALUE commandv)
   }
   free (r);
   return rv;
+}
+
+/*
+ * call-seq:
+ *   g.sh_out(command, output) -> nil
+ *
+ * run a command via the shell
+ *
+ * This is the same as "g.sh", but streams the output back,
+ * handling the case where the output from the command is
+ * larger than the protocol limit.
+ * 
+ * See also: "g.command_out"
+ *
+ *
+ * [Since] Added in version 1.55.6.
+ *
+ * [C API] For the C API documentation for this function, see
+ *         {guestfs_sh_out}[http://libguestfs.org/guestfs.3.html#guestfs_sh_out].
+ */
+VALUE
+guestfs_int_ruby_sh_out (VALUE gv, VALUE commandv, VALUE outputv)
+{
+  guestfs_h *g;
+  Data_Get_Struct (gv, guestfs_h, g);
+  if (!g)
+    rb_raise (rb_eArgError, "%s: used handle after closing it", "sh_out");
+
+  const char *command = StringValueCStr (commandv);
+  const char *output = StringValueCStr (outputv);
+
+  int r;
+
+  r = guestfs_sh_out (g, command, output);
+  if (r == -1)
+    rb_raise (e_Error, "%s", guestfs_last_error (g));
+
+  return Qnil;
 }
 
 /*

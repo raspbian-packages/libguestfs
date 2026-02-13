@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -251,6 +251,9 @@ static PyMethodDef methods[] = {
 #ifdef GUESTFS_HAVE_BTRFS_SCRUB_CANCEL
   { (char *) "btrfs_scrub_cancel", guestfs_int_py_btrfs_scrub_cancel, METH_VARARGS, NULL },
 #endif
+#ifdef GUESTFS_HAVE_BTRFS_SCRUB_FULL
+  { (char *) "btrfs_scrub_full", guestfs_int_py_btrfs_scrub_full, METH_VARARGS, NULL },
+#endif
 #ifdef GUESTFS_HAVE_BTRFS_SCRUB_RESUME
   { (char *) "btrfs_scrub_resume", guestfs_int_py_btrfs_scrub_resume, METH_VARARGS, NULL },
 #endif
@@ -337,6 +340,9 @@ static PyMethodDef methods[] = {
 #endif
 #ifdef GUESTFS_HAVE_COMMAND_LINES
   { (char *) "command_lines", guestfs_int_py_command_lines, METH_VARARGS, NULL },
+#endif
+#ifdef GUESTFS_HAVE_COMMAND_OUT
+  { (char *) "command_out", guestfs_int_py_command_out, METH_VARARGS, NULL },
 #endif
 #ifdef GUESTFS_HAVE_COMPRESS_DEVICE_OUT
   { (char *) "compress_device_out", guestfs_int_py_compress_device_out, METH_VARARGS, NULL },
@@ -1657,6 +1663,9 @@ static PyMethodDef methods[] = {
 #endif
 #ifdef GUESTFS_HAVE_SH_LINES
   { (char *) "sh_lines", guestfs_int_py_sh_lines, METH_VARARGS, NULL },
+#endif
+#ifdef GUESTFS_HAVE_SH_OUT
+  { (char *) "sh_out", guestfs_int_py_sh_out, METH_VARARGS, NULL },
 #endif
 #ifdef GUESTFS_HAVE_SHUTDOWN
   { (char *) "shutdown", guestfs_int_py_shutdown, METH_VARARGS, NULL },

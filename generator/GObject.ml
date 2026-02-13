@@ -1,5 +1,5 @@
 (* libguestfs
- * Copyright (C) 2012-2023 Red Hat Inc.
+ * Copyright (C) 2012-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -206,7 +206,7 @@ let generate_gobject_struct_header filename typ cols () =
       pr " * @%s: An unsigned 64-bit integer\n" n
     | n, FInt64 ->
       pr " * @%s: A signed 64-bit integer\n" n
-    | n, FString ->
+    | n, (FString|FDevice) ->
       pr " * @%s: A NULL-terminated string\n" n
     | n, FBuffer ->
       pr " * @%s: A GByteArray\n" n
@@ -231,7 +231,7 @@ let generate_gobject_struct_header filename typ cols () =
       pr "  guint64 %s;\n" n
     | n, FInt64 ->
       pr "  gint64 %s;\n" n
-    | n, FString ->
+    | n, (FString|FDevice) ->
       pr "  gchar *%s;\n" n
     | n, FBuffer ->
       pr "  GByteArray *%s;\n" n
@@ -1228,7 +1228,7 @@ guestfs_session_close (GuestfsSession *session, GError **err)
           | n, FUUID ->
             pr "%smemcpy (%s%s, %s%s, sizeof (%s%s));\n"
               indent dst n src n dst n
-          | n, FString ->
+          | n, (FString|FDevice) ->
             pr "%sif (%s%s) %s%s = g_strdup (%s%s);\n"
               indent src n dst n src n
           | n, FBuffer ->

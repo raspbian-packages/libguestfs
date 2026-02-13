@@ -7,7 +7,7 @@ libguestfs generated file
           and from the code in the generator/ subdirectory.
  ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 
- Copyright (C) 2009-2023 Red Hat Inc.
+ Copyright (C) 2009-2025 Red Hat Inc.
 
  Ця програма є вільним програмним забезпеченням; ви можете поширювати та/або
  змінювати її за умов дотримання GNU General Public License утому вигляді, що
@@ -191,10 +191,6 @@ The path to the ISO image containing the virtio-win drivers (eg. F</usr/share/vi
 =item DIR
 
 The directory containing the unpacked virtio-win drivers (eg. F</usr/share/virtio-win>).
-
-=item B<"osinfo">
-
-The literal string C<"osinfo"> means to use the libosinfo database to locate the drivers.  (See L<osinfo-query(1)>.
 
 =back
 

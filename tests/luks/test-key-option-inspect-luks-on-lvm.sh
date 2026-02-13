@@ -1,6 +1,6 @@
 #!/bin/bash -
 # libguestfs
-# Copyright (C) 2019-2023 Red Hat Inc.
+# Copyright (C) 2019-2025 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,9 +19,10 @@
 # Test the --key option.  It is handled by common code so we only need
 # to test one tool (guestfish).
 
+source ./functions.sh
 set -e
+set -x
 
-$TEST_FUNCTIONS
 skip_if_skipped
 skip_unless_feature_available luks
 skip_unless_phony_guest fedora-luks-on-lvm.img

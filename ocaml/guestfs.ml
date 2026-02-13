@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -483,6 +483,7 @@ external btrfs_replace : t -> string -> string -> string -> unit = "guestfs_int_
 external btrfs_rescue_chunk_recover : t -> string -> unit = "guestfs_int_ocaml_btrfs_rescue_chunk_recover"
 external btrfs_rescue_super_recover : t -> string -> unit = "guestfs_int_ocaml_btrfs_rescue_super_recover"
 external btrfs_scrub_cancel : t -> string -> unit = "guestfs_int_ocaml_btrfs_scrub_cancel"
+external btrfs_scrub_full : t -> ?readonly:bool -> string -> unit = "guestfs_int_ocaml_btrfs_scrub_full"
 external btrfs_scrub_resume : t -> string -> unit = "guestfs_int_ocaml_btrfs_scrub_resume"
 external btrfs_scrub_start : t -> string -> unit = "guestfs_int_ocaml_btrfs_scrub_start"
 external btrfs_scrub_status : t -> string -> btrfsscrub = "guestfs_int_ocaml_btrfs_scrub_status"
@@ -514,6 +515,7 @@ external clear_backend_setting : t -> string -> int = "guestfs_int_ocaml_clear_b
 external clevis_luks_unlock : t -> string -> string -> unit = "guestfs_int_ocaml_clevis_luks_unlock"
 external command : t -> string array -> string = "guestfs_int_ocaml_command"
 external command_lines : t -> string array -> string array = "guestfs_int_ocaml_command_lines"
+external command_out : t -> string array -> string -> unit = "guestfs_int_ocaml_command_out"
 external compress_device_out : t -> ?level:int -> string -> string -> string -> unit = "guestfs_int_ocaml_compress_device_out"
 external compress_out : t -> ?level:int -> string -> string -> string -> unit = "guestfs_int_ocaml_compress_out"
 external config : t -> string -> string option -> unit = "guestfs_int_ocaml_config"
@@ -550,7 +552,7 @@ external download_inode : t -> string -> int64 -> string -> unit = "guestfs_int_
 external download_offset : t -> string -> string -> int64 -> int64 -> unit = "guestfs_int_ocaml_download_offset"
 external drop_caches : t -> int -> unit = "guestfs_int_ocaml_drop_caches"
 external du : t -> string -> int64 = "guestfs_int_ocaml_du"
-external e2fsck : t -> ?correct:bool -> ?forceall:bool -> string -> unit = "guestfs_int_ocaml_e2fsck"
+external e2fsck : t -> ?correct:bool -> ?forceall:bool -> ?forceno:bool -> string -> unit = "guestfs_int_ocaml_e2fsck"
 external e2fsck_f : t -> string -> unit = "guestfs_int_ocaml_e2fsck_f"
 external echo_daemon : t -> string array -> string = "guestfs_int_ocaml_echo_daemon"
 external egrep : t -> string -> string -> string array = "guestfs_int_ocaml_egrep"
@@ -965,6 +967,7 @@ external sfdisk_kernel_geometry : t -> string -> string = "guestfs_int_ocaml_sfd
 external sfdisk_l : t -> string -> string = "guestfs_int_ocaml_sfdisk_l"
 external sh : t -> string -> string = "guestfs_int_ocaml_sh"
 external sh_lines : t -> string -> string array = "guestfs_int_ocaml_sh_lines"
+external sh_out : t -> string -> string -> unit = "guestfs_int_ocaml_sh_out"
 external shutdown : t -> unit = "guestfs_int_ocaml_shutdown"
 external sleep : t -> int -> unit = "guestfs_int_ocaml_sleep"
 external stat : t -> string -> stat = "guestfs_int_ocaml_stat"
@@ -1133,6 +1136,7 @@ class guestfs ?environment ?close_on_exit () =
     method btrfs_rescue_chunk_recover = btrfs_rescue_chunk_recover g
     method btrfs_rescue_super_recover = btrfs_rescue_super_recover g
     method btrfs_scrub_cancel = btrfs_scrub_cancel g
+    method btrfs_scrub_full = btrfs_scrub_full g
     method btrfs_scrub_resume = btrfs_scrub_resume g
     method btrfs_scrub_start = btrfs_scrub_start g
     method btrfs_scrub_status = btrfs_scrub_status g
@@ -1164,6 +1168,7 @@ class guestfs ?environment ?close_on_exit () =
     method clevis_luks_unlock = clevis_luks_unlock g
     method command = command g
     method command_lines = command_lines g
+    method command_out = command_out g
     method compress_device_out = compress_device_out g
     method compress_out = compress_out g
     method config = config g
@@ -1615,6 +1620,7 @@ class guestfs ?environment ?close_on_exit () =
     method sfdisk_l = sfdisk_l g
     method sh = sh g
     method sh_lines = sh_lines g
+    method sh_out = sh_out g
     method shutdown () = shutdown g
     method sleep = sleep g
     method stat = stat g

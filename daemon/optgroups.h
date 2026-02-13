@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -110,6 +110,7 @@ extern int optgroup_zerofree_available (void);
   int __attribute__((noreturn)) do_btrfs_rescue_chunk_recover (const char *device) { abort (); } \
   int __attribute__((noreturn)) do_btrfs_rescue_super_recover (const char *device) { abort (); } \
   int __attribute__((noreturn)) do_btrfs_scrub_cancel (const char *path) { abort (); } \
+  int __attribute__((noreturn)) do_btrfs_scrub_full (const char *path, int readonly) { abort (); } \
   int __attribute__((noreturn)) do_btrfs_scrub_resume (const char *path) { abort (); } \
   int __attribute__((noreturn)) do_btrfs_scrub_start (const char *path) { abort (); } \
   guestfs_int_btrfsscrub *__attribute__((noreturn)) do_btrfs_scrub_status (const char *path) { abort (); } \

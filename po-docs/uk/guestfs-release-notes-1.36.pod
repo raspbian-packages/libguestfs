@@ -197,7 +197,7 @@ C<make maintainer-check-extra-dist> тепер перевіряє, чи усі �
 
 Файли заголовків та структури C тепер можуть містити вбудовану документацію з використання спеціальних коментарів C</** ... */>.
 
-Підстановки C<@VAR@> у C<./run> тепер повністю екрануються лапками. Це потрібно для того, щоб (наприклад) команда C<./configure PYTHON=/якийсь/шлях> працювала належним чином, якщо у C</якийсь/шлях> містяться символи, які слід екранувати (Hilko Bengen).
+C<@VAR@> substitutions in C<./run> are now fully quoted.  This is necessary so that (eg) C<./configure PYTHON=/some/path> works robustly if C</some/path> contains characters that need to be quoted (Hilko Bengen).
 
 Реалізовано підтримку gperf E<ge> 3.1.
 
@@ -301,7 +301,7 @@ Importing VMs from VMware is failing with error "Inspection field 'i_arch' was '
 
 =item L<https://bugzilla.redhat.com/1401320>
 
-RFE: дещо збільшити покриття virt-sysprep
+RFE: Increase virt-sysprep coverage a bit
 
 =item L<https://bugzilla.redhat.com/1400205>
 
@@ -435,5 +435,5 @@ Richard W.M. Jones
 
 =head1 АВТОРСЬКІ ПРАВА
 
-Copyright (C) 2009-2023 Red Hat Inc.
+Copyright (C) 2009-2025 Red Hat Inc.
 

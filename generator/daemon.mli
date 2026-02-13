@@ -1,5 +1,5 @@
 (* libguestfs
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ val generate_daemon_caml_stubs : unit -> unit
 val generate_daemon_caml_callbacks_ml : unit -> unit
 val generate_daemon_caml_interface : string -> unit -> unit
 val generate_daemon_dispatch : unit -> unit
-val generate_daemon_lvm_tokenization : unit -> unit
 val generate_daemon_names : unit -> unit
 val generate_daemon_optgroups_c : unit -> unit
 val generate_daemon_optgroups_h : unit -> unit

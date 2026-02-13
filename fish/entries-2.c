@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -510,6 +510,26 @@ struct command_entry command_cmd_entry = {
           "",
   .synopsis = "command arguments",
   .run = run_command
+};
+
+struct command_entry command_out_cmd_entry = {
+  .name = "command-out",
+  .help = "NAME\n"
+          "    command-out - run a command from the guest filesystem\n"
+          "\n"
+          "SYNOPSIS\n"
+          "     command-out arguments output\n"
+          "\n"
+          "DESCRIPTION\n"
+          "    This is the same as \"command\", but streams the output back, handling the\n"
+          "    case where the output from the command is larger than the protocol\n"
+          "    limit.\n"
+          "\n"
+          "    See also: \"sh_out\"\n"
+          "\n"
+          "",
+  .synopsis = "command-out arguments output",
+  .run = run_command_out
 };
 
 struct command_entry copy_device_to_file_cmd_entry = {

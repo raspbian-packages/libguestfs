@@ -101,8 +101,19 @@ do_fstrim (const char *path,
   ADD_ARG (argv, i, buf);
   ADD_ARG (argv, i, NULL);
 
+  /* Run the command twice to workaround
+   * https://issues.redhat.com/browse/RHEL-88450
+   */
+  r = commandv (&out, &err, argv);
+  if (r == -1) goto error;
+  if (verbose)
+    fprintf (stderr, "%s\n", out);
+  free (out); out = NULL;
+  free (err); err = NULL;
+
   r = commandv (&out, &err, argv);
   if (r == -1) {
+  error:
     /* If the error is about the kernel operation not being supported
      * for this filesystem type, then return errno ENOTSUP here.
      */
@@ -115,6 +126,14 @@ do_fstrim (const char *path,
 
   if (verbose)
     fprintf (stderr, "%s\n", out);
+
+  /* Sync the disks again.  In practice we always call fstrim
+   * expecting that afterwards the results are visible in the qemu
+   * devices backing the guest.  Depending on the Linux filesystem,
+   * fstrim may issue asynch discard requests, so it's not necessarily
+   * true that everything has been written out before this point.
+   */
+  sync_disks ();
 
   return 0;
 }

@@ -1,5 +1,5 @@
 (* libguestfs
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -365,7 +365,7 @@ type action = {
   protocol_limit_warning : bool;  (** warn about protocol size limits *)
   fish_alias : string list;       (** alias(es) for this cmd in guestfish *)
   fish_output : fish_output_t option; (** how to display output in guestfish *)
-  visibility: visibility;         (** The visbility of function *)
+  visibility: visibility;         (** The visibility of function *)
   deprecated_by : deprecated_by;  (** function is deprecated *)
   optional : string option;       (** function is part of an optional group *)
   progress : bool;                (** function can generate progress messages *)
@@ -413,6 +413,7 @@ val defaults : action
 type field =
   | FChar			(** C 'char' (really, a 7 bit byte). *)
   | FString			(** nul-terminated ASCII string, NOT NULL. *)
+  | FDevice                     (** device name, needs reverse transl. *)
   | FBuffer			(** opaque buffer of bytes, (char *, int) pair*)
   | FUInt32
   | FInt32

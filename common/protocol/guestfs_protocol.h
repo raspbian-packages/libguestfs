@@ -957,6 +957,12 @@ struct guestfs_btrfs_scrub_cancel_args {
 };
 typedef struct guestfs_btrfs_scrub_cancel_args guestfs_btrfs_scrub_cancel_args;
 
+struct guestfs_btrfs_scrub_full_args {
+	char *path;
+	bool_t readonly;
+};
+typedef struct guestfs_btrfs_scrub_full_args guestfs_btrfs_scrub_full_args;
+
 struct guestfs_btrfs_scrub_resume_args {
 	char *path;
 };
@@ -1159,6 +1165,14 @@ struct guestfs_command_lines_ret {
 };
 typedef struct guestfs_command_lines_ret guestfs_command_lines_ret;
 
+struct guestfs_command_out_args {
+	struct {
+		u_int arguments_len;
+		guestfs_str *arguments_val;
+	} arguments;
+};
+typedef struct guestfs_command_out_args guestfs_command_out_args;
+
 struct guestfs_compress_device_out_args {
 	char *ctype;
 	char *device;
@@ -1359,6 +1373,7 @@ struct guestfs_e2fsck_args {
 	char *device;
 	bool_t correct;
 	bool_t forceall;
+	bool_t forceno;
 };
 typedef struct guestfs_e2fsck_args guestfs_e2fsck_args;
 
@@ -3926,6 +3941,11 @@ struct guestfs_sh_lines_ret {
 };
 typedef struct guestfs_sh_lines_ret guestfs_sh_lines_ret;
 
+struct guestfs_sh_out_args {
+	char *command;
+};
+typedef struct guestfs_sh_out_args guestfs_sh_out_args;
+
 struct guestfs_sleep_args {
 	int secs;
 };
@@ -4596,6 +4616,7 @@ enum guestfs_procedure {
 	GUESTFS_PROC_BTRFS_RESCUE_CHUNK_RECOVER = 444,
 	GUESTFS_PROC_BTRFS_RESCUE_SUPER_RECOVER = 445,
 	GUESTFS_PROC_BTRFS_SCRUB_CANCEL = 436,
+	GUESTFS_PROC_BTRFS_SCRUB_FULL = 518,
 	GUESTFS_PROC_BTRFS_SCRUB_RESUME = 437,
 	GUESTFS_PROC_BTRFS_SCRUB_START = 435,
 	GUESTFS_PROC_BTRFS_SCRUB_STATUS = 449,
@@ -4621,6 +4642,7 @@ enum guestfs_procedure {
 	GUESTFS_PROC_CLEVIS_LUKS_UNLOCK = 512,
 	GUESTFS_PROC_COMMAND = 50,
 	GUESTFS_PROC_COMMAND_LINES = 51,
+	GUESTFS_PROC_COMMAND_OUT = 516,
 	GUESTFS_PROC_COMPRESS_DEVICE_OUT = 292,
 	GUESTFS_PROC_COMPRESS_OUT = 291,
 	GUESTFS_PROC_COPY_ATTRIBUTES = 415,
@@ -4955,6 +4977,7 @@ enum guestfs_procedure {
 	GUESTFS_PROC_SFDISK_L = 100,
 	GUESTFS_PROC_SH = 111,
 	GUESTFS_PROC_SH_LINES = 112,
+	GUESTFS_PROC_SH_OUT = 517,
 	GUESTFS_PROC_SLEEP = 109,
 	GUESTFS_PROC_STATNS = 421,
 	GUESTFS_PROC_STATVFS = 54,
@@ -5032,7 +5055,7 @@ enum guestfs_procedure {
 	GUESTFS_PROC_ZGREPI = 160,
 };
 typedef enum guestfs_procedure guestfs_procedure;
-#define GUESTFS_MAX_PROC_NR 515
+#define GUESTFS_MAX_PROC_NR 518
 #define GUESTFS_MESSAGE_MAX 4194304
 #define GUESTFS_PROGRAM 0x2000F5F5
 #define GUESTFS_PROTOCOL_VERSION 4
@@ -5225,6 +5248,7 @@ extern  bool_t xdr_guestfs_btrfs_replace_args (XDR *, guestfs_btrfs_replace_args
 extern  bool_t xdr_guestfs_btrfs_rescue_chunk_recover_args (XDR *, guestfs_btrfs_rescue_chunk_recover_args*);
 extern  bool_t xdr_guestfs_btrfs_rescue_super_recover_args (XDR *, guestfs_btrfs_rescue_super_recover_args*);
 extern  bool_t xdr_guestfs_btrfs_scrub_cancel_args (XDR *, guestfs_btrfs_scrub_cancel_args*);
+extern  bool_t xdr_guestfs_btrfs_scrub_full_args (XDR *, guestfs_btrfs_scrub_full_args*);
 extern  bool_t xdr_guestfs_btrfs_scrub_resume_args (XDR *, guestfs_btrfs_scrub_resume_args*);
 extern  bool_t xdr_guestfs_btrfs_scrub_start_args (XDR *, guestfs_btrfs_scrub_start_args*);
 extern  bool_t xdr_guestfs_btrfs_scrub_status_args (XDR *, guestfs_btrfs_scrub_status_args*);
@@ -5260,6 +5284,7 @@ extern  bool_t xdr_guestfs_command_args (XDR *, guestfs_command_args*);
 extern  bool_t xdr_guestfs_command_ret (XDR *, guestfs_command_ret*);
 extern  bool_t xdr_guestfs_command_lines_args (XDR *, guestfs_command_lines_args*);
 extern  bool_t xdr_guestfs_command_lines_ret (XDR *, guestfs_command_lines_ret*);
+extern  bool_t xdr_guestfs_command_out_args (XDR *, guestfs_command_out_args*);
 extern  bool_t xdr_guestfs_compress_device_out_args (XDR *, guestfs_compress_device_out_args*);
 extern  bool_t xdr_guestfs_compress_out_args (XDR *, guestfs_compress_out_args*);
 extern  bool_t xdr_guestfs_copy_attributes_args (XDR *, guestfs_copy_attributes_args*);
@@ -5712,6 +5737,7 @@ extern  bool_t xdr_guestfs_sh_args (XDR *, guestfs_sh_args*);
 extern  bool_t xdr_guestfs_sh_ret (XDR *, guestfs_sh_ret*);
 extern  bool_t xdr_guestfs_sh_lines_args (XDR *, guestfs_sh_lines_args*);
 extern  bool_t xdr_guestfs_sh_lines_ret (XDR *, guestfs_sh_lines_ret*);
+extern  bool_t xdr_guestfs_sh_out_args (XDR *, guestfs_sh_out_args*);
 extern  bool_t xdr_guestfs_sleep_args (XDR *, guestfs_sleep_args*);
 extern  bool_t xdr_guestfs_statns_args (XDR *, guestfs_statns_args*);
 extern  bool_t xdr_guestfs_statns_ret (XDR *, guestfs_statns_ret*);
@@ -5951,6 +5977,7 @@ extern bool_t xdr_guestfs_btrfs_replace_args ();
 extern bool_t xdr_guestfs_btrfs_rescue_chunk_recover_args ();
 extern bool_t xdr_guestfs_btrfs_rescue_super_recover_args ();
 extern bool_t xdr_guestfs_btrfs_scrub_cancel_args ();
+extern bool_t xdr_guestfs_btrfs_scrub_full_args ();
 extern bool_t xdr_guestfs_btrfs_scrub_resume_args ();
 extern bool_t xdr_guestfs_btrfs_scrub_start_args ();
 extern bool_t xdr_guestfs_btrfs_scrub_status_args ();
@@ -5986,6 +6013,7 @@ extern bool_t xdr_guestfs_command_args ();
 extern bool_t xdr_guestfs_command_ret ();
 extern bool_t xdr_guestfs_command_lines_args ();
 extern bool_t xdr_guestfs_command_lines_ret ();
+extern bool_t xdr_guestfs_command_out_args ();
 extern bool_t xdr_guestfs_compress_device_out_args ();
 extern bool_t xdr_guestfs_compress_out_args ();
 extern bool_t xdr_guestfs_copy_attributes_args ();
@@ -6438,6 +6466,7 @@ extern bool_t xdr_guestfs_sh_args ();
 extern bool_t xdr_guestfs_sh_ret ();
 extern bool_t xdr_guestfs_sh_lines_args ();
 extern bool_t xdr_guestfs_sh_lines_ret ();
+extern bool_t xdr_guestfs_sh_out_args ();
 extern bool_t xdr_guestfs_sleep_args ();
 extern bool_t xdr_guestfs_statns_args ();
 extern bool_t xdr_guestfs_statns_ret ();

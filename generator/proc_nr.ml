@@ -1,5 +1,5 @@
 (* libguestfs
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -518,6 +518,9 @@ let proc_nr = [
 513, "inspect_get_build_id";
 514, "findfs_partuuid";
 515, "findfs_partlabel";
+516, "command_out";
+517, "sh_out";
+518, "btrfs_scrub_full";
 ]
 
 (* End of list.  If adding a new entry, add it at the end of the list

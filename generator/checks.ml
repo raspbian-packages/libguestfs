@@ -1,5 +1,5 @@
 (* libguestfs
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -166,7 +166,6 @@ let () =
         | StringList (FileIn, _)
         | StringList (FileOut, _)
         | StringList (Mountable, _)
-        | StringList (Pathname, _)
         | StringList (Dev_or_Path, _)
         | StringList (Mountable_or_Path, _)
         | StringList (Key, _)

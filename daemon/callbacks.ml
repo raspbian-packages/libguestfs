@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -76,6 +76,7 @@ let init_callbacks () =
   Callback.register "Cryptsetup.luks_open" Cryptsetup.luks_open;
   Callback.register "Cryptsetup.luks_open_ro" Cryptsetup.luks_open_ro;
   Callback.register "Lvm.lvs" Lvm.lvs;
+  Callback.register "Lvm_full.lvs_full" Lvm_full.lvs_full;
   Callback.register "Md.md_detail" Md.md_detail;
   Callback.register "Mount.mount" Mount.mount;
   Callback.register "Mount.mount_options" Mount.mount_options;
@@ -97,7 +98,9 @@ let init_callbacks () =
   Callback.register "Sfdisk.part_set_gpt_type" Sfdisk.part_set_gpt_type;
   Callback.register "Devsparts.part_to_dev" Devsparts.part_to_dev;
   Callback.register "Devsparts.part_to_partnum" Devsparts.part_to_partnum;
+  Callback.register "Lvm_full.pvs_full" Lvm_full.pvs_full;
   Callback.register "Link.readlink" Link.readlink;
   Callback.register "Realpath.realpath" Realpath.realpath;
   Callback.register "Statvfs.statvfs" Statvfs.statvfs;
   Callback.register "Blkid.vfs_type" Blkid.vfs_type;
+  Callback.register "Lvm_full.vgs_full" Lvm_full.vgs_full;

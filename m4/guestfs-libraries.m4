@@ -1,5 +1,5 @@
 # libguestfs
-# Copyright (C) 2009-2023 Red Hat Inc.
+# Copyright (C) 2009-2025 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -251,24 +251,11 @@ PKG_CHECK_MODULES([PCRE2], [libpcre2-8], [], [
 dnl Check for zstd (required since OCaml 5.1)
 PKG_CHECK_MODULES([LIBZSTD], [libzstd])
 
-dnl Check for Augeas >= 1.2.0 (required).
-PKG_CHECK_MODULES([AUGEAS],[augeas >= 1.2.0])
-
 dnl Check for aug_source function, added in Augeas 1.8.0.
 old_LIBS="$LIBS"
 LIBS="$AUGEAS_LIBS"
 AC_CHECK_FUNCS([aug_source])
 LIBS="$old_LIBS"
-
-dnl libmagic (required)
-AC_CHECK_LIB([magic],[magic_file],[
-    AC_CHECK_HEADER([magic.h],[
-        AC_SUBST([MAGIC_LIBS], ["-lmagic"])
-    ], [])
-],[])
-AS_IF([test -z "$MAGIC_LIBS"],
-    [AC_MSG_ERROR([libmagic (part of the "file" command) is required.
-                   Please install the file devel package])])
 
 dnl libvirt (highly recommended)
 AC_ARG_WITH([libvirt],[
@@ -301,8 +288,8 @@ LIBS="$LIBS $LIBXML2_LIBS"
 AC_CHECK_FUNCS([xmlBufferDetach])
 LIBS="$old_LIBS"
 
-dnl Check for Jansson JSON library (required).
-PKG_CHECK_MODULES([JANSSON], [jansson >= 2.7])
+dnl Check for JSON-C library (required).
+PKG_CHECK_MODULES([JSON_C], [json-c >= 0.14])
 
 dnl Check for C++ (optional, we just use this to test the header works).
 AC_PROG_CXX

@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -199,6 +199,7 @@ gboolean guestfs_session_btrfs_replace (GuestfsSession *session, const gchar *sr
 gboolean guestfs_session_btrfs_rescue_chunk_recover (GuestfsSession *session, const gchar *device, GError **err);
 gboolean guestfs_session_btrfs_rescue_super_recover (GuestfsSession *session, const gchar *device, GError **err);
 gboolean guestfs_session_btrfs_scrub_cancel (GuestfsSession *session, const gchar *path, GError **err);
+gboolean guestfs_session_btrfs_scrub_full (GuestfsSession *session, const gchar *path, GuestfsBTRFSScrubFull *optargs, GError **err);
 gboolean guestfs_session_btrfs_scrub_resume (GuestfsSession *session, const gchar *path, GError **err);
 gboolean guestfs_session_btrfs_scrub_start (GuestfsSession *session, const gchar *path, GError **err);
 GuestfsBTRFSScrub *guestfs_session_btrfs_scrub_status (GuestfsSession *session, const gchar *path, GError **err);
@@ -228,6 +229,7 @@ gint32 guestfs_session_clear_backend_setting (GuestfsSession *session, const gch
 gboolean guestfs_session_clevis_luks_unlock (GuestfsSession *session, const gchar *device, const gchar *mapname, GError **err);
 gchar *guestfs_session_command (GuestfsSession *session, gchar *const *arguments, GError **err);
 gchar **guestfs_session_command_lines (GuestfsSession *session, gchar *const *arguments, GError **err);
+gboolean guestfs_session_command_out (GuestfsSession *session, gchar *const *arguments, const gchar *output, GCancellable *cancellable, GError **err);
 gboolean guestfs_session_compress_device_out (GuestfsSession *session, const gchar *ctype, const gchar *device, const gchar *zdevice, GuestfsCompressDeviceOut *optargs, GCancellable *cancellable, GError **err);
 gboolean guestfs_session_compress_out (GuestfsSession *session, const gchar *ctype, const gchar *file, const gchar *zfile, GuestfsCompressOut *optargs, GCancellable *cancellable, GError **err);
 gboolean guestfs_session_config (GuestfsSession *session, const gchar *hvparam, const gchar *hvvalue, GError **err);
@@ -668,6 +670,7 @@ gchar *guestfs_session_sfdisk_kernel_geometry (GuestfsSession *session, const gc
 gchar *guestfs_session_sfdisk_l (GuestfsSession *session, const gchar *device, GError **err);
 gchar *guestfs_session_sh (GuestfsSession *session, const gchar *command, GError **err);
 gchar **guestfs_session_sh_lines (GuestfsSession *session, const gchar *command, GError **err);
+gboolean guestfs_session_sh_out (GuestfsSession *session, const gchar *command, const gchar *output, GError **err);
 gboolean guestfs_session_shutdown (GuestfsSession *session, GError **err);
 gboolean guestfs_session_sleep (GuestfsSession *session, gint32 secs, GError **err);
 GuestfsStat *guestfs_session_stat (GuestfsSession *session, const gchar *path, GError **err);

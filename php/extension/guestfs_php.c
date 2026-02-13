@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -512,6 +512,12 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_btrfs_scrub_cancel, 0, 0, 2)
   ZEND_ARG_INFO(0, path)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO_EX(arginfo_btrfs_scrub_full, 0, 0, 2)
+  ZEND_ARG_INFO(0, g)
+  ZEND_ARG_INFO(0, path)
+  ZEND_ARG_INFO(0, readonly)
+ZEND_END_ARG_INFO()
+
 ZEND_BEGIN_ARG_INFO_EX(arginfo_btrfs_scrub_resume, 0, 0, 2)
   ZEND_ARG_INFO(0, g)
   ZEND_ARG_INFO(0, path)
@@ -670,6 +676,12 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO_EX(arginfo_command_lines, 0, 0, 2)
   ZEND_ARG_INFO(0, g)
   ZEND_ARG_INFO(0, arguments)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_command_out, 0, 0, 3)
+  ZEND_ARG_INFO(0, g)
+  ZEND_ARG_INFO(0, arguments)
+  ZEND_ARG_INFO(0, output)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(arginfo_compress_device_out, 0, 0, 4)
@@ -924,6 +936,7 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_e2fsck, 0, 0, 2)
   ZEND_ARG_INFO(0, device)
   ZEND_ARG_INFO(0, correct)
   ZEND_ARG_INFO(0, forceall)
+  ZEND_ARG_INFO(0, forceno)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(arginfo_e2fsck_f, 0, 0, 2)
@@ -3216,6 +3229,12 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_sh_lines, 0, 0, 2)
   ZEND_ARG_INFO(0, command)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO_EX(arginfo_sh_out, 0, 0, 3)
+  ZEND_ARG_INFO(0, g)
+  ZEND_ARG_INFO(0, command)
+  ZEND_ARG_INFO(0, output)
+ZEND_END_ARG_INFO()
+
 ZEND_BEGIN_ARG_INFO_EX(arginfo_shutdown, 0, 0, 1)
   ZEND_ARG_INFO(0, g)
 ZEND_END_ARG_INFO()
@@ -3851,6 +3870,7 @@ static zend_function_entry guestfs_php_functions[] = {
   PHP_FE (guestfs_btrfs_rescue_chunk_recover, arginfo_btrfs_rescue_chunk_recover)
   PHP_FE (guestfs_btrfs_rescue_super_recover, arginfo_btrfs_rescue_super_recover)
   PHP_FE (guestfs_btrfs_scrub_cancel, arginfo_btrfs_scrub_cancel)
+  PHP_FE (guestfs_btrfs_scrub_full, arginfo_btrfs_scrub_full)
   PHP_FE (guestfs_btrfs_scrub_resume, arginfo_btrfs_scrub_resume)
   PHP_FE (guestfs_btrfs_scrub_start, arginfo_btrfs_scrub_start)
   PHP_FE (guestfs_btrfs_scrub_status, arginfo_btrfs_scrub_status)
@@ -3880,6 +3900,7 @@ static zend_function_entry guestfs_php_functions[] = {
   PHP_FE (guestfs_clevis_luks_unlock, arginfo_clevis_luks_unlock)
   PHP_FE (guestfs_command, arginfo_command)
   PHP_FE (guestfs_command_lines, arginfo_command_lines)
+  PHP_FE (guestfs_command_out, arginfo_command_out)
   PHP_FE (guestfs_compress_device_out, arginfo_compress_device_out)
   PHP_FE (guestfs_compress_out, arginfo_compress_out)
   PHP_FE (guestfs_config, arginfo_config)
@@ -4320,6 +4341,7 @@ static zend_function_entry guestfs_php_functions[] = {
   PHP_FE (guestfs_sfdisk_l, arginfo_sfdisk_l)
   PHP_FE (guestfs_sh, arginfo_sh)
   PHP_FE (guestfs_sh_lines, arginfo_sh_lines)
+  PHP_FE (guestfs_sh_out, arginfo_sh_out)
   PHP_FE (guestfs_shutdown, arginfo_shutdown)
   PHP_FE (guestfs_sleep, arginfo_sleep)
   PHP_FE (guestfs_stat, arginfo_stat)
@@ -7274,6 +7296,47 @@ PHP_FUNCTION (guestfs_btrfs_scrub_cancel)
   RETURN_TRUE;
 }
 
+PHP_FUNCTION (guestfs_btrfs_scrub_full)
+{
+  zval *z_g;
+  guestfs_h *g;
+  char *path;
+  guestfs_string_length path_size;
+  struct guestfs_btrfs_scrub_full_argv optargs_s = { .bitmask = 0 };
+  struct guestfs_btrfs_scrub_full_argv *optargs = &optargs_s;
+  zend_bool optargs_t_readonly = -1;
+
+  if (zend_parse_parameters (ZEND_NUM_ARGS() TSRMLS_CC, "rs|b",
+        &z_g, &path, &path_size, &optargs_t_readonly) == FAILURE) {
+    RETURN_FALSE;
+  }
+
+  GUESTFS_ZEND_FETCH_RESOURCE (g, guestfs_h *, z_g,
+                               PHP_GUESTFS_HANDLE_RES_NAME, res_guestfs_h);
+  if (g == NULL) {
+    RETURN_FALSE;
+  }
+
+  if (strlen (path) != path_size) {
+    fprintf (stderr, "libguestfs: btrfs_scrub_full: parameter 'path' contains embedded ASCII NUL.\n");
+    RETURN_FALSE;
+  }
+
+  if (optargs_t_readonly != (zend_bool)-1) {
+    optargs_s.readonly = optargs_t_readonly;
+    optargs_s.bitmask |= GUESTFS_BTRFS_SCRUB_FULL_READONLY_BITMASK;
+  }
+
+  int r;
+  r = guestfs_btrfs_scrub_full_argv (g, path, optargs);
+
+  if (r == -1) {
+    RETURN_FALSE;
+  }
+
+  RETURN_TRUE;
+}
+
 PHP_FUNCTION (guestfs_btrfs_scrub_resume)
 {
   zval *z_g;
@@ -8357,6 +8420,45 @@ PHP_FUNCTION (guestfs_command_lines)
     free (r[c]);
   }
   free (r);
+}
+
+PHP_FUNCTION (guestfs_command_out)
+{
+  zval *z_g;
+  guestfs_h *g;
+  zval *z_arguments;
+  char **arguments;
+  char *output;
+  guestfs_string_length output_size;
+
+  if (zend_parse_parameters (ZEND_NUM_ARGS() TSRMLS_CC, "ras",
+        &z_g, &z_arguments, &output, &output_size) == FAILURE) {
+    RETURN_FALSE;
+  }
+
+  GUESTFS_ZEND_FETCH_RESOURCE (g, guestfs_h *, z_g,
+                               PHP_GUESTFS_HANDLE_RES_NAME, res_guestfs_h);
+  if (g == NULL) {
+    RETURN_FALSE;
+  }
+
+  arguments = get_stringlist (z_arguments);
+
+  if (strlen (output) != output_size) {
+    fprintf (stderr, "libguestfs: command_out: parameter 'output' contains embedded ASCII NUL.\n");
+    RETURN_FALSE;
+  }
+
+  int r;
+  r = guestfs_command_out (g, arguments, output);
+
+  guestfs_efree_stringlist (arguments);
+
+  if (r == -1) {
+    RETURN_FALSE;
+  }
+
+  RETURN_TRUE;
 }
 
 PHP_FUNCTION (guestfs_compress_device_out)
@@ -9951,9 +10053,10 @@ PHP_FUNCTION (guestfs_e2fsck)
   struct guestfs_e2fsck_argv *optargs = &optargs_s;
   zend_bool optargs_t_correct = -1;
   zend_bool optargs_t_forceall = -1;
+  zend_bool optargs_t_forceno = -1;
 
-  if (zend_parse_parameters (ZEND_NUM_ARGS() TSRMLS_CC, "rs|bb",
-        &z_g, &device, &device_size, &optargs_t_correct, &optargs_t_forceall) == FAILURE) {
+  if (zend_parse_parameters (ZEND_NUM_ARGS() TSRMLS_CC, "rs|bbb",
+        &z_g, &device, &device_size, &optargs_t_correct, &optargs_t_forceall, &optargs_t_forceno) == FAILURE) {
     RETURN_FALSE;
   }
 
@@ -9975,6 +10078,10 @@ PHP_FUNCTION (guestfs_e2fsck)
   if (optargs_t_forceall != (zend_bool)-1) {
     optargs_s.forceall = optargs_t_forceall;
     optargs_s.bitmask |= GUESTFS_E2FSCK_FORCEALL_BITMASK;
+  }
+  if (optargs_t_forceno != (zend_bool)-1) {
+    optargs_s.forceno = optargs_t_forceno;
+    optargs_s.bitmask |= GUESTFS_E2FSCK_FORCENO_BITMASK;
   }
 
   int r;
@@ -25243,6 +25350,46 @@ PHP_FUNCTION (guestfs_sh_lines)
     free (r[c]);
   }
   free (r);
+}
+
+PHP_FUNCTION (guestfs_sh_out)
+{
+  zval *z_g;
+  guestfs_h *g;
+  char *command;
+  guestfs_string_length command_size;
+  char *output;
+  guestfs_string_length output_size;
+
+  if (zend_parse_parameters (ZEND_NUM_ARGS() TSRMLS_CC, "rss",
+        &z_g, &command, &command_size, &output, &output_size) == FAILURE) {
+    RETURN_FALSE;
+  }
+
+  GUESTFS_ZEND_FETCH_RESOURCE (g, guestfs_h *, z_g,
+                               PHP_GUESTFS_HANDLE_RES_NAME, res_guestfs_h);
+  if (g == NULL) {
+    RETURN_FALSE;
+  }
+
+  if (strlen (command) != command_size) {
+    fprintf (stderr, "libguestfs: sh_out: parameter 'command' contains embedded ASCII NUL.\n");
+    RETURN_FALSE;
+  }
+
+  if (strlen (output) != output_size) {
+    fprintf (stderr, "libguestfs: sh_out: parameter 'output' contains embedded ASCII NUL.\n");
+    RETURN_FALSE;
+  }
+
+  int r;
+  r = guestfs_sh_out (g, command, output);
+
+  if (r == -1) {
+    RETURN_FALSE;
+  }
+
+  RETURN_TRUE;
 }
 
 PHP_FUNCTION (guestfs_shutdown)

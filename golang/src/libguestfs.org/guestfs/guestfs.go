@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -2842,6 +2842,37 @@ func (g *Guestfs) Btrfs_scrub_cancel (path string) error {
     return nil
 }
 
+/* Struct carrying optional arguments for Btrfs_scrub_full */
+type OptargsBtrfs_scrub_full struct {
+    /* Readonly field is ignored unless Readonly_is_set == true */
+    Readonly_is_set bool
+    Readonly bool
+}
+
+/* btrfs_scrub_full : run a full scrub on a btrfs filesystem */
+func (g *Guestfs) Btrfs_scrub_full (path string, optargs *OptargsBtrfs_scrub_full) error {
+    if g.g == nil {
+        return closed_handle_error ("btrfs_scrub_full")
+    }
+
+    c_path := C.CString (path)
+    defer C.free (unsafe.Pointer (c_path))
+    c_optargs := C.struct_guestfs_btrfs_scrub_full_argv{}
+    if optargs != nil {
+        if optargs.Readonly_is_set {
+            c_optargs.bitmask |= C.GUESTFS_BTRFS_SCRUB_FULL_READONLY_BITMASK
+            if optargs.Readonly { c_optargs.readonly = 1 } else { c_optargs.readonly = 0}
+        }
+    }
+
+    r := C.guestfs_btrfs_scrub_full_argv (g.g, c_path, &c_optargs)
+
+    if r == -1 {
+        return get_error_from_handle (g, "btrfs_scrub_full")
+    }
+    return nil
+}
+
 /* btrfs_scrub_resume : resume a previously canceled or interrupted scrub */
 func (g *Guestfs) Btrfs_scrub_resume (path string) error {
     if g.g == nil {
@@ -3405,6 +3436,26 @@ func (g *Guestfs) Command_lines (arguments []string) ([]string, error) {
     }
     defer free_string_list (r)
     return return_string_list (r), nil
+}
+
+/* command_out : run a command from the guest filesystem */
+func (g *Guestfs) Command_out (arguments []string, output string) error {
+    if g.g == nil {
+        return closed_handle_error ("command_out")
+    }
+
+    c_arguments := arg_string_list (arguments)
+    defer free_string_list (c_arguments)
+
+    c_output := C.CString (output)
+    defer C.free (unsafe.Pointer (c_output))
+
+    r := C.guestfs_command_out (g.g, c_arguments, c_output)
+
+    if r == -1 {
+        return get_error_from_handle (g, "command_out")
+    }
+    return nil
 }
 
 /* Struct carrying optional arguments for Compress_device_out */
@@ -4436,6 +4487,9 @@ type OptargsE2fsck struct {
     /* Forceall field is ignored unless Forceall_is_set == true */
     Forceall_is_set bool
     Forceall bool
+    /* Forceno field is ignored unless Forceno_is_set == true */
+    Forceno_is_set bool
+    Forceno bool
 }
 
 /* e2fsck : check an ext2/ext3 filesystem */
@@ -4455,6 +4509,10 @@ func (g *Guestfs) E2fsck (device string, optargs *OptargsE2fsck) error {
         if optargs.Forceall_is_set {
             c_optargs.bitmask |= C.GUESTFS_E2FSCK_FORCEALL_BITMASK
             if optargs.Forceall { c_optargs.forceall = 1 } else { c_optargs.forceall = 0}
+        }
+        if optargs.Forceno_is_set {
+            c_optargs.bitmask |= C.GUESTFS_E2FSCK_FORCENO_BITMASK
+            if optargs.Forceno { c_optargs.forceno = 1 } else { c_optargs.forceno = 0}
         }
     }
 
@@ -12982,6 +13040,26 @@ func (g *Guestfs) Sh_lines (command string) ([]string, error) {
     }
     defer free_string_list (r)
     return return_string_list (r), nil
+}
+
+/* sh_out : run a command via the shell */
+func (g *Guestfs) Sh_out (command string, output string) error {
+    if g.g == nil {
+        return closed_handle_error ("sh_out")
+    }
+
+    c_command := C.CString (command)
+    defer C.free (unsafe.Pointer (c_command))
+
+    c_output := C.CString (output)
+    defer C.free (unsafe.Pointer (c_output))
+
+    r := C.guestfs_sh_out (g.g, c_command, c_output)
+
+    if r == -1 {
+        return get_error_from_handle (g, "sh_out")
+    }
+    return nil
 }
 
 /* shutdown : shutdown the hypervisor */

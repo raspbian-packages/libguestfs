@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -685,6 +685,35 @@ run_command (const char *cmd, size_t argc, char *argv[])
   printf ("%s\n", r);
   free (r);
  out:
+  guestfs_int_free_string_list (arguments);
+ out_arguments:
+ out_noargs:
+  return ret;
+}
+
+int
+run_command_out (const char *cmd, size_t argc, char *argv[])
+{
+  int ret = RUN_ERROR;
+  int r;
+  char **arguments;
+  char *output;
+  size_t i = 0;
+
+  if (argc != 2) {
+    ret = RUN_WRONG_ARGS;
+    goto out_noargs;
+  }
+  arguments = parse_string_list (argv[i++]);
+  if (arguments == NULL) goto out_arguments;
+  output = file_out (argv[i++]);
+  if (output == NULL) goto out_output;
+  r = guestfs_command_out (g, arguments, output);
+  if (r == -1) goto out;
+  ret = 0;
+ out:
+  free (output);
+ out_output:
   guestfs_int_free_string_list (arguments);
  out_arguments:
  out_noargs:

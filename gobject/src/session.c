@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -3372,6 +3372,7 @@ guestfs_session_btrfs_filesystem_sync (GuestfsSession *session, const gchar *fs,
  * See also guestfs_session_feature_available().
  *
  * Returns: true on success, false on error
+ * Deprecated: In new code, use guestfs_session_btrfs_scrub_full() instead
  * Since: 1.17.43
  */
 gboolean
@@ -3929,6 +3930,60 @@ guestfs_session_btrfs_scrub_cancel (GuestfsSession *session, const gchar *path, 
   }
 
   int ret = guestfs_btrfs_scrub_cancel (g, path);
+  if (ret == -1) {
+    g_set_error_literal (err, GUESTFS_ERROR, 0, guestfs_last_error (g));
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+/**
+ * guestfs_session_btrfs_scrub_full:
+ * @session: (transfer none): A GuestfsSession object
+ * @path: (transfer none) (type filename):
+ * @optargs: (transfer none) (allow-none): a GuestfsBTRFSScrubFull containing optional arguments
+ * @err: A GError object to receive any generated errors
+ *
+ * run a full scrub on a btrfs filesystem
+ *
+ * Run a full scrub on a btrfs filesystem and wait for it to finish. If the
+ * filesystem has errors this will return an error.
+ * 
+ * This function depends on the feature "btrfs".
+ * See also guestfs_session_feature_available().
+ *
+ * Returns: true on success, false on error
+ * Since: 1.55.12
+ */
+gboolean
+guestfs_session_btrfs_scrub_full (GuestfsSession *session, const gchar *path, GuestfsBTRFSScrubFull *optargs, GError **err)
+{
+  guestfs_h *g = session->priv->g;
+  if (g == NULL) {
+    g_set_error (err, GUESTFS_ERROR, 0,
+                "attempt to call %s after the session has been closed",
+                "btrfs_scrub_full");
+    return FALSE;
+  }
+
+  struct guestfs_btrfs_scrub_full_argv argv;
+  struct guestfs_btrfs_scrub_full_argv *argvp = NULL;
+
+  if (optargs) {
+    argv.bitmask = 0;
+
+    GValue readonly_v = {0, };
+    g_value_init (&readonly_v, GUESTFS_TYPE_TRISTATE);
+    g_object_get_property (G_OBJECT (optargs), "readonly", &readonly_v);
+    GuestfsTristate readonly = g_value_get_enum (&readonly_v);
+    if (readonly != GUESTFS_TRISTATE_NONE) {
+      argv.bitmask |= GUESTFS_BTRFS_SCRUB_FULL_READONLY_BITMASK;
+      argv.readonly = readonly;
+    }
+    argvp = &argv;
+  }
+  int ret = guestfs_btrfs_scrub_full_argv (g, path, argvp);
   if (ret == -1) {
     g_set_error_literal (err, GUESTFS_ERROR, 0, guestfs_last_error (g));
     return FALSE;
@@ -4721,9 +4776,9 @@ guestfs_session_cap_set_file (GuestfsSession *session, const gchar *path, const 
  * precise details of how they were created. In Windows itself this would
  * not be a problem.
  * 
- * Bug or feature? You decide: <ulink
- * url='https://www.tuxera.com/community/ntfs-3g-faq/#posixfilenames1'>
- * http://www.tuxera.com/community/ntfs-3g-faq/#posixfilenames1 </ulink>
+ * Bug or feature? You decide. See the relevant entry in the ntfs-3g FAQ:
+ * <ulink url='https://github.com/tuxera/ntfs-3g/wiki/NTFS-3G-FAQ'>
+ * http://github.com/tuxera/ntfs-3g/wiki/NTFS-3G-FAQ </ulink>
  * 
  * guestfs_session_case_sensitive_path() attempts to resolve the true case
  * of each element in the path. It will return a resolved path if either
@@ -5110,7 +5165,7 @@ guestfs_session_clear_backend_setting (GuestfsSession *session, const gchar *nam
  * 
  * The appliance will connect to the Tang servers noted in the tree of
  * Clevis pins that is bound to a keyslot of the LUKS header. The Clevis
- * pin tree may comprise @sss (redudancy) pins as internal nodes
+ * pin tree may comprise @sss (redundancy) pins as internal nodes
  * (optionally), and @tang pins as leaves. @tpm2 pins are not supported.
  * The appliance unlocks the encrypted block device by combining responses
  * from the Tang servers with metadata from the LUKS header; there is no
@@ -5249,6 +5304,57 @@ guestfs_session_command_lines (GuestfsSession *session, gchar *const *arguments,
   }
 
   return ret;
+}
+
+/**
+ * guestfs_session_command_out:
+ * @session: (transfer none): A GuestfsSession object
+ * @arguments: (transfer none) (array zero-terminated=1) (element-type utf8): an array of strings
+ * @output: (transfer none) (type filename):
+ * @cancellable: A GCancellable object
+ * @err: A GError object to receive any generated errors
+ *
+ * run a command from the guest filesystem
+ *
+ * This is the same as guestfs_session_command(), but streams the output
+ * back, handling the case where the output from the command is larger than
+ * the protocol limit.
+ * 
+ * See also: guestfs_session_sh_out()
+ * 
+ * Returns: true on success, false on error
+ * Since: 1.55.6
+ */
+gboolean
+guestfs_session_command_out (GuestfsSession *session, gchar *const *arguments, const gchar *output, GCancellable *cancellable, GError **err)
+{
+  /* Check we haven't already been cancelled */
+  if (g_cancellable_set_error_if_cancelled (cancellable, err))
+    return FALSE;
+
+  guestfs_h *g = session->priv->g;
+  if (g == NULL) {
+    g_set_error (err, GUESTFS_ERROR, 0,
+                "attempt to call %s after the session has been closed",
+                "command_out");
+    return FALSE;
+  }
+
+  gulong id = 0;
+  if (cancellable) {
+    id = g_cancellable_connect (cancellable,
+                               G_CALLBACK (cancelled_handler),
+                               g, NULL);
+  }
+
+  int ret = guestfs_command_out (g, arguments, output);
+  g_cancellable_disconnect (cancellable, id);
+  if (ret == -1) {
+    g_set_error_literal (err, GUESTFS_ERROR, 0, guestfs_last_error (g));
+    return FALSE;
+  }
+
+  return TRUE;
 }
 
 /**
@@ -7285,14 +7391,21 @@ guestfs_session_du (GuestfsSession *session, const gchar *path, GError **err)
  * fixed without human intervention.
  * 
  * This option may not be specified at the same time as the @forceall
- * option.
+ * or @forceno options.
  * 
  * @forceall
  * Assume an answer of ‘yes’ to all questions; allows e2fsck to be used
  * non-interactively.
  * 
- * This option may not be specified at the same time as the @correct
- * option.
+ * This option may not be specified at the same time as the @correct or
+ * @forceno options.
+ * 
+ * @forceno
+ * Open the filesystem readonly and assume an answer of ‘no’ to all
+ * questions; allows e2fsck to be used non-interactively.
+ * 
+ * This option may not be specified at the same time as the @correct or
+ * @forceall options.
  * 
  * Returns: true on success, false on error
  * Since: 1.15.17
@@ -7329,6 +7442,14 @@ guestfs_session_e2fsck (GuestfsSession *session, const gchar *device, GuestfsE2f
     if (forceall != GUESTFS_TRISTATE_NONE) {
       argv.bitmask |= GUESTFS_E2FSCK_FORCEALL_BITMASK;
       argv.forceall = forceall;
+    }
+    GValue forceno_v = {0, };
+    g_value_init (&forceno_v, GUESTFS_TYPE_TRISTATE);
+    g_object_get_property (G_OBJECT (optargs), "forceno", &forceno_v);
+    GuestfsTristate forceno = g_value_get_enum (&forceno_v);
+    if (forceno != GUESTFS_TRISTATE_NONE) {
+      argv.bitmask |= GUESTFS_E2FSCK_FORCENO_BITMASK;
+      argv.forceno = forceno;
     }
     argvp = &argv;
   }
@@ -26519,6 +26640,44 @@ guestfs_session_sh_lines (GuestfsSession *session, const gchar *command, GError 
   }
 
   return ret;
+}
+
+/**
+ * guestfs_session_sh_out:
+ * @session: (transfer none): A GuestfsSession object
+ * @command: (transfer none) (type utf8):
+ * @output: (transfer none) (type filename):
+ * @err: A GError object to receive any generated errors
+ *
+ * run a command via the shell
+ *
+ * This is the same as guestfs_session_sh(), but streams the output back,
+ * handling the case where the output from the command is larger than the
+ * protocol limit.
+ * 
+ * See also: guestfs_session_command_out()
+ * 
+ * Returns: true on success, false on error
+ * Since: 1.55.6
+ */
+gboolean
+guestfs_session_sh_out (GuestfsSession *session, const gchar *command, const gchar *output, GError **err)
+{
+  guestfs_h *g = session->priv->g;
+  if (g == NULL) {
+    g_set_error (err, GUESTFS_ERROR, 0,
+                "attempt to call %s after the session has been closed",
+                "sh_out");
+    return FALSE;
+  }
+
+  int ret = guestfs_sh_out (g, command, output);
+  if (ret == -1) {
+    g_set_error_literal (err, GUESTFS_ERROR, 0, guestfs_last_error (g));
+    return FALSE;
+  }
+
+  return TRUE;
 }
 
 /**

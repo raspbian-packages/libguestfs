@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -556,6 +556,51 @@ command_stub (XDR *xdr_in)
   struct guestfs_command_ret ret;
   ret.output = r;
   reply ((xdrproc_t) &xdr_guestfs_command_ret, (char *) &ret);
+}
+
+#define CLEANUP_XDR_FREE_COMMAND_OUT_ARGS \
+    __attribute__((cleanup(cleanup_xdr_free_command_out_args)))
+
+static void
+cleanup_xdr_free_command_out_args (struct guestfs_command_out_args *argsp)
+{
+  xdr_free ((xdrproc_t) xdr_guestfs_command_out_args, (char *) argsp);
+}
+
+
+void
+command_out_stub (XDR *xdr_in)
+{
+  int r;
+  CLEANUP_XDR_FREE_COMMAND_OUT_ARGS struct guestfs_command_out_args args;
+  memset (&args, 0, sizeof args);
+  char **arguments;
+
+  if (optargs_bitmask != 0) {
+    reply_with_error ("header optargs_bitmask field must be passed as 0 for calls that don't take optional arguments");
+    return;
+  }
+
+  if (!xdr_guestfs_command_out_args (xdr_in, &args)) {
+    reply_with_error ("daemon failed to decode procedure arguments");
+    return;
+  }
+  /* Ugly, but safe and avoids copying the strings. */
+  arguments = realloc (args.arguments.arguments_val,
+                sizeof (char *) * (args.arguments.arguments_len+1));
+  if (arguments == NULL) {
+    reply_with_perror ("realloc");
+    return;
+  }
+  arguments[args.arguments.arguments_len] = NULL;
+  args.arguments.arguments_val = arguments;
+
+  r = do_command_out (arguments);
+  if (r == -1)
+    /* do_command_out has already called reply_with_error */
+    return;
+
+  /* do_command_out has already sent a reply */
 }
 
 #define CLEANUP_XDR_FREE_COPY_DEVICE_TO_FILE_ARGS \
@@ -2199,6 +2244,13 @@ pvs_full_stub (XDR *xdr_in)
     return;
 
   struct guestfs_pvs_full_ret ret;
+  for (size_t i = 0; i < r->guestfs_int_lvm_pv_list_len; ++i) {
+    char *field = r->guestfs_int_lvm_pv_list_val[i].pv_name;
+    char *rr = reverse_device_name_translation (field);
+    if (!rr) abort ();
+    free (field);
+    r->guestfs_int_lvm_pv_list_val[i].pv_name = rr;
+  }
   ret.physvols = *r;
   reply ((xdrproc_t) xdr_guestfs_pvs_full_ret, (char *) &ret);
   xdr_free ((xdrproc_t) xdr_guestfs_pvs_full_ret, (char *) &ret);

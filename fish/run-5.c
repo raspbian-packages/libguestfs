@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -357,6 +357,64 @@ run_btrfs_scrub_cancel (const char *cmd, size_t argc, char *argv[])
   path = win_prefix (argv[i++]); /* process "win:" prefix */
   if (path == NULL) goto out_path;
   r = guestfs_btrfs_scrub_cancel (g, path);
+  if (r == -1) goto out;
+  ret = 0;
+ out:
+  free (path);
+ out_path:
+ out_noargs:
+  return ret;
+}
+
+int
+run_btrfs_scrub_full (const char *cmd, size_t argc, char *argv[])
+{
+  int ret = RUN_ERROR;
+  int r;
+  char *path;
+  struct guestfs_btrfs_scrub_full_argv optargs_s = { .bitmask = 0 };
+  struct guestfs_btrfs_scrub_full_argv *optargs = &optargs_s;
+  size_t i = 0;
+
+  if (argc < 1 || argc > 2) {
+    ret = RUN_WRONG_ARGS;
+    goto out_noargs;
+  }
+  path = win_prefix (argv[i++]); /* process "win:" prefix */
+  if (path == NULL) goto out_path;
+
+  for (; i < argc; ++i) {
+    uint64_t this_mask;
+    const char *this_arg;
+
+    if (STRPREFIX (argv[i], "readonly:")) {
+      switch (guestfs_int_is_true (&argv[i][9])) {
+        case -1:
+          fprintf (stderr,
+                   _("%s: '%s': invalid boolean value, use 'true' or 'false'\n"),
+                   getprogname (), &argv[i][9]);
+          goto out;
+        case 0:  optargs_s.readonly = 0; break;
+        default: optargs_s.readonly = 1;
+      }
+      this_mask = GUESTFS_BTRFS_SCRUB_FULL_READONLY_BITMASK;
+      this_arg = "readonly";
+    }
+    else {
+      fprintf (stderr, _("%s: unknown optional argument \"%s\"\n"),
+               cmd, argv[i]);
+      goto out;
+    }
+
+    if (optargs_s.bitmask & this_mask) {
+      fprintf (stderr, _("%s: optional argument \"%s\" given more than once\n"),
+               cmd, this_arg);
+      goto out;
+    }
+    optargs_s.bitmask |= this_mask;
+  }
+
+  r = guestfs_btrfs_scrub_full_argv (g, path, optargs);
   if (r == -1) goto out;
   ret = 0;
  out:

@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -2250,6 +2250,37 @@ guestfs_int_lua_btrfs_scrub_cancel (lua_State *L)
 }
 
 static int
+guestfs_int_lua_btrfs_scrub_full (lua_State *L)
+{
+  int r;
+  struct userdata *u = get_handle (L, 1);
+  guestfs_h *g = u->g;
+  const char *path;
+  struct guestfs_btrfs_scrub_full_argv optargs_s = { .bitmask = 0 };
+  struct guestfs_btrfs_scrub_full_argv *optargs = &optargs_s;
+
+  if (g == NULL)
+    return luaL_error (L, "Guestfs.%s: handle is closed",
+                       "btrfs_scrub_full");
+
+  path = luaL_checkstring (L, 2);
+
+  /* Check for optional arguments, encoded in a table. */
+  if (lua_type (L, 3) == LUA_TTABLE) {
+    OPTARG_IF_SET (3, "readonly",
+      optargs_s.bitmask |= GUESTFS_BTRFS_SCRUB_FULL_READONLY_BITMASK;
+      optargs_s.readonly = lua_toboolean (L, -1);
+    );
+  }
+
+  r = guestfs_btrfs_scrub_full_argv (g, path, optargs);
+  if (r == -1)
+    return last_error (L, g);
+
+  return 0;
+}
+
+static int
 guestfs_int_lua_btrfs_scrub_resume (lua_State *L)
 {
   int r;
@@ -2931,6 +2962,30 @@ guestfs_int_lua_command_lines (lua_State *L)
   push_string_list (L, r);
   guestfs_int_free_string_list (r);
   return 1;
+}
+
+static int
+guestfs_int_lua_command_out (lua_State *L)
+{
+  int r;
+  struct userdata *u = get_handle (L, 1);
+  guestfs_h *g = u->g;
+  char **arguments;
+  const char *output;
+
+  if (g == NULL)
+    return luaL_error (L, "Guestfs.%s: handle is closed",
+                       "command_out");
+
+  arguments = get_string_list (L, 2);
+  output = luaL_checkstring (L, 3);
+
+  r = guestfs_command_out (g, arguments, output);
+  free (arguments);
+  if (r == -1)
+    return last_error (L, g);
+
+  return 0;
 }
 
 static int
@@ -4005,6 +4060,10 @@ guestfs_int_lua_e2fsck (lua_State *L)
     OPTARG_IF_SET (3, "forceall",
       optargs_s.bitmask |= GUESTFS_E2FSCK_FORCEALL_BITMASK;
       optargs_s.forceall = lua_toboolean (L, -1);
+    );
+    OPTARG_IF_SET (3, "forceno",
+      optargs_s.bitmask |= GUESTFS_E2FSCK_FORCENO_BITMASK;
+      optargs_s.forceno = lua_toboolean (L, -1);
     );
   }
 
@@ -13966,6 +14025,29 @@ guestfs_int_lua_sh_lines (lua_State *L)
 }
 
 static int
+guestfs_int_lua_sh_out (lua_State *L)
+{
+  int r;
+  struct userdata *u = get_handle (L, 1);
+  guestfs_h *g = u->g;
+  const char *command;
+  const char *output;
+
+  if (g == NULL)
+    return luaL_error (L, "Guestfs.%s: handle is closed",
+                       "sh_out");
+
+  command = luaL_checkstring (L, 2);
+  output = luaL_checkstring (L, 3);
+
+  r = guestfs_sh_out (g, command, output);
+  if (r == -1)
+    return last_error (L, g);
+
+  return 0;
+}
+
+static int
 guestfs_int_lua_shutdown (lua_State *L)
 {
   int r;
@@ -17465,6 +17547,7 @@ static luaL_Reg methods[] = {
   { "btrfs_rescue_chunk_recover", guestfs_int_lua_btrfs_rescue_chunk_recover },
   { "btrfs_rescue_super_recover", guestfs_int_lua_btrfs_rescue_super_recover },
   { "btrfs_scrub_cancel", guestfs_int_lua_btrfs_scrub_cancel },
+  { "btrfs_scrub_full", guestfs_int_lua_btrfs_scrub_full },
   { "btrfs_scrub_resume", guestfs_int_lua_btrfs_scrub_resume },
   { "btrfs_scrub_start", guestfs_int_lua_btrfs_scrub_start },
   { "btrfs_scrub_status", guestfs_int_lua_btrfs_scrub_status },
@@ -17494,6 +17577,7 @@ static luaL_Reg methods[] = {
   { "clevis_luks_unlock", guestfs_int_lua_clevis_luks_unlock },
   { "command", guestfs_int_lua_command },
   { "command_lines", guestfs_int_lua_command_lines },
+  { "command_out", guestfs_int_lua_command_out },
   { "compress_device_out", guestfs_int_lua_compress_device_out },
   { "compress_out", guestfs_int_lua_compress_out },
   { "config", guestfs_int_lua_config },
@@ -17934,6 +18018,7 @@ static luaL_Reg methods[] = {
   { "sfdisk_l", guestfs_int_lua_sfdisk_l },
   { "sh", guestfs_int_lua_sh },
   { "sh_lines", guestfs_int_lua_sh_lines },
+  { "sh_out", guestfs_int_lua_sh_out },
   { "shutdown", guestfs_int_lua_shutdown },
   { "sleep", guestfs_int_lua_sleep },
   { "stat", guestfs_int_lua_stat },
@@ -18081,7 +18166,7 @@ luaopen_guestfs (lua_State *L)
 
   /* Add _COPYRIGHT, etc. fields to the module namespace. */
   lua_pushliteral (L, "_COPYRIGHT");
-  lua_pushliteral (L, "Copyright (C) 2009-2023 Red Hat Inc.");
+  lua_pushliteral (L, "Copyright (C) 2009-2025 Red Hat Inc.");
   lua_settable (L, -3);
 
   lua_pushliteral (L, "_DESCRIPTION");

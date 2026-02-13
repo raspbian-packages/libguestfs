@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -764,6 +764,11 @@ struct guestfs_btrfs_scrub_cancel_args {
   string path<>;
 };
 
+struct guestfs_btrfs_scrub_full_args {
+  string path<>;
+  bool readonly;
+};
+
 struct guestfs_btrfs_scrub_resume_args {
   string path<>;
 };
@@ -917,6 +922,10 @@ struct guestfs_command_lines_args {
 
 struct guestfs_command_lines_ret {
   guestfs_str lines<>;
+};
+
+struct guestfs_command_out_args {
+  guestfs_str arguments<>;
 };
 
 struct guestfs_compress_device_out_args {
@@ -1088,6 +1097,7 @@ struct guestfs_e2fsck_args {
   string device<>;
   bool correct;
   bool forceall;
+  bool forceno;
 };
 
 struct guestfs_e2fsck_f_args {
@@ -3054,6 +3064,10 @@ struct guestfs_sh_lines_ret {
   guestfs_str lines<>;
 };
 
+struct guestfs_sh_out_args {
+  string command<>;
+};
+
 struct guestfs_sleep_args {
   int secs;
 };
@@ -3574,6 +3588,7 @@ enum guestfs_procedure {
   GUESTFS_PROC_BTRFS_RESCUE_CHUNK_RECOVER = 444,
   GUESTFS_PROC_BTRFS_RESCUE_SUPER_RECOVER = 445,
   GUESTFS_PROC_BTRFS_SCRUB_CANCEL = 436,
+  GUESTFS_PROC_BTRFS_SCRUB_FULL = 518,
   GUESTFS_PROC_BTRFS_SCRUB_RESUME = 437,
   GUESTFS_PROC_BTRFS_SCRUB_START = 435,
   GUESTFS_PROC_BTRFS_SCRUB_STATUS = 449,
@@ -3599,6 +3614,7 @@ enum guestfs_procedure {
   GUESTFS_PROC_CLEVIS_LUKS_UNLOCK = 512,
   GUESTFS_PROC_COMMAND = 50,
   GUESTFS_PROC_COMMAND_LINES = 51,
+  GUESTFS_PROC_COMMAND_OUT = 516,
   GUESTFS_PROC_COMPRESS_DEVICE_OUT = 292,
   GUESTFS_PROC_COMPRESS_OUT = 291,
   GUESTFS_PROC_COPY_ATTRIBUTES = 415,
@@ -3933,6 +3949,7 @@ enum guestfs_procedure {
   GUESTFS_PROC_SFDISK_L = 100,
   GUESTFS_PROC_SH = 111,
   GUESTFS_PROC_SH_LINES = 112,
+  GUESTFS_PROC_SH_OUT = 517,
   GUESTFS_PROC_SLEEP = 109,
   GUESTFS_PROC_STATNS = 421,
   GUESTFS_PROC_STATVFS = 54,
@@ -4010,7 +4027,7 @@ enum guestfs_procedure {
   GUESTFS_PROC_ZGREPI = 160
 };
 
-const GUESTFS_MAX_PROC_NR = 515;
+const GUESTFS_MAX_PROC_NR = 518;
 
 /* The remote procedure call protocol. */
 

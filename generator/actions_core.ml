@@ -1,5 +1,5 @@
 (* libguestfs
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1795,6 +1795,7 @@ See also C<guestfs_lvs_full>, C<guestfs_list_filesystems>." };
   { defaults with
     name = "pvs_full"; added = (0, 0, 4);
     style = RStructList ("physvols", "lvm_pv"), [], [];
+    impl = OCaml "Lvm_full.pvs_full";
     optional = Some "lvm2";
     shortdesc = "list the LVM physical volumes (PVs)";
     longdesc = "\
@@ -1804,6 +1805,7 @@ of the L<pvs(8)> command.  The \"full\" version includes all fields." };
   { defaults with
     name = "vgs_full"; added = (0, 0, 4);
     style = RStructList ("volgroups", "lvm_vg"), [], [];
+    impl = OCaml "Lvm_full.vgs_full";
     optional = Some "lvm2";
     shortdesc = "list the LVM volume groups (VGs)";
     longdesc = "\
@@ -1813,6 +1815,7 @@ of the L<vgs(8)> command.  The \"full\" version includes all fields." };
   { defaults with
     name = "lvs_full"; added = (0, 0, 4);
     style = RStructList ("logvols", "lvm_lv"), [], [];
+    impl = OCaml "Lvm_full.lvs_full";
     optional = Some "lvm2";
     shortdesc = "list the LVM logical volumes (LVs)";
     longdesc = "\
@@ -2379,6 +2382,19 @@ This is the same as C<guestfs_command>, but splits the
 result into a list of lines.
 
 See also: C<guestfs_sh_lines>" };
+
+  { defaults with
+    name = "command_out"; added = (1, 55, 6);
+    style = RErr, [StringList (PlainString, "arguments"); String (FileOut, "output")], [];
+    progress = true; cancellable = true;
+    test_excuse = "there is a separate test in the tests directory";
+    shortdesc = "run a command from the guest filesystem";
+    longdesc = "\
+This is the same as C<guestfs_command>, but streams the output
+back, handling the case where the output from the command is
+larger than the protocol limit.
+
+See also: C<guestfs_sh_out>" };
 
   { defaults with
     name = "statvfs"; added = (1, 9, 2);
@@ -3393,8 +3409,8 @@ are activated or deactivated." };
          ["umount"; "/"; "false"; "false"];
          ["lvresize"; "/dev/VG/LV"; "20"];
          ["e2fsck_f"; "/dev/VG/LV"];
-         ["e2fsck"; "/dev/VG/LV"; "true"; "false"];
-         ["e2fsck"; "/dev/VG/LV"; "false"; "true"];
+         ["e2fsck"; "/dev/VG/LV"; "true"; "false"; "false"];
+         ["e2fsck"; "/dev/VG/LV"; "false"; "true"; "false"];
          ["resize2fs"; "/dev/VG/LV"];
          ["mount"; "/dev/VG/LV"; "/"];
          ["cat"; "/new"]], "test content"), [];
@@ -3488,6 +3504,18 @@ This is the same as C<guestfs_sh>, but splits the result
 into a list of lines.
 
 See also: C<guestfs_command_lines>" };
+
+  { defaults with
+    name = "sh_out"; added = (1, 55, 6);
+    style = RErr, [String (PlainString, "command"); String (FileOut, "output")], [];
+    test_excuse = "there is a separate test in the tests directory";
+    shortdesc = "run a command via the shell";
+    longdesc = "\
+This is the same as C<guestfs_sh>, but streams the output
+back, handling the case where the output from the command is
+larger than the protocol limit.
+
+See also: C<guestfs_command_out>" };
 
   { defaults with
     name = "glob_expand"; added = (1, 0, 50);
@@ -4633,8 +4661,8 @@ as F<C:\\windows> may appear as F</WINDOWS> or F</windows>
 they were created.  In Windows itself this would not be
 a problem.
 
-Bug or feature?  You decide:
-L<https://www.tuxera.com/community/ntfs-3g-faq/#posixfilenames1>
+Bug or feature?  You decide. See the relevant entry in the ntfs-3g FAQ:
+L<https://github.com/tuxera/ntfs-3g/wiki/NTFS-3G-FAQ>
 
 C<guestfs_case_sensitive_path> attempts to resolve the true case of
 each element in the path. It will return a resolved path if either the
@@ -6655,7 +6683,7 @@ The usage of this device, for example C<filesystem> or C<raid>.
 
   { defaults with
     name = "e2fsck"; added = (1, 15, 17);
-    style = RErr, [String (Device, "device")], [OBool "correct"; OBool "forceall"];
+    style = RErr, [String (Device, "device")], [OBool "correct"; OBool "forceall"; OBool "forceno"];
     shortdesc = "check an ext2/ext3 filesystem";
     longdesc = "\
 This runs the ext2/ext3 filesystem checker on C<device>.
@@ -6669,14 +6697,24 @@ Automatically repair the file system. This option will cause e2fsck
 to automatically fix any filesystem problems that can be safely
 fixed without human intervention.
 
-This option may not be specified at the same time as the C<forceall> option.
+This option may not be specified at the same time as the C<forceall>
+or C<forceno> options.
 
 =item C<forceall>
 
 Assume an answer of ‘yes’ to all questions; allows e2fsck to be used
 non-interactively.
 
-This option may not be specified at the same time as the C<correct> option.
+This option may not be specified at the same time as the C<correct>
+or C<forceno> options.
+
+=item C<forceno>
+
+Open the filesystem readonly and assume an answer of ‘no’ to all
+questions; allows e2fsck to be used non-interactively.
+
+This option may not be specified at the same time as the C<correct>
+or C<forceall> options.
 
 =back" };
 
@@ -7315,20 +7353,6 @@ If C<devices> is an empty list, this does nothing." };
     longdesc = "\
 Enable or disable the seeding feature of a device that contains
 a btrfs filesystem." };
-
-  { defaults with
-    name = "btrfs_fsck"; added = (1, 17, 43);
-    style = RErr, [String (Device, "device")], [OInt64 "superblock"; OBool "repair"];
-    optional = Some "btrfs";
-    tests = [
-      InitPartition, Always, TestRun (
-        [["mkfs_btrfs"; "/dev/sda1"; ""; ""; "NOARG"; ""; "NOARG"; "NOARG"; ""; ""];
-         ["btrfs_fsck"; "/dev/sda1"; ""; ""]]), []
-    ];
-    shortdesc = "check a btrfs filesystem";
-    longdesc = "\
-Used to check a btrfs filesystem, C<device> is the device file where the
-filesystem is stored." };
 
   { defaults with
     name = "filesystem_available"; added = (1, 19, 5);
@@ -9055,6 +9079,21 @@ Show the status of a running or paused balance on a btrfs filesystem." };
 Show status of running or finished scrub on a btrfs filesystem." };
 
   { defaults with
+    name = "btrfs_scrub_full"; added = (1, 55, 12);
+    style = RErr, [String (Pathname, "path")], [OBool "readonly"];
+    optional = Some "btrfs"; camel_name = "BTRFSScrubFull";
+    tests = [
+      InitPartition, Always, TestRun (
+        [["mkfs_btrfs"; "/dev/sda1"; ""; ""; "NOARG"; ""; "NOARG"; "NOARG"; ""; ""];
+         ["mount"; "/dev/sda1"; "/"];
+         ["btrfs_scrub_full"; "/"; "false"]]), [];
+    ];
+    shortdesc = "run a full scrub on a btrfs filesystem";
+    longdesc = "\
+Run a full scrub on a btrfs filesystem and wait for it to finish.
+If the filesystem has errors this will return an error." };
+
+  { defaults with
     name = "btrfstune_seeding"; added = (1, 29, 29);
     style = RErr, [String (Device, "device"); Bool "seeding"], [];
     optional = Some "btrfs"; camel_name = "BTRFSTuneSeeding";
@@ -9757,7 +9796,7 @@ C<device> is the encrypted block device.
 
 The appliance will connect to the Tang servers noted in the tree of
 Clevis pins that is bound to a keyslot of the LUKS header.  The Clevis
-pin tree may comprise C<sss> (redudancy) pins as internal nodes
+pin tree may comprise C<sss> (redundancy) pins as internal nodes
 (optionally), and C<tang> pins as leaves.  C<tpm2> pins are not
 supported.  The appliance unlocks the encrypted block device by
 combining responses from the Tang servers with metadata from the LUKS

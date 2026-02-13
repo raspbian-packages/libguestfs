@@ -161,7 +161,6 @@ on the class path, as well as the path of your program.  For example:
 L<guestfs(3)>,
 L<guestfs-examples(3)>,
 L<guestfs-erlang(3)>,
-L<guestfs-gobject(3)>,
 L<guestfs-golang(3)>,
 L<guestfs-lua(3)>,
 L<guestfs-ocaml(3)>,
@@ -178,4 +177,4 @@ Richard W.M. Jones (C<rjones at redhat dot com>)
 
 =head1 COPYRIGHT
 
-Copyright (C) 2011-2023 Red Hat Inc.
+Copyright (C) 2011-2025 Red Hat Inc.

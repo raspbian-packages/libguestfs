@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -260,6 +260,23 @@ struct command_entry btrfs_scrub_cancel_cmd_entry = {
           "",
   .synopsis = "btrfs-scrub-cancel path",
   .run = run_btrfs_scrub_cancel
+};
+
+struct command_entry btrfs_scrub_full_cmd_entry = {
+  .name = "btrfs-scrub-full",
+  .help = "NAME\n"
+          "    btrfs-scrub-full - run a full scrub on a btrfs filesystem\n"
+          "\n"
+          "SYNOPSIS\n"
+          "     btrfs-scrub-full path [readonly:true|false]\n"
+          "\n"
+          "DESCRIPTION\n"
+          "    Run a full scrub on a btrfs filesystem and wait for it to finish. If the\n"
+          "    filesystem has errors this will return an error.\n"
+          "\n"
+          "",
+  .synopsis = "btrfs-scrub-full path [readonly:true|false]",
+  .run = run_btrfs_scrub_full
 };
 
 struct command_entry btrfs_subvolume_get_default_cmd_entry = {

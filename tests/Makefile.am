@@ -1,5 +1,5 @@
 # libguestfs
-# Copyright (C) 2009-2023 Red Hat Inc.
+# Copyright (C) 2009-2025 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -415,30 +415,18 @@ endif
 TESTS += gdisk/test-expand-gpt.pl
 EXTRA_DIST += gdisk/test-expand-gpt.pl
 
-# Test uses the Python SimpleHTTPServer module which is
-# conveniently part of Python core.
-
-if HAVE_PYTHON
-
-# Test disabled for now.  Several things conspire to stop this working:
-#
-# (1) Python may throw "Broken pipe" errors:
-# http://bugs.python.org/issue14574
-# Fixed upstream in Python >= 2.7.5.
-#
-# (2) Fedora 18's Curl is broken.  Can be resolved by compiling Curl
-# from git and setting LD_LIBRARY_PATH=~/curl/lib/.libs
-
-# TESTS = test-http.py
-#
-# TESTS_ENVIRONMENT = $(top_builddir)/run --test $(PYTHON)
-
-endif
-
-EXTRA_DIST += http/test-http.py
-
 TESTS += journal/test-journal.pl
 EXTRA_DIST += journal/test-journal.pl
+
+# This binary must be statically linked.  It is used for testing
+# the "guestfs_command_out" function.
+
+large_command_test_large_command_SOURCES = large-command/test-large-command.c
+large_command_test_large_command_LDFLAGS = -all-static
+
+check_PROGRAMS += large-command/test-large-command
+TESTS += large-command/test-large-command.sh
+EXTRA_DIST += large-command/test-large-command.sh
 
 TESTS += \
 	luks/test-luks.sh \

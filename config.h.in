@@ -43,9 +43,6 @@
 /* Define to 1 if you have the <byteswap.h> header file. */
 #undef HAVE_BYTESWAP_H
 
-/* caml_alloc_initialized_string found at compile time. */
-#undef HAVE_CAML_ALLOC_INITIALIZED_STRING
-
 /* Define to 1 if the Linux capabilities library (libcap) is available. */
 #undef HAVE_CAP
 
@@ -144,9 +141,6 @@
 /* libconfig found at compile time. */
 #undef HAVE_LIBCONFIG
 
-/* liblzma found at compile time. */
-#undef HAVE_LIBLZMA
-
 /* Define if you have libreadline. */
 #undef HAVE_LIBREADLINE
 
@@ -188,12 +182,6 @@
 
 /* Lua library found at compile time */
 #undef HAVE_LUA
-
-/* Define to 1 if you have the 'lzma_index_stream_flags' function. */
-#undef HAVE_LZMA_INDEX_STREAM_FLAGS
-
-/* Define to 1 if you have the 'lzma_index_stream_padding' function. */
-#undef HAVE_LZMA_INDEX_STREAM_PADDING
 
 /* Define to 1 if you have the <minix/config.h> header file. */
 #undef HAVE_MINIX_CONFIG_H
@@ -557,10 +545,6 @@
 
 /* Name of xzcat program. */
 #undef XZCAT
-
-/* Define to 1 if 'lex' declares 'yytext' as a 'char *' by default, not a
-   'char[]'. */
-#undef YYTEXT_POINTER
 
 /* Number of bits in a file offset, on hosts where this is settable. */
 #undef _FILE_OFFSET_BITS

@@ -1,5 +1,5 @@
 (* guestfs-inspection
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -85,11 +85,11 @@ let commandr ?(fold_stdout_on_stderr = false) prog args =
   if verbose () then (
     if stdout <> "" then (
       eprintf "command: %s: stdout:\n%s%!" prog stdout;
-      if not (String.is_suffix stdout "\n") then eprintf "\n%!"
+      if not (String.ends_with "\n" stdout) then eprintf "\n%!"
     );
     if stderr <> "" then (
       eprintf "command: %s: stderr:\n%s%!" prog stderr;
-      if not (String.is_suffix stderr "\n") then eprintf "\n%!"
+      if not (String.ends_with "\n" stderr) then eprintf "\n%!"
     )
   );
 
@@ -114,7 +114,7 @@ let command ?fold_stdout_on_stderr prog args =
 let split_device_partition dev =
   (* Skip /dev/ prefix if present. *)
   let dev =
-    if String.is_prefix dev "/dev/" then
+    if String.starts_with "/dev/" dev then
       String.sub dev 5 (String.length dev - 5)
     else dev in
 
@@ -188,11 +188,6 @@ and compare_device_names a b =
     )
   )
 
-(* Bytes.get_uint8 was added in OCaml 4.08, so when we depend on
- * that version, remove this definition.
- *)
-external bytes_get_uint8 : bytes -> int -> int = "%bytes_safe_get"
-
 let has_bogus_mbr device =
   try
     with_openfile device [O_RDONLY; O_CLOEXEC] 0 (fun fd ->
@@ -207,7 +202,7 @@ let has_bogus_mbr device =
                        0x0E  (* FAT16B LBA *)] in
       let sec0 = Bytes.create sec0size in
       let sec0read = read fd sec0 0 sec0size in
-      let sec0at = bytes_get_uint8 sec0 in
+      let sec0at = Bytes.get_uint8 sec0 in
 
       (* sector read completely *)
       sec0read = sec0size &&

@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -217,6 +217,42 @@ run_btrfs_scrub_cancel (ei_x_buff *retbuff, const char *buff, int *idx)
   r = guestfs_btrfs_scrub_cancel (g, path);
   if (r == -1)
     return make_error (retbuff, "btrfs_scrub_cancel");
+
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
+  return 0;
+}
+
+int
+run_btrfs_scrub_full (ei_x_buff *retbuff, const char *buff, int *idx)
+{
+  CLEANUP_FREE char *path;
+  if (decode_string (buff, idx, &path) != 0) return -1;
+
+  struct guestfs_btrfs_scrub_full_argv optargs_s = { .bitmask = 0 };
+  struct guestfs_btrfs_scrub_full_argv *optargs = &optargs_s;
+  int optargsize;
+  if (ei_decode_list_header (buff, idx, &optargsize) != 0) return -1;
+  for (int i = 0; i < optargsize; i++) {
+    int hd;
+    if (ei_decode_tuple_header (buff, idx, &hd) != 0) return -1;
+    char hd_name[MAXATOMLEN];
+    if (ei_decode_atom (buff, idx, hd_name) != 0) return -1;
+
+    if (atom_equals (hd_name, "readonly")) {
+      optargs_s.bitmask |= GUESTFS_BTRFS_SCRUB_FULL_READONLY_BITMASK;
+      if (decode_bool (buff, idx, &optargs_s.readonly) != 0) return -1;;
+    }
+    else
+      return unknown_optarg (retbuff, "btrfs_scrub_full", hd_name);
+  }
+  if (optargsize > 0 && buff[*idx] == ERL_NIL_EXT)
+    (*idx)++;
+
+  int r;
+
+  r = guestfs_btrfs_scrub_full_argv (g, path, optargs);
+  if (r == -1)
+    return make_error (retbuff, "btrfs_scrub_full");
 
   if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
   return 0;

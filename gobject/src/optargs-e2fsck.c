@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,6 +38,7 @@
 struct _GuestfsE2fsckPrivate {
   GuestfsTristate correct;
   GuestfsTristate forceall;
+  GuestfsTristate forceno;
 };
 
 G_DEFINE_TYPE_WITH_CODE (GuestfsE2fsck, guestfs_e2fsck, G_TYPE_OBJECT,
@@ -46,7 +47,8 @@ G_DEFINE_TYPE_WITH_CODE (GuestfsE2fsck, guestfs_e2fsck, G_TYPE_OBJECT,
 enum {
   PROP_GUESTFS_E2FSCK_PROP0,
   PROP_GUESTFS_E2FSCK_CORRECT,
-  PROP_GUESTFS_E2FSCK_FORCEALL
+  PROP_GUESTFS_E2FSCK_FORCEALL,
+  PROP_GUESTFS_E2FSCK_FORCENO
 };
 
 static void
@@ -62,6 +64,10 @@ guestfs_e2fsck_set_property(GObject *object, guint property_id, const GValue *va
 
     case PROP_GUESTFS_E2FSCK_FORCEALL:
       priv->forceall = g_value_get_enum (value);
+      break;
+
+    case PROP_GUESTFS_E2FSCK_FORCENO:
+      priv->forceno = g_value_get_enum (value);
       break;
 
     default:
@@ -83,6 +89,10 @@ guestfs_e2fsck_get_property(GObject *object, guint property_id, GValue *value, G
 
     case PROP_GUESTFS_E2FSCK_FORCEALL:
       g_value_set_enum (value, priv->forceall);
+      break;
+
+    case PROP_GUESTFS_E2FSCK_FORCENO:
+      g_value_set_enum (value, priv->forceno);
       break;
 
     default:
@@ -132,6 +142,23 @@ guestfs_e2fsck_class_init (GuestfsE2fsckClass *klass)
     g_param_spec_enum (
       "forceall",
       "forceall",
+      "A boolean.",
+      GUESTFS_TYPE_TRISTATE, GUESTFS_TRISTATE_NONE,
+      G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS
+    )
+  );
+
+  /**
+   * GuestfsE2fsck:forceno:
+   *
+   * A boolean.
+   */
+  g_object_class_install_property (
+    object_class,
+    PROP_GUESTFS_E2FSCK_FORCENO,
+    g_param_spec_enum (
+      "forceno",
+      "forceno",
       "A boolean.",
       GUESTFS_TYPE_TRISTATE, GUESTFS_TRISTATE_NONE,
       G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS

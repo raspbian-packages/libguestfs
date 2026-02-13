@@ -18,9 +18,10 @@
 
 # Test the handling of MD devices specified in /etc/fstab
 
+source ./functions.sh
 set -e
+set -x
 
-$TEST_FUNCTIONS
 skip_if_skipped
 skip_unless_phony_guest fedora-md1.img
 skip_unless_phony_guest fedora-md2.img
@@ -40,7 +41,7 @@ if [ "$(cat inspect-fstab-md.output)" != "true" ]; then
     exit 1
 fi
 
-# Test inspection when /boot is specfied as /dev/md/bootdev
+# Test inspection when /boot is specified as /dev/md/bootdev
 cat <<'EOF' > inspect-fstab-md.fstab
 /dev/VG/Root / ext2 default 0 0
 /dev/md/bootdev /boot ext2 default 0 0

@@ -197,7 +197,7 @@ Debian hosts using UsrMerge are now supported (Pino Toscano).
 
 Header files and C structs can now have internal documentation using the special C</** ... */> comments.
 
-C<@VAR@> subtitutions in C<./run> are now fully quoted.  This is necessary so that (eg) C<./configure PYTHON=/some/path> works robustly if C</some/path> contains characters that need to be quoted (Hilko Bengen).
+C<@VAR@> substitutions in C<./run> are now fully quoted.  This is necessary so that (eg) C<./configure PYTHON=/some/path> works robustly if C</some/path> contains characters that need to be quoted (Hilko Bengen).
 
 gperf E<ge> 3.1 is now supported.
 
@@ -301,7 +301,7 @@ Importing VMs from VMware is failing with error "Inspection field 'i_arch' was '
 
 =item L<https://bugzilla.redhat.com/1401320>
 
-RFE: Increate virt-sysprep coverage a bit
+RFE: Increase virt-sysprep coverage a bit
 
 =item L<https://bugzilla.redhat.com/1400205>
 
@@ -435,5 +435,5 @@ Richard W.M. Jones
 
 =head1 COPYRIGHT
 
-Copyright (C) 2009-2023 Red Hat Inc.
+Copyright (C) 2009-2025 Red Hat Inc.
 

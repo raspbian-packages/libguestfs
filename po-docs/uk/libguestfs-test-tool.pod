@@ -123,7 +123,7 @@ libguestfs-test-tool — програма для тестування, яка п
 
 Ви можете перетворити AVC у пропоновані правила SELinux за допомогою програм, подібних до L<audit2allow(1)>.   Щоб дізнатися більше, ознайомтеся із документом «Security Enhanced Linux User Guide».
 
-Щоб знову увімкнути SELinux і sVirt, зробіть так:
+To re-enable SELinux and sVirt, do:
 
  setenforce Enforcing
 
@@ -149,5 +149,5 @@ Richard W.M. Jones (C<rjones at redhat dot com>)
 
 =head1 АВТОРСЬКІ ПРАВА
 
-Copyright (C) 2009-2023 Red Hat Inc.
+Copyright (C) 2009-2025 Red Hat Inc.
 

@@ -544,7 +544,7 @@ Add it to the list of C<TESTS> in the F<Makefile.am>, just like a normal test.
 
 =item *
 
-Modify the test so it checks if the C<SLOW=1> environment variable is set, and if I<not> set it skips (ie. returns with exit code 77).  If using C<$TEST_FUNCTIONS>, you can call the function C<slow_test> for this.
+Modify the test so it checks if the C<SLOW=1> environment variable is set, and if I<not> set it skips (ie. returns with exit code 77).  If using F<tests/functions.sh>, you can call the function C<slow_test> for this.
 
 =item *
 
@@ -573,7 +573,7 @@ Add it to the list of C<TESTS> in the F<Makefile.am>, just like a normal test.
 
 =item *
 
-Modify the test so it checks if euid == 0, and if I<not> set it skips (ie. returns with exit code 77).  If using C<$TEST_FUNCTIONS>, you can call the function C<root_test> for this.
+Modify the test so it checks if euid == 0, and if I<not> set it skips (ie. returns with exit code 77).  If using F<tests/functions.sh>, you can call the function C<root_test> for this.
 
 =item *
 
@@ -669,7 +669,7 @@ You do not need to subscribe to the mailing list if you don’t want to. There m
 
 We support i18n (gettext anyhow) in the library.
 
-However many messages come from the daemon, and we don’t translate those at the moment.  One reason is that the appliance generally has all locale files removed from it, because they take up a lot of space.  So we'd have to readd some of those, as well as copying our PO files into the appliance.
+However many messages come from the daemon, and we don’t translate those at the moment.  One reason is that the appliance generally has all locale files removed from it, because they take up a lot of space.  So we'd have to re-add some of those, as well as copying our PO files into the appliance.
 
 Debugging messages are never translated, since they are intended for the programmers.
 
@@ -842,5 +842,5 @@ Richard W.M. Jones (C<rjones at redhat dot com>)
 
 =head1 COPYRIGHT
 
-Copyright (C) 2009-2023 Red Hat Inc.
+Copyright (C) 2009-2025 Red Hat Inc.
 

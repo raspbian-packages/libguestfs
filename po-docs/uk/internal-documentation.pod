@@ -1484,7 +1484,7 @@ C<*size_rtn> повертає розмір повернутого повідом
 =head4 Функція C<lib/qemu.c:parse_json>
 
  static void
- parse_json (guestfs_h *g, const char *json, json_t **treep)
+ parse_json (guestfs_h *g, const char *json, json_object **treep)
 
 Обробити виведення у форматі json від QMP, але не завершувати роботу із помилкою, якщо обробка неможлива.
 

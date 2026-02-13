@@ -1,5 +1,5 @@
 (* libguestfs
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -607,7 +607,7 @@ and generate_perl_struct_list_code typ cols name style =
   pr "        hv = newHV ();\n";
   List.iter (
     function
-    | name, FString ->
+    | name, (FString|FDevice) ->
         pr "        (void) hv_store (hv, \"%s\", %d, newSVpv (r->val[i].%s, 0), 0);\n"
           name (String.length name) name
     | name, FUUID ->
@@ -645,7 +645,7 @@ and generate_perl_struct_code typ cols name style =
       pr "      PUSHs (sv_2mortal (newSVpv (\"%s\", 0)));\n" name;
 
       match col with
-      | name, FString ->
+      | name, (FString|FDevice) ->
           pr "      PUSHs (sv_2mortal (newSVpv (r->%s, 0)));\n"
             name
       | name, FBuffer ->

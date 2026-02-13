@@ -14,6 +14,7 @@ Build-Depends: dpkg-dev (>= 1.22.5), debhelper-compat (= 13),
   liblzma-dev, libmagic-dev, libncurses-dev, libpcre2-dev, libxml2-dev,
   libconfig-dev, libc-dev-bin,
   libdbus-1-dev,
+  libjson-c-dev,
   librpm-dev,
   systemtap-sdt-dev,
   libcap-dev, libacl1-dev, libyajl-dev,
@@ -32,11 +33,12 @@ Build-Depends: dpkg-dev (>= 1.22.5), debhelper-compat (= 13),
   qemu-system-sparc [sparc sparc64],
   qemu-system-x86 [i386 amd64],
   qemu-system-misc [loong64],
+  qemu-utils,
   xorriso,
   sqlite3,
   pkgconf,
   dh-lua,
-  dh-ocaml, ocaml-nox, ocaml-findlib, libgettext-ocaml-dev,
+  dh-ocaml, ocaml, ocaml-findlib, libgettext-ocaml-dev,
   python3-all-dev,
   dh-python,
   default-jdk,
@@ -46,8 +48,9 @@ Build-Depends: dpkg-dev (>= 1.22.5), debhelper-compat (= 13),
   libtest-pod-coverage-perl, libextutils-command-perl, libintl-perl, libtest-pod-perl,
   libstring-shellquote-perl,
   libsys-virt-perl, libwin-hivex-perl,
-  libfuse-dev, fuse3 (>= 3.10.1-3) | fuse (<< 3),
-  libglib2.0-dev, gobject-introspection, libgirepository1.0-dev,
+  libfuse3-dev, fuse3 (>= 3.10.1-3),
+  libglib2.0-dev,
+  gobject-introspection (>= 1.80), gir1.2-gio-2.0-dev, gir1.2-glib-2.0-dev,
   libgtk-3-dev,
   db-util,
   netpbm, icoutils,
@@ -63,6 +66,7 @@ Build-Depends: dpkg-dev (>= 1.22.5), debhelper-compat (= 13),
   bsdextrautils | bsdmainutils,
   btrfs-progs,
   bzip2,
+  clevis-luks,
   cpio,
   cryptsetup-bin,
   curl,
@@ -77,6 +81,7 @@ Build-Depends: dpkg-dev (>= 1.22.5), debhelper-compat (= 13),
   gdisk,
   gfs2-utils,
 # gfs-tools,
+  gostsum,
   grub2-common [amd64 arm64 armel armhf i386 mipsel ppc64el],
   hfsplus,
   iproute2 | iproute,
@@ -85,7 +90,6 @@ Build-Depends: dpkg-dev (>= 1.22.5), debhelper-compat (= 13),
   iputils-tracepath,
   jfsutils,
   kmod | module-init-tools,
-  kpartx,
   ldmtool,
   less,
 # libc-bin,
@@ -104,8 +108,6 @@ Build-Depends: dpkg-dev (>= 1.22.5), debhelper-compat (= 13),
   pciutils,
   procps,
   psmisc,
-  qemu-utils,
-  reiserfsprogs,
   rsync,
   scrub,
   sleuthkit,
@@ -122,7 +124,6 @@ Build-Depends: dpkg-dev (>= 1.22.5), debhelper-compat (= 13),
   xfsprogs,
   xz-utils,
   zerofree,
-  zfs-fuse [i386 amd64 armel armhf powerpc ppc64el sparc],
   zstd,
 #-# appliance end
 Build-Conflicts: rustc
@@ -198,14 +199,12 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
   osinfo-db,
   ${appliance:Depends},
 Recommends: libguestfs-hfsplus,
- libguestfs-reiserfs,
  libguestfs-xfs,
 Suggests: libguestfs-gfs2,
  libguestfs-jfs,
  libguestfs-nilfs,
  libguestfs-rescue,
  libguestfs-rsync,
- libguestfs-zfs,
 Description: guest disk image management system - shared library
  The libguestfs library allows accessing and modifying guest disk
  images. It offers the following features, among many others:
@@ -279,19 +278,6 @@ Description: guest disk image management system - NILFS v2 support
  .
  This package contains appliance fragments for NILFS v2 support.
 
-Package: libguestfs-reiserfs
-Section: libs
-Architecture: linux-any
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-Depends: libguestfs0t64 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
- ${appliance:Depends},
-Description: guest disk image management system - ReiserFS support
- The libguestfs library allows accessing and modifying guest disk
- images.
- .
- This package contains appliance fragments for ReiserFS support.
-
 Package: libguestfs-rescue
 Section: libs
 Architecture: linux-any
@@ -333,19 +319,6 @@ Description: guest disk image management system - XFS support
  images.
  .
  This package contains appliance fragments for XFS support.
-
-Package: libguestfs-zfs
-Section: libs
-Architecture: i386 amd64 powerpc sparc
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-Depends: libguestfs0t64 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
- ${appliance:Depends},
-Description: guest disk image management system - ZFS support
- The libguestfs library allows accessing and modifying guest disk
- images.
- .
- This package contains appliance fragments for ZFS support.
 
 Package: guestfish
 Section: admin
@@ -470,7 +443,7 @@ Description: guest disk image management system - Ruby bindings
  This package contains Ruby bindings to libguestfs.
 
 Package: libguestfs-gobject-1.0-0t64
-Provides: ${t64:Provides}
+Provides: ${t64:Provides}, ${gir:Provides}
 Replaces: libguestfs-gobject-1.0-0
 Breaks: libguestfs-gobject-1.0-0 (<< ${source:Version})
 Section: libs
@@ -489,7 +462,8 @@ Package: libguestfs-gobject-dev
 Section: libdevel
 Architecture: linux-any
 Multi-Arch: same
-Depends: libguestfs-gobject-1.0-0t64 (= ${binary:Version}), gir1.2-guestfs-1.0 (= ${binary:Version}), ${misc:Depends}
+Provides: ${gir:Provides}
+Depends: ${gir:Depends}, ${misc:Depends}
 Conflicts: libguestfs0t64 (<< 1:1.14.9-1~)
 Description: guest disk image management system - GObject development headers
  The libguestfs library allows accessing and modifying guest disk
@@ -501,6 +475,7 @@ Description: guest disk image management system - GObject development headers
 Package: gir1.2-guestfs-1.0
 Section: introspection
 Architecture: linux-any
+Provides: ${gir:Provides}
 Depends: libguestfs-gobject-1.0-0t64 (= ${binary:Version}), ${gir:Depends}, ${misc:Depends}
 Conflicts: libguestfs0t64 (<< 1:1.14.9-1~)
 Description: guest disk image management system - GObject introspection files

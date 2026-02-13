@@ -93,6 +93,9 @@ libguestfs.so.0 libguestfs0t64 #MINVER#
  guestfs_btrfs_rescue_chunk_recover@Base 1:1.29.22
  guestfs_btrfs_rescue_super_recover@Base 1:1.29.22
  guestfs_btrfs_scrub_cancel@Base 1:1.29.22
+ guestfs_btrfs_scrub_full@Base 1:1.56.0
+ guestfs_btrfs_scrub_full_argv@Base 1:1.56.0
+ guestfs_btrfs_scrub_full_va@Base 1:1.56.0
  guestfs_btrfs_scrub_resume@Base 1:1.29.22
  guestfs_btrfs_scrub_start@Base 1:1.29.22
  guestfs_btrfs_scrub_status@Base 1:1.29.26
@@ -126,6 +129,7 @@ libguestfs.so.0 libguestfs0t64 #MINVER#
  guestfs_close@Base 1.10
  guestfs_command@Base 1.10
  guestfs_command_lines@Base 1.10
+ guestfs_command_out@Base 1:1.56.0
  guestfs_compare_application2@Base 1:1.25.16
  guestfs_compare_application2_list@Base 1:1.25.16
  guestfs_compare_application@Base 1:1.25.16
@@ -815,6 +819,7 @@ libguestfs.so.0 libguestfs0t64 #MINVER#
  guestfs_sfdisk_l@Base 1.10
  guestfs_sh@Base 1.10
  guestfs_sh_lines@Base 1.10
+ guestfs_sh_out@Base 1:1.56.0
  guestfs_shutdown@Base 1:1.18
  guestfs_sleep@Base 1.10
  guestfs_stat@Base 1.10

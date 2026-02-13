@@ -544,7 +544,7 @@ ISO із фіксованим вмістом (див. F<images/test.iso>).
 
 =item *
 
-Змініть тест так, щоб у ньому перевірялася умова для змінної середовища C<SLOW=1>, і якщо таке значення змінної I<не> встановлено, тест пропускався (тобто повертав код виходу 77). Якщо використовується C<$TEST_FUNCTIONS>, для цього ви можете викликати функцію C<slow_test>.
+Modify the test so it checks if the C<SLOW=1> environment variable is set, and if I<not> set it skips (ie. returns with exit code 77).  If using F<tests/functions.sh>, you can call the function C<slow_test> for this.
 
 =item *
 
@@ -573,7 +573,7 @@ ISO із фіксованим вмістом (див. F<images/test.iso>).
 
 =item *
 
-Внесіть зміни до тесту так, щоб тест перевіряв, чи euid == 0, і якщо це значення I<не> встановлено, тест пропускається (тобто повертає код виходу 77). Якщо використовується C<$TEST_FUNCTIONS>, ви можете викликати функцію C<root_test> для цього.
+Modify the test so it checks if euid == 0, and if I<not> set it skips (ie. returns with exit code 77).  If using F<tests/functions.sh>, you can call the function C<root_test> for this.
 
 =item *
 
@@ -669,7 +669,7 @@ Submit patches to the mailing list: L<https://lists.libguestfs.org> and CC to L<
 
 У нашій бібліотеці передбачено можливість інтернаціоналізації (засобами gettext).
 
-Втім, багато повідомлень надходять від фонової служби, і у поточній версії ми їх не перекладаємо. Однією з причин цього є те, що, загалом, у базовій системі немає файлів локалей, оскільки вони досить об'ємні. Тому для реалізації можливості перекладу нам довелося б додати ці файли і скопіювати наші файли PO до базової системи.
+However many messages come from the daemon, and we don’t translate those at the moment.  One reason is that the appliance generally has all locale files removed from it, because they take up a lot of space.  So we'd have to re-add some of those, as well as copying our PO files into the appliance.
 
 Діагностичні повідомлення не перекладаються, оскільки їх призначено для програмістів.
 
@@ -842,5 +842,5 @@ Richard W.M. Jones (C<rjones at redhat dot com>)
 
 =head1 АВТОРСЬКІ ПРАВА
 
-Copyright (C) 2009-2023 Red Hat Inc.
+Copyright (C) 2009-2025 Red Hat Inc.
 

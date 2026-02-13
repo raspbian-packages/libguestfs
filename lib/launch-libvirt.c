@@ -1,5 +1,5 @@
 /* libguestfs
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -1175,6 +1175,13 @@ construct_libvirt_xml_cpu (guestfs_h *g,
 
   single_element_format ("vcpu", "%d", g->smp);
 
+#if defined(__i386__) || defined(__x86_64__) || \
+  defined(__arm__) || defined(__aarch64__)
+  start_element ("features") {
+    empty_element ("acpi");
+  } end_element ();
+#endif
+
   start_element ("clock") {
     attribute ("offset", "utc");
 
@@ -1312,13 +1319,6 @@ construct_libvirt_xml_devices (guestfs_h *g,
      */
     if (is_custom_hv (g, params->data))
       single_element ("emulator", g->hv);
-#if defined(__arm__)
-    /* Hopefully temporary hack to make ARM work (otherwise libvirt
-     * chooses to run /usr/bin/qemu-kvm).
-     */
-    else
-      single_element ("emulator", QEMU);
-#endif
 
     /* Add a random number generator (backend for virtio-rng).  This
      * requires Cole Robinson's patch to permit /dev/urandom to be
@@ -2173,12 +2173,18 @@ destroy_domain (guestfs_h *g, virDomainPtr dom, int check_for_errors)
 
   /* Error returned by virDomainDestroyFlags ... */
   err = virGetLastError ();
+  if (err && err->code != 0) {
+    debug (g, "virDomainDestroy: %s [code=%d int1=%d]",
+           err->message, err->code, err->int1);
+  }
 
   /* Retry (indefinitely) if we're just waiting for qemu to shut down.  See:
    * https://www.redhat.com/archives/libvir-list/2016-January/msg00767.html
    */
-  if (err && err->code == VIR_ERR_SYSTEM_ERROR && err->int1 == EBUSY)
+  if (err && err->code == VIR_ERR_SYSTEM_ERROR && err->int1 == EBUSY) {
+    sleep (1);
     goto again;
+  }
 
   /* "Domain not found" is not treated as an error. */
   if (err && err->code == VIR_ERR_NO_DOMAIN)

@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -2400,6 +2400,43 @@ sh_lines_stub (XDR *xdr_in)
   ret.lines.lines_len = guestfs_int_count_strings (r);
   ret.lines.lines_val = r;
   reply ((xdrproc_t) &xdr_guestfs_sh_lines_ret, (char *) &ret);
+}
+
+#define CLEANUP_XDR_FREE_SH_OUT_ARGS \
+    __attribute__((cleanup(cleanup_xdr_free_sh_out_args)))
+
+static void
+cleanup_xdr_free_sh_out_args (struct guestfs_sh_out_args *argsp)
+{
+  xdr_free ((xdrproc_t) xdr_guestfs_sh_out_args, (char *) argsp);
+}
+
+
+void
+sh_out_stub (XDR *xdr_in)
+{
+  int r;
+  CLEANUP_XDR_FREE_SH_OUT_ARGS struct guestfs_sh_out_args args;
+  memset (&args, 0, sizeof args);
+  const char *command;
+
+  if (optargs_bitmask != 0) {
+    reply_with_error ("header optargs_bitmask field must be passed as 0 for calls that don't take optional arguments");
+    return;
+  }
+
+  if (!xdr_guestfs_sh_out_args (xdr_in, &args)) {
+    reply_with_error ("daemon failed to decode procedure arguments");
+    return;
+  }
+  command = args.command;
+
+  r = do_sh_out (command);
+  if (r == -1)
+    /* do_sh_out has already called reply_with_error */
+    return;
+
+  /* do_sh_out has already sent a reply */
 }
 
 #define CLEANUP_XDR_FREE_SWAPON_FILE_ARGS \

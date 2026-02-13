@@ -1,5 +1,5 @@
 /* guestmount - mount guests using libguestfs and FUSE
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-
-#define FUSE_USE_VERSION 26
 
 #include <config.h>
 
@@ -105,7 +103,7 @@ usage (int status)
   else {
     printf (_("%s: FUSE module for libguestfs\n"
               "%s lets you mount a virtual machine filesystem\n"
-              "Copyright (C) 2009-2023 Red Hat Inc.\n"
+              "Copyright (C) 2009-2025 Red Hat Inc.\n"
               "Usage:\n"
               "  %s [--options] mountpoint\n"
               "Options:\n"

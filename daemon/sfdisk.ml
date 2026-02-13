@@ -1,5 +1,5 @@
 (* guestfs-inspection
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ let part_get_mbr_id device partnum =
   udev_settle ();
 
   (* It's printed in hex, possibly with a leading space. *)
-  sscanf out " %x" identity
+  sscanf out " %x" Fun.id
 
 let part_get_gpt_type device partnum =
   if partnum <= 0 then
@@ -142,22 +142,22 @@ let part_get_gpt_attributes device partnum =
       let out = String.sub out 1 (len-1) in
       loop out acc
     )
-    else if String.is_prefix out "RequiredPartition" then (
+    else if String.starts_with "RequiredPartition" out then (
       let acc = 0 :: acc in
       let out = String.sub out 17 (len-17) in
       loop out acc
     )
-    else if String.is_prefix out "NoBlockIOProtocol" then (
+    else if String.starts_with "NoBlockIOProtocol" out then (
       let acc = 1 :: acc in
       let out = String.sub out 17 (len-17) in
       loop out acc
     )
-    else if String.is_prefix out "LegacyBIOSBootable" then (
+    else if String.starts_with "LegacyBIOSBootable" out then (
       let acc = 2 :: acc in
       let out = String.sub out 18 (len-18) in
       loop out acc
     )
-    else if String.is_prefix out "GUID:" then (
+    else if String.starts_with "GUID:" out then (
       let out = String.sub out 5 (len-5) in
       loop out acc
     )

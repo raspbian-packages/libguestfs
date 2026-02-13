@@ -1,5 +1,5 @@
 /* libguestfs
- * Copyright (C) 2012-2023 Red Hat Inc.
+ * Copyright (C) 2012-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -119,7 +119,7 @@ disk_create_raw_block (guestfs_h *g, const char *filename)
   if (ioctl (fd, BLKGETSIZE64, &size) == 0) {
     range[0] = 0;
     range[1] = size;
-    if (ioctl (fd, BLKDISCARD, range) == 0)
+    if (ioctl (fd, BLKDISCARD, range) == -1)
       debug (g, "disk_create: %s: BLKDISCARD failed on this device: %m",
              filename);
   }
@@ -241,6 +241,14 @@ is_power_of_2 (unsigned v)
   return v && ((v & (v - 1)) == 0);
 }
 
+static void
+read_all (guestfs_h *g, void *retv, const char *buf, size_t len)
+{
+  char **ret = retv;
+
+  *ret = safe_strndup (g, buf, len);
+}
+
 /**
  * Check for valid backing format.  Allow any C<^[[:alnum]]+$>
  * (in C locale), but limit the length to something reasonable.
@@ -256,6 +264,7 @@ disk_create_qcow2 (guestfs_h *g, const char *filename, int64_t size,
 {
   const char *backingformat = NULL;
   CLEANUP_FREE char *backingformat_free = NULL;
+  CLEANUP_FREE char *cmd_stdout = NULL;
   const char *preallocation = NULL;
   const char *compat = NULL;
   int clustersize = -1;
@@ -351,10 +360,16 @@ disk_create_qcow2 (guestfs_h *g, const char *filename, int64_t size,
   if (size >= 0)
     guestfs_int_cmd_add_arg_format (cmd, "%" PRIi64, size);
 
+  guestfs_int_cmd_clear_capture_errors (cmd);
+  guestfs_int_cmd_set_stderr_to_stdout (cmd);
+  guestfs_int_cmd_set_stdout_callback (cmd, read_all, &cmd_stdout,
+                                       CMD_STDOUT_FLAG_WHOLE_BUFFER);
   r = guestfs_int_cmd_run (cmd);
   if (!WIFEXITED (r) || WEXITSTATUS (r) != 0) {
-    guestfs_int_external_command_failed (g, r, "qemu-img", filename);
+    guestfs_int_external_command_failed (g, r, "qemu-img", cmd_stdout);
     return -1;
+  } else {
+    debug (g, "%s", cmd_stdout);
   }
 
   return 0;

@@ -7,7 +7,7 @@ Subject: Fix /sbin/reboot requirements
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/appliance/packagelist.in b/appliance/packagelist.in
-index 854d254..a1bc8ed 100644
+index f8c80af..dee561c 100644
 --- a/appliance/packagelist.in
 +++ b/appliance/packagelist.in
 @@ -89,8 +89,8 @@ dnl isc-dhcp-client has been replaced with dhcpcd-base

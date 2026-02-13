@@ -3,7 +3,7 @@
  *          from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Hiroyuki Katsura <hiroyuki.katsura.0513@gmail.com>
+ * Copyright (C) 2009-2025 Hiroyuki Katsura <hiroyuki.katsura.0513@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -2002,6 +2002,45 @@ impl convert::From<&CExprBtrfsImageOptArgs> for RawBtrfsImageOptArgs {
 
 /* Optional Structs */
 #[derive(Default)]
+pub struct BtrfsScrubFullOptArgs {
+    pub readonly: Option<bool>,
+}
+
+struct CExprBtrfsScrubFullOptArgs {
+    readonly: Option<c_int>,
+}
+
+impl TryFrom<BtrfsScrubFullOptArgs> for CExprBtrfsScrubFullOptArgs {
+    type Error = Error;
+    fn try_from(optargs: BtrfsScrubFullOptArgs) -> Result<Self, Self::Error> {
+        Ok(CExprBtrfsScrubFullOptArgs {
+        readonly: optargs.readonly.map(|b| if b { 1 } else { 0 }),
+         })
+    }
+}
+#[repr(C)]
+struct RawBtrfsScrubFullOptArgs {
+    bitmask: u64,
+    readonly: c_int,
+}
+
+impl convert::From<&CExprBtrfsScrubFullOptArgs> for RawBtrfsScrubFullOptArgs {
+    fn from(optargs: &CExprBtrfsScrubFullOptArgs) -> Self {
+        let mut bitmask = 0;
+        RawBtrfsScrubFullOptArgs {
+        readonly: if let Some(v) = optargs.readonly {
+            bitmask |= 1 << 0;
+            v
+        } else {
+            0
+        },
+              bitmask,
+         }
+    }
+}
+
+/* Optional Structs */
+#[derive(Default)]
 pub struct BtrfsSubvolumeCreateOptArgs<'a> {
     pub qgroupid: Option<&'a str>,
 }
@@ -2772,11 +2811,13 @@ impl convert::From<&CExprDownloadBlocksOptArgs> for RawDownloadBlocksOptArgs {
 pub struct E2fsckOptArgs {
     pub correct: Option<bool>,
     pub forceall: Option<bool>,
+    pub forceno: Option<bool>,
 }
 
 struct CExprE2fsckOptArgs {
     correct: Option<c_int>,
     forceall: Option<c_int>,
+    forceno: Option<c_int>,
 }
 
 impl TryFrom<E2fsckOptArgs> for CExprE2fsckOptArgs {
@@ -2785,6 +2826,7 @@ impl TryFrom<E2fsckOptArgs> for CExprE2fsckOptArgs {
         Ok(CExprE2fsckOptArgs {
         correct: optargs.correct.map(|b| if b { 1 } else { 0 }),
         forceall: optargs.forceall.map(|b| if b { 1 } else { 0 }),
+        forceno: optargs.forceno.map(|b| if b { 1 } else { 0 }),
          })
     }
 }
@@ -2793,6 +2835,7 @@ struct RawE2fsckOptArgs {
     bitmask: u64,
     correct: c_int,
     forceall: c_int,
+    forceno: c_int,
 }
 
 impl convert::From<&CExprE2fsckOptArgs> for RawE2fsckOptArgs {
@@ -2807,6 +2850,12 @@ impl convert::From<&CExprE2fsckOptArgs> for RawE2fsckOptArgs {
         },
         forceall: if let Some(v) = optargs.forceall {
             bitmask |= 1 << 1;
+            v
+        } else {
+            0
+        },
+        forceno: if let Some(v) = optargs.forceno {
+            bitmask |= 1 << 2;
             v
         } else {
             0
@@ -6385,6 +6434,8 @@ extern "C" {
     #[allow(non_snake_case)]
     fn guestfs_btrfs_scrub_cancel(g: *const guestfs_h, path: *const c_char) -> c_int;
     #[allow(non_snake_case)]
+    fn guestfs_btrfs_scrub_full_argv(g: *const guestfs_h, path: *const c_char, optarg: *const RawBtrfsScrubFullOptArgs) -> c_int;
+    #[allow(non_snake_case)]
     fn guestfs_btrfs_scrub_resume(g: *const guestfs_h, path: *const c_char) -> c_int;
     #[allow(non_snake_case)]
     fn guestfs_btrfs_scrub_start(g: *const guestfs_h, path: *const c_char) -> c_int;
@@ -6442,6 +6493,8 @@ extern "C" {
     fn guestfs_command(g: *const guestfs_h, arguments: *const *const c_char) -> *const c_char;
     #[allow(non_snake_case)]
     fn guestfs_command_lines(g: *const guestfs_h, arguments: *const *const c_char) -> *const *const c_char;
+    #[allow(non_snake_case)]
+    fn guestfs_command_out(g: *const guestfs_h, arguments: *const *const c_char, output: *const c_char) -> c_int;
     #[allow(non_snake_case)]
     fn guestfs_compress_device_out_argv(g: *const guestfs_h, ctype: *const c_char, device: *const c_char, zdevice: *const c_char, optarg: *const RawCompressDeviceOutOptArgs) -> c_int;
     #[allow(non_snake_case)]
@@ -7322,6 +7375,8 @@ extern "C" {
     fn guestfs_sh(g: *const guestfs_h, command: *const c_char) -> *const c_char;
     #[allow(non_snake_case)]
     fn guestfs_sh_lines(g: *const guestfs_h, command: *const c_char) -> *const *const c_char;
+    #[allow(non_snake_case)]
+    fn guestfs_sh_out(g: *const guestfs_h, command: *const c_char, output: *const c_char) -> c_int;
     #[allow(non_snake_case)]
     fn guestfs_shutdown(g: *const guestfs_h) -> c_int;
     #[allow(non_snake_case)]
@@ -8532,6 +8587,21 @@ impl<'a> Handle<'a> {
         Ok(())
     }
 
+    /// run a full scrub on a btrfs filesystem
+    #[allow(non_snake_case)]
+    pub fn btrfs_scrub_full(&self, path: &str, optargs: BtrfsScrubFullOptArgs) -> Result<(), Error> {
+        let c_path = ffi::CString::new(path)?;
+        let optargs_cexpr = CExprBtrfsScrubFullOptArgs::try_from(optargs)?;
+        
+        let r = unsafe { guestfs_btrfs_scrub_full_argv(self.g, (&c_path).as_ptr(), &(RawBtrfsScrubFullOptArgs::from(&optargs_cexpr)) as *const RawBtrfsScrubFullOptArgs) };
+        if r == -1 {
+            return Err(self.get_error_from_handle("btrfs_scrub_full"));
+        }
+        drop(c_path);
+        drop(optargs_cexpr);
+        Ok(())
+    }
+
     /// resume a previously canceled or interrupted scrub
     #[allow(non_snake_case)]
     pub fn btrfs_scrub_resume(&self, path: &str) -> Result<(), Error> {
@@ -8968,6 +9038,24 @@ impl<'a> Handle<'a> {
             free_string_list(r);
             s?
         })
+    }
+
+    /// run a command from the guest filesystem
+    #[allow(non_snake_case)]
+    pub fn command_out(&self, arguments: &[&str], output: &str) -> Result<(), Error> {
+        let c_arguments_v = arg_string_list(arguments)?;
+        let mut c_arguments = (&c_arguments_v).into_iter().map(|v| v.as_ptr()).collect::<Vec<_>>();
+        c_arguments.push(ptr::null());
+        let c_output = ffi::CString::new(output)?;
+        
+        let r = unsafe { guestfs_command_out(self.g, (&c_arguments).as_ptr() as *const *const c_char, (&c_output).as_ptr()) };
+        if r == -1 {
+            return Err(self.get_error_from_handle("command_out"));
+        }
+        drop(c_arguments);
+        drop(c_arguments_v);
+        drop(c_output);
+        Ok(())
     }
 
     /// output compressed device
@@ -15438,6 +15526,21 @@ impl<'a> Handle<'a> {
             free_string_list(r);
             s?
         })
+    }
+
+    /// run a command via the shell
+    #[allow(non_snake_case)]
+    pub fn sh_out(&self, command: &str, output: &str) -> Result<(), Error> {
+        let c_command = ffi::CString::new(command)?;
+        let c_output = ffi::CString::new(output)?;
+        
+        let r = unsafe { guestfs_sh_out(self.g, (&c_command).as_ptr(), (&c_output).as_ptr()) };
+        if r == -1 {
+            return Err(self.get_error_from_handle("sh_out"));
+        }
+        drop(c_command);
+        drop(c_output);
+        Ok(())
     }
 
     /// shutdown the hypervisor

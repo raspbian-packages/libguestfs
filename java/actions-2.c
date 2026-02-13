@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -490,6 +490,48 @@ Java_com_redhat_et_libguestfs_GuestFS__1command  (JNIEnv *env, jobject obj, jlon
 
  ret_error:
   return NULL;
+}
+
+
+JNIEXPORT void JNICALL
+Java_com_redhat_et_libguestfs_GuestFS__1command_1out  (JNIEnv *env, jobject obj, jlong jg, jobjectArray jarguments, jstring joutput)
+{
+  guestfs_h *g = (guestfs_h *) (long) jg;
+  int r;
+  size_t arguments_len;
+  CLEANUP_FREE char **arguments = NULL;
+  const char *output;
+  size_t i;
+
+  arguments_len = (*env)->GetArrayLength (env, jarguments);
+  arguments = malloc (sizeof (char *) * (arguments_len+1));
+  if (arguments == NULL) {
+    throw_out_of_memory (env, "malloc");
+    goto ret_error;
+  }
+  for (i = 0; i < arguments_len; ++i) {
+    jobject o = (*env)->GetObjectArrayElement (env, jarguments, i);
+    arguments[i] = (char *) (*env)->GetStringUTFChars (env, o, NULL);
+  }
+  arguments[arguments_len] = NULL;
+  output = (*env)->GetStringUTFChars (env, joutput, NULL);
+
+  r = guestfs_command_out (g, arguments, output);
+
+  for (i = 0; i < arguments_len; ++i) {
+    jobject o = (*env)->GetObjectArrayElement (env, jarguments, i);
+    (*env)->ReleaseStringUTFChars (env, o, arguments[i]);
+  }
+  (*env)->ReleaseStringUTFChars (env, joutput, output);
+
+  if (r == -1) {
+    throw_exception (env, guestfs_last_error (g));
+    goto ret_error;
+  }
+  return;
+
+ ret_error:
+  return;
 }
 
 

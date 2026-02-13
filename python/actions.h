@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -409,6 +409,9 @@ extern PyObject *guestfs_int_py_btrfs_rescue_super_recover (PyObject *self, PyOb
 #ifdef GUESTFS_HAVE_BTRFS_SCRUB_CANCEL
 extern PyObject *guestfs_int_py_btrfs_scrub_cancel (PyObject *self, PyObject *args);
 #endif
+#ifdef GUESTFS_HAVE_BTRFS_SCRUB_FULL
+extern PyObject *guestfs_int_py_btrfs_scrub_full (PyObject *self, PyObject *args);
+#endif
 #ifdef GUESTFS_HAVE_BTRFS_SCRUB_RESUME
 extern PyObject *guestfs_int_py_btrfs_scrub_resume (PyObject *self, PyObject *args);
 #endif
@@ -495,6 +498,9 @@ extern PyObject *guestfs_int_py_command (PyObject *self, PyObject *args);
 #endif
 #ifdef GUESTFS_HAVE_COMMAND_LINES
 extern PyObject *guestfs_int_py_command_lines (PyObject *self, PyObject *args);
+#endif
+#ifdef GUESTFS_HAVE_COMMAND_OUT
+extern PyObject *guestfs_int_py_command_out (PyObject *self, PyObject *args);
 #endif
 #ifdef GUESTFS_HAVE_COMPRESS_DEVICE_OUT
 extern PyObject *guestfs_int_py_compress_device_out (PyObject *self, PyObject *args);
@@ -1815,6 +1821,9 @@ extern PyObject *guestfs_int_py_sh (PyObject *self, PyObject *args);
 #endif
 #ifdef GUESTFS_HAVE_SH_LINES
 extern PyObject *guestfs_int_py_sh_lines (PyObject *self, PyObject *args);
+#endif
+#ifdef GUESTFS_HAVE_SH_OUT
+extern PyObject *guestfs_int_py_sh_out (PyObject *self, PyObject *args);
 #endif
 #ifdef GUESTFS_HAVE_SHUTDOWN
 extern PyObject *guestfs_int_py_shutdown (PyObject *self, PyObject *args);

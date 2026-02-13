@@ -5,7 +5,7 @@ set -ex
 cd debian/tmp/usr/lib/*-*/guestfs/supermin.d
 cp -n packages packages.orig
 
-for p in gfs2 hfsplus jfs nilfs reiserfs rsync xfs zfs; do
+for p in gfs2 hfsplus jfs nilfs rsync xfs; do
     sed -i -e "/$p/d" packages
     grep -F  "$p" < packages.orig > packages-$p || true
 done

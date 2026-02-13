@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -2478,6 +2478,40 @@ guestfs_int_py_sh_lines (PyObject *self, PyObject *args)
   py_r = guestfs_int_py_put_string_list (r);
   guestfs_int_free_string_list (r);
   if (py_r == NULL) goto out;
+
+  PyErr_Clear ();
+ out:
+  return py_r;
+}
+#endif
+
+#ifdef GUESTFS_HAVE_SH_OUT
+PyObject *
+guestfs_int_py_sh_out (PyObject *self, PyObject *args)
+{
+  PyObject *py_g;
+  guestfs_h *g;
+  PyObject *py_r = NULL;
+  int r;
+  const char *command;
+  const char *output;
+
+  if (!PyArg_ParseTuple (args, (char *) "Oss:guestfs_sh_out",
+                         &py_g, &command, &output))
+    goto out;
+  g = get_handle (py_g);
+
+  Py_BEGIN_ALLOW_THREADS
+  r = guestfs_sh_out (g, command, output);
+  Py_END_ALLOW_THREADS
+
+  if (r == -1) {
+    PyErr_SetString (PyExc_RuntimeError, guestfs_last_error (g));
+    goto out;
+  }
+
+  Py_INCREF (Py_None);
+  py_r = Py_None;
 
   PyErr_Clear ();
  out:

@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -2183,6 +2183,32 @@ run_sh_lines (const char *cmd, size_t argc, char *argv[])
   print_strings (r);
   guestfs_int_free_string_list (r);
  out:
+ out_noargs:
+  return ret;
+}
+
+int
+run_sh_out (const char *cmd, size_t argc, char *argv[])
+{
+  int ret = RUN_ERROR;
+  int r;
+  const char *command;
+  char *output;
+  size_t i = 0;
+
+  if (argc != 2) {
+    ret = RUN_WRONG_ARGS;
+    goto out_noargs;
+  }
+  command = argv[i++];
+  output = file_out (argv[i++]);
+  if (output == NULL) goto out_output;
+  r = guestfs_sh_out (g, command, output);
+  if (r == -1) goto out;
+  ret = 0;
+ out:
+  free (output);
+ out_output:
  out_noargs:
   return ret;
 }

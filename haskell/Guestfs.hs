@@ -4,7 +4,7 @@
             and from the code in the generator/ subdirectory.
    ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
   
-   Copyright (C) 2009-2023 Red Hat Inc.
+   Copyright (C) 2009-2025 Red Hat Inc.
   
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -109,6 +109,7 @@ module Guestfs (
   clevis_luks_unlock,
   command,
   command_lines,
+  command_out,
   config,
   copy_in,
   copy_out,
@@ -467,6 +468,7 @@ module Guestfs (
   sfdisk_l,
   sh,
   sh_lines,
+  sh_out,
   shutdown,
   sleep,
   strings,
@@ -1599,6 +1601,18 @@ command_lines h arguments = do
       err <- last_error h
       fail err
     else peekArray0 nullPtr r >>= mapM peekCString
+
+foreign import ccall unsafe "guestfs.h guestfs_command_out" c_command_out
+  :: GuestfsP -> Ptr CString -> CString -> IO CInt
+
+command_out :: GuestfsH -> [String] -> String -> IO ()
+command_out h arguments output = do
+  r <- withMany withCString arguments $ \arguments -> withArray0 nullPtr arguments $ \arguments -> withCString output $ \output -> withForeignPtr h (\p -> c_command_out p arguments output)
+  if (r == -1)
+    then do
+      err <- last_error h
+      fail err
+    else return ()
 
 foreign import ccall unsafe "guestfs.h guestfs_config" c_config
   :: GuestfsP -> CString -> CString -> IO CInt
@@ -5919,6 +5933,18 @@ sh_lines h command = do
       err <- last_error h
       fail err
     else peekArray0 nullPtr r >>= mapM peekCString
+
+foreign import ccall unsafe "guestfs.h guestfs_sh_out" c_sh_out
+  :: GuestfsP -> CString -> CString -> IO CInt
+
+sh_out :: GuestfsH -> String -> String -> IO ()
+sh_out h command output = do
+  r <- withCString command $ \command -> withCString output $ \output -> withForeignPtr h (\p -> c_sh_out p command output)
+  if (r == -1)
+    then do
+      err <- last_error h
+      fail err
+    else return ()
 
 foreign import ccall unsafe "guestfs.h guestfs_shutdown" c_shutdown
   :: GuestfsP -> IO CInt

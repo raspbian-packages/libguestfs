@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -666,7 +666,7 @@ Java_com_redhat_et_libguestfs_GuestFS__1disk_1has_1backing_1file  (JNIEnv *env, 
 
 
 JNIEXPORT void JNICALL
-Java_com_redhat_et_libguestfs_GuestFS__1e2fsck  (JNIEnv *env, jobject obj, jlong jg, jstring jdevice, jlong joptargs_bitmask, jboolean jcorrect, jboolean jforceall)
+Java_com_redhat_et_libguestfs_GuestFS__1e2fsck  (JNIEnv *env, jobject obj, jlong jg, jstring jdevice, jlong joptargs_bitmask, jboolean jcorrect, jboolean jforceall, jboolean jforceno)
 {
   guestfs_h *g = (guestfs_h *) (long) jg;
   int r;
@@ -678,6 +678,7 @@ Java_com_redhat_et_libguestfs_GuestFS__1e2fsck  (JNIEnv *env, jobject obj, jlong
 
   optargs_s.correct = jcorrect;
   optargs_s.forceall = jforceall;
+  optargs_s.forceno = jforceno;
   optargs_s.bitmask = joptargs_bitmask;
 
   r = guestfs_e2fsck_argv (g, device, optargs);

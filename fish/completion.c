@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -115,6 +115,7 @@ static const char *const commands[] = {
   "btrfs-rescue-chunk-recover",
   "btrfs-rescue-super-recover",
   "btrfs-scrub-cancel",
+  "btrfs-scrub-full",
   "btrfs-scrub-resume",
   "btrfs-scrub-start",
   "btrfs-scrub-status",
@@ -146,6 +147,7 @@ static const char *const commands[] = {
   "clevis-luks-unlock",
   "command",
   "command-lines",
+  "command-out",
   "compress-device-out",
   "compress-out",
   "config",
@@ -605,6 +607,7 @@ static const char *const commands[] = {
   "sfdisk-l",
   "sh",
   "sh-lines",
+  "sh-out",
   "shutdown",
   "sleep",
   "sparse",

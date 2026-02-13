@@ -4,7 +4,7 @@
 //          and from the code in the generator/ subdirectory.
 // ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 //
-// Copyright (C) 2009-2023 Red Hat Inc.
+// Copyright (C) 2009-2025 Red Hat Inc.
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -1459,6 +1459,20 @@ namespace Guestfs
     }
 
     [DllImport ("libguestfs.so.0")]
+    static extern int guestfs_btrfs_scrub_full_argv (IntPtr h, [In] string path, void *);
+
+    /// <summary>
+    /// run a full scrub on a btrfs filesystem
+    /// </summary>
+    public void btrfs_scrub_full (string path)
+    {
+      int r;
+      r = guestfs_btrfs_scrub_full_argv (_handle, path, NULL);
+      if (r == -1)
+        throw new Error (guestfs_last_error (_handle));
+    }
+
+    [DllImport ("libguestfs.so.0")]
     static extern int guestfs_btrfs_scrub_resume (IntPtr h, [In] string path);
 
     /// <summary>
@@ -1889,6 +1903,20 @@ namespace Guestfs
       if (r == null)
         throw new Error (guestfs_last_error (_handle));
       return r;
+    }
+
+    [DllImport ("libguestfs.so.0")]
+    static extern int guestfs_command_out (IntPtr h, [In] string[] arguments, [In] string output);
+
+    /// <summary>
+    /// run a command from the guest filesystem
+    /// </summary>
+    public void command_out (string[] arguments, string output)
+    {
+      int r;
+      r = guestfs_command_out (_handle, arguments, output);
+      if (r == -1)
+        throw new Error (guestfs_last_error (_handle));
     }
 
     [DllImport ("libguestfs.so.0")]
@@ -8365,6 +8393,20 @@ namespace Guestfs
       if (r == null)
         throw new Error (guestfs_last_error (_handle));
       return r;
+    }
+
+    [DllImport ("libguestfs.so.0")]
+    static extern int guestfs_sh_out (IntPtr h, [In] string command, [In] string output);
+
+    /// <summary>
+    /// run a command via the shell
+    /// </summary>
+    public void sh_out (string command, string output)
+    {
+      int r;
+      r = guestfs_sh_out (_handle, command, output);
+      if (r == -1)
+        throw new Error (guestfs_last_error (_handle));
     }
 
     [DllImport ("libguestfs.so.0")]

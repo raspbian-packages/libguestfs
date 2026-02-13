@@ -731,12 +731,6 @@ The C# bindings are highly experimental.  Please read the warnings at the top of
 
 L<guestfs-erlang(3)> 参照。
 
-=item B<GObject>
-
-Experimental GObject bindings (with GObject Introspection support) are available.
-
-See L<guestfs-gobject(3)>.
-
 =item B<Go>
 
 See L<guestfs-golang(3)>.
@@ -2254,7 +2248,7 @@ See also L</guestfs_get_sockdir>, L<http://www.freedesktop.org/wiki/Specificatio
 
 Examples written in C: L<guestfs-examples(3)>.
 
-Language bindings: L<guestfs-erlang(3)>, L<guestfs-gobject(3)>, L<guestfs-golang(3)>, L<guestfs-java(3)>, L<guestfs-lua(3)>, L<guestfs-ocaml(3)>, L<guestfs-perl(3)>, L<guestfs-python(3)>, L<guestfs-ruby(3)>.
+Language bindings: L<guestfs-erlang(3)>, L<guestfs-golang(3)>, L<guestfs-java(3)>, L<guestfs-lua(3)>, L<guestfs-ocaml(3)>, L<guestfs-perl(3)>, L<guestfs-python(3)>, L<guestfs-ruby(3)>.
 
 Tools: L<guestfish(1)>, L<guestmount(1)>, L<virt-alignment-scan(1)>, L<virt-builder(1)>, L<virt-builder-repository(1)>, L<virt-cat(1)>, L<virt-copy-in(1)>, L<virt-copy-out(1)>, L<virt-customize(1)>, L<virt-df(1)>, L<virt-diff(1)>, L<virt-edit(1)>, L<virt-filesystems(1)>, L<virt-format(1)>, L<virt-inspector(1)>, L<virt-list-filesystems(1)>, L<virt-list-partitions(1)>, L<virt-log(1)>, L<virt-ls(1)>, L<virt-make-fs(1)>, L<virt-p2v(1)>, L<virt-rescue(1)>, L<virt-resize(1)>, L<virt-sparsify(1)>, L<virt-sysprep(1)>, L<virt-tail(1)>, L<virt-tar(1)>, L<virt-tar-in(1)>, L<virt-tar-out(1)>, L<virt-v2v(1)>, L<virt-win-reg(1)>.
 
@@ -2272,5 +2266,5 @@ Richard W.M. Jones (C<rjones at redhat dot com>)
 
 =head1 COPYRIGHT
 
-Copyright (C) 2009-2023 Red Hat Inc.
+Copyright (C) 2009-2025 Red Hat Inc.
 

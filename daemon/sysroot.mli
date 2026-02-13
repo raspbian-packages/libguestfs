@@ -1,5 +1,5 @@
 (* guestfs-inspection
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,4 +22,4 @@ val sysroot : unit -> string
     in default. *)
 
 val sysroot_path : string -> string
-(** Equivalent to calling [sysroot () // path] *)
+(** Prepend [path] parameter with the sysroot. *)

@@ -6,7 +6,7 @@ libguestfs generated file
           and from the code in the generator/ subdirectory.
  ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 
- Copyright (C) 2009-2023 Red Hat Inc.
+ Copyright (C) 2009-2025 Red Hat Inc.
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -1142,6 +1142,13 @@ filesystem is stored.
 
 This command has one or more optional arguments.  See L</OPTIONAL ARGUMENTS>.
 
+I<This function is deprecated.>
+In new code, use the L</btrfs-scrub-full> call instead.
+
+Deprecated functions will not be removed from the API, but the
+fact that they are deprecated indicates that there are problems
+with correct use of these functions.
+
 This command depends on the feature C<btrfs>.   See also
 L</feature-available>.
 
@@ -1269,6 +1276,18 @@ L</feature-available>.
  btrfs-scrub-cancel path
 
 Cancel a running scrub on a btrfs filesystem.
+
+This command depends on the feature C<btrfs>.   See also
+L</feature-available>.
+
+=head2 btrfs-scrub-full
+
+ btrfs-scrub-full path [readonly:true|false]
+
+Run a full scrub on a btrfs filesystem and wait for it to finish.
+If the filesystem has errors this will return an error.
+
+This command has one or more optional arguments.  See L</OPTIONAL ARGUMENTS>.
 
 This command depends on the feature C<btrfs>.   See also
 L</feature-available>.
@@ -1502,8 +1521,8 @@ as F<C:\windows> may appear as F</WINDOWS> or F</windows>
 they were created.  In Windows itself this would not be
 a problem.
 
-Bug or feature?  You decide:
-L<https://www.tuxera.com/community/ntfs-3g-faq/#posixfilenames1>
+Bug or feature?  You decide. See the relevant entry in the ntfs-3g FAQ:
+L<https://github.com/tuxera/ntfs-3g/wiki/NTFS-3G-FAQ>
 
 L</case-sensitive-path> attempts to resolve the true case of
 each element in the path. It will return a resolved path if either the
@@ -1678,7 +1697,7 @@ C<device> is the encrypted block device.
 
 The appliance will connect to the Tang servers noted in the tree of
 Clevis pins that is bound to a keyslot of the LUKS header.  The Clevis
-pin tree may comprise C<sss> (redudancy) pins as internal nodes
+pin tree may comprise C<sss> (redundancy) pins as internal nodes
 (optionally), and C<tang> pins as leaves.  C<tpm2> pins are not
 supported.  The appliance unlocks the encrypted block device by
 combining responses from the Tang servers with metadata from the LUKS
@@ -1752,6 +1771,18 @@ See also: L</sh-lines>
 
 Because of the message protocol, there is a transfer limit
 of somewhere between 2MB and 4MB.  See L<guestfs(3)/PROTOCOL LIMITS>.
+
+=head2 command-out
+
+ command-out 'arguments ...' (output|-)
+
+This is the same as L</command>, but streams the output
+back, handling the case where the output from the command is
+larger than the protocol limit.
+
+See also: L</sh-out>
+
+Use C<-> instead of a filename to read/write from stdin/stdout.
 
 =head2 compress-device-out
 
@@ -2320,7 +2351,7 @@ The result is the estimated size in I<kilobytes>
 
 =head2 e2fsck
 
- e2fsck device [correct:true|false] [forceall:true|false]
+ e2fsck device [correct:true|false] [forceall:true|false] [forceno:true|false]
 
 This runs the ext2/ext3 filesystem checker on C<device>.
 It can take the following optional arguments:
@@ -2333,14 +2364,24 @@ Automatically repair the file system. This option will cause e2fsck
 to automatically fix any filesystem problems that can be safely
 fixed without human intervention.
 
-This option may not be specified at the same time as the C<forceall> option.
+This option may not be specified at the same time as the C<forceall>
+or C<forceno> options.
 
 =item C<forceall>
 
 Assume an answer of ‘yes’ to all questions; allows e2fsck to be used
 non-interactively.
 
-This option may not be specified at the same time as the C<correct> option.
+This option may not be specified at the same time as the C<correct>
+or C<forceno> options.
+
+=item C<forceno>
+
+Open the filesystem readonly and assume an answer of ‘no’ to all
+questions; allows e2fsck to be used non-interactively.
+
+This option may not be specified at the same time as the C<correct>
+or C<forceall> options.
 
 =back
 
@@ -8922,6 +8963,18 @@ This is the same as L</sh>, but splits the result
 into a list of lines.
 
 See also: L</command-lines>
+
+=head2 sh-out
+
+ sh-out command (output|-)
+
+This is the same as L</sh>, but streams the output
+back, handling the case where the output from the command is
+larger than the protocol limit.
+
+See also: L</command-out>
+
+Use C<-> instead of a filename to read/write from stdin/stdout.
 
 =head2 shutdown
 

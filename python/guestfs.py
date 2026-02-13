@@ -5,7 +5,7 @@
 #          and from the code in the generator/ subdirectory.
 # ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 #
-# Copyright (C) 2009-2023 Red Hat Inc.
+# Copyright (C) 2009-2025 Red Hat Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -1414,10 +1414,21 @@ class GuestFS(object):
         """Used to check a btrfs filesystem, "device" is the device
         file where the filesystem is stored.
 
+        *This function is deprecated.* In new code, use the
+        "btrfs_scrub_full" call instead.
+
+        Deprecated functions will not be removed from the API,
+        but the fact that they are deprecated indicates that
+        there are problems with correct use of these functions.
+
         This function depends on the feature "btrfs". See also
         "g.feature-available".
         """
         self._check_not_closed()
+        import warnings
+        warnings.warn("use GuestFS.btrfs_scrub_full() "
+                      "instead of GuestFS.btrfs_fsck()",
+                      DeprecationWarning, stacklevel=2)
         r = libguestfsmod.btrfs_fsck(self._o, device, superblock, repair)
         return r
 
@@ -1572,6 +1583,19 @@ class GuestFS(object):
         """
         self._check_not_closed()
         r = libguestfsmod.btrfs_scrub_cancel(self._o, path)
+        return r
+
+    def btrfs_scrub_full(self, path: str,
+                         readonly: Optional[bool] = None) -> None:
+        """Run a full scrub on a btrfs filesystem and wait for it
+        to finish. If the filesystem has errors this will return
+        an error.
+
+        This function depends on the feature "btrfs". See also
+        "g.feature-available".
+        """
+        self._check_not_closed()
+        r = libguestfsmod.btrfs_scrub_full(self._o, path, readonly)
         return r
 
     def btrfs_scrub_resume(self, path: str) -> None:
@@ -1839,9 +1863,9 @@ class GuestFS(object):
         they were created. In Windows itself this would not be a
         problem.
 
-        Bug or feature? You decide:
-        <https://www.tuxera.com/community/ntfs-3g-faq/#posixfile
-        names1>
+        Bug or feature? You decide. See the relevant entry in
+        the ntfs-3g FAQ:
+        <https://github.com/tuxera/ntfs-3g/wiki/NTFS-3G-FAQ>
 
         "g.case_sensitive_path" attempts to resolve the true
         case of each element in the path. It will return a
@@ -2017,7 +2041,7 @@ class GuestFS(object):
         The appliance will connect to the Tang servers noted in
         the tree of Clevis pins that is bound to a keyslot of
         the LUKS header. The Clevis pin tree may comprise "sss"
-        (redudancy) pins as internal nodes (optionally), and
+        (redundancy) pins as internal nodes (optionally), and
         "tang" pins as leaves. "tpm2" pins are not supported.
         The appliance unlocks the encrypted block device by
         combining responses from the Tang servers with metadata
@@ -2104,6 +2128,18 @@ class GuestFS(object):
         arguments = list(arguments)
         self._check_not_closed()
         r = libguestfsmod.command_lines(self._o, arguments)
+        return r
+
+    def command_out(self, arguments: List[str], output: str) -> None:
+        """This is the same as "g.command", but streams the output
+        back, handling the case where the output from the
+        command is larger than the protocol limit.
+
+        See also: "g.sh_out"
+        """
+        arguments = list(arguments)
+        self._check_not_closed()
+        r = libguestfsmod.command_out(self._o, arguments, output)
         return r
 
     def compress_device_out(self, ctype: str, device: str, zdevice: str,
@@ -2762,7 +2798,8 @@ class GuestFS(object):
         return r
 
     def e2fsck(self, device: str, correct: Optional[bool] = None,
-               forceall: Optional[bool] = None) -> None:
+               forceall: Optional[bool] = None,
+               forceno: Optional[bool] = None) -> None:
         """This runs the ext2/ext3 filesystem checker on "device".
         It can take the following optional arguments:
 
@@ -2773,17 +2810,25 @@ class GuestFS(object):
         human intervention.
 
         This option may not be specified at the same time as
-        the "forceall" option.
+        the "forceall" or "forceno" options.
 
         "forceall"
         Assume an answer of ‘yes’ to all questions; allows
         e2fsck to be used non-interactively.
 
         This option may not be specified at the same time as
-        the "correct" option.
+        the "correct" or "forceno" options.
+
+        "forceno"
+        Open the filesystem readonly and assume an answer of
+        ‘no’ to all questions; allows e2fsck to be used
+        non-interactively.
+
+        This option may not be specified at the same time as
+        the "correct" or "forceall" options.
         """
         self._check_not_closed()
-        r = libguestfsmod.e2fsck(self._o, device, correct, forceall)
+        r = libguestfsmod.e2fsck(self._o, device, correct, forceall, forceno)
         return r
 
     def e2fsck_f(self, device: str) -> None:
@@ -10288,6 +10333,17 @@ class GuestFS(object):
         """
         self._check_not_closed()
         r = libguestfsmod.sh_lines(self._o, command)
+        return r
+
+    def sh_out(self, command: str, output: str) -> None:
+        """This is the same as "g.sh", but streams the output back,
+        handling the case where the output from the command is
+        larger than the protocol limit.
+
+        See also: "g.command_out"
+        """
+        self._check_not_closed()
+        r = libguestfsmod.sh_out(self._o, command, output)
         return r
 
     def shutdown(self) -> None:

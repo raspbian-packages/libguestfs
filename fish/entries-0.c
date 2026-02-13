@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -302,7 +302,7 @@ struct command_entry clevis_luks_unlock_cmd_entry = {
           "\n"
           "    The appliance will connect to the Tang servers noted in the tree of\n"
           "    Clevis pins that is bound to a keyslot of the LUKS header. The Clevis\n"
-          "    pin tree may comprise \"sss\" (redudancy) pins as internal nodes\n"
+          "    pin tree may comprise \"sss\" (redundancy) pins as internal nodes\n"
           "    (optionally), and \"tang\" pins as leaves. \"tpm2\" pins are not supported.\n"
           "    The appliance unlocks the encrypted block device by combining responses\n"
           "    from the Tang servers with metadata from the LUKS header; there is no\n"
@@ -500,7 +500,7 @@ struct command_entry e2fsck_cmd_entry = {
           "    e2fsck - check an ext2/ext3 filesystem\n"
           "\n"
           "SYNOPSIS\n"
-          "     e2fsck device [correct:true|false] [forceall:true|false]\n"
+          "     e2fsck device [correct:true|false] [forceall:true|false] [forceno:true|false]\n"
           "\n"
           "DESCRIPTION\n"
           "    This runs the ext2/ext3 filesystem checker on \"device\". It can take the\n"
@@ -512,17 +512,24 @@ struct command_entry e2fsck_cmd_entry = {
           "        fixed without human intervention.\n"
           "\n"
           "        This option may not be specified at the same time as the \"forceall\"\n"
-          "        option.\n"
+          "        or \"forceno\" options.\n"
           "\n"
           "    \"forceall\"\n"
           "        Assume an answer of ‘yes’ to all questions; allows e2fsck to be used\n"
           "        non-interactively.\n"
           "\n"
           "        This option may not be specified at the same time as the \"correct\"\n"
-          "        option.\n"
+          "        or \"forceno\" options.\n"
+          "\n"
+          "    \"forceno\"\n"
+          "        Open the filesystem readonly and assume an answer of ‘no’ to all\n"
+          "        questions; allows e2fsck to be used non-interactively.\n"
+          "\n"
+          "        This option may not be specified at the same time as the \"correct\"\n"
+          "        or \"forceall\" options.\n"
           "\n"
           "",
-  .synopsis = "e2fsck device [correct:true|false] [forceall:true|false]",
+  .synopsis = "e2fsck device [correct:true|false] [forceall:true|false] [forceno:true|false]",
   .run = run_e2fsck
 };
 

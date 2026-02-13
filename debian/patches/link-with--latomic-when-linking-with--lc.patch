@@ -9,10 +9,10 @@ Bug-Debian: https://bugs.debian.org/1078470
  2 files changed, 2 insertions(+)
 
 diff --git a/daemon/Makefile.am b/daemon/Makefile.am
-index d7cf5bc..d7c423a 100644
+index a602248..d0c8411 100644
 --- a/daemon/Makefile.am
 +++ b/daemon/Makefile.am
-@@ -384,6 +384,7 @@ OCAML_LIBS = \
+@@ -385,6 +385,7 @@ OCAML_LIBS = \
  	-l$(CAMLSTR) \
  	-l$(CAMLUNIX) \
  	-l$(CAMLRUN) \
@@ -21,10 +21,10 @@ index d7cf5bc..d7c423a 100644
  	-ldl -lm
  
 diff --git a/daemon/Makefile.in b/daemon/Makefile.in
-index cbe2b72..b83a72d 100644
+index f923637..58d2172 100644
 --- a/daemon/Makefile.in
 +++ b/daemon/Makefile.in
-@@ -1367,6 +1367,7 @@ OCAML_LIBS = \
+@@ -1371,6 +1371,7 @@ OCAML_LIBS = \
  	-l$(CAMLSTR) \
  	-l$(CAMLUNIX) \
  	-l$(CAMLRUN) \

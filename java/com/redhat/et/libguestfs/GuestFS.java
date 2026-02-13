@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -2611,9 +2611,10 @@ public class GuestFS {
    * This function depends on the feature "btrfs".  See also {@link #feature_available}.
    * </p>
    * @since 1.17.43
+   * @deprecated In new code, use {@link #btrfs_scrub_full} instead
    * @throws LibGuestFSException If there is a libguestfs error.
    */
-  public void btrfs_fsck (String device, Map<String, Object> optargs)
+  @Deprecated public void btrfs_fsck (String device, Map<String, Object> optargs)
     throws LibGuestFSException
   {
     if (g == 0)
@@ -2988,6 +2989,54 @@ public class GuestFS {
   }
 
   private native void _btrfs_scrub_cancel (long g, String path)
+    throws LibGuestFSException;
+
+  /**
+   * <p>
+   * run a full scrub on a btrfs filesystem
+   * </p><p>
+   * Run a full scrub on a btrfs filesystem and wait for it
+   * to finish. If the filesystem has errors this will return
+   * an error.
+   * </p><p>
+   * Optional arguments are supplied in the final
+   * Map&lt;String,Object&gt; parameter, which is a hash of the
+   * argument name to its value (cast to Object). Pass an
+   * empty Map or null for no optional arguments.
+   * </p><p>
+   * This function depends on the feature "btrfs".  See also {@link #feature_available}.
+   * </p>
+   * @since 1.55.12
+   * @throws LibGuestFSException If there is a libguestfs error.
+   */
+  public void btrfs_scrub_full (String path, Map<String, Object> optargs)
+    throws LibGuestFSException
+  {
+    if (g == 0)
+      throw new LibGuestFSException ("btrfs_scrub_full: handle is closed");
+
+    /* Unpack optional args. */
+    Object _optobj;
+    long _optargs_bitmask = 0;
+    boolean readonly = false;
+    _optobj = null;
+    if (optargs != null)
+      _optobj = optargs.get ("readonly");
+    if (_optobj != null) {
+      readonly = ((Boolean) _optobj).booleanValue();
+      _optargs_bitmask |= 1L;
+    }
+
+    _btrfs_scrub_full (g, path, _optargs_bitmask, readonly);
+  }
+
+  public void btrfs_scrub_full (String path)
+    throws LibGuestFSException
+  {
+    btrfs_scrub_full (path, null);
+  }
+
+  private native void _btrfs_scrub_full (long g, String path, long _optargs_bitmask, boolean readonly)
     throws LibGuestFSException;
 
   /**
@@ -3553,9 +3602,9 @@ public class GuestFS {
    * they were created. In Windows itself this would not be a
    * problem.
    * </p><p>
-   * Bug or feature? You decide:
-   * &lt;https://www.tuxera.com/community/ntfs-3g-faq/#posixfile
-   * names1&gt;
+   * Bug or feature? You decide. See the relevant entry in
+   * the ntfs-3g FAQ:
+   * &lt;https://github.com/tuxera/ntfs-3g/wiki/NTFS-3G-FAQ&gt;
    * </p><p>
    * "g.case_sensitive_path" attempts to resolve the true
    * case of each element in the path. It will return a
@@ -3842,7 +3891,7 @@ public class GuestFS {
    * The appliance will connect to the Tang servers noted in
    * the tree of Clevis pins that is bound to a keyslot of
    * the LUKS header. The Clevis pin tree may comprise "sss"
-   * (redudancy) pins as internal nodes (optionally), and
+   * (redundancy) pins as internal nodes (optionally), and
    * "tang" pins as leaves. "tpm2" pins are not supported.
    * The appliance unlocks the encrypted block device by
    * combining responses from the Tang servers with metadata
@@ -3963,6 +4012,31 @@ public class GuestFS {
   }
 
   private native String[] _command_lines (long g, String[] arguments)
+    throws LibGuestFSException;
+
+  /**
+   * <p>
+   * run a command from the guest filesystem
+   * </p><p>
+   * This is the same as "g.command", but streams the output
+   * back, handling the case where the output from the
+   * command is larger than the protocol limit.
+   * </p><p>
+   * See also: "g.sh_out"
+   * </p>
+   * @since 1.55.6
+   * @throws LibGuestFSException If there is a libguestfs error.
+   */
+  public void command_out (String[] arguments, String output)
+    throws LibGuestFSException
+  {
+    if (g == 0)
+      throw new LibGuestFSException ("command_out: handle is closed");
+
+    _command_out (g, arguments, output);
+  }
+
+  private native void _command_out (long g, String[] arguments, String output)
     throws LibGuestFSException;
 
   /**
@@ -5496,14 +5570,22 @@ public class GuestFS {
    * human intervention.
    * </p><p>
    * This option may not be specified at the same time as
-   * the "forceall" option.
+   * the "forceall" or "forceno" options.
    * </p><p>
    * "forceall"
    * Assume an answer of ‘yes’ to all questions; allows
    * e2fsck to be used non-interactively.
    * </p><p>
    * This option may not be specified at the same time as
-   * the "correct" option.
+   * the "correct" or "forceno" options.
+   * </p><p>
+   * "forceno"
+   * Open the filesystem readonly and assume an answer of
+   * ‘no’ to all questions; allows e2fsck to be used
+   * non-interactively.
+   * </p><p>
+   * This option may not be specified at the same time as
+   * the "correct" or "forceall" options.
    * </p><p>
    * Optional arguments are supplied in the final
    * Map&lt;String,Object&gt; parameter, which is a hash of the
@@ -5538,8 +5620,16 @@ public class GuestFS {
       forceall = ((Boolean) _optobj).booleanValue();
       _optargs_bitmask |= 2L;
     }
+    boolean forceno = false;
+    _optobj = null;
+    if (optargs != null)
+      _optobj = optargs.get ("forceno");
+    if (_optobj != null) {
+      forceno = ((Boolean) _optobj).booleanValue();
+      _optargs_bitmask |= 4L;
+    }
 
-    _e2fsck (g, device, _optargs_bitmask, correct, forceall);
+    _e2fsck (g, device, _optargs_bitmask, correct, forceall, forceno);
   }
 
   public void e2fsck (String device)
@@ -5548,7 +5638,7 @@ public class GuestFS {
     e2fsck (device, null);
   }
 
-  private native void _e2fsck (long g, String device, long _optargs_bitmask, boolean correct, boolean forceall)
+  private native void _e2fsck (long g, String device, long _optargs_bitmask, boolean correct, boolean forceall, boolean forceno)
     throws LibGuestFSException;
 
   /**
@@ -19450,6 +19540,31 @@ public class GuestFS {
   }
 
   private native String[] _sh_lines (long g, String command)
+    throws LibGuestFSException;
+
+  /**
+   * <p>
+   * run a command via the shell
+   * </p><p>
+   * This is the same as "g.sh", but streams the output back,
+   * handling the case where the output from the command is
+   * larger than the protocol limit.
+   * </p><p>
+   * See also: "g.command_out"
+   * </p>
+   * @since 1.55.6
+   * @throws LibGuestFSException If there is a libguestfs error.
+   */
+  public void sh_out (String command, String output)
+    throws LibGuestFSException
+  {
+    if (g == 0)
+      throw new LibGuestFSException ("sh_out: handle is closed");
+
+    _sh_out (g, command, output);
+  }
+
+  private native void _sh_out (long g, String command, String output)
     throws LibGuestFSException;
 
   /**

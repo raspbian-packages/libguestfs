@@ -7,7 +7,7 @@ libguestfs generated file
           and from the code in the generator/ subdirectory.
  ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 
- Copyright (C) 2009-2023 Red Hat Inc.
+ Copyright (C) 2009-2025 Red Hat Inc.
 
  Ця програма є вільним програмним забезпеченням; ви можете поширювати та/або
  змінювати її за умов дотримання GNU General Public License утому вигляді, що
@@ -895,6 +895,10 @@ I<Ця функція вважається застарілою.> Замінни
 
 У цієї команди є один або декілька необов'язкових аргументів. Див. L</НЕОБОВ'ЯЗКОВІ АРГУМЕНТИ>.
 
+I<This function is deprecated.> In new code, use the L</btrfs-scrub-full> call instead.
+
+Застарілі функції не буде вилучено з програмного інтерфейсу, але той факт, що їх визнано застарілими, вказує на проблеми із належним використанням цих функцій.
+
 Працездатність цієї команди залежить від можливості C<btrfs>. Див. також L</feature-available>.
 
 =head2 btrfs-image
@@ -1002,6 +1006,16 @@ I<Ця функція вважається застарілою.> Замінни
  btrfs-scrub-cancel шлях
 
 Скасувати витирання, що виконується у файловій системі btrfs.
+
+Працездатність цієї команди залежить від можливості C<btrfs>. Див. також L</feature-available>.
+
+=head2 btrfs-scrub-full
+
+ btrfs-scrub-full path [readonly:true|false]
+
+Run a full scrub on a btrfs filesystem and wait for it to finish.  If the filesystem has errors this will return an error.
+
+У цієї команди є один або декілька необов'язкових аргументів. Див. L</НЕОБОВ'ЯЗКОВІ АРГУМЕНТИ>.
 
 Працездатність цієї команди залежить від можливості C<btrfs>. Див. також L</feature-available>.
 
@@ -1320,7 +1334,7 @@ This command opens a block device that has been encrypted according to the Linux
 
 C<device> is the encrypted block device.
 
-The appliance will connect to the Tang servers noted in the tree of Clevis pins that is bound to a keyslot of the LUKS header.  The Clevis pin tree may comprise C<sss> (redudancy) pins as internal nodes (optionally), and C<tang> pins as leaves.  C<tpm2> pins are not supported.  The appliance unlocks the encrypted block device by combining responses from the Tang servers with metadata from the LUKS header; there is no C<key> parameter.
+The appliance will connect to the Tang servers noted in the tree of Clevis pins that is bound to a keyslot of the LUKS header.  The Clevis pin tree may comprise C<sss> (redundancy) pins as internal nodes (optionally), and C<tang> pins as leaves.  C<tpm2> pins are not supported.  The appliance unlocks the encrypted block device by combining responses from the Tang servers with metadata from the LUKS header; there is no C<key> parameter.
 
 This command will fail if networking has not been enabled for the appliance. Refer to L</set-network>.
 
@@ -1361,6 +1375,16 @@ This command depends on the feature C<clevisluks>.  See also L</feature-availabl
 Див. також L</sh-lines>
 
 Через обмеження протоколу передавання повідомлень існує граничний об'єм повідомлення, щось у діапазоні від 2 МБ до 4 МБ. Див. L<guestfs(3)/ОБМЕЖЕННЯ ПРОТОКОЛУ>.
+
+=head2 command-out
+
+ command-out 'arguments ...' (output|-)
+
+This is the same as L</command>, but streams the output back, handling the case where the output from the command is larger than the protocol limit.
+
+See also: L</sh-out>
+
+Скористайтеся виразом C<-> замість назви файла, щоб наказати програмі виконувати читання зі stdin або запис до stdout.
 
 =head2 compress-device-out
 
@@ -1778,7 +1802,7 @@ C<шлях> може бути адресою файла або каталогу.
 
 =head2 e2fsck
 
- e2fsck пристрій [correct:true|false] [forceall:true|false]
+ e2fsck device [correct:true|false] [forceall:true|false] [forceno:true|false]
 
 Ця команда виконує перевірку файлової системи ext2/ext3 на пристрої C<пристрій>. Вона може приймати такі необов'язкові аргументи:
 
@@ -1788,13 +1812,19 @@ C<шлях> може бути адресою файла або каталогу.
 
 Автоматично виправляти файлову систему. Використання цього параметра призведе до того, що e2fsck автоматично виправлятиме усі проблеми файлової системи, які може бути безпечно виправлено без втручання людини.
 
-Цей параметр не можна використовувати одночасно із параметром C<forceall>.
+This option may not be specified at the same time as the C<forceall> or C<forceno> options.
 
 =item C<forceall>
 
 Припускати відповідь «так» на усі питання; уможливлює неінтерактивне використання e2fsck.
 
-Цей параметр не можна використовувати одночасно із параметром C<correct>.
+This option may not be specified at the same time as the C<correct> or C<forceno> options.
+
+=item C<forceno>
+
+Open the filesystem readonly and assume an answer of ‘no’ to all questions; allows e2fsck to be used non-interactively.
+
+This option may not be specified at the same time as the C<correct> or C<forceall> options.
 
 =back
 
@@ -6792,6 +6822,16 @@ I<Ця функція вважається застарілою.> У новом�
 Те саме, що і L</sh>, але результат буде поділено на список рядків.
 
 Див. також L</command-lines>
+
+=head2 sh-out
+
+ sh-out command (output|-)
+
+This is the same as L</sh>, but streams the output back, handling the case where the output from the command is larger than the protocol limit.
+
+See also: L</command-out>
+
+Скористайтеся виразом C<-> замість назви файла, щоб наказати програмі виконувати читання зі stdin або запис до stdout.
 
 =head2 shutdown
 

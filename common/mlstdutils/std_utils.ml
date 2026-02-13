@@ -18,6 +18,137 @@
 
 open Printf
 
+module List = struct
+    include List
+
+    (* Drop elements from a list while a predicate is true. *)
+    let rec drop_while f = function
+      | [] -> []
+      | x :: xs when f x -> drop_while f xs
+      | xs -> xs
+
+    (* Take elements from a list while a predicate is true. *)
+    let rec take_while f = function
+      | x :: xs when f x -> x :: take_while f xs
+      | _ -> []
+
+    let take n xs =
+      if n < 0 then invalid_arg "List.take"
+      else if n = 0 then []
+      else (
+        (* This optimisation avoids copying xs. *)
+        let len = List.length xs in
+        if len <= n then xs
+        else (
+          let rec take n = function
+            | x :: xs when n >= 1 -> x :: take (n-1) xs
+            | _ -> []
+          in
+          take n xs
+        )
+      )
+    let rec drop n xs =
+      if n < 0 then invalid_arg "List.drop"
+      else if n = 0 then xs
+      else if xs = [] then []
+      else drop (n-1) (List.tl xs)
+
+    let rec last = function
+      | [] -> invalid_arg "List.last"
+      | [x] -> x
+      | _ :: xs -> last xs
+
+    let rec find_map f = function
+      | [] -> raise Not_found
+      | x :: xs ->
+          match f x with
+          | Some y -> y
+          | None -> find_map f xs
+
+    let rec group_by = function
+      | [] -> []
+      | (day1, x1) :: (day2, x2) :: rest when day1 = day2 ->
+         let rest = group_by ((day2, x2) :: rest) in
+         let day, xs = List.hd rest in
+         (day, x1 :: xs) :: List.tl rest
+      | (day, x) :: rest ->
+         (day, [x]) :: group_by rest
+
+    let rec combine3 xs ys zs =
+      match xs, ys, zs with
+      | [], [], [] -> []
+      | x::xs, y::ys, z::zs -> (x, y, z) :: combine3 xs ys zs
+      | _ -> invalid_arg "combine3"
+
+    let rec combine4 ws xs ys zs =
+      match ws, xs, ys, zs with
+      | [], [], [], [] -> []
+      | w::ws, x::xs, y::ys, z::zs -> (w, x, y, z) :: combine4 ws xs ys zs
+      | _ -> invalid_arg "combine4"
+
+    let rec assoc_lbl ?(cmp = Stdlib.compare) ~default x = function
+      | [] -> default
+      | (y, y') :: _ when cmp x y = 0 -> y'
+      | _ :: ys -> assoc_lbl ~cmp ~default x ys
+
+    let uniq ?(cmp = Stdlib.compare) xs =
+      let rec loop acc = function
+        | [] -> acc
+        | [x] -> x :: acc
+        | x :: (y :: _ as xs) when cmp x y = 0 ->
+           loop acc xs
+        | x :: (y :: _ as xs) ->
+           loop (x :: acc) xs
+      in
+      List.rev (loop [] xs)
+
+    let remove_duplicates xs =
+      let h = Hashtbl.create (List.length xs) in
+      let rec loop = function
+        | [] -> []
+        | x :: xs when Hashtbl.mem h x -> xs
+        | x :: xs -> Hashtbl.add h x true; x :: loop xs
+      in
+      loop xs
+
+    let push_back xsp x = xsp := !xsp @ [x]
+    let push_front x xsp = xsp := x :: !xsp
+    let pop_back xsp =
+      let x, xs =
+        match List.rev !xsp with
+        | x :: xs -> x, xs
+        | [] -> failwith "pop" in
+      xsp := List.rev xs;
+      x
+    let pop_front xsp =
+      let x, xs =
+        match !xsp with
+        | x :: xs -> x, xs
+        | [] -> failwith "shift" in
+      xsp := xs;
+      x
+
+    let may_push_back xsp x =
+      match x with None -> () | Some x -> push_back xsp x
+    let may_push_front x xsp =
+      match x with None -> () | Some x -> push_front x xsp
+
+    let push_back_list xsp xs = xsp := !xsp @ xs
+    let push_front_list xs xsp = xsp := xs @ !xsp
+
+    let make n x =
+      let rec loop acc = function
+        | 0 -> acc
+        | i when i > 0 -> loop (x :: acc) (i-1)
+        | _ -> invalid_arg "make"
+      in
+      loop [] n
+
+    let same = function
+      | [] -> true
+      | x :: xs -> List.for_all ((=) x) xs
+end
+
 module Char = struct
     include Char
 
@@ -89,33 +220,36 @@ module String = struct
       Bytes.unsafe_set b 0 (Char.uppercase_ascii (Bytes.unsafe_get b 0));
       Bytes.to_string b
 
-    let is_prefix str prefix =
+    let starts_with ~prefix str =
       let n = length prefix in
       length str >= n && sub str 0 n = prefix
 
-    let is_suffix str suffix =
+    let ends_with ~suffix str =
       let sufflen = length suffix
       and len = length str in
       len >= sufflen && sub str (len - sufflen) sufflen = suffix
 
-    let rec find s sub =
-      let len = length s in
+    let find_from str pos sub =
       let sublen = length sub in
-      let rec loop i =
-        if i <= len-sublen then (
-          let rec loop2 j =
-            if j < sublen then (
-              if s.[i+j] = sub.[j] then loop2 (j+1)
-              else -1
-            ) else
-              i (* found *)
-          in
-          let r = loop2 0 in
-          if r = -1 then loop (i+1) else r
-        ) else
-          -1 (* not found *)
-      in
-      loop 0
+      if sublen = 0 then
+        0
+      else (
+        let found = ref 0 in
+        let len = length str in
+        try
+          for i = pos to len - sublen do
+            let j = ref 0 in
+            while unsafe_get str (i + !j) = unsafe_get sub !j do
+              incr j;
+              if !j = sublen then begin found := i; raise Exit; end;
+            done;
+          done;
+          -1
+        with
+          Exit -> !found
+      )
+
+    let find str sub = find_from str 0 sub
 
     let rec replace s s1 s2 =
       let len = length s in
@@ -145,7 +279,7 @@ module String = struct
       else if n >= len then str, ""
       else sub str 0 n, sub str n (len-n)
 
-    let rec split sep str =
+    let split sep str =
       let seplen = length sep in
       let strlen = length str in
       let i = find str sep in
@@ -154,20 +288,36 @@ module String = struct
         sub str 0 i, sub str (i + seplen) (strlen - i - seplen)
       )
 
-    and nsplit ?(max = 0) sep str =
+    let nsplit ?(max = 0) sep str =
       if max < 0 then
         invalid_arg "String.nsplit: max parameter should not be negative";
 
-      (* If we reached the limit, OR if the pattern does not match the string
-       * at all, return the rest of the string as a single element list.
-       *)
-      if max = 1 || find str sep = -1 then
-        [str]
-      else (
-        let s1, s2 = split sep str in
-        let max = if max = 0 then 0 else max - 1 in
-        s1 :: nsplit ~max sep s2
-      )
+      let len = String.length str in
+      let seplen = String.length sep in
+
+      let rec loop iters posn acc =
+        (* If we reached the limit, OR if the pattern does not match
+         * the string at all, return the rest of the string.
+         *)
+        if max > 0 && iters = max then (
+          let rest =
+            if posn = 0 then str else String.sub str posn (len-posn) in
+          List.rev (rest :: acc)
+        )
+        else (
+          let end_ = find_from str posn sep in
+          if end_ = -1 then (
+            let rest =
+              if posn = 0 then str else String.sub str posn (len-posn) in
+            List.rev (rest :: acc)
+          )
+          else (
+            let acc = String.sub str posn (end_-posn) :: acc in
+            loop (iters+1) (end_+seplen) acc
+          )
+        )
+      in
+      loop 1 0 []
 
     let rec lines_split str =
       let buf = Buffer.create 16 in
@@ -256,6 +406,12 @@ module String = struct
     let map_chars f str =
       List.map f (explode str)
 
+    let implode cs =
+      let n = List.length cs in
+      let b = Bytes.create n in
+      List.iteri (Bytes.unsafe_set b) cs;
+      Bytes.to_string b
+
     let spaces n = String.make n ' '
 
     let span str accept =
@@ -277,134 +433,23 @@ module String = struct
       loop 0
 
     let unix2dos str = replace str "\n" "\r\n"
-end
 
-module List = struct
-    include List
-
-    (* Drop elements from a list while a predicate is true. *)
-    let rec dropwhile f = function
-      | [] -> []
-      | x :: xs when f x -> dropwhile f xs
-      | xs -> xs
-
-    (* Take elements from a list while a predicate is true. *)
-    let rec takewhile f = function
-      | x :: xs when f x -> x :: takewhile f xs
-      | _ -> []
-
-    let take n xs =
-      if n <= 0 then []
-      else (
-        (* This optimisation avoids copying xs. *)
-        let len = List.length xs in
-        if len <= n then xs
-        else (
-          let rec take n = function
-            | x :: xs when n >= 1 -> x :: take (n-1) xs
-            | _ -> []
-          in
-          take n xs
-        )
-      )
-    let rec drop n xs =
-      if n <= 0 then xs
-      else if xs = [] then []
-      else drop (n-1) (List.tl xs)
-
-    let rec filter_map f = function
-      | [] -> []
-      | x :: xs ->
-          match f x with
-          | Some y -> y :: filter_map f xs
-          | None -> filter_map f xs
-
-    let rec find_map f = function
-      | [] -> raise Not_found
-      | x :: xs ->
-          match f x with
-          | Some y -> y
-          | None -> find_map f xs
-
-    let rec group_by = function
-      | [] -> []
-      | (day1, x1) :: (day2, x2) :: rest when day1 = day2 ->
-         let rest = group_by ((day2, x2) :: rest) in
-         let day, xs = List.hd rest in
-         (day, x1 :: xs) :: List.tl rest
-      | (day, x) :: rest ->
-         (day, [x]) :: group_by rest
-
-    let rec combine3 xs ys zs =
-      match xs, ys, zs with
-      | [], [], [] -> []
-      | x::xs, y::ys, z::zs -> (x, y, z) :: combine3 xs ys zs
-      | _ -> invalid_arg "combine3"
-
-    let rec assoc_lbl ?(cmp = Stdlib.compare) ~default x = function
-      | [] -> default
-      | (y, y') :: _ when cmp x y = 0 -> y'
-      | _ :: ys -> assoc_lbl ~cmp ~default x ys
-
-    let uniq ?(cmp = Stdlib.compare) xs =
-      let rec loop acc = function
-        | [] -> acc
-        | [x] -> x :: acc
-        | x :: (y :: _ as xs) when cmp x y = 0 ->
-           loop acc xs
-        | x :: (y :: _ as xs) ->
-           loop (x :: acc) xs
+    let rec longest_common_prefix = function
+      | [] -> ""
+      | [s] -> s
+      | strs ->
+         let strs = List.sort compare strs in
+         let s1 = List.hd strs and s2 = List.last strs in
+         common_prefix s1 s2
+    and common_prefix s1 s2 =
+      let n1 = length s1 and n2 = length s2 in
+      let n = min n1 n2 in
+      let rec loop i =
+        if i = n then sub s1 0 n
+        else if unsafe_get s1 i <> unsafe_get s2 i then sub s1 0 i
+        else loop (i+1)
       in
-      List.rev (loop [] xs)
-
-    let remove_duplicates xs =
-      let h = Hashtbl.create (List.length xs) in
-      let rec loop = function
-        | [] -> []
-        | x :: xs when Hashtbl.mem h x -> xs
-        | x :: xs -> Hashtbl.add h x true; x :: loop xs
-      in
-      loop xs
-
-    let push_back xsp x = xsp := !xsp @ [x]
-    let push_front x xsp = xsp := x :: !xsp
-    let pop_back xsp =
-      let x, xs =
-        match List.rev !xsp with
-        | x :: xs -> x, xs
-        | [] -> failwith "pop" in
-      xsp := List.rev xs;
-      x
-    let pop_front xsp =
-      let x, xs =
-        match !xsp with
-        | x :: xs -> x, xs
-        | [] -> failwith "shift" in
-      xsp := xs;
-      x
-
-    let may_push_back xsp x =
-      match x with None -> () | Some x -> push_back xsp x
-    let may_push_front x xsp =
-      match x with None -> () | Some x -> push_front x xsp
-
-    let push_back_list xsp xs = xsp := !xsp @ xs
-    let push_front_list xs xsp = xsp := xs @ !xsp
-end
-
-module Option = struct
-    let iter f = function
-      | None -> ()
-      | Some x -> f x
-
-    let map f = function
-      | None -> None
-      | Some x -> Some (f x)
-
-    let value x ~default =
-      match x with
-      | None -> default
-      | Some x -> x
+      loop 0
 end
 
 let (//) = Filename.concat
@@ -416,8 +461,6 @@ let ( *^ ) = Int64.mul
 let ( /^ ) = Int64.div
 let ( &^ ) = Int64.logand
 let ( ~^ ) = Int64.lognot
-
-external identity : 'a -> 'a = "%identity"
 
 let roundup64 i a = let a = a -^ 1L in (i +^ a) &^ (~^ a)
 let div_roundup64 i a = (i +^ a -^ 1L) /^ a
@@ -582,13 +625,6 @@ let unique = let i = ref 0 in fun () -> incr i; !i
 
 type ('a, 'b) maybe = Either of 'a | Or of 'b
 
-let protect ~f ~finally =
-  let r =
-    try Either (f ())
-    with exn -> Or exn in
-  finally ();
-  match r with Either ret -> ret | Or exn -> raise exn
-
 type 'a return = { return: 'b. 'a -> 'b } [@@unboxed]
 let with_return (type a) f =
   let exception Return of a in
@@ -645,15 +681,15 @@ let wrap () = !wrap
 
 let with_open_in filename f =
   let chan = open_in filename in
-  protect ~f:(fun () -> f chan) ~finally:(fun () -> close_in chan)
+  Fun.protect (fun () -> f chan) ~finally:(fun () -> close_in chan)
 
 let with_open_out filename f =
   let chan = open_out filename in
-  protect ~f:(fun () -> f chan) ~finally:(fun () -> close_out chan)
+  Fun.protect (fun () -> f chan) ~finally:(fun () -> close_out chan)
 
 let with_openfile filename flags perms f =
   let fd = Unix.openfile filename flags perms in
-  protect ~f:(fun () -> f fd) ~finally:(fun () -> Unix.close fd)
+  Fun.protect (fun () -> f fd) ~finally:(fun () -> Unix.close fd)
 
 let read_whole_file path =
   let buf = Buffer.create 16384 in
@@ -794,7 +830,7 @@ let unix_like = function
   | "hurd"
   | "linux"
   | "minix" -> true
-  | typ when String.is_suffix typ "bsd" -> true
+  | typ when String.ends_with "bsd" typ -> true
   | _ -> false
 
 (** Return the last part of a string, after the specified separator. *)

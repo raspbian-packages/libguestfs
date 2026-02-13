@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -2985,7 +2985,7 @@ guestfs_e2fsck_argv (guestfs_h *g,
     return -1;
   }
 
-  if (optargs->bitmask & UINT64_C(0xfffffffffffffffc)) {
+  if (optargs->bitmask & UINT64_C(0xfffffffffffffff8)) {
     error (g, "%s: unknown option in guestfs_%s_argv->bitmask (this can happen if a program is compiled against a newer version of libguestfs, then dynamically linked to an older version)",
            "e2fsck", "e2fsck");
     return -1;
@@ -3000,6 +3000,9 @@ guestfs_e2fsck_argv (guestfs_h *g,
     }
     if (optargs->bitmask & GUESTFS_E2FSCK_FORCEALL_BITMASK) {
       fprintf (trace_buffer.fp, " \"%s:%s\"", "forceall", optargs->forceall ? "true" : "false");
+    }
+    if (optargs->bitmask & GUESTFS_E2FSCK_FORCENO_BITMASK) {
+      fprintf (trace_buffer.fp, " \"%s:%s\"", "forceno", optargs->forceno ? "true" : "false");
     }
     guestfs_int_trace_send_line (g, &trace_buffer);
   }
@@ -3021,6 +3024,11 @@ guestfs_e2fsck_argv (guestfs_h *g,
     args.forceall = optargs->forceall;
   } else {
     args.forceall = 0;
+  }
+  if (optargs->bitmask & GUESTFS_E2FSCK_FORCENO_BITMASK) {
+    args.forceno = optargs->forceno;
+  } else {
+    args.forceno = 0;
   }
   serial = guestfs_int_send (g, GUESTFS_PROC_E2FSCK,
                              progress_hint, optargs->bitmask,

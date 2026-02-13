@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -394,6 +394,23 @@ run_command (ei_x_buff *retbuff, const char *buff, int *idx)
 
   if (ei_x_encode_string (retbuff, r) != 0) return -1;
   free (r);
+  return 0;
+}
+
+int
+run_command_out (ei_x_buff *retbuff, const char *buff, int *idx)
+{
+  CLEANUP_FREE_STRING_LIST char **arguments;
+  if (decode_string_list (buff, idx, &arguments) != 0) return -1;
+  CLEANUP_FREE char *output;
+  if (decode_string (buff, idx, &output) != 0) return -1;
+  int r;
+
+  r = guestfs_command_out (g, arguments, output);
+  if (r == -1)
+    return make_error (retbuff, "command_out");
+
+  if (ei_x_encode_atom (retbuff, "ok") != 0) return -1;
   return 0;
 }
 

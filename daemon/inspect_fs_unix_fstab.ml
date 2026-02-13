@@ -1,5 +1,5 @@
 (* guestfs-inspection
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ open Inspect_utils
 
 let re_cciss = PCRE.compile "^/dev/(cciss/c\\d+d\\d+)(?:p(\\d+))?$"
 let re_diskbyid = PCRE.compile "^/dev/disk/by-id/.*-part(\\d+)$"
+let re_dmuuid = PCRE.compile "^/dev/disk/by-id/dm-uuid-LVM-([0-9a-zA-Z]{32})([0-9a-zA-Z]{32})$"
 let re_freebsd_gpt = PCRE.compile "^/dev/(ada{0,1}|vtbd)(\\d+)p(\\d+)$"
 let re_freebsd_mbr = PCRE.compile "^/dev/(ada{0,1}|vtbd)(\\d+)s(\\d+)([a-z])$"
 let re_hurd_dev = PCRE.compile "^/dev/(h)d(\\d+)s(\\d+)$"
@@ -42,6 +43,23 @@ let rec check_fstab ?(mdadm_conf = false) (root_mountable : Mountable.t)
     if mdadm_conf then ["/etc/mdadm.conf"; "/etc/mdadm/mdadm.conf"] else [] in
   let configfiles = "/etc/fstab" :: mdadmfiles in
 
+  (* If verbose, dump the contents of each config file as that can be
+   * useful for debugging.
+   *)
+  if verbose () then (
+    List.iter (
+      fun filename ->
+        let sysroot_filename = Sysroot.sysroot_path filename in
+        if Sys.file_exists sysroot_filename then (
+          eprintf "info: %s in %s\n%!"
+            filename (Mountable.to_string root_mountable);
+          let cmd = sprintf "cat -A %s >&2" (quote sysroot_filename) in
+          ignore (Sys.command cmd);
+          eprintf "\n%!"
+        )
+    ) configfiles
+  );
+
   with_augeas ~name:"check_fstab_aug"
               configfiles (check_fstab_aug mdadm_conf root_mountable os_type)
 
@@ -52,8 +70,10 @@ and check_fstab_aug mdadm_conf root_mountable os_type aug =
   let md_map = if mdadm_conf then map_md_devices aug else StringMap.empty in
 
   let path = "/files/etc/fstab/*[label() != '#comment']" in
-  let entries = aug_matches_noerrors aug path in
-  List.filter_map (check_fstab_entry md_map root_mountable os_type aug) entries
+  path |>
+    aug_matches_noerrors aug |>
+    List.filter_map (check_fstab_entry md_map root_mountable os_type aug) |>
+    remove_duplicate_root_mountpoints
 
 and check_fstab_entry md_map root_mountable os_type aug entry =
   with_return (fun {return} ->
@@ -79,13 +99,13 @@ and check_fstab_entry md_map root_mountable os_type aug entry =
      * /dev/iso9660/FREEBSD_INSTALL can be found in FreeBSD's
      * installation discs.
      *)
-    if (String.is_prefix spec "/dev/fd" &&
+    if (String.starts_with "/dev/fd" spec &&
         String.length spec >= 8 && Char.isdigit spec.[7]) ||
-       (String.is_prefix spec "/dev/cd" &&
+       (String.starts_with "/dev/cd" spec &&
         String.length spec >= 8 && Char.isdigit spec.[7]) ||
        spec = "/dev/floppy" ||
        spec = "/dev/cdrom" ||
-       String.is_prefix spec "/dev/iso9660/" then
+       String.starts_with "/dev/iso9660/" spec then
       return None;
 
     let mp = aug_get_noerrors aug (entry ^ "/file") in
@@ -100,20 +120,20 @@ and check_fstab_entry md_map root_mountable os_type aug entry =
     if verbose () then eprintf "check_fstab_entry: mp=%s\n%!" mp;
 
     (* Ignore certain mountpoints. *)
-    if String.is_prefix mp "/dev/" ||
+    if String.starts_with "/dev/" mp ||
        mp = "/dev" ||
-       String.is_prefix mp "/media/" ||
-       String.is_prefix mp "/proc/" ||
+       String.starts_with "/media/" mp ||
+       String.starts_with "/proc/" mp ||
        mp = "/proc" ||
-       String.is_prefix mp "/selinux/" ||
+       String.starts_with "/selinux/" mp ||
        mp = "/selinux" ||
-       String.is_prefix mp "/sys/" ||
+       String.starts_with "/sys/" mp ||
        mp = "/sys" then
       return None;
 
     let mountable =
       (* Resolve UUID= and LABEL= to the actual device. *)
-      if String.is_prefix spec "UUID=" then (
+      if String.starts_with "UUID=" spec then (
         let uuid = String.sub spec 5 (String.length spec - 5) in
         let uuid = shell_unquote uuid in
         (* Just ignore the device if the UUID cannot be resolved. *)
@@ -122,7 +142,7 @@ and check_fstab_entry md_map root_mountable os_type aug entry =
         with
           Failure _ -> return None
       )
-      else if String.is_prefix spec "LABEL=" then (
+      else if String.starts_with "LABEL=" spec then (
         let label = String.sub spec 6 (String.length spec - 6) in
         let label = shell_unquote label in
         (* Just ignore the device if the label cannot be resolved. *)
@@ -132,7 +152,7 @@ and check_fstab_entry md_map root_mountable os_type aug entry =
           Failure _ -> return None
       )
       (* EFI partition UUIDs and labels. *)
-      else if String.is_prefix spec "PARTUUID=" then (
+      else if String.starts_with "PARTUUID=" spec then (
         let uuid = String.sub spec 9 (String.length spec - 9) in
         let uuid = shell_unquote uuid in
         (* Just ignore the device if the UUID cannot be resolved. *)
@@ -141,7 +161,7 @@ and check_fstab_entry md_map root_mountable os_type aug entry =
         with
           Failure _ -> return None
       )
-      else if String.is_prefix spec "PARTLABEL=" then (
+      else if String.starts_with "PARTLABEL=" spec then (
         let label = String.sub spec 10 (String.length spec - 10) in
         let label = shell_unquote label in
         (* Just ignore the device if the label cannot be resolved. *)
@@ -158,7 +178,7 @@ and check_fstab_entry md_map root_mountable os_type aug entry =
       else if spec = "/dev/root" || (is_bsd && mp = "/") then
         root_mountable
       (* Resolve guest block device names. *)
-      else if String.is_prefix spec "/dev/" then
+      else if String.starts_with "/dev/" spec then
         resolve_fstab_device spec md_map os_type
       (* In OpenBSD's fstab you can specify partitions
        * on a disk by appending a period and a partition
@@ -344,25 +364,9 @@ and resolve_fstab_device spec md_map os_type =
       eprintf "resolve_fstab_device: %s matched %s\n%!" spec what
   in
 
-  if String.is_prefix spec "/dev/mapper" then (
+  if String.starts_with "/dev/mapper" spec then (
     debug_matching "/dev/mapper";
-    (* LVM2 does some strange munging on /dev/mapper paths for VGs and
-     * LVs which contain '-' character:
-     *
-     * ><fs> lvcreate LV--test VG--test 32
-     * ><fs> debug ls /dev/mapper
-     * VG----test-LV----test
-     *
-     * This makes it impossible to reverse those paths directly, so
-     * we have implemented lvm_canonical_lv_name in the daemon.
-     *)
-    try
-      match Lvm_utils.lv_canonical spec with
-      | None -> Mountable.of_device spec
-      | Some device -> Mountable.of_device device
-    with
-    (* Ignore devices that don't exist. (RHBZ#811872) *)
-    | Unix.Unix_error (Unix.ENOENT, _, _) -> default
+    resolve_dev_mapper spec default
   )
 
   else if PCRE.matches re_xdev spec then (
@@ -392,6 +396,39 @@ and resolve_fstab_device spec md_map os_type =
     debug_matching "diskbyid";
     let part = int_of_string (PCRE.sub 1) in
     resolve_diskbyid part default
+  )
+
+  (* Ubuntu 22+ uses /dev/disk/by-uuid/ followed by a UUID. *)
+  else if String.starts_with "/dev/disk/by-uuid/" spec then (
+    debug_matching "diskbyuuid";
+    let uuid = String.sub spec 18 (String.length spec - 18) in
+    try
+      (* Try a filesystem UUID.  Unclear if this could be a partition UUID
+       * as well, but in the Ubuntu guest I tried it was an fs UUID XXX.
+       *)
+      Mountable.of_device (Findfs.findfs_uuid uuid)
+    with
+      Failure _ -> default
+  )
+
+  (* Ubuntu 22+ uses /dev/disk/by-id/dm-uuid-LVM-... followed by a
+   * double UUID which identifies an LV.  The first part of the UUID
+   * is the VG UUID.  The second part is the LV UUID.
+   *)
+  else if PCRE.matches re_dmuuid spec then (
+    debug_matching "dmuuid";
+    let vg_uuid_spec = PCRE.sub 1 and lv_uuid_spec = PCRE.sub 2 in
+    try
+      (* Get the list of all VGs and LVs. *)
+      let vgs = Lvm_full.vgs_full () and lvs = Lvm_full.lvs_full () in
+      (* Find one VG & LV (hopefully) that matches the UUIDs. *)
+      let vg =
+        List.find (fun { Structs.vg_uuid } -> vg_uuid = vg_uuid_spec) vgs
+      and lv =
+        List.find (fun { Structs.lv_uuid } -> lv_uuid = lv_uuid_spec) lvs in
+      Mountable.of_device (sprintf "/dev/%s/%s" vg.vg_name lv.lv_name)
+    with
+      Failure _ | Not_found -> default
   )
 
   else if PCRE.matches re_freebsd_gpt spec then (
@@ -503,6 +540,25 @@ and resolve_fstab_device spec md_map os_type =
     default
   )
 
+and resolve_dev_mapper spec default =
+  (* LVM2 does some strange munging on /dev/mapper paths for VGs and
+   * LVs which contain '-' character:
+   *
+   * ><fs> lvcreate LV--test VG--test 32
+   * ><fs> debug ls /dev/mapper
+   * VG----test-LV----test
+   *
+   * This makes it impossible to reverse those paths directly, so
+   * we have implemented lvm_canonical_lv_name in the daemon.
+   *)
+  try
+    match Lvm_utils.lv_canonical spec with
+    | None -> default
+    | Some device -> Mountable.of_device device
+  with
+  (* Ignore devices that don't exist. (RHBZ#811872) *)
+  | Unix.Unix_error (Unix.ENOENT, _, _) -> default
+
 (* type: (h|s|v|xv)
  * disk: [a-z]+
  * part: \d*
@@ -569,4 +625,29 @@ and resolve_diskbyid part default =
     let dev = sprintf "/dev/sda%d" part in
     if is_partition dev then Mountable.of_device dev
     else default
+  )
+
+(* Remove duplicate root mountpoints if they are identical.  If
+ * there are multiple non-identical roots we pick the first and
+ * emit a warning (RHEL-90168).
+ *)
+and remove_duplicate_root_mountpoints (entries : fstab_entry list) =
+  let root_entries, non_root_entries =
+    List.partition (function (_, "/") -> true | _ -> false) entries in
+  (* If there is one root entry (the normal case) return the list unmodified. *)
+  if List.length root_entries <= 1 then entries
+  else (
+    (* If they are not the same, issue a warning. *)
+    if not (List.same root_entries) then
+      eprintf "check_fstab: multiple, non-identical root mountpoints found \
+               in the /etc/fstab of this guest, picking the first.  The \
+               root entries were: [%s]\n"
+        (String.concat "; "
+           (List.map (fun (mountable, mp) ->
+                sprintf "%s -> %s" (Mountable.to_string mountable) mp)
+              root_entries)
+        );
+
+    (* Choose the first root entry and return it. *)
+    List.hd root_entries :: non_root_entries
   )

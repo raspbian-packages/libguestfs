@@ -1,6 +1,6 @@
 #!/bin/bash -
 # libguestfs
-# Copyright (C) 2011-2023 Red Hat Inc.
+# Copyright (C) 2011-2025 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,9 +20,10 @@
 # underlying disk image.  If this test were to fail, you could expect
 # libguestfs to cause massive disk corruption on live guests.
 
+source ./functions.sh
 set -e
+set -x
 
-$TEST_FUNCTIONS
 skip_if_skipped
 
 f=isolation-add-drive-ro.img

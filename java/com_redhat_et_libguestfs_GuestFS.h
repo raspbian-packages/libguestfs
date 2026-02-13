@@ -639,6 +639,14 @@ JNIEXPORT void JNICALL Java_com_redhat_et_libguestfs_GuestFS__1btrfs_1scrub_1can
 
 /*
  * Class:     com_redhat_et_libguestfs_GuestFS
+ * Method:    _btrfs_scrub_full
+ * Signature: (JLjava/lang/String;JZ)V
+ */
+JNIEXPORT void JNICALL Java_com_redhat_et_libguestfs_GuestFS__1btrfs_1scrub_1full
+  (JNIEnv *, jobject, jlong, jstring, jlong, jboolean);
+
+/*
+ * Class:     com_redhat_et_libguestfs_GuestFS
  * Method:    _btrfs_scrub_resume
  * Signature: (JLjava/lang/String;)V
  */
@@ -868,6 +876,14 @@ JNIEXPORT jstring JNICALL Java_com_redhat_et_libguestfs_GuestFS__1command
  */
 JNIEXPORT jobjectArray JNICALL Java_com_redhat_et_libguestfs_GuestFS__1command_1lines
   (JNIEnv *, jobject, jlong, jobjectArray);
+
+/*
+ * Class:     com_redhat_et_libguestfs_GuestFS
+ * Method:    _command_out
+ * Signature: (J[Ljava/lang/String;Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_com_redhat_et_libguestfs_GuestFS__1command_1out
+  (JNIEnv *, jobject, jlong, jobjectArray, jstring);
 
 /*
  * Class:     com_redhat_et_libguestfs_GuestFS
@@ -1160,10 +1176,10 @@ JNIEXPORT jlong JNICALL Java_com_redhat_et_libguestfs_GuestFS__1du
 /*
  * Class:     com_redhat_et_libguestfs_GuestFS
  * Method:    _e2fsck
- * Signature: (JLjava/lang/String;JZZ)V
+ * Signature: (JLjava/lang/String;JZZZ)V
  */
 JNIEXPORT void JNICALL Java_com_redhat_et_libguestfs_GuestFS__1e2fsck
-  (JNIEnv *, jobject, jlong, jstring, jlong, jboolean, jboolean);
+  (JNIEnv *, jobject, jlong, jstring, jlong, jboolean, jboolean, jboolean);
 
 /*
  * Class:     com_redhat_et_libguestfs_GuestFS
@@ -4388,6 +4404,14 @@ JNIEXPORT jstring JNICALL Java_com_redhat_et_libguestfs_GuestFS__1sh
  */
 JNIEXPORT jobjectArray JNICALL Java_com_redhat_et_libguestfs_GuestFS__1sh_1lines
   (JNIEnv *, jobject, jlong, jstring);
+
+/*
+ * Class:     com_redhat_et_libguestfs_GuestFS
+ * Method:    _sh_out
+ * Signature: (JLjava/lang/String;Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_com_redhat_et_libguestfs_GuestFS__1sh_1out
+  (JNIEnv *, jobject, jlong, jstring, jstring);
 
 /*
  * Class:     com_redhat_et_libguestfs_GuestFS

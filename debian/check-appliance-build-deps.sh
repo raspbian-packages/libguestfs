@@ -15,6 +15,7 @@ m4 -DDEBIAN=1 -DEXTRA_PACKAGES= appliance/packagelist.in \
           -e '/^\(bash\|coreutils\|dash\|diffutils\|findutils\|grep\|gzip\|libc-bin\|sed\|tar\|util-linux\)$/d' \
           -e '/\(btrfs-tools\|fuse-exfat\|exfat-utils\|exfat-fuse\|gfs2*-tools\|iproute\|module-init-tools\|procps-ng\)$/d' \
           -e '/^\(util-linux-ng\|sysvinit-core\|linux-image\)$/d' \
+          -e '/^reiserfsprogs$/d' \
     | grep -v ^lib \
     | grep -v ufsutils \
     | sort -u \

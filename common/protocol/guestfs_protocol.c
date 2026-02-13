@@ -2144,6 +2144,18 @@ xdr_guestfs_btrfs_scrub_cancel_args (XDR *xdrs, guestfs_btrfs_scrub_cancel_args 
 }
 
 bool_t
+xdr_guestfs_btrfs_scrub_full_args (XDR *xdrs, guestfs_btrfs_scrub_full_args *objp)
+{
+	register int32_t *buf;
+
+	 if (!xdr_string (xdrs, &objp->path, ~0))
+		 return FALSE;
+	 if (!xdr_bool (xdrs, &objp->readonly))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
 xdr_guestfs_btrfs_scrub_resume_args (XDR *xdrs, guestfs_btrfs_scrub_resume_args *objp)
 {
 	register int32_t *buf;
@@ -2522,6 +2534,17 @@ xdr_guestfs_command_lines_ret (XDR *xdrs, guestfs_command_lines_ret *objp)
 	register int32_t *buf;
 
 	 if (!xdr_array (xdrs, (char **)&objp->lines.lines_val, (u_int *) &objp->lines.lines_len, ~0,
+		sizeof (guestfs_str), (xdrproc_t) xdr_guestfs_str))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_guestfs_command_out_args (XDR *xdrs, guestfs_command_out_args *objp)
+{
+	register int32_t *buf;
+
+	 if (!xdr_array (xdrs, (char **)&objp->arguments.arguments_val, (u_int *) &objp->arguments.arguments_len, ~0,
 		sizeof (guestfs_str), (xdrproc_t) xdr_guestfs_str))
 		 return FALSE;
 	return TRUE;
@@ -2971,6 +2994,8 @@ xdr_guestfs_e2fsck_args (XDR *xdrs, guestfs_e2fsck_args *objp)
 	 if (!xdr_bool (xdrs, &objp->correct))
 		 return FALSE;
 	 if (!xdr_bool (xdrs, &objp->forceall))
+		 return FALSE;
+	 if (!xdr_bool (xdrs, &objp->forceno))
 		 return FALSE;
 	return TRUE;
 }
@@ -8348,6 +8373,16 @@ xdr_guestfs_sh_lines_ret (XDR *xdrs, guestfs_sh_lines_ret *objp)
 
 	 if (!xdr_array (xdrs, (char **)&objp->lines.lines_val, (u_int *) &objp->lines.lines_len, ~0,
 		sizeof (guestfs_str), (xdrproc_t) xdr_guestfs_str))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_guestfs_sh_out_args (XDR *xdrs, guestfs_sh_out_args *objp)
+{
+	register int32_t *buf;
+
+	 if (!xdr_string (xdrs, &objp->command, ~0))
 		 return FALSE;
 	return TRUE;
 }

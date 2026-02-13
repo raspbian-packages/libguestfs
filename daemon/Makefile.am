@@ -22,7 +22,6 @@ BUILT_SOURCES = \
 	caml-stubs.c \
 	dispatch.c \
 	names.c \
-	lvm-tokenization.c \
 	structs-cleanups.c \
 	structs-cleanups.h \
 	stubs-0.c \
@@ -52,6 +51,7 @@ generator_built = \
 	listfs.mli \
 	lvm.mli \
 	lvm_dm.mli \
+	lvm_full.mli \
 	md.mli \
 	mount.mli \
 	optgroups.ml \
@@ -152,7 +152,6 @@ guestfsd_SOURCES = \
 	luks.c \
 	lvm.c \
 	lvm-filter.c \
-	lvm-tokenization.c \
 	md.c \
 	mkfs.c \
 	mknod.c \
@@ -215,7 +214,7 @@ guestfsd_SOURCES = \
 	zerofree.c
 
 guestfsd_LDFLAGS = \
-	-L$(shell $(OCAMLC) -where) \
+	-L$(OCAMLLIB) \
 	-L$(shell $(OCAMLFIND) query hivex) \
 	-L$(shell $(OCAMLFIND) query augeas) \
 	-L../common/mlutils \
@@ -225,7 +224,7 @@ guestfsd_LDADD = \
 	camldaemon.o \
 	$(ACL_LIBS) \
 	$(CAP_LIBS) \
-	$(JANSSON_LIBS) \
+	$(JSON_C_LIBS) \
 	$(SELINUX_LIBS) \
 	$(AUGEAS_LIBS) \
 	$(HIVEX_LIBS) \
@@ -247,7 +246,7 @@ guestfsd_LDADD = \
 
 guestfsd_CPPFLAGS = \
 	-DCAML_NAME_SPACE \
-	-I$(shell $(OCAMLC) -where) \
+	-I$(OCAMLLIB) \
 	-I$(top_srcdir)/gnulib/lib \
 	-I$(top_builddir)/gnulib/lib \
 	-I$(top_srcdir)/lib \
@@ -265,7 +264,7 @@ guestfsd_CFLAGS = \
 	$(AUGEAS_CFLAGS) \
 	$(HIVEX_CFLAGS) \
 	$(SD_JOURNAL_CFLAGS) \
-	$(JANSSON_CFLAGS) \
+	$(JSON_C_CFLAGS) \
 	$(PCRE2_CFLAGS) \
 	$(LIBRPM_CFLAGS)
 
@@ -299,6 +298,7 @@ SOURCES_MLI = \
 	listfs.mli \
 	lvm.mli \
 	lvm_dm.mli \
+	lvm_full.mli \
 	lvm_utils.mli \
 	md.mli \
 	mount.mli \
@@ -334,6 +334,7 @@ SOURCES_ML = \
 	ldm.ml \
 	link.ml \
 	lvm.ml \
+	lvm_full.ml \
 	lvm_utils.ml \
 	lvm_dm.ml \
 	findfs.ml \
@@ -423,7 +424,7 @@ daemon_utils_tests_CPPFLAGS = \
 	-DCAML_NAME_SPACE \
 	-I. \
 	-I$(top_builddir) \
-	-I$(shell $(OCAMLC) -where) \
+	-I$(OCAMLLIB) \
 	-I$(top_srcdir)/gnulib/lib \
 	-I$(top_builddir)/gnulib/lib \
 	-I$(top_srcdir)/common/errnostring \

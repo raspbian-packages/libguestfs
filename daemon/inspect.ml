@@ -1,5 +1,5 @@
 (* guestfs-inspection
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,42 +29,53 @@ let re_primary_partition = PCRE.compile "^/dev/(?:h|s|v)d.[1234]$"
 let rec inspect_os () =
   Mount_utils.umount_all ();
 
-  (* Iterate over all detected filesystems.  Inspect each one in turn. *)
-  let fses = Listfs.list_filesystems () in
+  (* Start with the full list of filesystems, and inspect each one
+   * in turn to determine its possible role (root, /usr, homedir, etc.)
+   * Then we filter out duplicates and merge some filesystems into
+   * others.
+   *)
 
   let fses =
+    Listfs.list_filesystems () |>
+
+    (* Filter out those filesystems which are mountable, and inspect
+     * each one to find its possible role.  Converts the list to
+     * type: {!Inspect_types.fs} list.
+     *)
     List.filter_map (
       fun (mountable, vfs_type) ->
         Inspect_fs.check_for_filesystem_on mountable vfs_type
-  ) fses in
-  if verbose () then (
-    eprintf "inspect_os: fses:\n";
-    List.iter (fun fs -> eprintf "%s" (string_of_fs fs)) fses;
-    flush stderr
-  );
+    ) |>
 
-  (* The OS inspection information for CoreOS are gathered by inspecting
-   * multiple filesystems. Gather all the inspected information in the
-   * inspect_fs struct of the root filesystem.
-   *)
-  let fses = collect_coreos_inspection_info fses in
+    debug_list_of_filesystems |>
 
-  (* Check if the same filesystem was listed twice as root in fses.
-   * This may happen for the *BSD root partition where an MBR partition
-   * is a shadow of the real root partition probably /dev/sda5
-   *)
-  let fses = check_for_duplicated_bsd_root fses in
+    (* The OS inspection information for CoreOS are gathered by inspecting
+     * multiple filesystems. Gather all the inspected information in the
+     * inspect_fs struct of the root filesystem.
+     *)
+    collect_coreos_inspection_info |>
 
-  (* For Linux guests with a separate /usr filesystem, merge some of the
-   * inspected information in that partition to the inspect_fs struct
-   * of the root filesystem.
-   *)
-  let fses = collect_linux_inspection_info fses in
+    (* Check if the same filesystem was listed twice as root in fses.
+     * This may happen for the *BSD root partition where an MBR partition
+     * is a shadow of the real root partition probably /dev/sda5
+     *)
+    check_for_duplicated_bsd_root |>
+
+    (* Check if the root filesystems are duplicated by btrfs snapshots.
+     * This happens especially for SLES guests.
+     *)
+    check_for_duplicated_btrfs_snapshots_of_root |>
+
+    (* For Linux guests with a separate /usr filesystem, merge some of the
+     * inspected information in that partition to the inspect_fs struct
+     * of the root filesystem.
+     *)
+    collect_linux_inspection_info in
 
   (* Save what we found in a global variable. *)
   Inspect_types.inspect_fses := fses;
 
-  (* At this point we have, in the handle, a list of all filesystems
+  (* At this point we have (in a global variable) a list of all filesystems
    * found and data about each one.  Now we assemble the list of
    * filesystems which are root devices.
    *
@@ -72,11 +83,21 @@ let rec inspect_os () =
    *)
   inspect_get_roots ()
 
+and debug_list_of_filesystems fses =
+  if verbose () then (
+    eprintf "inspect_os: fses:\n";
+    List.iter (fun fs -> eprintf "%s" (string_of_fs fs)) fses;
+    flush stderr
+  );
+  fses
+
 (* Traverse through the filesystem list and find out if it contains
  * the [/] and [/usr] filesystems of a CoreOS image. If this is the
  * case, sum up all the collected information on the root fs.
  *)
 and collect_coreos_inspection_info fses =
+  eprintf "inspect_os: collect_coreos_inspection_info\n%!";
+
   (* Split the list into CoreOS root(s), CoreOS usr(s), and
    * everything else.
    *)
@@ -134,6 +155,8 @@ and collect_coreos_inspection_info fses =
  * [http://www.freebsd.org/doc/handbook/disk-organization.html])
  *)
 and check_for_duplicated_bsd_root fses =
+  eprintf "inspect_os: check_for_duplicated_bsd_root\n%!";
+
   try
     let is_primary_partition = function
       | { m_type = (MountablePath | MountableBtrfsVol _) } -> false
@@ -172,6 +195,52 @@ and check_for_duplicated_bsd_root fses =
   with
     Not_found -> fses
 
+(* Check for the case where the root filesystem gets duplicated by
+ * btrfs snapshots.  Ignore the snapshots in this case (RHEL-93109).
+ *)
+and check_for_duplicated_btrfs_snapshots_of_root fses =
+  eprintf "inspect_os: check_for_duplicated_btrfs_snapshots_of_root\n%!";
+
+  let fs_is_btrfs_snapshot_of_root = function
+    (* Is this filesystem a btrfs snapshot of root? *)
+    | { fs_location =
+          { mountable = { m_type = MountableBtrfsVol _; m_device = dev1 };
+            vfs_type = "btrfs" };
+        role = RoleRoot inspection_data1 } as fs1 ->
+       (* Return true if it duplicates the parent device which has
+        * a root role.
+        *)
+       List.exists (function
+         | { fs_location =
+               { mountable = { m_type = MountableDevice; m_device = dev2 };
+                 vfs_type = "btrfs" };
+             role = RoleRoot inspection_data2 }
+              when dev1 = dev2 ->
+            (* Check the roles are similar enough.  In my test I saw
+             * that /etc/fstab was slightly different in the parent
+             * and snapshot.  It's possible this is because the snapshot
+             * was created during installation, but it's not clear.
+             *)
+            let similar =
+              inspection_data1.os_type = inspection_data2.os_type &&
+              inspection_data1.distro = inspection_data2.distro &&
+              inspection_data1.product_name = inspection_data2.product_name &&
+              inspection_data1.version = inspection_data2.version in
+            if verbose () && similar then
+              eprintf "check_for_duplicated_btrfs_snapshots_of_root: \
+                       dropping duplicate btrfs snapshot:\n%s\n"
+                (string_of_fs fs1);
+            similar
+         | _ -> false
+       ) fses
+
+    (* Anything else is not a snapshot. *)
+    | _ -> false
+  in
+
+  (* Filter out the duplicates. *)
+  List.filter (Fun.negate fs_is_btrfs_snapshot_of_root) fses
+
 (* Traverse through the filesystem list and find out if it contains
  * the [/] and [/usr] filesystems of a Linux image (but not CoreOS,
  * for which there is a separate [collect_coreos_inspection_info]).
@@ -180,6 +249,8 @@ and check_for_duplicated_bsd_root fses =
  * root fs from the respective [/usr] filesystems.
  *)
 and collect_linux_inspection_info fses =
+  eprintf "inspect_os: collect_linux_inspection_info\n%!";
+
   List.map (
     function
     | { role = RoleRoot { distro = Some DISTRO_COREOS } } as root -> root
@@ -194,6 +265,9 @@ and collect_linux_inspection_info fses =
  * or other ways to identify the OS).
  *)
 and collect_linux_inspection_info_for fses root =
+  eprintf "inspect_os: collect_linux_inspection_info_for %s\n"
+    (string_of_location root.fs_location);
+
   let root_fstab =
     match root with
     | { role = RoleRoot { fstab = f } } -> f
@@ -207,14 +281,21 @@ and collect_linux_inspection_info_for fses root =
            (* This checks that this usr is found in the fstab of
             * the root filesystem.
             *)
+           eprintf "inspect_os: checking if %s found in fstab of this root\n"
+             (string_of_location usr_mp);
            List.exists (
              fun (mountable, _) ->
+               eprintf "inspect_os: collect_linux_inspection_info_for: \
+                        compare %s = %s\n"
+                 (Mountable.to_string usr_mp.mountable)
+                 (Mountable.to_string mountable);
                usr_mp.mountable = mountable
            ) root_fstab
         | _ -> false
       ) fses in
 
-    eprintf "collect_linux_inspection_info_for: merging:\n%sinto:\n%s"
+    eprintf "inspect_os: collect_linux_inspection_info_for: merging:\n\
+             %sinto:\n%s"
       (string_of_fs usr) (string_of_fs root);
     merge usr root;
     root

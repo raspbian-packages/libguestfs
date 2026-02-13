@@ -1,6 +1,6 @@
 #!/bin/bash -
 # libguestfs
-# Copyright (C) 2010-2023 Red Hat Inc.
+# Copyright (C) 2010-2025 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,9 +20,10 @@
 # https://bugzilla.redhat.com/show_bug.cgi?id=576879#c5
 # where both ends send cancel messages simultaneously.
 
+source ./functions.sh
 set -e
+set -x
 
-$TEST_FUNCTIONS
 skip_if_skipped
 
 guestfish <<EOF

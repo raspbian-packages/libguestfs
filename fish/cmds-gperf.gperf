@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -111,6 +111,7 @@ extern struct command_entry btrfs_replace_cmd_entry;
 extern struct command_entry btrfs_rescue_chunk_recover_cmd_entry;
 extern struct command_entry btrfs_rescue_super_recover_cmd_entry;
 extern struct command_entry btrfs_scrub_cancel_cmd_entry;
+extern struct command_entry btrfs_scrub_full_cmd_entry;
 extern struct command_entry btrfs_scrub_resume_cmd_entry;
 extern struct command_entry btrfs_scrub_start_cmd_entry;
 extern struct command_entry btrfs_scrub_status_cmd_entry;
@@ -140,6 +141,7 @@ extern struct command_entry clear_backend_setting_cmd_entry;
 extern struct command_entry clevis_luks_unlock_cmd_entry;
 extern struct command_entry command_cmd_entry;
 extern struct command_entry command_lines_cmd_entry;
+extern struct command_entry command_out_cmd_entry;
 extern struct command_entry compress_device_out_cmd_entry;
 extern struct command_entry compress_out_cmd_entry;
 extern struct command_entry config_cmd_entry;
@@ -562,6 +564,7 @@ extern struct command_entry sfdisk_kernel_geometry_cmd_entry;
 extern struct command_entry sfdisk_l_cmd_entry;
 extern struct command_entry sh_cmd_entry;
 extern struct command_entry sh_lines_cmd_entry;
+extern struct command_entry sh_out_cmd_entry;
 extern struct command_entry shutdown_cmd_entry;
 extern struct command_entry sleep_cmd_entry;
 extern struct command_entry sparse_cmd_entry;
@@ -798,6 +801,8 @@ btrfs_rescue_super_recover, &btrfs_rescue_super_recover_cmd_entry
 btrfs-rescue-super-recover, &btrfs_rescue_super_recover_cmd_entry
 btrfs_scrub_cancel, &btrfs_scrub_cancel_cmd_entry
 btrfs-scrub-cancel, &btrfs_scrub_cancel_cmd_entry
+btrfs_scrub_full, &btrfs_scrub_full_cmd_entry
+btrfs-scrub-full, &btrfs_scrub_full_cmd_entry
 btrfs_scrub_resume, &btrfs_scrub_resume_cmd_entry
 btrfs-scrub-resume, &btrfs_scrub_resume_cmd_entry
 btrfs_scrub_start, &btrfs_scrub_start_cmd_entry
@@ -853,6 +858,8 @@ clevis-luks-unlock, &clevis_luks_unlock_cmd_entry
 command, &command_cmd_entry
 command_lines, &command_lines_cmd_entry
 command-lines, &command_lines_cmd_entry
+command_out, &command_out_cmd_entry
+command-out, &command_out_cmd_entry
 compress_device_out, &compress_device_out_cmd_entry
 compress-device-out, &compress_device_out_cmd_entry
 compress_out, &compress_out_cmd_entry
@@ -1626,6 +1633,8 @@ sfdisk-l, &sfdisk_l_cmd_entry
 sh, &sh_cmd_entry
 sh_lines, &sh_lines_cmd_entry
 sh-lines, &sh_lines_cmd_entry
+sh_out, &sh_out_cmd_entry
+sh-out, &sh_out_cmd_entry
 shutdown, &shutdown_cmd_entry
 sleep, &sleep_cmd_entry
 sparse, &sparse_cmd_entry

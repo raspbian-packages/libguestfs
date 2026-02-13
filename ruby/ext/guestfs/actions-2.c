@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -950,6 +950,56 @@ guestfs_int_ruby_command (VALUE gv, VALUE argumentsv)
   volatile VALUE rv = rb_str_new2 (r);
   free (r);
   return rv;
+}
+
+/*
+ * call-seq:
+ *   g.command_out(arguments, output) -> nil
+ *
+ * run a command from the guest filesystem
+ *
+ * This is the same as "g.command", but streams the output
+ * back, handling the case where the output from the
+ * command is larger than the protocol limit.
+ * 
+ * See also: "g.sh_out"
+ *
+ *
+ * [Since] Added in version 1.55.6.
+ *
+ * [C API] For the C API documentation for this function, see
+ *         {guestfs_command_out}[http://libguestfs.org/guestfs.3.html#guestfs_command_out].
+ */
+VALUE
+guestfs_int_ruby_command_out (VALUE gv, VALUE argumentsv, VALUE outputv)
+{
+  guestfs_h *g;
+  Data_Get_Struct (gv, guestfs_h, g);
+  if (!g)
+    rb_raise (rb_eArgError, "%s: used handle after closing it", "command_out");
+
+  char **arguments;
+  Check_Type (argumentsv, T_ARRAY);
+  {
+    size_t i, len;
+    len = RARRAY_LEN (argumentsv);
+    arguments = ALLOC_N (char *, len+1);
+    for (i = 0; i < len; ++i) {
+      volatile VALUE v = rb_ary_entry (argumentsv, i);
+      arguments[i] = StringValueCStr (v);
+    }
+    arguments[len] = NULL;
+  }
+  const char *output = StringValueCStr (outputv);
+
+  int r;
+
+  r = guestfs_command_out (g, arguments, output);
+  free (arguments);
+  if (r == -1)
+    rb_raise (e_Error, "%s", guestfs_last_error (g));
+
+  return Qnil;
 }
 
 /*

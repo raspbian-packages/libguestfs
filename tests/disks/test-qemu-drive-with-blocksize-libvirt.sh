@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (C) 2013-2023 Red Hat Inc.
+# Copyright (C) 2013-2025 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,9 +18,10 @@
 # Test that disks with <blockio .../> tag map to the correct qemu -device
 # parameters and respect to logical_block_size value.
 
+source ./functions.sh
 set -e
+set -x
 
-$TEST_FUNCTIONS
 skip_if_skipped
 skip_unless_libvirt_minimum_version 1 1 3
 

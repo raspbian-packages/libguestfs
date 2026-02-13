@@ -10,13 +10,14 @@ pkglist_to_deps() {
         -e 's,^\(systemd-sysv\|sysvinit-core\)$,systemd-sysv | sysvinit-core,' \
         -e 's,^\(libsystemd-[a-z1-9-]*0\)$,libsystemd0 | \1,' \
         -e 's,^\(util-linux\|fdisk\)$,fdisk | util-linux (<< 2.29.2),' \
-        -e 's,^\(dhcpcd-base\|isc-dhcp-client\)$,dhcpcd-base | isc-dhcp-client,' \
         -e '/^\(bash\|coreutils\|findutils\|grep\|gzip\|libc-bin\|sed\|tar\)$/d' \
+        -e '/^reiserfsprogs$/d' \
+        -e '/^isc-dhcp-client$/d' \
         | tr '\n' ','
     echo
 }
 
-for p in gfs2 hfsplus jfs nilfs reiserfs rescue rsync xfs zfs
+for p in gfs2 hfsplus jfs nilfs rescue rsync xfs
 do
     cat debian/libguestfs-$p/usr/lib/*-*/guestfs/supermin.d/packages-$p \
         |  pkglist_to_deps \

@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -237,6 +237,8 @@ Init__guestfs (void)
                     guestfs_int_ruby_btrfs_rescue_super_recover, 1);
   rb_define_method (c_guestfs, "btrfs_scrub_cancel",
                     guestfs_int_ruby_btrfs_scrub_cancel, 1);
+  rb_define_method (c_guestfs, "btrfs_scrub_full",
+                    guestfs_int_ruby_btrfs_scrub_full, -1);
   rb_define_method (c_guestfs, "btrfs_scrub_resume",
                     guestfs_int_ruby_btrfs_scrub_resume, 1);
   rb_define_method (c_guestfs, "btrfs_scrub_start",
@@ -299,6 +301,8 @@ Init__guestfs (void)
                     guestfs_int_ruby_command, 1);
   rb_define_method (c_guestfs, "command_lines",
                     guestfs_int_ruby_command_lines, 1);
+  rb_define_method (c_guestfs, "command_out",
+                    guestfs_int_ruby_command_out, 2);
   rb_define_method (c_guestfs, "compress_device_out",
                     guestfs_int_ruby_compress_device_out, -1);
   rb_define_method (c_guestfs, "compress_out",
@@ -1201,6 +1205,8 @@ Init__guestfs (void)
                     guestfs_int_ruby_sh, 1);
   rb_define_method (c_guestfs, "sh_lines",
                     guestfs_int_ruby_sh_lines, 1);
+  rb_define_method (c_guestfs, "sh_out",
+                    guestfs_int_ruby_sh_out, 2);
   rb_define_method (c_guestfs, "shutdown",
                     guestfs_int_ruby_shutdown, 0);
   rb_define_method (c_guestfs, "sleep",

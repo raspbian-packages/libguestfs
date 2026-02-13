@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -581,6 +581,7 @@ list_commands (void)
   printf ("%-20s %s\n", "btrfs-rescue-chunk-recover", _("recover the chunk tree of btrfs filesystem"));
   printf ("%-20s %s\n", "btrfs-rescue-super-recover", _("recover bad superblocks from good copies"));
   printf ("%-20s %s\n", "btrfs-scrub-cancel", _("cancel a running scrub"));
+  printf ("%-20s %s\n", "btrfs-scrub-full", _("run a full scrub on a btrfs filesystem"));
   printf ("%-20s %s\n", "btrfs-scrub-resume", _("resume a previously canceled or interrupted scrub"));
   printf ("%-20s %s\n", "btrfs-scrub-start", _("read all data from all disks and verify checksums"));
   printf ("%-20s %s\n", "btrfs-scrub-status", _("show status of running or finished scrub"));
@@ -613,6 +614,7 @@ list_commands (void)
   printf ("%-20s %s\n", "clevis-luks-unlock", _("open an encrypted LUKS block device with Clevis and Tang"));
   printf ("%-20s %s\n", "command", _("run a command from the guest filesystem"));
   printf ("%-20s %s\n", "command-lines", _("run a command, returning lines"));
+  printf ("%-20s %s\n", "command-out", _("run a command from the guest filesystem"));
   printf ("%-20s %s\n", "compress-device-out", _("output compressed device"));
   printf ("%-20s %s\n", "compress-out", _("output compressed file"));
   printf ("%-20s %s\n", "config", _("add hypervisor parameters"));
@@ -1092,6 +1094,7 @@ list_commands (void)
   printf ("%-20s %s\n", "sfdisk-l", _("display the partition table"));
   printf ("%-20s %s\n", "sh", _("run a command via the shell"));
   printf ("%-20s %s\n", "sh-lines", _("run a command via the shell returning lines"));
+  printf ("%-20s %s\n", "sh-out", _("run a command via the shell"));
   printf ("%-20s %s\n", "shutdown", _("shutdown the hypervisor"));
   printf ("%-20s %s\n", "sleep", _("sleep for some seconds"));
   printf ("%-20s ", "smp");

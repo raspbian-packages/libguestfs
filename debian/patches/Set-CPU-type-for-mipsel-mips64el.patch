@@ -7,7 +7,7 @@ Subject: Set CPU type for mipsel, mips64el
  1 file changed, 6 insertions(+)
 
 diff --git a/lib/appliance-cpu.c b/lib/appliance-cpu.c
-index 8ce5084..841e601 100644
+index 0f75f38..5ffd257 100644
 --- a/lib/appliance-cpu.c
 +++ b/lib/appliance-cpu.c
 @@ -90,6 +90,12 @@ guestfs_int_get_cpu_model (int kvm)

@@ -7,7 +7,7 @@ libguestfs generated file
           and from the code in the generator/ subdirectory.
  ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 
- Copyright (C) 2009-2023 Red Hat Inc.
+ Copyright (C) 2009-2025 Red Hat Inc.
 
  Ця програма є вільним програмним забезпеченням; ви можете поширювати та/або
  змінювати її за умов дотримання GNU General Public License утому вигляді, що
@@ -1480,6 +1480,10 @@ I<Ця функція вважається застарілою.> Замінни
                      const char *device,
                      ...);
 
+I<This function is deprecated.> In new code, use the L</guestfs_btrfs_scrub_full> call instead.
+
+Застарілі функції не буде вилучено з програмного інтерфейсу, але той факт, що їх визнано застарілими, вказує на проблеми із належним використанням цих функцій.
+
 У цьому виклику можна вказати список необов'язкових аргументів. Ви можете не використати жодного або використати декілька з вказаних нижче пар параметрів і завершити список за допомогою C<-1>. Див. L</ВИКЛИКИ ІЗ НЕОБОВ'ЯЗКОВИМИ АРГУМЕНТАМИ>.
 
  GUESTFS_BTRFS_FSCK_SUPERBLOCK, int64_t superblock,
@@ -1738,6 +1742,47 @@ I<Ця функція вважається застарілою.> Замінни
 Працездатність цієї функції залежить від можливості C<btrfs>. Див. також L</guestfs_feature_available>.
 
 (Додано у 1.29.22)
+
+=head2 guestfs_btrfs_scrub_full
+
+ int
+ guestfs_btrfs_scrub_full (guestfs_h *g,
+                           const char *path,
+                           ...);
+
+У цьому виклику можна вказати список необов'язкових аргументів. Ви можете не використати жодного або використати декілька з вказаних нижче пар параметрів і завершити список за допомогою C<-1>. Див. L</ВИКЛИКИ ІЗ НЕОБОВ'ЯЗКОВИМИ АРГУМЕНТАМИ>.
+
+ GUESTFS_BTRFS_SCRUB_FULL_READONLY, int readonly,
+
+Run a full scrub on a btrfs filesystem and wait for it to finish.  If the filesystem has errors this will return an error.
+
+Ця функція повертає 0 у разі успіху і -1 у разі помилки.
+
+Працездатність цієї функції залежить від можливості C<btrfs>. Див. також L</guestfs_feature_available>.
+
+(Added in 1.55.12)
+
+=head2 guestfs_btrfs_scrub_full_va
+
+ int
+ guestfs_btrfs_scrub_full_va (guestfs_h *g,
+                              const char *path,
+                              va_list args);
+
+This is the "va_list variant" of L</guestfs_btrfs_scrub_full>.
+
+Див. L</ВИКЛИКИ ІЗ НЕОБОВ'ЯЗКОВИМИ АРГУМЕНТАМИ>.
+
+=head2 guestfs_btrfs_scrub_full_argv
+
+ int
+ guestfs_btrfs_scrub_full_argv (guestfs_h *g,
+                                const char *path,
+                                const struct guestfs_btrfs_scrub_full_argv *optargs);
+
+This is the "argv variant" of L</guestfs_btrfs_scrub_full>.
+
+Див. L</ВИКЛИКИ ІЗ НЕОБОВ'ЯЗКОВИМИ АРГУМЕНТАМИ>.
 
 =head2 guestfs_btrfs_scrub_resume
 
@@ -2297,7 +2342,7 @@ This command opens a block device that has been encrypted according to the Linux
 
 C<device> is the encrypted block device.
 
-The appliance will connect to the Tang servers noted in the tree of Clevis pins that is bound to a keyslot of the LUKS header.  The Clevis pin tree may comprise C<sss> (redudancy) pins as internal nodes (optionally), and C<tang> pins as leaves.  C<tpm2> pins are not supported.  The appliance unlocks the encrypted block device by combining responses from the Tang servers with metadata from the LUKS header; there is no C<key> parameter.
+The appliance will connect to the Tang servers noted in the tree of Clevis pins that is bound to a keyslot of the LUKS header.  The Clevis pin tree may comprise C<sss> (redundancy) pins as internal nodes (optionally), and C<tang> pins as leaves.  C<tpm2> pins are not supported.  The appliance unlocks the encrypted block device by combining responses from the Tang servers with metadata from the LUKS header; there is no C<key> parameter.
 
 This command will fail if networking has not been enabled for the appliance. Refer to C<guestfs_set_network>.
 
@@ -2354,6 +2399,23 @@ This function depends on the feature C<clevisluks>.  See also L</guestfs_feature
 Через обмеження протоколу передавання повідомлень існує граничний об'єм повідомлення, щось у діапазоні від 2 МБ до 4 МБ. Див. L<guestfs(3)/ОБМЕЖЕННЯ ПРОТОКОЛУ>.
 
 (Додано у 1.9.1)
+
+=head2 guestfs_command_out
+
+ int
+ guestfs_command_out (guestfs_h *g,
+                      char *const *arguments,
+                      const char *output);
+
+This is the same as C<guestfs_command>, but streams the output back, handling the case where the output from the command is larger than the protocol limit.
+
+See also: C<guestfs_sh_out>
+
+Ця функція повертає 0 у разі успіху і -1 у разі помилки.
+
+Команда, виконання якої триває довго, може створювати повідомлення щодо поступу виконання, які програма, яка викликає команду, може показувати за допомогою панелі або індикатора поступу. Щоб отримувати такі повідомлення, програма має зареєструвати зворотний виклик події поступу. Див. L<guestfs(3)/GUESTFS_EVENT_PROGRESS>.
+
+(Added in 1.55.6)
 
 =head2 guestfs_compress_device_out
 
@@ -3367,6 +3429,7 @@ C<шлях> може бути адресою файла або каталогу.
 
  GUESTFS_E2FSCK_CORRECT, int correct,
  GUESTFS_E2FSCK_FORCEALL, int forceall,
+ GUESTFS_E2FSCK_FORCENO, int forceno,
 
 Ця команда виконує перевірку файлової системи ext2/ext3 на пристрої C<пристрій>. Вона може приймати такі необов'язкові аргументи:
 
@@ -3376,13 +3439,19 @@ C<шлях> може бути адресою файла або каталогу.
 
 Автоматично виправляти файлову систему. Використання цього параметра призведе до того, що e2fsck автоматично виправлятиме усі проблеми файлової системи, які може бути безпечно виправлено без втручання людини.
 
-Цей параметр не можна використовувати одночасно із параметром C<forceall>.
+This option may not be specified at the same time as the C<forceall> or C<forceno> options.
 
 =item C<forceall>
 
 Припускати відповідь «так» на усі питання; уможливлює неінтерактивне використання e2fsck.
 
-Цей параметр не можна використовувати одночасно із параметром C<correct>.
+This option may not be specified at the same time as the C<correct> or C<forceno> options.
+
+=item C<forceno>
+
+Open the filesystem readonly and assume an answer of ‘no’ to all questions; allows e2fsck to be used non-interactively.
+
+This option may not be specified at the same time as the C<correct> or C<forceall> options.
 
 =back
 
@@ -11701,6 +11770,21 @@ I<Ця функція вважається застарілою.> У новом�
 Ця функція повертає масив рядків із завершальним NULL (подібно до L<environ(3)>) або NULL, якщо сталася помилка. I<Після використання слід звільнити рядки і масив>.
 
 (Додано у 1.0.50)
+
+=head2 guestfs_sh_out
+
+ int
+ guestfs_sh_out (guestfs_h *g,
+                 const char *command,
+                 const char *output);
+
+This is the same as C<guestfs_sh>, but streams the output back, handling the case where the output from the command is larger than the protocol limit.
+
+See also: C<guestfs_command_out>
+
+Ця функція повертає 0 у разі успіху і -1 у разі помилки.
+
+(Added in 1.55.6)
 
 =head2 guestfs_shutdown
 

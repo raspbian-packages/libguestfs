@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -188,6 +188,8 @@ dispatch (ei_x_buff *retbuff, const char *buff, int *index)
     return run_btrfs_rescue_super_recover (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_scrub_cancel"))
     return run_btrfs_scrub_cancel (retbuff, buff, index);
+  else if (atom_equals (fun, "btrfs_scrub_full"))
+    return run_btrfs_scrub_full (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_scrub_resume"))
     return run_btrfs_scrub_resume (retbuff, buff, index);
   else if (atom_equals (fun, "btrfs_scrub_start"))
@@ -246,6 +248,8 @@ dispatch (ei_x_buff *retbuff, const char *buff, int *index)
     return run_command (retbuff, buff, index);
   else if (atom_equals (fun, "command_lines"))
     return run_command_lines (retbuff, buff, index);
+  else if (atom_equals (fun, "command_out"))
+    return run_command_out (retbuff, buff, index);
   else if (atom_equals (fun, "compress_device_out"))
     return run_compress_device_out (retbuff, buff, index);
   else if (atom_equals (fun, "compress_out"))
@@ -1126,6 +1130,8 @@ dispatch (ei_x_buff *retbuff, const char *buff, int *index)
     return run_sh (retbuff, buff, index);
   else if (atom_equals (fun, "sh_lines"))
     return run_sh_lines (retbuff, buff, index);
+  else if (atom_equals (fun, "sh_out"))
+    return run_sh_out (retbuff, buff, index);
   else if (atom_equals (fun, "shutdown"))
     return run_shutdown (retbuff, buff, index);
   else if (atom_equals (fun, "sleep"))

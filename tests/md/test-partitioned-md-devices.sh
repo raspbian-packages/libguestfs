@@ -17,12 +17,13 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 # Test guestfish list-filesystems command finds file system on partitioned
-# md device and does't take into account md device itself (similar to as
+# md device and doesn't take into account md device itself (similar to as
 # physical devices are skipped if they are partitioned)
 
+source ./functions.sh
 set -e
+set -x
 
-$TEST_FUNCTIONS
 skip_if_skipped
 
 disk1=list-filesystems2-1.img

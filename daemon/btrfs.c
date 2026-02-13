@@ -1,5 +1,5 @@
 /* libguestfs - the guestfsd daemon
- * Copyright (C) 2011-2023 Red Hat Inc.
+ * Copyright (C) 2011-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -685,7 +685,7 @@ do_btrfs_device_delete (char *const *devices, const char *fs)
  * -U UUID      change fsid to UUID
  * -u           change fsid, use a random one
  * since v4.1
- * We could check wheter 'btrfstune' support
+ * We could check whether 'btrfstune' support
  * '-u' and '-U UUID' option by checking the output of
  * 'btrfstune' command.
  */
@@ -1176,7 +1176,7 @@ do_btrfs_qgroup_destroy (const char *qgroupid, const char *subvolume)
 /* btrfs qgroup show command change default output to
  * binary prefix since v3.18.2, such as KiB;
  * also introduced '--raw' to keep traditional behaviour.
- * We could check wheter 'btrfs qgroup show' support '--raw'
+ * We could check whether 'btrfs qgroup show' support '--raw'
  * option by checking the output of
  * 'btrfs qgroup show' support --help' command.
  */
@@ -1442,6 +1442,47 @@ do_btrfs_scrub_resume (const char *path)
   ADD_ARG (argv, i, NULL);
 
   r = commandv (NULL, &err, argv);
+  if (r == -1) {
+    reply_with_error ("%s: %s", path, err);
+    return -1;
+  }
+
+  return 0;
+}
+
+/* Takes optional arguments, consult optargs_bitmask. */
+int
+do_btrfs_scrub_full (const char *path, int readonly)
+{
+  const size_t MAX_ARGS = 64;
+  const char *argv[MAX_ARGS];
+  size_t i = 0;
+  CLEANUP_FREE char *path_buf = NULL;
+  CLEANUP_FREE char *out = NULL, *err = NULL;
+  int r;
+
+  path_buf = sysroot_path (path);
+  if (path_buf == NULL) {
+    reply_with_perror ("malloc");
+    return -1;
+  }
+
+  ADD_ARG (argv, i, "btrfs");
+  ADD_ARG (argv, i, "scrub");
+  ADD_ARG (argv, i, "start");
+  ADD_ARG (argv, i, "-B");      /* foreground */
+
+  /* Optional arguments. */
+  if ((optargs_bitmask & GUESTFS_BTRFS_SCRUB_FULL_READONLY_BITMASK) &&
+      readonly)
+    ADD_ARG (argv, i, "-r");
+
+  ADD_ARG (argv, i, path_buf);
+  ADD_ARG (argv, i, NULL);
+
+  r = commandvf (&out, &err,
+                 COMMAND_FLAG_FOLD_STDOUT_ON_STDERR,
+                 argv);
   if (r == -1) {
     reply_with_error ("%s: %s", path, err);
     return -1;

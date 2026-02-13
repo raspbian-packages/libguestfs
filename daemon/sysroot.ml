@@ -1,5 +1,5 @@
 (* guestfs-inspection
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,13 @@
 
 open Std_utils
 
-external sysroot : unit -> string = "guestfs_int_daemon_sysroot"
+external get_sysroot : unit -> string = "guestfs_int_daemon_get_sysroot"
 
-let sysroot_path path = sysroot () // path
+let sysroot = lazy (get_sysroot ())
+let sysroot () = Lazy.force sysroot
+
+let sysroot_path path =
+  let sysroot = sysroot () in
+  if path = "" then sysroot
+  else if path.[0] = '/' then sysroot ^ path
+  else sysroot // path

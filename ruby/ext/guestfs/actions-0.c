@@ -4,7 +4,7 @@
  *          and from the code in the generator/ subdirectory.
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2023 Red Hat Inc.
+ * Copyright (C) 2009-2025 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -591,7 +591,7 @@ guestfs_int_ruby_btrfstune_enable_extended_inode_refs (VALUE gv, VALUE devicev)
  * The appliance will connect to the Tang servers noted in
  * the tree of Clevis pins that is bound to a keyslot of
  * the LUKS header. The Clevis pin tree may comprise "sss"
- * (redudancy) pins as internal nodes (optionally), and
+ * (redundancy) pins as internal nodes (optionally), and
  * "tang" pins as leaves. "tpm2" pins are not supported.
  * The appliance unlocks the encrypted block device by
  * combining responses from the Tang servers with metadata
@@ -1079,14 +1079,22 @@ guestfs_int_ruby_disk_has_backing_file (VALUE gv, VALUE filenamev)
  * human intervention.
  * 
  * This option may not be specified at the same time as
- * the "forceall" option.
+ * the "forceall" or "forceno" options.
  * 
  * "forceall"
  * Assume an answer of ‘yes’ to all questions; allows
  * e2fsck to be used non-interactively.
  * 
  * This option may not be specified at the same time as
- * the "correct" option.
+ * the "correct" or "forceno" options.
+ * 
+ * "forceno"
+ * Open the filesystem readonly and assume an answer of
+ * ‘no’ to all questions; allows e2fsck to be used
+ * non-interactively.
+ * 
+ * This option may not be specified at the same time as
+ * the "correct" or "forceall" options.
  * 
  * Optional arguments are supplied in the final hash
  * parameter, which is a hash of the argument name to its
@@ -1127,6 +1135,11 @@ guestfs_int_ruby_e2fsck (int argc, VALUE *argv, VALUE gv)
   if (v != Qnil) {
     optargs_s.forceall = RTEST (v);
     optargs_s.bitmask |= GUESTFS_E2FSCK_FORCEALL_BITMASK;
+  }
+  v = rb_hash_lookup (optargsv, ID2SYM (rb_intern ("forceno")));
+  if (v != Qnil) {
+    optargs_s.forceno = RTEST (v);
+    optargs_s.bitmask |= GUESTFS_E2FSCK_FORCENO_BITMASK;
   }
 
   int r;

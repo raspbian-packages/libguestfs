@@ -80,10 +80,6 @@ I<Обов'язкове>. Має бути увімкнено такі можли
 
 I<Обов'язковий>. Зі списком альтернативних варіантів можна ознайомитися у розділі L</ВИКОРИСТАННЯ ПОПЕРЕДНЬО ЗІБРАНОЇ БІНАРНОЇ ОСНОВНОЇ СИСТЕМИ> нижче.
 
-=item glibc
-
-I<Обов'язковий>. Ми використовуємо розширення для нетипових засобів форматування printf для glibc (див. L<guestfs-hacking(1)/НЕТИПОВІ ЗАСОБИ ФОРМАТУВАННЯ PRINTF У ФОНОВІЙ СЛУЖБІ>).
-
 =item XDR (tirpc, glibc або інша)
 
 I<Обов'язковий>. Ми використовуємо реалізацію XDR з C<E<lt>rpc/xdr.hE<gt>>, яка може походити з glibc, tirpc або іншої бібліотеки.
@@ -104,7 +100,7 @@ I<Обов'язковий>. Різноманітні засоби збиранн
 
 I<Обов’язкове>. Частина ядра Perl.
 
-=item OCaml E<ge> 4.07
+=item OCaml E<ge> 4.08
 
 =item OCaml findlib
 
@@ -127,12 +123,6 @@ I<Обов’язкове>.
 I<Обов’язкове>.
 
 =item realpath
-
-I<Обов’язкове>.
-
-=item flex
-
-=item bison
 
 I<Обов’язкове>.
 
@@ -168,7 +158,7 @@ I<Обов’язкове>.
 
 I<Обов’язкове>.
 
-=item Jansson E<ge> 2.7
+=item json-c E<ge> 0.14
 
 I<Обов’язкове>.
 
@@ -181,10 +171,6 @@ I<Обов'язкове>, якщо збирається версія з git. Н�
 =item ocaml-hivex
 
 I<Обов'язковий>. ocaml-hivex є прив'язкою OCaml для hivex, яка потрібна для збирання фонової служби.
-
-=item libmagic
-
-I<Обов'язковий>. Це бібліотека, яка використовується програмою L<file(1)>.
 
 =item libvirt E<ge> 0.10.2
 
@@ -252,33 +238,7 @@ Optional.  To parse the list of applications from RPM-based guests.
 
 =item qemu-nbd
 
-=item nbdkit E<ge> 1.12
-
 Необов'язкове. qemu-nbd використовується для тестування.
-
-=item curl
-
-Необов'язкове. Використовується virt-builder для отримання даних.
-
-=item GNU Privacy Guard (GnuPG, gpg) версії 1 або 2
-
-Необов'язкове. Використовується virt-builder для перевіряння цифрових підписів.
-
-=item liblzma
-
-Необов'язковий. Якщо доступний, virt-builder скористається цією бібліотекою для швидкого паралельного розпаковування шаблонів.
-
-=item python-evtx
-
-Необов'язкове. Використовується L<virt-log(1)> для обробки файлів журналу подій Windows.
-
-=item OCaml gettext
-
-Необов'язкове. Для локалізації засобів віртуалізації OCaml.
-
-=item ocaml-ounit E<ge> 2.0.0
-
-Необов'язкове. Для тестування загальних модулів OCaml.
 
 =item Perl C<Module::Build> E<ge> 0.19
 
@@ -643,7 +603,7 @@ Libguestfs зібрано у Fedora за допомогою типової си�
 
 =back
 
-Латки, які ми застосовуємо для випусків RHEL загально доступні у нашому основному сховищі коду git, гілка називається C<rhel-x.y>
+The patches we apply to RHEL releases are available publicly in the upstream git repository, in a branch called C<rhel-x.y>
 
 Наприклад, із латками для RHEL 7.3 можна ознайомитися тут: L<https://github.com/libguestfs/libguestfs/commits/rhel-7.3>
 
@@ -659,5 +619,5 @@ Richard W.M. Jones (C<rjones at redhat dot com>)
 
 =head1 АВТОРСЬКІ ПРАВА
 
-Copyright (C) 2009-2023 Red Hat Inc.
+Copyright (C) 2009-2025 Red Hat Inc.
 
