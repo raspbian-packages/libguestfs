@@ -2,8 +2,8 @@ Index: tempdefuzz/m4/guestfs-appliance.m4
 ===================================================================
 --- tempdefuzz.orig/m4/guestfs-appliance.m4
 +++ tempdefuzz/m4/guestfs-appliance.m4
-@@ -134,7 +134,7 @@ AM_CONDITIONAL([HAVE_RPM],
-     [AS_CASE([$DISTRO], [REDHAT | SUSE | OPENMANDRIVA | MAGEIA | OPENCLOUDOS | OPENEULER ], [true],
+@@ -135,7 +135,7 @@ AM_CONDITIONAL([HAVE_RPM],
+     [AS_CASE([$DISTRO], [REDHAT | SUSE | OPENMANDRIVA | MAGEIA | OPENCLOUDOS | TENCENTOS | OPENEULER ], [true],
                          [*], [false])])
  AM_CONDITIONAL([HAVE_DPKG],
 -    [AS_CASE([$DISTRO], [DEBIAN | UBUNTU ], [true],
