@@ -1,4 +1,4 @@
-libguestfs (1:1.54.1-2+rpi1) trixie-staging; urgency=medium
+libguestfs (1:1.54.1-2+rpi1+deb13u1) trixie-staging; urgency=medium
 
   [changes brought forward from 1:1.42.0-11+rpi1 by Peter Michael Green <plugwash@raspbian.org> at Thu, 12 Nov 2020 16:03:00 +0000]
   * Add raspbian to the list of distros with dpkg.
@@ -15,7 +15,14 @@ libguestfs (1:1.54.1-2+rpi1) trixie-staging; urgency=medium
   [changes introduced in 1:1.52.2-7+rpi1 by Peter Michael Green]
   * disable some translations due to build failures.
 
- -- Raspbian forward porter <root@raspbian.org>  Mon, 02 Jun 2025 00:28:27 +0000
+ -- Raspbian forward porter <root@raspbian.org>  Tue, 17 Mar 2026 22:48:01 +0000
+
+libguestfs (1:1.54.1-2+deb13u1) trixie-updates; urgency=medium
+
+  * Add isc-dhcp-client dependency so it is added to the packagelist
+    (Closes: #1111785)
+
+ -- Hilko Bengen <bengen@debian.org>  Tue, 30 Dec 2025 12:09:55 +0100
 
 libguestfs (1:1.54.1-2) unstable; urgency=medium
 
