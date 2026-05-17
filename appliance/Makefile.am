@@ -146,7 +146,7 @@ supermin.d/hostfiles: hostfiles.in Makefile
 
 supermin.d/init.tar.gz: init
 	rm -f $@ $@-t
-	( cd $(srcdir) && tar $(TAR_OPTIONS) -cf - init ) > $@-t
+	( cd $(srcdir) && tar --mode=0755 $(TAR_OPTIONS) -cf - init ) > $@-t
 	mv $@-t $@
 
 # We should put this file in /lib/udev/rules.d, but put it in /etc so
@@ -156,7 +156,7 @@ supermin.d/udev-rules.tar.gz: 99-guestfs-serial.rules
 	rm -rf tmp-u
 	mkdir -p tmp-u/etc/udev/rules.d
 	for f in $^; do ln $$f tmp-u/etc/udev/rules.d/$$(basename $$f); done
-	( cd tmp-u && tar $(TAR_OPTIONS) -cf - etc ) > $@-t
+	( cd tmp-u && tar --mode=0644 $(TAR_OPTIONS) -cf - etc ) > $@-t
 	rm -r tmp-u
 	mv $@-t $@
 

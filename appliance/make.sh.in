@@ -20,6 +20,9 @@ unset CDPATH
 
 set -e
 
+# ensure reproducability
+umask 002
+
 # Run supermin.
 
 if [ "x@SUPERMIN_PACKAGER_CONFIG@" != "xno" ]; then
