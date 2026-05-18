@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# Workaround for Ubuntu's strict kernel permissions
+
+dpkg-statoverride --force-all --add root root 0644 "$1"

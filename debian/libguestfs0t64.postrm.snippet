@@ -1,0 +1,9 @@
+# Workaround for Ubuntu's strict kernel permissions
+
+case "$1" in
+    purge|remove)
+        for file in /boot/vmlinux-*; do
+            dpkg-statoverride --quiet --force-all --remove "$file"
+        done
+        ;;
+esac
