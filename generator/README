@@ -1,0 +1,55 @@
+This program generates a large amount of code and documentation for
+all the daemon actions.
+
+To add a new action there are only two files you need to change,
+'actions_*.ml' to describe the interface, and daemon/<somefile>.c to
+write the implementation.
+
+After editing these files, build it (make -C generator) to regenerate
+all the output files.  'make' will rerun this automatically when
+necessary.
+
+IMPORTANT: This program should NOT print any warnings at compile time
+or run time.  If it prints warnings, you should treat them as errors.
+
+OCaml tips:
+
+(1) In emacs, install tuareg-mode to display and format OCaml code
+correctly.  'vim' comes with a good OCaml editing mode by default.
+
+(2) Read the resources at http://ocaml.org/learn/
+
+(3) A module called 'Foo' is defined in one or two files called
+'foo.mli' and 'foo.ml' (NB: lowercase first letter).  The *.mli file,
+if present, defines the public interface for the module.  The *.ml
+file is the implementation.  If the *.mli file is missing then
+everything is exported.
+
+Some notable files in this directory:
+
+  actions_*.ml        The libguestfs API.
+  proc_nr.ml          Procedure numbers associated with each API.
+  structs.ml          Structures returned by the API.
+  c.ml                Generate C API.
+  <lang>.ml           Generate bindings for <lang>.
+  main.ml             The main generator program.
+
+Note about long descriptions:
+
+When referring to another action, use the format C<guestfs_other>
+(ie. the full name of the C function).  This will be replaced as
+appropriate in other language bindings.  Apart from that, long
+descriptions are just perldoc paragraphs.
+
+Note about extending functions:
+
+In general you cannot change the name, number of required arguments or
+type of required arguments of a function, since this would break
+backwards compatibility.
+
+You may add another optional argument, *if* the function has >= 1
+optional arguments already.  Add it at the end of the list.
+
+You may add optional arguments to a function that doesn't have any.
+However you *must* set the once_had_no_optargs flag to true, so that
+the relevant backwards compatibility bindings can be added.

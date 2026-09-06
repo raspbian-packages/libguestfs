@@ -1,0 +1,72 @@
+dnl This is the list of files excluded from the appliance, even if
+dnl they appear in packagelist.in (or more likely, as dependencies of
+dnl packages in packagelist.in).
+dnl
+dnl List is a list of wildcards, one per line, prefixed by a '-' character.
+dnl
+dnl This file is processed by m4 with one of the
+dnl following symbols defined (depending on the distro):
+dnl
+dnl   REDHAT=1     For Fedora, RHEL, EPEL and workalikes.
+dnl   DEBIAN=1     For Debian.
+dnl   UBUNTU=1     For Ubuntu.
+dnl   ARCHLINUX=1  For Archlinux.
+dnl   SUSE=1       For OpenSUSE.
+dnl   FRUGALWARE=1 For Frugalware.
+dnl   MAGEIA=1     For Mageia.
+dnl
+dnl Note that any matching file will be dropped from the appliance.
+dnl Of course, this may break the appliance, so be careful.
+
+dnl The right kernel modules are added back by supermin.
+-/boot/*
+-/lib/modules/*
+-/usr/lib/modules/*
+
+dnl Firmware blobs should not be required by a virtual machine.
+dnl Because of UsrMove nonsense, we need to list both directories.
+-/lib/firmware/*
+-/usr/lib/firmware/*
+
+-/usr/lib/locale/*
+-/usr/share/cracklib/*
+-/usr/share/doc/*
+-/usr/share/fonts/*
+-/usr/share/gnome/help/*
+-/usr/share/i18n/*
+-/usr/share/icons/*
+-/usr/share/info/*
+-/usr/share/locale/*
+-/usr/share/man/*
+-/usr/share/pkgconfig/*
+
+-/var/log/?tmp
+-/var/log/*.gz
+-/var/log/*.log*
+-/var/log/cron*
+-/var/log/lastlog*
+-/var/log/maillog*
+-/var/log/messages*
+-/var/log/secure*
+-/var/log/syslog*
+-/var/log/tallylog*
+
+-/var/log/*/*.gz
+-/var/log/*/*.log*
+-/var/log/*/syslog*
+
+-/var/log/sa/*
+
+dnl For Debian:
+-/usr/share/lintian/*
+-/usr/share/initramfs-tools/*
+-/usr/share/doc-base/*
+-/usr/share/bug/*
+-/etc/initramfs-tools/*
+
+dnl For Ubuntu:
+ifelse(UBUNTU,1,
+dnl This lvm2 rule automatically re-enables vgs when they are added
+dnl or changed
+-/lib/udev/rules.d/85-lvm2.rules
+)

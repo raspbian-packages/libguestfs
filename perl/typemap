@@ -1,0 +1,38 @@
+TYPEMAP
+char *		T_PV
+const char *	T_PV
+guestfs_h *	O_OBJECT_guestfs_h
+int64_t	  	O_OBJECT_int64
+void * /* virDomainPtr */ O_OBJECT_virDomainPtr
+
+INPUT
+O_OBJECT_guestfs_h
+    if (sv_isobject ($arg) && sv_derived_from ($arg, \"Sys::Guestfs\") &&
+        SvTYPE ($arg) == SVt_RV &&
+        SvTYPE (SvRV ($arg)) == SVt_PVHV) {
+        HV *hv = (HV *) SvRV ($arg);
+        SV **svp = hv_fetch (hv, \"_g\", 2, 0);
+        if (svp == NULL)
+            croak (\"${Package}::$func_name(): called on a closed handle\");
+        $var = INT2PTR ($type, SvIV (*svp));
+    } else {
+        croak (\"${Package}::$func_name(): $var is not a blessed HV reference\");
+    }
+
+O_OBJECT_int64
+    $var = my_SvIV64 ($arg);
+
+O_OBJECT_virDomainPtr
+    /* This is copied directly from the Sys::Virt typemap.  Dan has assured
+     * me that he doesn't intend to change this implementation!
+     */
+    if (sv_isobject ($arg) && SvTYPE (SvRV ($arg)) == SVt_PVMG)
+        $var = INT2PTR (void *, SvIV ((SV*) SvRV ($arg)));
+    else {
+        warn (\"${Package}::$func_name() -- $var is not a blessed SV reference\");
+        XSRETURN_UNDEF;
+    }
+
+OUTPUT
+O_OBJECT_guestfs_h
+    sv_setiv ($arg, PTR2IV ($var));

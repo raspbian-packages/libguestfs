@@ -1,0 +1,7 @@
+
+=item B<--keys-from-stdin>
+
+Прочитати параметри ключа або пароля із джерела стандартного введення. Типово програма намагається читати паролі від користувача відкриттям F</dev/tty>.
+
+If there are multiple encrypted devices then you may need to supply multiple keys on stdin, one per line.
+

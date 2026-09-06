@@ -1,0 +1,237 @@
+
+=head1 名前
+
+guestfs-release-notes - libguestfs リリースノート
+
+=head1 RELEASE NOTES FOR LIBGUESTFS 1.60
+
+These are the release notes for libguestfs stable release 1.60.  This describes the major changes since 1.58.
+
+Libguestfs 1.60.0 was released on B<9 July 2026>.
+
+=head2 Inspection
+
+Add support for Kylin, NeoKylin and Anolis Linux distributions (grass lu).
+
+Guests using Veritas partition tables (reusing the Sun partition type)  can now be inspected.
+
+Windows Defender (antivirus) is now detected if present in Windows guests (Susant Sahani).
+
+=head2 API
+
+New C<guestfs_xfs_info2> API.  This is similar to the existing C<guestfs_xfs_info> API but returns a flexible hashtable allowing more fields to be added to the output in future.
+
+C<guestfs_get_hv> now returns the default hypervisor.
+
+C<guestfs_tar_in> adds a new option C<keepdirlink> which controls the tar I<--keep-directory-symlink> flag (Anders Roxell).
+
+C<guestfs_xfs_repair> C<maxmem> option now produces better error messages if maxmem is too small.
+
+All functions that take LUKS key parameters may now use either C<text:...> or C<base64:...> prefixes, allowing binary keys to be encoded as base64 and passed to these APIs.  L<guestfish(1)> and other tools taking a key file now allow a binary file to be used.
+
+C<guestfs_command*> and C<guestfs_sh*> now use a bind mount to override C</etc/resolv.conf> inside the guest, allowing these commands to work even when this file is marked as immutable, a common change that system administrators make (Srihari Parimi).
+
+=head2 Tools
+
+New L<guestfish(1)> C<not> subcommand, which negates the status of a command.
+
+=head2 Language bindings
+
+GObject and Vala bindings were removed.  They were previously deprecated in libguestfs 1.56 (Cole Robinson).
+
+=head2 Documentation
+
+All information related to firstboot scripts was moved to and consolidated in L<virt-customize(1)/FIRSTBOOT> (Srihari Parimi).
+
+Fix documentation of C<guestfs_copy_out> API.
+
+=head2 Build changes
+
+Fix Weblate (i18n) web hooks (Rafael Fontenelle).
+
+Fix build when libselinux is not available (David Runge).
+
+Github CI is now used more comprehensively (Cole Robinson).
+
+Fix C<make dist> command when certain language bindings are disabled (Cole Robinson).
+
+C<./configure --with-qemu> was removed.
+
+C<CFLAGS> is now prepended to the default, allowing default flags to be overridden.  In addition I<-fPIC> is added to the default flags (Cole Robinson).
+
+Some bash completion scripts that were no longer used by libguestfs (they moved to guestfs-tools) were removed.  Also new C<./configure --with-bash-completion> and C<./configure --with-bash-completion-dir> options were added (Christopher Byrne).
+
+No longer over-link Lua bindings with libxml2 and libvirt (David Runge).
+
+Improve appliance support for Arch (David Runge).
+
+=head2 内部
+
+Simplify qemu property testing.  Most of the code was eliminated completely, and also we no longer start up an empty guest when detecting if KVM is available (thanks Daniel Berrange).  Also we now print stderr if qemu fails to start during detection (Hilko Bengen).
+
+Use I<-cpu max> on RISC-V (thanks Apache553).
+
+Very minimal support for Apple Filesystem (APFS) was added on Fedora.
+
+Many memory and file descriptor leaks found by Claude Code were fixed (shivanayak).
+
+In the libguestfs appliance, increase the number of pre-process memory maps.  This may allow xfs_repair to work on larger filesystems (Eric Sandeen).
+
+Fix DHCP on fast machines by making it wait for an address when networking is enabled.  In addition use C<dhcpcd --debug> which makes it easier to see if DHCP requests are working (Cole Robinson).
+
+Improvements to debug output (Surya Gupta, Srihari Parimi).
+
+Fix Fedora bin/sbin symlinking to be less noisy (Cole Robinson).
+
+Rewrite xfs_repair and luks_* implementations in the daemon in OCaml.
+
+Ensure fds 0, 1 and 2 are open when running subcommands.
+
+=head2 バグ修正
+
+=begin コメント
+
+./bugs-in-changelog.sh v1.58.0..
+
+=end コメント
+
+=over 4
+
+=item L<https://issues.redhat.com/browse/RHEL-129145>
+
+RFE: Detect Windows Defender antivirus when enabled in default Windows 11 installs
+
+=item L<https://issues.redhat.com/browse/RHEL-143673>
+
+Add new xfs_info2 API to expose XFS version information
+
+=item L<https://issues.redhat.com/browse/RHEL-165220>
+
+virt-v2v with sun partition table and Veritas storage failed with: parted exited with status 1: Warning: The disk CHS geometry reported by the operating system does not match the geometry stored on the disk label
+
+=item L<https://issues.redhat.com/browse/RHEL-165677>
+
+Stop using xfs_repair -m because memory required scales with filesystem size and has sharp edges
+
+=item L<https://issues.redhat.com/browse/RHEL-170864>
+
+virt-v2v failing with binary LUKS keys [virt-v2v]
+
+=item L<https://issues.redhat.com/browse/RHEL-171895>
+
+virt-v2v failing with binary LUKS keys [libguestfs]
+
+=item L<https://issues.redhat.com/browse/RHEL-171896>
+
+virt-v2v failing with binary LUKS keys [guestfs-tools]
+
+=item L<https://issues.redhat.com/browse/RHEL-178287>
+
+virt-v2v fails during migration of RHEL 7 VMs due to XFS filesystem errors, potentially related to RHEL 10.1 xfs_repair running against a RHEL 7 XFS filesystem.
+
+=item L<https://issues.redhat.com/browse/RHEL-178556>
+
+Use bind mount to overwrite /sysroot/etc/resolv.conf during "sh" operations
+
+=item L<https://github.com/libguestfs/libguestfs/issues/290>
+
+1.58.0: undefined reference to optgroup_selinuxrelabel_available
+
+=item L<https://github.com/libguestfs/libguestfs/issues/292>
+
+guestfs_int_get_cpu_model: use -cpu max for riscv
+
+=item L<https://github.com/libguestfs/libguestfs/issues/312>
+
+switch to po4a
+
+=item L<https://github.com/libguestfs/libguestfs/issues/336>
+
+flaky test network/test-network.sh
+
+=item L<https://github.com/libguestfs/libguestfs/issues/359>
+
+1.58.1: The Lua bindings link against libxml2 but don't seem to use it
+
+=back
+
+=head1 関連項目
+
+L<guestfs-examples(1)>, L<guestfs-faq(1)>, L<guestfs-performance(1)>, L<guestfs-recipes(1)>, L<guestfs-testing(1)>, L<guestfs(3)>, L<guestfish(1)>, L<http://libguestfs.org/>
+
+=head1 著者
+
+=begin コメント
+
+git shortlog -s v1.58.0..
+
+=end コメント
+
+=over 4
+
+=item Adolfo Jayme Barrientos
+
+=item Anders Roxell
+
+=item Andi Chandler
+
+=item Arif Budiman
+
+=item Christopher Byrne
+
+=item Cole Robinson
+
+=item David Runge
+
+=item Emilio Herrera
+
+=item Ettore Atalan
+
+=item Fco. Javier F. Serrador
+
+=item grimst
+
+=item Hela Basa
+
+=item Hilko Bengen
+
+=item Jan Kuparinen
+
+=item Krascovict Petrov
+
+=item Léane GRASSER
+
+=item Nathan95
+
+=item Pavel Borecki
+
+=item Piotr Drąg
+
+=item Rafael Fontenelle
+
+=item Richard W.M. Jones
+
+=item Ricky Tigg
+
+=item shivanayak
+
+=item Srihari Parimi
+
+=item Surya Gupta
+
+=item Susant Sahani
+
+=item Temuri Doghonadze
+
+=item Tian Shixiong
+
+=item Yuri Chornoivan
+
+=item zhanchun li
+
+=back
+
+=head1 COPYRIGHT
+
+Copyright (C) 2009-2026 Red Hat Inc.
+

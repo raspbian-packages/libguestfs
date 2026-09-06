@@ -1,0 +1,29 @@
+Random contributions and things which don't fit in anywhere else
+----------------------------------------------------------------------
+
+autobuild/
+        The autobuild script that we use to build and test the
+        tarballs on Debian and elsewhere.
+
+intro/ "Slides" for an intro to libguestfs.  This is a short (10-15
+        min) talk that I give to introduce the main features of
+        libguestfs.  The slides are in the form of a complete
+        self-contained HTML page with a handful images that can be
+        easily distributed before the talk.
+
+make-check-on-installed.pl
+        This Perl script allows you to run the test suite (ie.  'make
+        check', 'make check-all' etc) on an installed RPM.  This is
+        useful for adding another layer of testing to packages before
+        we release them.  Note that a checked out copy of the source
+        from git is required.  Read the top of the file before using.
+
+windows-icons.pl
+        This script lets you extract all the icons from a Windows
+        guest.  We use this to locate the Windows logo in new releases
+        of Windows (see lib/inspect-icon.c).
+
+visualize-alignment/
+        Tests for visualizing block device reads and writes and
+        alignment using a patched qemu.  See the README file in that
+        directory.
