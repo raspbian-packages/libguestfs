@@ -1,0 +1,9 @@
+# Workaround for Ubuntu's strict kernel permissions
+
+case "$1" in
+    install|upgrade)
+        for file in /boot/vmlinux-*; do
+            dpkg-statoverride --quiet --force-all --add root root 0644 "$file"
+        done
+    ;;
+esac

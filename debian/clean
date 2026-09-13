@@ -1,0 +1,11 @@
+debian/gocache/
+
+generator/.pod2text.data.version.2
+generator/files-generated.txt
+
+java/examples/*.class
+
+ocaml/examples/*.cm*
+ocaml/examples/*.o
+
+golang/src/src

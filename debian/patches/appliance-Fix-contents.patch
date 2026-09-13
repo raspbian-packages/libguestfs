@@ -1,0 +1,62 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Thu, 20 Jul 2017 23:30:28 +0200
+Subject: appliance: Fix contents
+
+- cryptsetop->cryptsetup-bin
+- Add bsdextrautils (hexdump)
+- Add util-linux
+- Fix udev-rules path
+---
+ appliance/Makefile.am    | 2 +-
+ appliance/packagelist.in | 8 +++++---
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/appliance/Makefile.am b/appliance/Makefile.am
+index 66d43ac..f6dec95 100644
+--- a/appliance/Makefile.am
++++ b/appliance/Makefile.am
+@@ -162,7 +162,7 @@ supermin.d/udev-rules.tar.gz: 99-guestfs-serial.rules
+ # If installing the daemon, install the udev rules too.
+ 
+ if INSTALL_DAEMON
+-udevrulesdir = /lib/udev/rules.d
++udevrulesdir = /usr/lib/udev/rules.d
+ udevrules_DATA = 99-guestfs-serial.rules
+ endif
+ 
+diff --git a/appliance/packagelist.in b/appliance/packagelist.in
+index 6414ee4..59d8b71 100644
+--- a/appliance/packagelist.in
++++ b/appliance/packagelist.in
+@@ -57,10 +57,11 @@ ifelse(REDHAT,1,
+ 
+ ifelse(DEBIAN,1,
+   bsdmainutils
++  bsdextrautils
+ dnl old name used in Jessie and earlier
+   btrfs-tools
+   clevis-luks
+-  cryptsetup
++  cryptsetup-bin
+   dash
+   extlinux
+   fdisk
+@@ -90,8 +91,8 @@ dnl isc-dhcp-client has been replaced with dhcpcd-base
+   ntfs-3g
+   openssh-client
+   reiserfsprogs
+-  sysvinit                  dnl for /sbin/reboot
+-  systemd                   dnl alternative for /sbin/reboot
++  sysvinit-core             dnl for /sbin/reboot
++  systemd-sysv              dnl alternative for /sbin/reboot
+   ufsutils
+   vim-tiny
+   xz-utils
+@@ -315,6 +316,7 @@ syslinux
+ tar
+ udev
+ util-linux
++util-linux-extra
+ util-linux-ng
+ xfsprogs
+ zerofree
