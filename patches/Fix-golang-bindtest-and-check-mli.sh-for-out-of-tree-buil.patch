@@ -1,0 +1,36 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Mon, 27 Dec 2021 01:17:16 +0100
+Subject: Fix golang bindtest and check-mli.sh for out-of-tree builds
+
+---
+ check-mli.sh         | 2 +-
+ golang/run-bindtests | 5 ++---
+ 2 files changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/check-mli.sh b/check-mli.sh
+index 8a93187..1b3da07 100755
+--- a/check-mli.sh
++++ b/check-mli.sh
+@@ -22,7 +22,7 @@
+ exitcode=0
+ 
+ for f in $(
+-    find -name '*.ml' |
++    find "$abs_srcdir" "$abs_builddir" -name '*.ml' |
+     grep -v builder/templates |
+     grep -v contrib/ |
+     grep -v ocaml/examples/ |
+diff --git a/golang/run-bindtests b/golang/run-bindtests
+index e79bb07..b62132b 100755
+--- a/golang/run-bindtests
++++ b/golang/run-bindtests
+@@ -18,7 +18,6 @@
+ 
+ set -e
+ 
+-cd $srcdir/bindtests
+-$GOLANG run bindtests.go > bindtests.tmp
+-diff -u $srcdir/../../bindtests bindtests.tmp
++( cd $srcdir/bindtests && $GOLANG run bindtests.go ) > bindtests.tmp
++diff -u $srcdir/../bindtests bindtests.tmp
+ rm bindtests.tmp

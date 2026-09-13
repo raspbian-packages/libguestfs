@@ -1,0 +1,29 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Sat, 28 Jul 2018 18:59:16 +0200
+Subject: Fix up perl path in installed scripts
+
+---
+ perl/examples/create_disk.pl | 2 +-
+ perl/examples/inspect_vm.pl  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/perl/examples/create_disk.pl b/perl/examples/create_disk.pl
+index 3b40683..3b69fab 100755
+--- a/perl/examples/create_disk.pl
++++ b/perl/examples/create_disk.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env perl
++#!/usr/bin/perl
+ 
+ # Example showing how to create a disk image.
+ 
+diff --git a/perl/examples/inspect_vm.pl b/perl/examples/inspect_vm.pl
+index 04fbae6..00679ec 100755
+--- a/perl/examples/inspect_vm.pl
++++ b/perl/examples/inspect_vm.pl
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env perl
++#!/usr/bin/perl
+ 
+ # Example showing how to inspect a virtual machine disk.
+ 
